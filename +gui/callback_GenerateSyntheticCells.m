@@ -17,7 +17,6 @@ answer = gui.myQuestdlg(FigureHandle, msg);
 if ~strcmp(answer,'Yes'), return; end
 
 
-
 tag = 'is_synthetic';
 issynthetic = sce.getCellAttribute(tag);
 if isempty(issynthetic)
@@ -37,12 +36,12 @@ if sce.NumCells*sce.NumGenes < 4e8
 else
     answer = gui.myQuestdlg(FigureHandle, ...
         'You are about to change the SCE data. This cannot be undone.');
-    if ~strcmp(answer, 'Yes'), return; end        
+    if ~strcmp(answer, 'Yes'), return; end
     sceori = [];
 end
 
 
-%fw = gui.myWaitbar(FigureHandle);
+% fw = gui.myWaitbar(FigureHandle);
 
 sub_sce = copy(sce).selectcells(ptsSelected);
 x = sce.X(:, ptsSelected);
@@ -59,24 +58,24 @@ sce = sc_mergesces({sce, sub_sce}, "intersect", true, true);
 f = fieldnames(sce.struct_cell_embeddings);
 
 for i = 1:numel(f)
-    if ~isempty(sce.struct_cell_embeddings.(f{i})) 
+    if ~isempty(sce.struct_cell_embeddings.(f{i}))
         s = sce.struct_cell_embeddings.(f{i});
         r = trnd(100, size(s)) * 0.75;
         sce.struct_cell_embeddings.(f{i}) = s + r;
     end
 end
 
-%gui.myWaitbar(FigureHandle, fw);
+% gui.myWaitbar(FigureHandle, fw);
 
 newcn = sce.NumCells;
 newgn = sce.NumGenes;
 
-    if oldcn-newcn==0 && oldgn-newgn==0
+if oldcn-newcn==0 && oldgn-newgn==0
         gui.myHelpdlg(FigureHandle, "No cells are synthesized.");
         % requirerefresh = false;
         return;
     end
-    if ~isempty(sceori)
+if ~isempty(sceori)
         answer = gui.myQuestdlg(FigureHandle, ...
             sprintf('%d cells will be added.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
                 newcn - oldcn, oldgn, oldcn, newgn, newcn),'', ...
@@ -93,6 +92,6 @@ newgn = sce.NumGenes;
     end
 
 
-    gui.myGuidata(FigureHandle, sce, src);
+gui.myGuidata(FigureHandle, sce, src);
 
 end

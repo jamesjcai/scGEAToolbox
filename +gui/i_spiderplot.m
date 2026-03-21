@@ -12,7 +12,7 @@ n = size(P, 2);
 %             repmat(max(P(:)),1,n)];
 
 axes_limits = [repmat(min(P(:)), 1, n); ...
-    repmat(max(P(:)), 1, n)];
+repmat(max(P(:)), 1, n)];
 
 
 if ~isempty(strfind(labelx{1}, ')'))
@@ -37,17 +37,17 @@ bkcolor = gui.i_getthemebkgcolor(hFig);
 
 labelx = strrep(labelx, '_', '\_');
 spider_plot_R2019b(P, 'AxesLabels', labelx, ...
-    'AxesPrecision', 2, 'AxesLimits', axes_limits, ...
-    'BackgroundColor', bkcolor, ...
-    'AxesFontColor', 1-bkcolor, ...
-    'AxesZeroColor', 1-bkcolor);
+'AxesPrecision', 2, 'AxesLimits', axes_limits, ...
+'BackgroundColor', bkcolor, ...
+'AxesFontColor', 1-bkcolor, ...
+'AxesZeroColor', 1-bkcolor);
 cL = strrep(cL, '_', '\_');
 legend(cL, 'Location', 'best');
 if ~isempty(titlex), title(titlex); end
 hx.show(parentfig);
 
 
-    function i_showvalues(~, ~)
+function i_showvalues(~, ~)
         showaxes = ~showaxes;
         cla(hx.AxHandle);
         if showaxes
@@ -69,7 +69,7 @@ hx.show(parentfig);
         if ~isempty(titlex), title(titlex); end
     end
 
-    function i_reordersamples(~, ~)
+function i_reordersamples(~, ~)
         showlegend = ~showlegend;
 
         if showlegend
@@ -80,7 +80,7 @@ hx.show(parentfig);
     end
 
 
-    function i_editgrpnames(~, ~)
+function i_editgrpnames(~, ~)
 
         if gui.i_isuifig(parentfig)
             [indxx, tfx] = gui.myListdlg(parentfig, string(cL), 'Select group name');
@@ -106,7 +106,7 @@ hx.show(parentfig);
     end
 
 
-    function i_savedata(~, ~)
+function i_savedata(~, ~)
         if isempty(sce)
             a = string(1:size(Y, 1));
         else
@@ -115,10 +115,10 @@ hx.show(parentfig);
         T = array2table(Y, 'VariableNames', ...
             labelx, 'RowNames', a);
         name = 'Cell_Group';
-        %T.(name) = thisc;
+        % T.(name) = thisc;
         T.(name) = cL(c);
         T.Properties.DimensionNames{1} = 'Cell_ID';
-        needwait = false;                                    
+        needwait = false;
         gui.i_exporttable(T, needwait, ...
             'Tspiderdata', 'SpiderOutTable');
     end

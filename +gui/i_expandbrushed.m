@@ -1,5 +1,5 @@
 function [ptsSelected, updated] = ...
-    i_expandbrushed(ptsSelected, sce, parentfig)
+i_expandbrushed(ptsSelected, sce, parentfig)
 
 if nargin < 3, parentfig = []; end
 updated = false;

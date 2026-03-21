@@ -6,11 +6,11 @@ needupdate = false;
 v1local = [];
 v2web = [];
 im = [];
-try    
+try
     % fid = fopen(xfilelocal, 'r');
     % C = textscan(fid, '%s', 'delimiter', '\n');
     % fclose(fid);
-    % a = C{1};    
+    % a = C{1};
     % x = a(contains(a, '<param.version>'));
     % a1 = strfind(x, '<param.version>');
     % a2 = strfind(x, '</param.version>');
@@ -65,11 +65,11 @@ end
     %         end
     %     end
     % end
-    if nargout > 3 && needed(4)
-        %try
+if nargout > 3 && needed(4)
+        % try
         %    im = webread('https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Fgithub.com%2Fjamesjcai%2FscGEAToolbox%2F&s=15&c=ffffff&bg=00000000&no=2&ff=digi&tb=&ta=');
-        %catch
-        %end
+        % catch
+        % end
         im = [];
     end
 end

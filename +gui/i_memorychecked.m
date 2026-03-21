@@ -9,8 +9,8 @@ prepare_input_only = false;
 [totalMemoryGB] = pkg.i_memory;
 
 s = sprintf(['%d GB of memory is recommended to run this function. ' ...
-    'Detected total physical memory: %.2f GB.'], ...
-    ram_needed, totalMemoryGB);
+'Detected total physical memory: %.2f GB.'], ...
+ram_needed, totalMemoryGB);
 
 if totalMemoryGB < ram_needed * 0.95
     answer = gui.myQuestdlg(parentfig, s, ...
@@ -23,7 +23,7 @@ if totalMemoryGB < ram_needed * 0.95
             continue_to_try = true;
             prepare_input_only = true;
         case 'Proceed Anyway'
-            continue_to_try = true;            
+            continue_to_try = true;
         case 'Cancel'
             return;
         otherwise
@@ -35,13 +35,13 @@ end
 
 
 %{
-    if ispc    
+    if ispc
         [~, sys] = memory;
         totalMemoryGB = sys.PhysicalMemory.Total / (1024^3);
         s = sprintf(['%d GB of memory is recommended to run this function. ' ...
             'Detected total physical memory: %.2f GB.'], ...
             ram_needed, totalMemoryGB);
-        
+
         if totalMemoryGB < ram_needed * 0.95
             answer = gui.myQuestdlg(parentfig, s, ...
                 '', {'Continue, but Only Prepare Input', ...
@@ -53,7 +53,7 @@ end
                     continue_to_try = true;
                     prepare_input_only = true;
                 case 'Proceed Anyway'
-                    continue_to_try = true;            
+                    continue_to_try = true;
                 case 'Cancel'
                     return;
                 otherwise
@@ -65,7 +65,7 @@ end
     else
 
         s = '32 GB of memory is recommended to run this function.';
-        
+
         answer = gui.myQuestdlg(parentfig, s, ...
             '', {'Continue, but Only Prepare Input', ...
             'Proceed Anyway', 'Cancel'}, ...
@@ -76,7 +76,7 @@ end
                 continue_to_try = true;
                 prepare_input_only = true;
             case 'Proceed Anyway'
-                continue_to_try = true;            
+                continue_to_try = true;
             case 'Cancel'
                 return;
             otherwise

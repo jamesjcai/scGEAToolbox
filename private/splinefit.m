@@ -1,5 +1,5 @@
 function pp = splinefit(varargin)
-%SPLINEFIT Fit a spline to noisy data.
+% SPLINEFIT Fit a spline to noisy data.
 %   PP = SPLINEFIT(X,Y,BREAKS) fits a piecewise cubic spline with breaks
 %   (knots) BREAKS to the noisy data (X,Y). X is a vector and Y is a vector
 %   or an ND array. If Y is an ND array, then X(j) and Y(:,...,:,j) are
@@ -90,7 +90,7 @@ narginchk(3, 8);
 % Evaluate B-splines
 base = splinebase(breaks, n);
 pieces = base.pieces;
-%base
+% base
 A = ppval(base, x);
 
 % Bin data
@@ -114,7 +114,7 @@ if pieces < 20 * n / log(1.7*n)
 end
 
 % Solve
-if isempty(constr)    
+if isempty(constr)
     % Solve Min norm(u*A-y)
     u = lsqsolve(A, y, beta);
 else
@@ -148,8 +148,8 @@ pp = mkpp(breaks, coefs, dim);
 
 
 %--------------------------------------------------------------------------
-    function [x, y, dim, breaks, n, periodic, beta, constr] = arguments(varargin)
-        %ARGUMENTS Lengthy input checking
+function [x, y, dim, breaks, n, periodic, beta, constr] = arguments(varargin)
+        % ARGUMENTS Lengthy input checking
         %   x           Noisy data x-locations (1 x mx)
         %   y           Noisy data y-values (prod(dim) x mx)
         %   dim         Leading dimensions of y
@@ -392,7 +392,7 @@ pp = mkpp(breaks, coefs, dim);
 
         %--------------------------------------------------------------------------
             function pp = splinebase(breaks, n)
-                %SPLINEBASE Generate B-spline base PP of order N for breaks BREAKS
+                % SPLINEBASE Generate B-spline base PP of order N for breaks BREAKS
 
                 breaks = breaks(:); % Breaks
                 breaks0 = breaks'; % Initial breaks
@@ -472,7 +472,7 @@ pp = mkpp(breaks, coefs, dim);
 
                 %--------------------------------------------------------------------------
                     function B = evalcon(base, constr, periodic)
-                        %EVALCON Evaluate linear constraints
+                        % EVALCON Evaluate linear constraints
 
                         % Unpack structures
                         breaks = base.breaks;
@@ -514,7 +514,7 @@ pp = mkpp(breaks, coefs, dim);
 
                         %--------------------------------------------------------------------------
                             function [Z, u0] = solvecon(B, constr)
-                                %SOLVECON Find a particular solution u0 and null space Z (Z*B = 0)
+                                % SOLVECON Find a particular solution u0 and null space Z (Z*B = 0)
                                 %         for constraint equation u*B = yc.
 
                                 yc = constr.yc;
@@ -565,7 +565,7 @@ pp = mkpp(breaks, coefs, dim);
 
                                 %--------------------------------------------------------------------------
                                     function u = lsqsolve(A, y, beta)
-                                        %LSQSOLVE Solve Min norm(u*A-y)
+                                        % LSQSOLVE Solve Min norm(u*A-y)
 
                                         % Avoid sparse-complex limitations
                                         if issparse(A) && ~isreal(y)

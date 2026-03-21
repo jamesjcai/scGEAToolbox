@@ -5,8 +5,8 @@ classdef chordChart < handle
 % 公众号  : slandarer随笔
 % 知乎    : slandarer
 % -------------------------------------------------------------------------
-% Zhaoxu Liu / slandarer (2024). chord chart 弦图 
-% (https://www.mathworks.com/matlabcentral/fileexchange/116550-chord-chart), 
+% Zhaoxu Liu / slandarer (2024). chord chart 弦图
+% (https://www.mathworks.com/matlabcentral/fileexchange/116550-chord-chart),
 % MATLAB Central File Exchange. 检索来源 2024/3/31.
 % =========================================================================
 % 使用示例：
@@ -16,7 +16,7 @@ classdef chordChart < handle
 %          4 0 5 5 2 4 3];
 % colName={'G1','G2','G3','G4','G5','G6','G7'};
 % rowName={'S1','S2','S3'};
-% 
+%
 % CC=chordChart(dataMat,'rowName',rowName,'colName',colName);
 % CC=CC.draw()
 % =========================================================================
@@ -45,15 +45,15 @@ classdef chordChart < handle
 %   Fixed a bug with incorrect rotation of some labels in older versions
 % + 单独设置每一个弦末端方块(demo8)
 %   Set individual end blocks for each chord(demo8)
-%   Use obj.setEachSquareF_Prop 
+%   Use obj.setEachSquareF_Prop
 %   or  obj.setEachSquareT_Prop
 %   F means from (blocks below)
 %   T means to   (blocks above)
 % -------------------------------------------------------------------------
 % # version 2.2.0
 % + 可使用`SSqRatio`属性调整弦末端弧形块占比
-%   The 'SSqRatio' attribute can be used to adjust 
-%   the ratio of arc-shaped blocks at the end of the chord 
+%   The 'SSqRatio' attribute can be used to adjust
+%   the ratio of arc-shaped blocks at the end of the chord
     properties
         ax
         arginList={'colName','rowName','Sep','LRadius','LRotate','SSqRatio'}
@@ -87,7 +87,7 @@ classdef chordChart < handle
                 obj.ax=gca;
             end
             obj.ax.NextPlot='add';
-            
+
             obj.dataMat=varargin{1};varargin(1)=[];
             if isa(obj.dataMat,'table')
             obj.chordTable=obj.dataMat;
@@ -201,7 +201,7 @@ classdef chordChart < handle
                     theta3=pi-pi*sep1/2-sum(ratioT(1:j))*baseLenT-(j-1)*sepLen;
                     theta4=pi-pi*sep1/2-sum(ratioT(1:j+1))*baseLenT-(j-1)*sepLen;
                     tRowV=tDMat(i,:);tRowV=[0,tRowV(end:-1:1)./sum(tRowV)];
-                    tColV=tDMat(:,j)';tColV=[0,tColV./sum(tColV)];       
+                    tColV=tDMat(:,j)';tColV=[0,tColV./sum(tColV)];
                     % 贝塞尔曲线断点计算
                     theta5=(theta2-theta1).*sum(tRowV(1:(sepNumT+1-j)))+theta1;
                     theta6=(theta2-theta1).*sum(tRowV(1:(sepNumT+2-j)))+theta1;
@@ -233,7 +233,7 @@ classdef chordChart < handle
                          tDMatUni(i,j),'FaceAlpha',.3,'EdgeColor','none');
                     if tDMat(i,j)==0
                         set(obj.chordMatHdl(i,j),'Visible','off')
-                    end     
+                    end
                 end
                 % 绘制刻度线
                 tX=[cos(obj.thetaSetF(i,:)).*1.17;cos(obj.thetaSetF(i,:)).*1.19;nan.*ones(1,sepNumT+1)];
@@ -365,7 +365,7 @@ classdef chordChart < handle
             end
             for j=1:size(tDMat,2)
                 set(obj.nameTHdl(j),varargin{:});
-            end 
+            end
         end
         function setTickFont(obj,varargin)
             for m=1:size(obj.thetaSetF,1)
@@ -434,7 +434,7 @@ classdef chordChart < handle
             for j=1:size(tDMat,2)
                 set(obj.thetaTickTHdl(j),'Visible',state);
                 set(obj.RTickTHdl(j),'Visible',state);
-            end          
+            end
         end
         function tickLabelState(obj,state)
             for m=1:size(obj.thetaSetF,1)
@@ -468,7 +468,7 @@ classdef chordChart < handle
 % 公众号  : slandarer随笔
 % 知乎    : slandarer
 % -------------------------------------------------------------------------
-% Zhaoxu Liu / slandarer (2024). chord chart 弦图 
-% (https://www.mathworks.com/matlabcentral/fileexchange/116550-chord-chart), 
+% Zhaoxu Liu / slandarer (2024). chord chart 弦图
+% (https://www.mathworks.com/matlabcentral/fileexchange/116550-chord-chart),
 % MATLAB Central File Exchange. 检索来源 2024/3/31.
 end

@@ -10,7 +10,7 @@ function T = sc_genestats(X, g)
 %   automatically.
 
 if nargin == 1
-        % --- Handle SingleCellExperiment input ---
+    % --- Handle SingleCellExperiment input ---
     if isa(X, 'SingleCellExperiment')
         g = X.g;
         X = X.X;
@@ -31,30 +31,30 @@ else
 
 end
 
-    % --- Gene names default ---
-    numGenes = size(X,1);
-    if isempty(g)
-        g = pkg.i_defaultgenenames(numGenes);
-    elseif iscellstr(g)
-        g = string(g);
+% --- Gene names default ---
+numGenes = size(X,1);
+if isempty(g)
+    g = pkg.i_defaultgenenames(numGenes);
+elseif iscellstr(g)
+    g = string(g);
+end
+g = g(:);  % ensure column
+
+% --- Convert sparse to dense if needed ---
+if issparse(X)
+    try
+        X = full(X);
+    catch
+        warning('Could not convert sparse matrix to full; computations may be slow.');
     end
-    g = g(:);  % ensure column
+end
 
-    % --- Convert sparse to dense if needed ---
-    if issparse(X)
-        try
-            X = full(X);
-        catch
-            warning('Could not convert sparse matrix to full; computations may be slow.');
-        end
-    end
+% --- Compute statistics ---
+dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
+u     = mean(X, 2, 'omitnan');
+cv    = std(X, 0, 2, 'omitnan') ./ u;
 
-    % --- Compute statistics ---
-    dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
-    u     = mean(X, 2, 'omitnan');
-    cv    = std(X, 0, 2, 'omitnan') ./ u;
-
-    % --- Assemble result table ---
-    T = table(g, u, cv, dropr, ...
-        'VariableNames', {'Gene', 'Mean', 'CV', 'Dropout_rate'});
+% --- Assemble result table ---
+T = table(g, u, cv, dropr, ...
+    'VariableNames', {'Gene', 'Mean', 'CV', 'Dropout_rate'});
 end

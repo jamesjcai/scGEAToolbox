@@ -5,10 +5,10 @@ sce = copy(sce_ori);
 
 if ~gui.gui_showrefinfo('DP Analysis', FigureHandle), return; end
 
-    extprogname = 'scgeatool_DPAnalysis';
-    preftagname = 'externalwrkpath';
-    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
-    if isempty(wrkdir), return; end
+extprogname = 'scgeatool_DPAnalysis';
+preftagname = 'externalwrkpath';
+[wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
+if isempty(wrkdir), return; end
 
 
 [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
@@ -28,10 +28,10 @@ if ~all(c>0)
     i2 = c==2;
 end
 
-[indx1,speciesid] = gui.i_selgenecollection;
+[indx1,speciesid] = gui.i_selgenecollection(FigureHandle);
 if isempty(indx1), return; end
-[setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1, speciesid); %(indx1);
-if isempty(setmatrx) || isempty(setnames) || isempty(setgenes) 
+[setmatrx, setnames, setgenes] = pkg.e_getgenesets(indx1, speciesid); % (indx1);
+if isempty(setmatrx) || isempty(setnames) || isempty(setgenes)
     return;
 end
 
@@ -42,7 +42,7 @@ end
 fw = gui.myWaitbar(FigureHandle);
 
 [~, ix, iy]=intersect(upper(setgenes), ...
-                    upper(sce.g)); %,'stable');
+                    upper(sce.g)); % ,'stable');
 setgenes=setgenes(ix);
 setmatrx=setmatrx(:,ix);      % s x g
 
@@ -64,15 +64,15 @@ n2 = nan(size(Z,1),1);
 m1 = nan(size(Z,1),1);
 m2 = nan(size(Z,1),1);
 
-%warning off
+% warning off
 for k = 1:size(Z,1)
     if any(setmatrx(k,:))
         a = Z(k,i1);
         b = Z(k,i2);
         p_val(k) = ranksum(a,b);
         if ~isnan(p_val(k)) && p_val(k)<1e-3
-            %[ax]=nbinfit(a);
-            %[bx]=nbinfit(b);
+            % [ax]=nbinfit(a);
+            % [bx]=nbinfit(b);
             [ax] = mean(a);
             [bx] = mean(b);
             avg_log2FC(k) = log2(ax(1)./bx(1));
@@ -85,7 +85,7 @@ for k = 1:size(Z,1)
         end
     end
 end
-%warning on
+% warning on
 if exist('mafdr.m', 'file')
     p_val_adj = mafdr(p_val, 'BHFDR', true);
 else
@@ -93,15 +93,15 @@ else
 end
 
 T = table(setnames, gsetsize, v1, v2, avg_log2FC, m1, n1, ...
-    m2, n2, p_val, p_val_adj);
+m2, n2, p_val, p_val_adj);
 T(isnan(T.p_val)|isnan(T.avg_log2FC)|abs(T.avg_log2FC)<1,:)=[];
 T = sortrows(T, 'p_val_adj', 'ascend');
 T = T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
 
-    gui.myWaitbar(FigureHandle, fw);
+gui.myWaitbar(FigureHandle, fw);
 
 
-    if height(T)==0
+if height(T)==0
         gui.myHelpdlg(FigureHandle, 'No significant results.');
         return;
     else
@@ -142,12 +142,12 @@ images = {};
      if ~ismember(k,idxneedplot), continue; end
      idx=T.setnames(k)==setnames;
      posg=string(setgenes(setmatrx(idx,:)));
-    
+
         outfile1 = sprintf('dotplot_%s.png', ...
             matlab.lang.makeValidName(T.setnames(k)));
         outfile2 = sprintf('violplt_%s.png', ...
             matlab.lang.makeValidName(T.setnames(k)));
-        
+
         filesaved1 = fullfile(outdir, outfile1);
         filesaved2 = fullfile(outdir, outfile2);
 
@@ -155,20 +155,20 @@ images = {};
         % assignin("base","g",sce.g);
         % assignin("base","c",c);
         % assignin("base","cL",cL);
-        % assignin("base","posg",posg);       
-        
+        % assignin("base","posg",posg);
+
         gui.myWaitbar(FigureHandle, fw, false, '', '',(kk-1)./numel(idxneedplot));
-        
+
     suc1=false;
     try
         f1 = gui.i_dotplot(Xt, upper(sce.g), c, cL, upper(posg), true, T.setnames(k));
-        saveas(f1, filesaved1);                    
+        saveas(f1, filesaved1);
         images = [images, {filesaved1}];
         suc1=true;
     catch ME
         warning(ME.message);
     end
-    
+
     suc2=false;
     try
         [y] = gui.e_cellscore(sce, posg, 2, false);  % 'AddModuleScore/Seurat'
@@ -183,7 +183,7 @@ images = {};
         images = [images, {filesaved2}];
         suc2 = true;
     catch ME
-        %success=false;
+        % success=false;
         warning(ME.message);
     end
 
@@ -195,7 +195,7 @@ images = {};
      winopen(outdir);
  end
 
-    
+
     % answer = gui.myQuestdlg(FigureHandle, 'Output to PowerPoint?','','Yes','No','Yes');
     % switch answer
     %     case 'Yes'
@@ -209,7 +209,7 @@ images = {};
     % if needpptx
         gui.i_save2pptx(images);
     % else
-        % if success    
+        % if success
         %     answer = gui.myQuestdlg(FigureHandle, sprintf('Figure files have been saved in %s. Open the folder to view files?', outdir),'');
         %     if strcmp(answer, 'Yes'), winopen(outdir); end
         % end

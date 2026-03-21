@@ -1,6 +1,6 @@
 function [X, genelist, keptidxv] = sc_qcfilter(X, genelist, libszcutoff, ...
                                 mtratio, min_cells_nonzero, gnnumcutoff)
-%Basic QC filter
+% Basic QC filter
 if nargin < 6, gnnumcutoff = 200; end
 if nargin < 5 || isempty(min_cells_nonzero)
     min_cells_nonzero = 10; % 0.01
@@ -41,9 +41,8 @@ while ~isequal(oldsz, newsz)
 end
 end
 
-
 function [keptidx] = obj_rmmtcells(Xobj, genelist, mtratio, mtgenenamepat, verbose)
-%Remove cells with high mtDNA ratio
+% Remove cells with high mtDNA ratio
 if nargin < 3, mtratio = 0.1; end
 if nargin < 4, mtgenenamepat = "mt-"; end
 if nargin < 5, verbose = false; end

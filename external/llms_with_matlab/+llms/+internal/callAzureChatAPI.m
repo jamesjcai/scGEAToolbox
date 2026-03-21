@@ -37,7 +37,7 @@ function [text, message, response] = callAzureChatAPI(endpoint, deploymentID, me
 %   % Send a request
 %   [text, message] = llms.internal.callAzureChatAPI(messages, functions, APIKey=apiKey)
 
-%   Copyright 2023-2025 The MathWorks, Inc.
+%   Copyright 2023-2026 The MathWorks, Inc.
 
 arguments
     endpoint
@@ -59,13 +59,17 @@ arguments
     nvp.TimeOut
     nvp.StreamFun
     nvp.sendRequestFcn
+    nvp.Verbosity
+    nvp.ReasoningEffort
 end
 
-URL = endpoint + "openai/deployments/" + deploymentID + "/chat/completions?api-version=" + nvp.APIVersion;
+URL = matlab.net.URI(endpoint);
+URL.Path = [URL.Path, "openai", "deployments", deploymentID, "chat", "completions"];
+URL.Query = matlab.net.QueryParameter("api-version", nvp.APIVersion);
 
-parameters = buildParametersCall(messages, functions, nvp);
+parameters = llms.internal.buildAzureParameters(messages, functions, nvp);
 
-[response, streamedText] = nvp.sendRequestFcn(parameters,nvp.APIKey, URL, nvp.TimeOut, nvp.StreamFun);
+[response, streamedText] = nvp.sendRequestFcn(parameters,nvp.APIKey, URL.EncodedURI, nvp.TimeOut, nvp.StreamFun);
 
 % For old models like GPT-3.5, we may have to change the request sent a
 % little. Since we cannot detect the model used other than trying to send a
@@ -75,7 +79,7 @@ if response.StatusCode=="BadRequest" && ...
         isfield(response.Body.Data.error,"message") && ...
         response.Body.Data.error.message == "Unrecognized request argument supplied: max_completion_tokens"
     parameters = renameStructField(parameters,'max_completion_tokens','max_tokens');
-    [response, streamedText] = nvp.sendRequestFcn(parameters,nvp.APIKey, URL, nvp.TimeOut, nvp.StreamFun);
+    [response, streamedText] = nvp.sendRequestFcn(parameters,nvp.APIKey, URL.EncodedURI, nvp.TimeOut, nvp.StreamFun);
 end
 
 % If call errors, "choices" will not be part of response.Body.Data, instead
@@ -109,63 +113,4 @@ else
     text = "";
     message = struct();
 end
-end
-
-function parameters = buildParametersCall(messages, functions, nvp)
-% Builds a struct in the format that is expected by the API, combining
-% MESSAGES, FUNCTIONS and parameters in NVP.
-
-parameters = struct();
-parameters.messages = messages;
-
-parameters.stream = ~isempty(nvp.StreamFun);
-
-if ~isempty(functions)
-    parameters.tools = functions;
-end
-
-if ~isempty(nvp.ToolChoice)
-    parameters.tool_choice = nvp.ToolChoice;
-end
-
-if strcmp(nvp.ResponseFormat,"json")
-    parameters.response_format = struct('type','json_object');
-elseif isstruct(nvp.ResponseFormat)
-    parameters.response_format = struct('type','json_schema',...
-        'json_schema', struct('strict', true, 'name', 'computedFromPrototype', ...
-            'schema', llms.internal.jsonSchemaFromPrototype(nvp.ResponseFormat)));
-elseif startsWith(string(nvp.ResponseFormat), asManyOfPattern(whitespacePattern)+"{")
-    parameters.response_format = struct('type','json_schema',...
-        'json_schema', struct('strict', true, 'name', 'providedInCall', ...
-            'schema', llms.internal.verbatimJSON(nvp.ResponseFormat)));
-end
-
-if ~isempty(nvp.Seed)
-    parameters.seed = nvp.Seed;
-end
-
-dict = mapNVPToParameters;
-
-nvpOptions = keys(dict);
-for opt = nvpOptions.'
-    if isfield(nvp, opt) && ~isempty(nvp.(opt))
-        parameters.(dict(opt)) = nvp.(opt);
-    end
-end
-
-if nvp.MaxNumTokens == Inf
-    parameters = rmfield(parameters,dict("MaxNumTokens"));
-end
-
-end
-
-function dict = mapNVPToParameters()
-dict = dictionary();
-dict("Temperature") = "temperature";
-dict("TopP") = "top_p";
-dict("NumCompletions") = "n";
-dict("StopSequences") = "stop";
-dict("MaxNumTokens") = "max_completion_tokens";
-dict("PresencePenalty") = "presence_penalty";
-dict("FrequencyPenalty") = "frequency_penalty";
 end

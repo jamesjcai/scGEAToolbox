@@ -1,6 +1,6 @@
 function [done] = i_setrenv(src, ~)
 
-%see also: I_SETPYENV, I_SETEXTWD
+% see also: I_SETPYENV, I_SETEXTWD
 [done] = false;
 if nargin<1
     parentfig = [];
@@ -15,14 +15,14 @@ if ismac
     else
         s = '/Library/Frameworks/R.framework/Versions/4.4/Resources/bin/R';
     end
-    
+
 if gui.i_isuifig(parentfig)
     new_s = gui.myInputdlg({'Path to R Executable (e.g., /Library/Frameworks/R.framework/Versions/4.4/Resources/bin/R)'}, ...
                            'Set up R Environment', {s}, parentfig);
 else
     new_s = inputdlg('Path to R Executable (e.g., /Library/Frameworks/R.framework/Versions/4.4/Resources/bin/R)', ...
                      'Set up R Environment', [1 100], {s});
-end    
+end
 
 
     if isempty(new_s), return; end
@@ -88,7 +88,7 @@ if done
     end
 end
 
-    function [done] = ix_setrenv(deflt)
+function [done] = ix_setrenv(deflt)
         % selpath = uigetdir;
         done = false;
         if ispc
@@ -97,8 +97,8 @@ end
             [file, path] = uigetfile('Rscript', 'Select R Interpreter', deflt);
         end
         if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
-        if isequal(file, 0) 
-            return; 
+        if isequal(file, 0)
+            return;
         else
             disp(['User selected: ', fullfile(path, file)]);
             % fullfile(path)

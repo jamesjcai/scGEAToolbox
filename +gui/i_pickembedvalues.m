@@ -4,7 +4,7 @@ if nargin<3, parentfig=[]; end
 
 s = [];
 % slist = fieldnames(sce.struct_cell_embeddings);
-% 
+%
 % valids = false (length(slist), 1);
 % for k=1:length(slist)
 %     sx = sce.struct_cell_embeddings.(slist{k});
@@ -19,7 +19,7 @@ s = [];
 if isempty(vslist)
     gui.myWarndlg(parentfig, ['No embedding is available. Please embed cells ' ...
         'using an embedding algorithm first.']);
-    return; 
+    return;
 end
 
 if gui.i_isuifig(parentfig)

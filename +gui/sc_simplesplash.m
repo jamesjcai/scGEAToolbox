@@ -1,25 +1,25 @@
 function [fx, v1] = sc_simplesplash(fx, r)
-    if nargin<1, fx = []; end
-    v1 = '';
+if nargin<1, fx = []; end
+v1 = '';
     % https://www.mathworks.com/matlabcentral/answers/92259-how-do-i-make-a-splash-screen-for-my-matlab-gui-application
-    mfolder = fileparts(mfilename('fullpath'));
+mfolder = fileparts(mfilename('fullpath'));
     % splashpng = 'splash.png';
-    splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
-    a = dir(splashdir);
+splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
+a = dir(splashdir);
 
-    if length(a)<=2, return; end
-    d = datetime('today');
-    seed = year(d) * 10000 + month(d) * 100 + day(d);
-    rng(seed);
-    idx = 2+randi(length(a)-2);
-    pngfilename = a(idx).name;
-    splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);
-   
-    if ~isfile(splashpng)
+if length(a)<=2, return; end
+d = datetime('today');
+seed = year(d) * 10000 + month(d) * 100 + day(d);
+rng(seed);
+idx = 2+randi(length(a)-2);
+pngfilename = a(idx).name;
+splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);
+
+if ~isfile(splashpng)
         error('Splash image file not found: %s', splashpng);
-    end    
-    [im] = imread(splashpng);
-    
+    end
+[im] = imread(splashpng);
+
 
 if nargin < 2, r = 0.1; end
 % if r>1, r=r/10; end
@@ -30,14 +30,14 @@ if nargin < 1 || isempty(fx)
         'WindowStyle','normal', ...
         'DockControls','off', ...
         'Resize','off');
-    
+
     % fa = axes('Parent',fx,'Color','k', ...
     %     'XColor','k','YColor','k','Visible','off');
-  
+
         fa = axes('Parent',fx, 'Visible','off');
         ih = image(im,'Parent',fa);
-    %colormap(map)
-    
+    % colormap(map)
+
     imxpos = get(ih,'XData');
     imypos = get(ih,'YData');
     set(fa,'Unit','Normalized','Position',[0,0,1,1]);
@@ -47,7 +47,7 @@ if nargin < 1 || isempty(fx)
 
 
     % text(fa,0.75,0.2,'Loading...','Color','w');
-    %plot(fa,[255 repmat(255, 1, r)],'-','LineWidth',5,'Color',[.7 .7 .7]);
+    % plot(fa,[255 repmat(255, 1, r)],'-','LineWidth',5,'Color',[.7 .7 .7]);
     hold(fa, "on");
     r=0.1;
     X=10:390;
@@ -59,9 +59,9 @@ if nargin < 1 || isempty(fx)
     movegui(fx,'center');
     drawnow;
     pause(0.1);
-    %ylim(fa,[0 1]);
-    %xlim(fa,[1 10]);
-    
+    % ylim(fa,[0 1]);
+    % xlim(fa,[1 10]);
+
     % set(fa,'Color','k','XColor','k','YColor','k');
     text(fa,20, 50,'SCGEATOOL','Color','w','FontSize',16);
     v1  = pkg.i_get_versionnum;
@@ -70,7 +70,7 @@ if nargin < 1 || isempty(fx)
     fx.Visible=true;
     hold(fa,"on");
 else
-    fa = findall(fx,'type','axes');    
+    fa = findall(fx,'type','axes');
     X=10:390;
     x=X(1:round(length(X)*r));
     y=290*ones(size(x));
@@ -79,15 +79,14 @@ end
 
 
 % for k = 3:10
-%     h = plot(fa, repmat(0.1, 1, k),'-','LineWidth',5,'Color',[.7 .7 .7]);    
+%     h = plot(fa, repmat(0.1, 1, k),'-','LineWidth',5,'Color',[.7 .7 .7]);
 %     drawnow;
 %     pause(1)
 % end
-% 
+%
 
 % for k=10:-1:2
 %     xlim(fa,[1 k]);
 %     pause(.5);
 %     drawnow;
 % end
-

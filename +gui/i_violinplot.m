@@ -20,7 +20,7 @@ cLorder = strrep(cLorder, '_', '\_');
 thisc = strrep(string(thisc), '_', '\_');
 pkg.i_bindviolinplot(y, thisc, colorit, cLorder);
 title(strrep(ttxt, '_', '\_'));
-%ylabel(selitems{indx1});
+% ylabel(selitems{indx1});
 
 
 hx.addCustomButton('off', @i_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
@@ -33,46 +33,43 @@ hx.addCustomButton('off', @i_sortbymean, "reorder.jpg", 'Sort Samples by Median'
 hx.addCustomButton('on', @i_viewgenenames, 'HDF_point.gif', 'Show Gene Names');
 
 
-%i_addsamplesize([],[]);
-%i_testdata([],[]);
+% i_addsamplesize([],[]);
+% i_testdata([],[]);
 
 if nargout > 0, return; end
 hx.show(parentfig);
 
-%catch ME
+% catch ME
 %    gui.myErrordlg(parentfig, ME.message, ME.identifier);
-%end
+% end
 
 
-
-
-
-    function i_invertcolor(~, ~)
+function i_invertcolor(~, ~)
         colorit = ~colorit;
         b = hFig.get("CurrentAxes");
         cla(b);
         pkg.i_bindviolinplot(y, thisc, colorit, cLorder);
     end
 
-    function i_addsamplesize(~, ~)
+function i_addsamplesize(~, ~)
         % b = gca;
         b = hFig.get("CurrentAxes");
         b.FontName='Palatino';
         % assert(isequal(cLorder, b.XTickLabel));
 
         if isequal(cLorder, b.XTickLabel)
-            a = zeros(length(cLorder), 1);            
+            a = zeros(length(cLorder), 1);
             for k = 1:length(cLorder)
                 a(k) = sum(thisc == cLorder(k));
-                cb=pad([string(b.XTickLabel{k}); sprintf("(n=%d)",a(k))],'both');
-                b.XTickLabel{k} = sprintf('%s\\newline%s', cb(:));                
+                cb=pad([string(b.XTickLabel{k}); sprintf("(n=% d)",a(k))],'both');
+                b.XTickLabel{k} = sprintf('%s\\newline%s', cb(:));
             end
         else
-            b.XTickLabel = cLorder;                
-        end        
+            b.XTickLabel = cLorder;
+        end
     end
 
-    function i_sortbymean(~, ~)
+function i_sortbymean(~, ~)
         [cx, cLx] = findgroups(string(thisc));
         a = zeros(max(cx), 1);
         for k = 1:max(cx)
@@ -87,8 +84,8 @@ hx.show(parentfig);
         end
         cLx_sorted = cLx(idx);
 
-        %[~,cL,noanswer]=gui.i_reordergroups(thisc, cLx_sorted, f);
-        %if noanswer, return; end
+        % [~,cL,noanswer]=gui.i_reordergroups(thisc, cLx_sorted, f);
+        % if noanswer, return; end
         b = hFig.get("CurrentAxes");
         cla(b);
         cLorder = cLx_sorted;
@@ -96,7 +93,7 @@ hx.show(parentfig);
     end
 
 
-    function i_reordersamples(~, ~)
+function i_reordersamples(~, ~)
         [~, cLorder, noanswer] = gui.i_reordergroups(thisc, [], hFig);
 
         % cLorder
@@ -107,7 +104,7 @@ hx.show(parentfig);
     end
 
 
-    function i_selectsamples(~, ~)
+function i_selectsamples(~, ~)
         [~,cL] = findgroups(string(thisc));
         [newidx] = gui.i_selmultidialog(cL, cLorder, parentfig);
         if isempty(newidx), return; end
@@ -115,7 +112,7 @@ hx.show(parentfig);
 %        [~, cLorder, noanswer] = gui.i_reordergroups(thisc, [], f);
 %        % cLorder
 %        if noanswer, return; end
-        
+
         cLorder=cLorder(ismember(cLorder,cL(newidx)));
         b = hFig.get("CurrentAxes");
         cla(b);
@@ -125,7 +122,7 @@ hx.show(parentfig);
     end
 
 
-    function i_testdata(~, ~)
+function i_testdata(~, ~)
         a = hFig.get("CurrentAxes");
         if isempty(OldTitle)
             OldTitle = a.Title.String;
@@ -133,8 +130,8 @@ hx.show(parentfig);
                 y = y.';
             end
             tbl = pkg.e_grptest(y, thisc);
-            %h1=gca;
-            %titre=string(h1.Title.String);
+            % h1=gca;
+            % titre=string(h1.Title.String);
 
             %     a=sprintf('%s\n%s=%.2e; %s=%.2e', ...
             %         strrep(string(ttxt),'_','\_'), ...
@@ -164,18 +161,18 @@ hx.show(parentfig);
         else
             a.Title.String = OldTitle;
             OldTitle = [];
-            
+
         end
     end
 
 
-    function i_viewgenenames(~, ~)
+function i_viewgenenames(~, ~)
         if isempty(posg)
             gui.myHelpdlg(parentfig, ['The gene set is empty. This score ' ...
                 'may not be associated with any gene set.']);
         else
-            %idx=matches(sce.g,posg,'IgnoreCase',true);
-            %gg=sce.g(idx);
+            % idx=matches(sce.g,posg,'IgnoreCase',true);
+            % gg=sce.g(idx);
             if gui.i_isuifig(parentfig)
                 gui.myInputdlg({ttxt}, '', {char(posg)}, parentfig);
             else
@@ -184,11 +181,11 @@ hx.show(parentfig);
         end
     end
 
-    function i_savedata(~, ~)    
+function i_savedata(~, ~)
         T = table(y(:), thisc(:));
         T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
-        %T=sortrows(T,'ScoreLevel','descend');
-        %T=sortrows(T,'GroupID');
+        % T=sortrows(T,'ScoreLevel','descend');
+        % T=sortrows(T,'GroupID');
         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
     end
 

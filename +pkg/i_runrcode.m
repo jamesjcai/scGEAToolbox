@@ -41,7 +41,7 @@ else
     [status, cmdout] = system(commandline);
 end
 
-end %i_runrcode
+end % i_runrcode
 
 function Rexec = i_resolve_rexec(Rexecpath)
 if isfolder(Rexecpath)

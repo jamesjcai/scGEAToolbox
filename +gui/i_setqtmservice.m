@@ -22,10 +22,10 @@ if isQuantumInstalled
 
 else
 
-    %url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/53c14e1e-1831-4a74-b0ee-e306c3cbf83d/7e5d5d80-5c7c-42ef-b5d9-3944e9549d0b/packages/mlpkginstall';
-    %tempZip = fullfile(tempdir, 'MLSupportPackageForQuantumComputing.mlpkginstall');
-    %websave(tempZip, url);
-    %matlab.addons.install(tempZip);
+    % url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/53c14e1e-1831-4a74-b0ee-e306c3cbf83d/7e5d5d80-5c7c-42ef-b5d9-3944e9549d0b/packages/mlpkginstall';
+    % tempZip = fullfile(tempdir, 'MLSupportPackageForQuantumComputing.mlpkginstall');
+    % websave(tempZip, url);
+    % matlab.addons.install(tempZip);
     if strcmpi('Yes', gui.myQuestdlg(parentfig, 'Quantum Computing Support Package is not installed. Visit the MATLAB Support Package for Quantum Computing page to download the installer?'))
         web('https://www.mathworks.com/matlabcentral/fileexchange/125425-matlab-support-package-for-quantum-computing');
     end

@@ -1,10 +1,10 @@
 function callback_ShowClustersPop(src, ~)
 
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 answer = gui.myQuestdlg(FigureHandle, ['Select a grouping variable and ' ...
-    'show cell groups in new figures individually?']);
+'show cell groups in new figures individually?']);
 if ~strcmp(answer, 'Yes'), return; end
 
 [thisc, ~] = gui.i_select1class(sce, true,'','',FigureHandle);
@@ -28,21 +28,20 @@ end
         return;
     end
 
-    %cLa=getappdata(FigureHandle,'cL');
-    %if ~isempty(cLa) && length(cL)==length(cLa)
-    %    cL=cLa;
-    %end
-    cmv = 1:max(c);
-    idxx = cmv;
-    [cmx] = countmember(cmv, c);
+% cLa=getappdata(FigureHandle,'cL');
+% if ~isempty(cLa) && length(cL)==length(cLa)
+%    cL=cLa;
+% end
+cmv = 1:max(c);
+idxx = cmv;
+[cmx] = countmember(cmv, c);
 
 
-
-%answer = gui.myQuestdlg(FigureHandle, 'Sort by size of cell groups?');
-%if strcmpi(answer, 'Yes')
-    [~, idxx] = sort(cmx, 'descend');
-    SCEV = SCEV(idxx);
-%end
+% answer = gui.myQuestdlg(FigureHandle, 'Sort by size of cell groups?');
+% if strcmpi(answer, 'Yes')
+[~, idxx] = sort(cmx, 'descend');
+SCEV = SCEV(idxx);
+% end
 
 try
     sces = sce.s;
@@ -56,8 +55,8 @@ try
 
     % -------------
 
-    hx = gui.myFigure(FigureHandle);
-    
+    hx = gui.myFigure(FigureHandle, true);
+
     tabgp = uitabgroup(hx.FigHandle);
     for nf = 1:numfig
         tab{nf} = uitab(tabgp, 'Title', sprintf('Tab%d',nf));
@@ -87,14 +86,14 @@ catch ME
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
 end
 
-    function in_callback_scgeatoolsce(src, ~)
+function in_callback_scgeatoolsce(src, ~)
         parentfig = src.Parent.Parent;
         figure(parentfig);
         figure(hx.FigHandle);
 
-        %answer1 = gui.myQuestdlg(FigureHandle, 'Extract cells from different groups and view new SCEs, or save new SCEs?','',...
+        % answer1 = gui.myQuestdlg(FigureHandle, 'Extract cells from different groups and view new SCEs, or save new SCEs?','',...
         %    'View SCEs','Save SCEs','Cancel','View SCEs');
-        
+
         % hx.FigHandle.Theme
 
         answer1 = gui.myQuestdlg(hx.FigHandle, 'Extract cells and make new SCEs?','');
@@ -108,23 +107,23 @@ end
                 % currentColormap = colormap;
                 % figure(FigureHandle)
                 % colormap(currentColormap);
-                
+
                 s=0;
                 for ik=1:length(idx)
                     % scev = SCEV{idx(ik)};
                     scev = copy(sce).selectcells(SCEV{idx(ik)}); % OK
-                    
-                    %p = scgeatool(scev,'useuifig', ...
+
+                    % p = scgeatool(scev,'useuifig', ...
                     %    gui.i_isuifig(FigureHandle));
-                    %p.Name=matlab.lang.makeValidName(cL2{idx(ik)});
-                    
-                    %if isa(src, 'matlab.apps.AppBase')
-                    
+                    % p.Name=matlab.lang.makeValidName(cL2{idx(ik)});
+
+                    % if isa(src, 'matlab.apps.AppBase')
+
                     scgeatoolApp(scev);
 
-                    %else
+                    % else
                     %    scgeatool(scev);
-                    %end
+                    % end
                     % p.Position([2])=p.Position([2])-s*30;
                     % p.Position([1])=p.Position([1])+s*30;
                     % p.Position([3 4])=p.Position([3 4])*0.8;
@@ -144,7 +143,7 @@ end
                         else
                             [seltpath] = uigetdir();
                         end
-                        
+
                         if seltpath==0, return; end
                         if ~isfolder(seltpath), return; end
                     case 'Use Temporary Folder'
@@ -157,22 +156,22 @@ end
                     gui.myErrordlg(hx.FigHandle, 'Not a folder.');
                     return;
                 end
-               
+
                 [idx] = in_selectcellgrps(cL(idxx));
 
 
                 cL2=cL(idxx);
-                if isempty(idx), return; end 
+                if isempty(idx), return; end
                 for ik=1:length(idx)
                     % scev=SCEV{idx(ik)};
                     scev = copy(sce).selectcells(SCEV{idx(ik)}); % OK
-                    
+
                     scev=scev.qcfilter;
                     outmatfile=sprintf('%s.mat', ...
                         matlab.lang.makeValidName(cL2{idx(ik)}));
                     outmatfile=fullfile(seltpath,outmatfile);
                     if ~exist(outmatfile,"file")
-                        q=sprintf('Save file %s?',outmatfile);                        
+                        q=sprintf('Save file %s?',outmatfile);
                         answerx=gui.myQuestdlg(hx.FigHandle, q,'');
                     else
                         q=sprintf('Overwrite file %s?',outmatfile);
@@ -194,21 +193,21 @@ end
 end
 
 function [idx] = in_selectcellgrps(grpv, FigureHandle)
-    idx=[];
+idx=[];
 
-       if gui.i_isuifig(FigureHandle)
-            [indx2, tf2] = gui.myListdlg(FigureHandle, grpv, ...
-                'Select Group(s):',...
-                grpv(1));
-        else
-            [indx2, tf2] = listdlg('PromptString', ...
-                {'Select Group(s):'}, ...
-                'SelectionMode', 'multiple', 'ListString', grpv, ...
-                'InitialValue', 1, 'ListSize', [220, 300]);
-       end
+   if gui.i_isuifig(FigureHandle)
+        [indx2, tf2] = gui.myListdlg(FigureHandle, grpv, ...
+            'Select Group(s):',...
+            grpv(1));
+    else
+        [indx2, tf2] = listdlg('PromptString', ...
+            {'Select Group(s):'}, ...
+            'SelectionMode', 'multiple', 'ListString', grpv, ...
+            'InitialValue', 1, 'ListSize', [220, 300]);
+   end
 
 
-    if tf2 == 1
-        idx = indx2;
-    end
+if tf2 == 1
+    idx = indx2;
+end
 end

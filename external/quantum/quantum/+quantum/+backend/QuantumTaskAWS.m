@@ -46,7 +46,7 @@ classdef (Sealed) QuantumTaskAWS < quantum.backend.QuantumTask
     %
     %   See also quantum.backend.QuantumDeviceAWS, quantumCircuit/run
 
-    %   Copyright 2022-2023 The MathWorks, Inc.
+    %   Copyright 2022-2025 The MathWorks, Inc.
 
 
     properties (GetAccess = public, SetAccess = public)
@@ -146,10 +146,13 @@ classdef (Sealed) QuantumTaskAWS < quantum.backend.QuantumTask
             end
         end
 
-        function output = fetchOutput(obj)
+        function out = fetchOutput(obj)
             %FETCHOUTPUT Retrieve result of the finished task
-            %   m = FETCHOUTPUT(task) returns a QuantumMeasurement object
-            %   representing the output of the task.
+            %   out = FETCHOUTPUT(task) returns data representing the task
+            %   output. The quantumCircuit/run syntax determines the
+            %   output type. If the Observable name-value pair was specified,
+            %   out is a numeric scalar, otherwise it's a QuantumMeasurement
+            %   object.
             %
             %   If task is not in status "finished", fetchOutput will error.
             %
@@ -171,16 +174,36 @@ classdef (Sealed) QuantumTaskAWS < quantum.backend.QuantumTask
                         error(message("quantum:QuantumTaskAWS:OutputNotAvailableCancelled"))
                     end
 
+                    % Verify the raw result string comes from gate-based QPU
                     resultStr = readS3Bucket(obj);
                     results = decodeS3Contents(resultStr);
                     taskType = results.braketSchemaHeader.name;
-
                     if ~strcmp(taskType, "braket.task_result.gate_model_task_result")
                         error(message("quantum:QuantumTaskAWS:InvalidResultType"))
                     end
 
+                    % The results always contain a resultTypes field for
+                    % any additional data requested using pragma
+                    % statements.
+                    resultType = results.resultTypes;
+                    if isempty(resultType)
+                        % No pragma statements requested
+                        % Return QuantumMeasurement
+                        out = processSamplerResults(results);
+                    elseif strcmpi(resultType.type.type, "expectation")
+                        % Expectation pragma
+                        % Return numeric scalar
+                        % Extract observable weight from qasm code
+                        qasm = string(results.additionalMetadata.action.source);
+                        wStr = extractBetween(qasm, "//Start weight", "//End weight");
+                        w = str2num(erase(wStr, "//")); %#ok<ST2NM>
+                        out = w*resultType.value;
+                    else
+                        error(message("quantum:QuantumTaskAWS:InvalidResultType"))
+                    end
+
+                    % All task details are stored internally
                     obj.ResultDetailStr = resultStr;
-                    output = decodeGateResults(results);
             end
         end
     end
@@ -192,7 +215,7 @@ classdef (Sealed) QuantumTaskAWS < quantum.backend.QuantumTask
             end
 
             details = quantum.internal.aws.getQuantumTask(obj.TaskARN, obj.TaskRegion);
-            
+
             obj.TaskDetailStruct = details;
             status = mapBraketStatusToMATLABStatus(details.status);
             obj.Status = status;
@@ -239,9 +262,9 @@ catch causeME
 end
 end
 
-function out = decodeGateResults(results)
+function out = processSamplerResults(results)
 % Cases are Braket result pragmas used in our QASM to standardize how the
-% results are formatted.  
+% results are formatted.
 
 if isfield(results, "measurements")
     map = '01';

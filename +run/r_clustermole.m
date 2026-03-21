@@ -1,5 +1,5 @@
 function [T] = r_clustermole(X, genelist, clusterid, varargin)
-%Assigne cell type using clustermole database
+% Assigne cell type using clustermole database
 %
 % using clustermole database
 % https://cran.r-project.org/web/packages/clustermole/vignettes/clustermole-intro.html
@@ -23,7 +23,7 @@ species = p.Results.species;
 organ = p.Results.organ;
 
 oldpth = pwd;
-%pw1=fileparts(which(mfilename));
+% pw1=fileparts(which(mfilename));
 pw1 = fileparts(mfilename('fullpath'));
 if strcmpi(organ, "all")
     pth = fullfile(pw1, '..', 'external', 'R_clustermole');
@@ -83,7 +83,7 @@ for j = 1:length(celltypev)
     g = strsplit(markergenev(j), ',');
     g = g(1:end-1);
     g = upper(unique(g));
-    %[~,idx]=ismember(g,genelist);
+    % [~,idx]=ismember(g,genelist);
     Z = zeros(NC, 1);
     ng = zeros(NC, 1);
     for i = 1:length(g)

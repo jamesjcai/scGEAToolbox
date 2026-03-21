@@ -32,33 +32,32 @@ end
 %     z = zeros(size(x));
 %     is2d = true;
 % end
-isAxesHandle = isa(ax, 'matlab.graphics.axis.Axes'); %isgraphics(s, 'axes');
+isAxesHandle = isa(ax, 'matlab.graphics.axis.Axes'); % isgraphics(s, 'axes');
 if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
 hx = gui.myFigure(parentfig);
 hFig = hx.FigHandle;
 
-%if ~isempty(parentfig)
+% if ~isempty(parentfig)
 %    hFig.Position = parentfig.Position;
-%end
+% end
 
 if isAxesHandle
     if ~gui.i_isuifig(hFig)
         copyobj(ax.Children, hx.AxHandle);
         hAx = hx.AxHandle;
     else
-        hAx = copyobj(ax, hFig);   
+        hAx = copyobj(ax, hFig);
     end
 else
     if gui.i_isuifig(hFig)
         hAx = hx.AxHandle;
 
 
-
     else
         hAx = axes('Parent', hFig, 'Visible', 'off');
     end
-    %h1 = gui.i_gscatter3(ax, c, 1, 1, hAx);  
+    % h1 = gui.i_gscatter3(ax, c, 1, 1, hAx);
 end
 
 
@@ -72,17 +71,17 @@ xLimits = hAx.XLim;
 yLimits = hAx.YLim;
 zLimits = hAx.ZLim;
 
-%bx=gca;
-%assert(isequal(bx, hAx));
+% bx=gca;
+% assert(isequal(bx, hAx));
 
 is3d1 = isprop(hAx, 'ZLim');
 h = get(hAx, 'Children');
 is3d2 = false;
-if isscalar(h) 
+if isscalar(h)
     if isprop(h, 'ZData')  % ismember('ZData', properties(h))
         is3d2 = any(arrayfun(@(x) ~isempty(get(x, 'ZData')), h));
     end
-else    
+else
     for k=1:numel(h)
         if isa(h(k), 'matlab.graphics.chart.primitive.Scatter')
             is3d2 = any(arrayfun(@(x) ~isempty(get(x, 'ZData')), h(k)));
@@ -111,8 +110,8 @@ h.DataTipTemplate.DataTipRows = row;
 
 if is3d    % ======================================== 3D
     % Turn off the default axis display
-    %set(gca, 'Visible', 'off');
- 
+    % set(gca, 'Visible', 'off');
+
     a = xLimits(1); b = yLimits(1); c = zLimits(1);
     la = xLimits(2)-a;
     lb = yLimits(2)-b;
@@ -130,36 +129,36 @@ if is3d    % ======================================== 3D
     txt1 = sprintf('%s\\_1', t);
     txt2 = sprintf('%s\\_2', t);
     txt3 = sprintf('%s\\_3', t);
-    
+
     % Label each arrow for clarity
     text(hAx, a+la/5, b, c, txt1);
     text(hAx, a, b+lb/5, c, txt2);
     text(hAx, a, b, c+lc/5, txt3);
     view(hAx, 3);
 else          % ======================================== 2D
-    %disp('2D')
+    % disp('2D')
     hAx.Units = "pixels";
     r = hAx.Position(3)/hAx.Position(4);
-    
+
     hAx.Units = "normalized";
     axPos = hAx.Position;
-    
+
     % Convert data limits to figure normalized units
     % xArrowPos = [0, 1]; % normalized from left to right of the axes
     % yArrowPos = [0, 1]; % normalized from bottom to top of the axes
-    
+
     % Draw x-axis arrow
     annotation(hFig, 'arrow', ...
         [axPos(1), axPos(1) + axPos(3)/7], ... % x positions
         [axPos(2), axPos(2)], ...            % y positions
         'Color', colortag, 'LineWidth', .5);
-    
+
     % Draw y-axis arrow
     annotation(hFig, 'arrow', ...
         [axPos(1), axPos(1)], ...            % x positions
         [axPos(2), axPos(2) + r*(axPos(4)/7)], ... % y positions
         'Color', colortag, 'LineWidth', .5);
-        
+
     txt1 = sprintf('%s\\_1', t);
     txt2 = sprintf('%s\\_2', t);
 
@@ -171,7 +170,7 @@ else          % ======================================== 2D
 
     [~, b] = measureText(txt1, textOpts, hAx);
     text(hAx, xLimits(1), yLimits(1) - 2*b, txt1);
-    
+
     [~, b] = measureText(txt2, textOpts, hAx);
     text(hAx, xLimits(1)-3*b, yLimits(1), txt2,'Rotation',90);
     view(hAx, 2);
@@ -199,8 +198,8 @@ hx.show(parentfig);
     hTest = text(ax, 0, 0, txt, textOpts);
     textExt = get(hTest, 'Extent');
     delete(hTest);
-    height = textExt(4)/3;    %Height
-    width = textExt(3)/3;     %Width
+    height = textExt(4)/3;    % Height
+    width = textExt(3)/3;     % Width
  end
 
 end

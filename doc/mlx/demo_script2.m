@@ -23,7 +23,7 @@ T1.genes(1:10)
 dofit=true;
 showdata=true;
 % Show data points and the spline-fit curve
-gui.sc_scatter3genes(X,genelist,dofit,showdata);
+gui.i_hvgsplinefitplot(X,genelist,dofit,showdata);
 %view([36.39 46.25])
 %% Analysis of differentially deviated (DD) genes using spline-fit feature selection with data X and Y
 % Read and pre-process two data sets, X and Y
@@ -38,14 +38,14 @@ gui.sc_scatter3genes(X,genelist,dofit,showdata);
 dofit=true;
 showdata=true;
 %subplot(2,1,1)
-gui.sc_scatter3genes(X,genelistx,dofit,showdata);
+gui.i_hvgsplinefitplot(X,genelistx,dofit,showdata);
 title('Data 1')
 %view([-6.39 36.70])
 
 % Show 3D scatter plot and spline-fit curve for Y
 %figure;
 %subplot(2,1,2)
-gui.sc_scatter3genes(Y,genelisty,dofit,showdata);
+gui.i_hvgsplinefitplot(Y,genelisty,dofit,showdata);
 title('Data 2')
 % view([24.08 32.68])
 % view([-6.39 36.70])

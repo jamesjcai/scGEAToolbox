@@ -1,6 +1,6 @@
 function violins = violinplot(data, cats, varargin)
 import gui.Violin
-%Violinplots plots violin plots of some data and categories
+% Violinplots plots violin plots of some data and categories
 %   VIOLINPLOT(DATA) plots a violin of a double vector DATA
 %
 %   VIOLINPLOT(DATAMATRIX) plots violins for each column in
@@ -53,8 +53,8 @@ import gui.Violin
 
 hascategories = exist('cats', 'var') && not(isempty(cats));
 
-%parse the optional grouporder argument
-%if it exists parse the categories order
+% parse the optional grouporder argument
+% if it exists parse the categories order
 % but also delete it from the arguments passed to Violin
 grouporder = {};
 idx = find(strcmp(varargin, 'GroupOrder'));

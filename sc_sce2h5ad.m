@@ -1,11 +1,11 @@
 function [succeeded] = sc_sce2h5ad(sce, filename)
-%Write SCE to H5AD file
+% Write SCE to H5AD file
 %
-%see also: sc_readh5adfile
+% see also: sc_readh5adfile
 
 succeeded = false;
 if nargin < 2
-     [filename, pathname] = uiputfile({'*.h5ad'; '*.*'}, 'Save as');
+    [filename, pathname] = uiputfile({'*.h5ad'; '*.*'}, 'Save as');
     if ~(filename), return; end
     filename = [pathname, filename];
 end

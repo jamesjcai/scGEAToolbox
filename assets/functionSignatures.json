@@ -3,243 +3,676 @@
 {
 	"inputs":
 	[
-        {"name": "sce", "type": "SingleCellExperiment", "description": "Single-cell experiment object"}
-	]
-},    
-"sc_cluster_s":
-{
-	"inputs":
-	[
-		{"name":"s","kind":"required","type":[["numeric","size=:,3"],["numeric","size=3,:"]]},
-		{"name":"k","kind":"required","type":["numeric","choices=[3,6,9]"]},
-		{"name":"type", "kind":"namevalue","type":["char", "choices={'kmeans','kmedoids','dbscan','spectclust'}"]},
-        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"]}
+		{"name":"sce", "kind":"optional", "type":["SingleCellExperiment"]}
 	]
 },
-"sc_impute":
+"sc_read10xdir":
 {
 	"inputs":
 	[
-		{"name":"X", "kind":"required", "type":"numeric"},
-		{"name":"type", "kind":"namevalue","type":["char", "choices={'MAGIC','McImpute','SAVER'}"]}
+		{"name":"selpath", "kind":"required", "type":[["folder"],["char"]]},
+		{"name":"coln", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_read10xh5file":
+{
+	"inputs":
+	[
+		{"name":"filenm", "kind":"required", "type":[["file=*.h5"],["char"]]}
 	]
 },
 "sc_readfile":
 {
 	"inputs":
 	[
-		{"name":"filename", "kind":"required", "type":[["file=*.txt,*.csv,*.tsv,*.tab,*.mtx,*.h5"], ["char"]]},
-		{"name":"type", "kind":"namevalue","type":["char", "choices={'tsv','mtx','h5'}"]}
+		{"name":"filename", "kind":"required", "type":[["file=*.txt,*.csv,*.tsv,*.tab,*.mtx,*.h5"],["char"]]},
+		{"name":"type", "kind":"namevalue", "type":["char","choices={'tsv','mtx','h5'}"]}
 	]
 },
 "sc_readtsvfile":
 {
 	"inputs":
 	[
-		{"name":"filename", "kind":"required", "type":[["file=*.tsv,*.csv,*.tab,*.txt"], ["char"]]}
+		{"name":"filename", "kind":"required", "type":[["file=*.tsv,*.csv,*.tab,*.txt"],["char"]]},
+		{"name":"genecolnum", "kind":"optional", "type":["numeric","scalar"]}
 	]
 },
 "sc_readmtxfile":
 {
 	"inputs":
 	[
-	{"name":"mtxfilename", "kind":"required", "type":[["file=*.mtx"], ["char"]]},
-	{"name":"genfilename", "kind":"required", "type":[["file=*.txt,*.csv"], ["char"]]}
+		{"name":"matrixmtxfile", "kind":"required", "type":[["file=*.mtx"],["char"]]},
+		{"name":"featurestxtfile", "kind":"required", "type":[["file=*.txt,*.csv,*.tsv"],["char"]]},
+		{"name":"barcodestxtfile", "kind":"optional", "type":[["file=*.txt,*.csv"],["char"]]},
+		{"name":"coln", "kind":"optional", "type":["numeric","scalar"]}
 	]
 },
-"sc_readh5file":
+"sc_readh5adfile":
 {
 	"inputs":
 	[
-	{"name":"h5filename", "kind":"required", "type":[["file=*.h5"], ["char"]]}	
+		{"name":"filenm", "kind":"required", "type":[["file=*.h5ad"],["char"]]}
 	]
 },
-"sc_mmread":
+"sc_readhdf5file":
 {
 	"inputs":
 	[
-	{"name":"mtxfilename", "kind":"required", "type":[["file=*.mtx"], ["char"]]},
-	{"name":"genfilename", "kind":"required", "type":[["file=*.txt,*.csv"], ["char"]]}
+		{"name":"filenm", "kind":"required", "type":[["file=*.h5,*.hdf5"],["char"]]}
 	]
 },
-"sc_splinefit":
+"sc_readloomfile":
 {
 	"inputs":
 	[
-		{"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"positional", "type":["string","vector"]},
-        {"name":"sortit", "kind":"positional", "type":["logical","scalar"]}
+		{"name":"filenm", "kind":"required", "type":[["file=*.loom"],["char"]]}
 	]
 },
-"sc_mergesces":
+"sc_readrdsfile":
 {
 	"inputs":
 	[
-		{"name":"sces", "kind":"required", "type":"cell"},
-        {"name":"method", "kind":"positional","type":["char", "choices={'intersect', 'union'}"]},
-        {"name":"keepbatchid", "kind":"positional", "type":["logical","scalar"]}
+		{"name":"filename", "kind":"required", "type":[["file=*.rds,*.RDS"],["char"]]}
 	]
 },
-"sc_splinefit2":
+"sc_readparsebio":
 {
 	"inputs":
 	[
-		{"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"Y", "kind":"required", "type":"numeric"},
-        {"name":"genelistx", "kind":"required", "type":["string","vector"]},
-        {"name":"genelisty", "kind":"positional", "type":["string","vector"]},
-        {"name":"sortit", "kind":"positional", "type":["logical","scalar"]}
+		{"name":"selpath", "kind":"required", "type":[["folder"],["char"]]}
 	]
 },
-"sc_scatter3":
+"sc_readgeoaccess":
 {
 	"inputs":
 	[
-		{"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"dofit", "kind":"positional", "type":["logical","scalar"]},
-        {"name":"showdata", "kind":"positional", "type":["logical","scalar"]}
+		{"name":"acc", "kind":"required", "type":["char"]},
+		{"name":"readspatialdata", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"readatacseqdata", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_writefile":
+{
+	"inputs":
+	[
+		{"name":"filename", "kind":"required", "type":[["file=*.txt,*.csv,*.tsv"],["char"]]},
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"g", "kind":"optional", "type":["string","vector"]},
+		{"name":"delim", "kind":"optional", "type":["char"]}
+	]
+},
+"sc_sce2h5ad":
+{
+	"inputs":
+	[
+		{"name":"sce", "kind":"required", "type":["SingleCellExperiment"]},
+		{"name":"filename", "kind":"optional", "type":[["file=*.h5ad"],["char"]]}
+	]
+},
+"sc_sce2hdf5":
+{
+	"inputs":
+	[
+		{"name":"sce", "kind":"required", "type":["SingleCellExperiment"]},
+		{"name":"filename", "kind":"optional", "type":[["file=*.h5,*.hdf5"],["char"]]}
+	]
+},
+"sc_sce2rds":
+{
+	"inputs":
+	[
+		{"name":"sce", "kind":"required", "type":["SingleCellExperiment"]},
+		{"name":"filename", "kind":"optional", "type":[["file=*.rds"],["char"]]}
+	]
+},
+"sc_filterc":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"cutoff", "kind":"optional", "type":["double","scalar"]},
+		{"name":"verbose", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_filterg":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"optional", "type":["string","vector"]},
+		{"name":"cutoff", "kind":"optional", "type":["double","scalar"]},
+		{"name":"verbose", "kind":"optional", "type":["logical","scalar"]}
 	]
 },
 "sc_selectg":
 {
 	"inputs":
 	[
-		{"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]}
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"min_cells_nonzero", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"isexpressed_cutoff", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_selectc":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"libszcutoff", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"gnnumcutoff", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_qcfilter":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"libszcutoff", "kind":"optional", "type":["numeric","choices={1000,2000}"]},
+		{"name":"mtratio", "kind":"optional", "type":["numeric","choices={0.10,0.15}"]},
+		{"name":"min_cells_nonzero", "kind":"optional", "type":["numeric","choices={0.05}"]},
+		{"name":"gnnumcutoff", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_qcmetrics":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]}
+	]
+},
+"sc_mtratio":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"verbose", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_rmmtcells":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"mtratio", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"mtgenenamepat", "kind":"optional", "type":["char"]},
+		{"name":"verbose", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_rmmtgenes":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"mtgenenamepat", "kind":"optional", "type":["char"]},
+		{"name":"verbose", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_rmdugenes":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"methodid", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_norm":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"type", "kind":"optional", "type":["char","choices={'libsize','deseq'}"]}
+	]
+},
+"sc_transform":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"type", "kind":"optional", "type":["char","choices={'PearsonResiduals','kNNSmoothing','SCTransform','FreemanTukey','SCT'}"]}
+	]
+},
+"sc_regressout":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"n_counts", "kind":"optional", "type":["numeric","vector"]},
+		{"name":"percent_MT", "kind":"optional", "type":["numeric","vector"]}
+	]
+},
+"sc_impute":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"type", "kind":"namevalue", "type":["char","choices={'MAGIC','McImpute','SAVER'}"]}
 	]
 },
 "sc_hvg":
 {
 	"inputs":
 	[
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"sortit", "kind":"positional", "type":["logical","scalar"],"purpose":"sortit"},
-        {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"},
-        {"name":"normit", "kind":"positional", "type":["logical","scalar"],"purpose":"normit"},
-        {"name":"ignorehigh", "kind":"positional", "type":["logical","scalar"],"purpose":"ignorehigh"}        
-	]
-},
-"sc_norm":
-{
-	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue","type":["char", "choices={'libsize','deseq'}"]}
-	]
-},
-"sc_transform":
-{
-	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue","type":["char", "choices={'PearsonResiduals','kNNSmoothing','SCTransform','FreemanTukey','SCT'}"]}
-	]
-},
-"sc_transform":
-{
-	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue","type":["char", "choices={'PearsonResiduals','kNNSmoothing','FreemanTukey'}"]}
-	]
-},
-"run.SoptSC":
-{
-	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":[["double"], ["single"]]},
-        {"name":"k", "kind":"namevalue", "type":["numeric"],"purpose":"number of clusters"},
-        {"name":"donorm", "kind":"namevalue", "type":["logical", "scalar"]}
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"g", "kind":"required", "type":["string","vector"]},
+		{"name":"sortit", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"plotit", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"normit", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"ignorehigh", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"ignorelow", "kind":"optional", "type":["logical","scalar"]}
 	]
 },
 "sc_genestat":
 {
 	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"sortit", "kind":"positional", "type":["logical","scalar"]},
-        {"name":"removeinf", "kind":"positional", "type":["logical","scalar"]}
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"optional", "type":["string","vector"]},
+		{"name":"sortit", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"removeinf", "kind":"optional", "type":["logical","scalar"]}
 	]
 },
-"run.web_GOrilla":
+"sc_genestats":
 {
 	"inputs":
-	[		
-        {"name":"genelist", "kind":"required", "type":["string","vector"]}
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"g", "kind":"optional", "type":["string","vector"]}
+	]
+},
+"sc_deg":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["double"]},
+		{"name":"Y", "kind":"required", "type":["double"]},
+		{"name":"genelist", "kind":"optional", "type":["string","vector"]},
+		{"name":"methodid", "kind":"optional", "type":["numeric","choices={1,2}"]},
+		{"name":"guiwaitbar", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_mergesces":
+{
+	"inputs":
+	[
+		{"name":"sces", "kind":"required", "type":["cell"]},
+		{"name":"method", "kind":"optional", "type":["char","choices={'intersect','union'}"]},
+		{"name":"keepbatchid", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"forcenoappendix", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_mergedata":
+{
+	"inputs":
+	[
+		{"name":"X1", "kind":"required", "type":["numeric"]},
+		{"name":"X2", "kind":"required", "type":["numeric"]},
+		{"name":"genelist1", "kind":"required", "type":["string","vector"]},
+		{"name":"genelist2", "kind":"required", "type":["string","vector"]},
+		{"name":"method", "kind":"optional", "type":["char","choices={'intersect','union'}"]},
+		{"name":"ignorecase", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_cluster_s":
+{
+	"inputs":
+	[
+		{"name":"s", "kind":"required", "type":[["numeric","size=:,3"],["numeric","size=3,:"],["numeric","size=:,2"],["numeric","size=2,:"]]},
+		{"name":"k", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"type", "kind":"optional", "type":["char","choices={'kmeans','kmedoids','dbscan','spectclust','snndpc','mbkmeans'}"]},
+		{"name":"plotit", "kind":"optional", "type":["logical","scalar"]}
 	]
 },
 "sc_cluster_x":
 {
 	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"k","kind":"required","type":["numeric","choices=[3,6,9]"]},
-        {"name":"type", "kind":"namevalue", "type":"choices={'simlr','soptsc','sc3'}"}
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"k", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"type", "kind":"optional", "type":["char","choices={'sc3','simlr','soptsc','sinnlrr','specter'}"]},
+		{"name":"usehvgs", "kind":"optional", "type":["logical","scalar"]}
 	]
 },
-"run.PHATE":
+"sc_snndpc":
 {
 	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"ndim", "kind":"positional", "type":["numeric", "choices={2,3}"]},        
-        {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"},
-        {"name":"bygene", "kind":"positional", "type":["logical","scalar"],"purpose":"bygene"},
-        {"name":"genelist", "kind":"positional", "type":["string","vector"]}
+	[
+		{"name":"s", "kind":"required", "type":["numeric"]},
+		{"name":"cluK", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"knnK", "kind":"optional", "type":["numeric","scalar"]}
 	]
 },
-"sc_trajectory":
+"sc_tsne":
 {
 	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"type", "kind":"namevalue", "type":"choices={'splinefit','tscan'}"},
-        {"name":"plotit", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"ndim", "kind":"optional", "type":["numeric","choices={2,3}"]},
+		{"name":"donorm", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"dolog1p", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_umap":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"ndim", "kind":"optional", "type":["numeric","choices={2,3}"]},
+		{"name":"donorm", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"dolog1p", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_phate":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"ndim", "kind":"optional", "type":["numeric","choices={2,3}"]}
+	]
+},
+"sc_diffumap":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]}
+	]
+},
+"sc_knngraph":
+{
+	"inputs":
+	[
+		{"name":"s", "kind":"required", "type":["numeric"]},
+		{"name":"k", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"plotit", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"methodid", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_multiembed":
+{
+	"inputs":
+	[
+		{"name":"sce", "kind":"required", "type":["SingleCellExperiment"]},
+		{"name":"dometaviz", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_fullembed":
+{
+	"inputs":
+	[
+		{"name":"sce", "kind":"required", "type":["SingleCellExperiment"]}
 	]
 },
 "sc_pcnet":
 {
 	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"ncom", "kind":"positional", "type":"choices={3,5,7,9}"},
-        {"name":"fastersvd", "kind":"positional", "type":["logical","scalar"],"purpose":"Option"}
+	[
+		{"name":"X", "kind":"required", "type":["double"]},
+		{"name":"ncom", "kind":"optional", "type":["numeric","choices={3,5,7,9}"]},
+		{"name":"fastersvd", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"dozscore", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"guiwaitbar", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_pcnetpar":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"ncom", "kind":"optional", "type":["numeric","choices={3,5,7,9}"]},
+		{"name":"fastersvd", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"dozscore", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_pcnetbat":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"ncom", "kind":"optional", "type":["numeric","choices={3,5,7,9}"]}
+	]
+},
+"sc_grn":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"type", "kind":"optional", "type":["string","choices={'pcnetpar','pcnet','pcnetdenoised','genie3'}"]}
+	]
+},
+"sc_grnview":
+{
+	"inputs":
+	[
+		{"name":"A", "kind":"required", "type":["numeric"]},
+		{"name":"nodenames", "kind":"optional", "type":["string","vector"]},
+		{"name":"figname", "kind":"optional", "type":["char"]},
+		{"name":"parentfig", "kind":"optional", "type":["matlab.ui.Figure"]}
+	]
+},
+"sc_grnview2":
+{
+	"inputs":
+	[
+		{"name":"A1", "kind":"required", "type":["numeric"]},
+		{"name":"A2", "kind":"required", "type":["numeric"]},
+		{"name":"nodenames", "kind":"optional", "type":["string","vector"]},
+		{"name":"figname", "kind":"optional", "type":["char"]},
+		{"name":"parentfig", "kind":"optional", "type":["matlab.ui.Figure"]}
+	]
+},
+"sc_trajectory":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"type", "kind":"namevalue", "type":["char","choices={'splinefit','tscan'}"]},
+		{"name":"plotit", "kind":"namevalue", "type":["logical","scalar"]}
+	]
+},
+"sc_splinefit":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"optional", "type":["string","vector"]},
+		{"name":"sortit", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"plotit", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"removenan", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_splinefit2":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"Y", "kind":"required", "type":["numeric"]},
+		{"name":"genelistx", "kind":"required", "type":["string","vector"]},
+		{"name":"genelisty", "kind":"optional", "type":["string","vector"]},
+		{"name":"sortid", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_potency":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"speciesid", "kind":"optional", "type":["numeric","choices={1,2}"]}
+	]
+},
+"sc_stemness":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"g", "kind":"optional", "type":["string","vector"]}
+	]
+},
+"sc_cellcyclescore":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"g", "kind":"required", "type":["string","vector"]}
+	]
+},
+"sc_cellscore":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"tgsPos", "kind":"required", "type":["string","vector"]},
+		{"name":"tgsNeg", "kind":"optional", "type":["string","vector"]},
+		{"name":"methodid", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_tfactivity":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"g", "kind":"required", "type":["string","vector"]},
+		{"name":"Ttfgn", "kind":"optional", "type":["table"]},
+		{"name":"speciestag", "kind":"optional", "type":["char","choices={'human','mouse'}"]},
+		{"name":"methodid", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_celltypeanno":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"g", "kind":"required", "type":["string","vector"]},
+		{"name":"c_cluster_id", "kind":"required", "type":["numeric","vector"]},
+		{"name":"species", "kind":"optional", "type":["char","choices={'human','mouse'}"]}
+	]
+},
+"sc_csubtypeanno":
+{
+	"inputs":
+	[
+		{"name":"sce", "kind":"required", "type":["SingleCellExperiment"]},
+		{"name":"cell_type_target", "kind":"optional", "type":["char"]},
+		{"name":"formatid", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"speciestag", "kind":"optional", "type":["char","choices={'human','mouse'}"]}
+	]
+},
+"sc_pickmarkers":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"c", "kind":"required", "type":["numeric","vector"]},
+		{"name":"topn", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"methodid", "kind":"optional", "type":["numeric","scalar"]}
+	]
+},
+"sc_scattermarker":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"s", "kind":"required", "type":[["numeric","size=:,3"],["numeric","size=3,:"],["numeric","size=:,2"],["numeric","size=2,:"]]},
+		{"name":"targetg", "kind":"required", "type":["string"]},
+		{"name":"methodid", "kind":"optional", "type":["numeric","choices={1,2,3}"]},
+		{"name":"sz", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"showcam", "kind":"optional", "type":["logical","scalar"]}
+	]
+},
+"sc_dpg":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"Y", "kind":"required", "type":["numeric"]},
+		{"name":"g", "kind":"required", "type":["string","vector"]},
+		{"name":"setmatrx", "kind":"optional", "type":["cell"]},
+		{"name":"setnames", "kind":"optional", "type":["string","vector"]},
+		{"name":"setgenes", "kind":"optional", "type":["cell"]}
+	]
+},
+"sc_distcorr":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"g", "kind":"required", "type":["string","vector"]},
+		{"name":"gset", "kind":"optional", "type":["string","vector"]}
+	]
+},
+"sc_nnmf":
+{
+	"inputs":
+	[
+		{"name":"expr", "kind":"required", "type":["struct"]},
+		{"name":"rank", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"sel_clusters", "kind":"optional", "type":["numeric","vector"]}
+	]
+},
+"sc_tenifoldnet":
+{
+	"inputs":
+	[
+		{"name":"X0", "kind":"required", "type":["numeric"]},
+		{"name":"X1", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]}
 	]
 },
 "ten.sc_pcnetdenoised":
 {
 	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"nsubsmpl", "kind":"namevalue", "type":["numeric","choices=[10]"]},
-        {"name":"csubsmpl", "kind":"namevalue", "type":["numeric","choices=[500]"]},
-        {"name":"savegrn", "kind":"namevalue", "type":["logical","scalar"]},
-        {"name":"donorm", "kind":"namevalue", "type":["logical","scalar"]}		
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"nsubsmpl", "kind":"namevalue", "type":["numeric","choices={10,20}"]},
+		{"name":"csubsmpl", "kind":"namevalue", "type":["numeric","choices={500}"]},
+		{"name":"savegrn", "kind":"namevalue", "type":["logical","scalar"]},
+		{"name":"donorm", "kind":"namevalue", "type":["logical","scalar"]}
 	]
 },
 "ten.sctenifoldknk":
 {
 	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"kogene", "kind":"required", "type":["string","vector"]},
-        {"name":"nsubsmpl", "kind":"namevalue", "type":["numeric","choices=[10,20]"]},
-        {"name":"csubsmpl", "kind":"namevalue", "type":["numeric","choices=[500]"]},
-        {"name":"savegrn", "kind":"namevalue", "type":["logical","scalar"]},
-        {"name":"sorttable", "kind":"namevalue", "type":["logical","scalar"]}		
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"kogene", "kind":"required", "type":["string","vector"]},
+		{"name":"nsubsmpl", "kind":"namevalue", "type":["numeric","choices={10,20}"]},
+		{"name":"csubsmpl", "kind":"namevalue", "type":["numeric","choices={500}"]},
+		{"name":"savegrn", "kind":"namevalue", "type":["logical","scalar"]},
+		{"name":"sorttable", "kind":"namevalue", "type":["logical","scalar"]}
+	]
+},
+"ten.sctenifoldnet":
+{
+	"inputs":
+	[
+		{"name":"X0", "kind":"required", "type":["numeric"]},
+		{"name":"X1", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"donorm", "kind":"namevalue", "type":["logical","scalar"]},
+		{"name":"qqplot", "kind":"namevalue", "type":["logical","scalar"]},
+		{"name":"smplmethod", "kind":"namevalue", "type":["string","choices={'Jackknife','Bootstrap'}"]},
+		{"name":"nsubsmpl", "kind":"namevalue", "type":["numeric","choices={10,20}"]},
+		{"name":"csubsmpl", "kind":"namevalue", "type":["numeric","choices={500}"]},
+		{"name":"tdmethod", "kind":"namevalue", "type":["string","choices={'CP','Tucker'}"]},
+		{"name":"savegrn", "kind":"namevalue", "type":["logical","scalar"]}
 	]
 },
 "ten.i_ma":
 {
 	"inputs":
 	[
-		{"name":"A0", "kind":"required", "type":["numeric","square","size=N,N"]},
-        {"name":"A1", "kind":"required", "type":["numeric","square","size=N,N"]},
-        {"name":"ndim", "kind":"positional", "type":["numeric","scalar","choices=[30,50]"]}
+		{"name":"A0", "kind":"required", "type":[["numeric","square"]]},
+		{"name":"A1", "kind":"required", "type":[["numeric","square"]]},
+		{"name":"ndim", "kind":"optional", "type":["numeric","scalar"]}
 	]
 },
 "ten.e_fgsearun":
@@ -247,8 +680,7 @@
 	"inputs":
 	[
 		{"name":"T", "kind":"required", "type":["table"]},
-        {"name":"rmribo","kind":"positional","type":["logical","scalar"]},
-        {"name":"dbfile","kind":"positional","type":["string","char","choices={'all','bp','mf'}"]}
+		{"name":"rmribo", "kind":"optional", "type":["logical","scalar"]}
 	]
 },
 "ten.e_fgseanet":
@@ -256,172 +688,131 @@
 	"inputs":
 	[
 		{"name":"T", "kind":"required", "type":["table"]},
-        {"name":"JaccardCutoff", "kind":"namevalue", "type":["scalar"],"purpose":"Option"},
-        {"name":"PlotNetwork", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
-        {"name":"ShowNotepad", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
+		{"name":"JaccardCutoff", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"PlotNetwork", "kind":"namevalue", "type":["logical","scalar"]},
+		{"name":"ShowNotepad", "kind":"namevalue", "type":["logical","scalar"]}
 	]
 },
-"ten.sctenifoldnet":
+"run.ml_SoptSC":
 {
 	"inputs":
 	[
-		{"name":"X0", "kind":"required", "type":"numeric"},
-        {"name":"X1", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"donorm", "kind":"namevalue", "type":["logical","scalar"]},
-        {"name":"qqplot", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
-        {"name":"smplmethod", "kind":"namevalue","type":["string", "choices={'Jackknife','Bootstrap'}"],"purpose":"Option"},
-        {"name":"nsubsmpl", "kind":"namevalue", "type":["scalar", "choices={10,20}"],"purpose":"nsubsmpl"},
-        {"name":"csubsmpl", "kind":"namevalue", "type":["scalar", "choices={500}"],"purpose":"csubsmpl"},
-        {"name":"tdmethod", "kind":"namevalue","type":["string", "choices={'CP','Tucker'}"],"purpose":"tdmethod"},
-        {"name":"savegrn", "kind":"namevalue", "type":["logical","scalar"]}
+		{"name":"X", "kind":"required", "type":[["double"],["single"]]},
+		{"name":"k", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"donorm", "kind":"namevalue", "type":["logical","scalar"]}
 	]
 },
-"sc_pcnetpar":
-{
-	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":"numeric"},
-        {"name":"ncom", "kind":"positional", "type":"choices={3,5,7,9}"},
-        {"name":"fastersvd", "kind":"positional", "type":["logical","scalar"],"purpose":"fastersvd"}
-	]
-},
-"sc_qcfilter":
+"run.ml_UMAP":
 {
 	"inputs":
 	[
-	{"name":"X", "kind":"required", "type":["numeric"]},
-    {"name":"genelist", "kind":"required", "type":["string","vector"]},
-    {"name":"libsize", "kind":"positional", "type":["numeric", "choices={1000,2000}"], "purpose":"libsize"},
-    {"name":"mtratio", "kind":"positional", "type":["numeric", "choices={0.10,0.15}"], "purpose":"mtratio"},
-    {"name":"min_cells_nonzero", "kind":"positional", "type":["numeric", "choices={0.05}"], "purpose":"min_cells_nonzero"}
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"ndim", "kind":"optional", "type":["numeric","choices={2,3}"]},
+		{"name":"vnum", "kind":"optional", "type":["numeric","scalar"]}
 	]
 },
-"sc_tsne":
+"run.ml_PHATE":
 {
 	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"ndim", "kind":"positional", "type":["numeric", "choices={2,3}", "size=1,1"]},                
-        {"name":"donorm", "kind":"positional", "type":["logical","scalar"],"purpose":"donorm"},
-        {"name":"dolog1p", "kind":"positional", "type":["logical","scalar"],"purpose":"dolog1p"}  
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"ndim", "kind":"optional", "type":["numeric","choices={2,3}"]},
+		{"name":"plotit", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"bygene", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"genelist", "kind":"optional", "type":["string","vector"]}
 	]
 },
-"run.UMAP":
+"run.ml_Harmony":
 {
 	"inputs":
-	[		
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"plotit", "kind":"positional", "type":["logical","scalar"],"purpose":"plotit"}        
+	[
+		{"name":"Z", "kind":"required", "type":["numeric"]},
+		{"name":"batch", "kind":"required", "type":["numeric","vector"]}
+	]
+},
+"run.ml_ComBat":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"Y", "kind":"required", "type":["numeric"]}
 	]
 },
 "run.r_MAST":
-    {
-        "inputs":
-        [
-            {"name":"X", "kind":"required", "type":[["double"], ["single"]]},
-            {"name":"Y", "kind":"required", "type":[["double"], ["single"]]},
-            {"name":"genelist", "kind":"positional", "type":["string","vector"]}
-        ]
-    },
-"sc_celltypeexplorer":
 {
 	"inputs":
 	[
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},
-		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
-        {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]},
-        {"name":"method", "kind":"namevalue","type":["char", "choices={'alona','singler'}"]}
+		{"name":"X", "kind":"required", "type":[["double"],["single"]]},
+		{"name":"Y", "kind":"required", "type":[["double"],["single"]]},
+		{"name":"genelist", "kind":"optional", "type":["string","vector"]},
+		{"name":"wkdir", "kind":"optional", "type":[["folder"],["char"]]}
 	]
 },
-"sc_celltypeexplorer_auto":
+"run.r_DESeq2":
 {
 	"inputs":
 	[
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},        
-        {"name":"k", "kind":"namevalue", "type":["numeric","choices=[3,6,9]"]},
-		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
-        {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]},
-        {"name":"method", "kind":"namevalue","type":["char", "choices={'alona','singler'}"]}
+		{"name":"X", "kind":"required", "type":[["double"],["single"]]},
+		{"name":"Y", "kind":"required", "type":[["double"],["single"]]},
+		{"name":"genelist", "kind":"optional", "type":["string","vector"]},
+		{"name":"wkdir", "kind":"optional", "type":[["folder"],["char"]]}
 	]
 },
-"sc_markerexplorer":
+"run.r_monocle3":
 {
 	"inputs":
 	[
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},
-        {"name":"numfig", "kind":"namevalue","type":["numeric","choices=[1,2,3]"]},
-        {"name":"method", "kind":"namevalue","type":["char", "choices={'ttest','mast'}"]}
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"idx", "kind":"required", "type":["numeric","vector"]},
+		{"name":"ndim", "kind":"optional", "type":["numeric","choices={2,3}"]},
+		{"name":"wkdir", "kind":"optional", "type":[["folder"],["char"]]},
+		{"name":"isdebug", "kind":"optional", "type":["logical","scalar"]}
 	]
 },
-"sc_scattermarker":
+"run.r_seurat":
 {
 	"inputs":
 	[
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"g", "kind":"required", "type":["string","choices={'gene'}"]},
-        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},
-        {"name":"methodid", "kind":"positional", "type":["scalar","choices=[1,2,3]"]},
-        {"name":"sz", "kind":"positional", "type":["scalar","choices=[5,10]"]}
+		{"name":"X", "kind":"required", "type":["numeric"]},
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"wkdir", "kind":"optional", "type":[["folder"],["char"]]},
+		{"name":"isdebug", "kind":"optional", "type":["logical","scalar"]}
 	]
 },
-
-"sc_markerscatter":
+"run.r_fgsea":
 {
 	"inputs":
 	[
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"g", "kind":"required", "type":["string","choices={'gene'}"]},
-        {"name":"s", "kind":"required", "type":[["numeric", "size=:,3"],["numeric", "size=3,:"],["numeric", "size=:,2"],["numeric", "size=2,:"]]},
-        {"name":"methodid", "kind":"positional", "type":["scalar","choices=[1,2,3]"]},
-        {"name":"sz", "kind":"positional", "type":["scalar","choices=[5,10]"]}
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"rmribo", "kind":"optional", "type":["logical","scalar"]},
+		{"name":"drdistin", "kind":"optional", "type":["char"]},
+		{"name":"wkdir", "kind":"optional", "type":[["folder"],["char"]]}
 	]
 },
-"sc_celltypecaller":
+"run.web_Enrichr":
 {
 	"inputs":
 	[
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-        {"name":"clusterid", "kind":"required", "type":["numeric"]},
-		{"name":"species", "kind":"namevalue","type":["char", "choices={'human','mouse'}"]},
-        {"name":"organ", "kind":"namevalue","type":["char", "choices={'all','heart','immunesystem','brain','pancreas'}"]}
+		{"name":"genelist", "kind":"required", "type":["string","vector"]},
+		{"name":"genenum", "kind":"optional", "type":["numeric","scalar"]},
+		{"name":"bkglist", "kind":"optional", "type":["string","vector"]},
+		{"name":"wkdir", "kind":"optional", "type":[["folder"],["char"]]}
 	]
 },
-"sc_qcfilter2":
+"run.py_scrublet":
 {
 	"inputs":
 	[
-        {"name":"X", "kind":"required", "type":["numeric"]},
-        {"name":"genelist", "kind":"required", "type":["string","vector"]},
-		{"name":"libsize", "kind":"namevalue","type":["scalar","choices=[1000,2000]"]},
-		{"name":"mtratio", "kind":"namevalue","type":["scalar","choices=[0.1,0.15]"]},
-        {"name":"dropout", "kind":"namevalue","type":["scalar","choices=[0.01,0.05]"]},
-        {"name":"min_cells_nonzero", "kind":"namevalue","type":["scalar","choices=[0.01,0.05]"]},
-        {"name":"removemtgenes", "kind":"namevalue", "type":["logical","scalar"]}
+		{"name":"X", "kind":"required", "type":["numeric"]}
 	]
 },
-"sc_deg": {
-"inputs": [
-  {"name": "X", "kind": "required", "type": "double", "rank": 2, "dimensions": "dynamic", "description": "Matrix for group 1 (genes x cells)"},
-  {"name": "Y", "kind": "required", "type": "double", "rank": 2, "dimensions": "dynamic", "description": "Matrix for group 2 (genes x cells)"},
-  {"name": "genelist", "kind": "optional", "type": "string", "rank": 1, "dimensions": "dynamic", "defaultValue": "string(1:size(X, 1))'", "description": "List of gene names"},
-  {"name": "methodid", "kind": "optional", "type": "double", "rank": 0, "defaultValue": "1", "description": "Method choice: 1 for Mann–Whitney U test, 2 for t-test"},
-  {"name": "guiwaitbar", "kind": "optional", "type": "logical", "rank": 0, "defaultValue": "false", "description": "Show waitbar"}
-],
-"outputs": [
-  {"name": "T", "kind": "required", "type": "table", "rank": 2, "dimensions": "dynamic", "description": "Table with DEG analysis results"},
-  {"name": "Tup", "kind": "optional", "type": "table", "rank": 2, "dimensions": "dynamic", "description": "Processed table for up-regulated genes"},
-  {"name": "Tdn", "kind": "optional", "type": "table", "rank": 2, "dimensions": "dynamic", "description": "Processed table for down-regulated genes"}
-],
-"description": "DEG analysis using Mann–Whitney U test or t-test"
+"run.py_cellbender":
+{
+	"inputs":
+	[
+		{"name":"input_h5", "kind":"required", "type":[["file=*.h5"],["char"]]},
+		{"name":"wkdir", "kind":"optional", "type":[["folder"],["char"]]},
+		{"name":"isdebug", "kind":"optional", "type":["logical","scalar"]}
+	]
 }
 }

@@ -3,10 +3,47 @@ function callback_CrossTabulation(src, ~)
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 % [thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true, FigureHandle);
-[thisc1, clabel1, thisc2, clabel2] = gui.i_select2states_new(sce, true, FigureHandle);
+[thisc1, clabel1, thisc2, clabel2] = gui.i_select2states(sce, true, FigureHandle);
 
-%[answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '');
+% [answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '');
 if isempty(thisc1), return; end
+
+iscon1 = i_iscontinuous(thisc1);
+iscon2 = ~isempty(thisc2) && i_iscontinuous(thisc2);
+
+if ~isempty(thisc2) && (iscon1 || iscon2)
+    if iscon1 && iscon2
+        % Both continuous: scatter plot
+        hx = gui.myFigure(FigureHandle);
+        ax = hx.AxHandle;
+        if isempty(ax), ax = gca; end
+        scatter(ax, thisc1, thisc2, 5, 'filled', 'MarkerFaceAlpha', 0.3);
+        xlabel(ax, strrep(clabel1, '_', '\_'));
+        ylabel(ax, strrep(clabel2, '_', '\_'));
+        title(ax, sprintf('%s vs %s', clabel1, clabel2));
+        [rho, pval] = corr(double(thisc1(:)), double(thisc2(:)), ...
+            'Type', 'Spearman', 'Rows', 'complete');
+        subtitle(ax, sprintf('Spearman \\rho=%.3f, p=%.2e', rho, pval));
+        hx.show(FigureHandle);
+        return;
+    end
+    % One continuous, one categorical
+    if iscon1
+        conc = double(thisc1(:));
+        conlabel = clabel1;
+        catc = thisc2;
+        catlabel = clabel2;
+    else
+        conc = double(thisc2(:));
+        conlabel = clabel2;
+        catc = thisc1;
+        catlabel = clabel1;
+    end
+    gui.i_violinplot(conc, catc, ...
+        sprintf('%s by %s', conlabel, catlabel), ...
+        true, [], [], FigureHandle);
+    return;
+end
 
 [c, cL1, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
 if noanswer, return; end
@@ -18,26 +55,25 @@ end
 if ~isempty(thisc2)
     [c2, cL2, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
     if noanswer, return; end
-    % thisc2 = categorical(thisc2, cL2);
     if isnumeric(thisc2)
         thisc2 = categorical(cL2(c2), cL2);
     else
         thisc2 = categorical(thisc2, cL2);
-    end    
+    end
 else
     cL2 = [];
 end
 
 if isempty(thisc1), return; end
 if isempty(thisc2) || isempty(cL2)
-    
+
     hx = gui.myFigure(FigureHandle);
     T = tabulate(thisc1);
     y = T(:,2);
     if iscell(y), y = cell2mat(y); end
     ax = hx.AxHandle;
     if isempty(ax), ax = gca; end
-    bar(ax, y, 'FaceColor', "flat");    
+    bar(ax, y, 'FaceColor', "flat");
     colormap(ax, "turbo")
     labelsx = string(T(:,1));
 
@@ -50,7 +86,6 @@ if isempty(thisc2) || isempty(cL2)
 end
 
 
-
 fw = gui.myWaitbar(FigureHandle);
 
 % sizesorted = false;
@@ -58,7 +93,7 @@ labelsx='';
 labelsy='';
 T=[];
 
-hx = gui.myFigure(FigureHandle);
+hx = gui.myFigure(FigureHandle, true);
 tab=cell(2,1);
 ax0=cell(2,1);
 ax=cell(2,2);
@@ -79,9 +114,9 @@ for k=1:2
     end
     in_crossplot(thiscA, thiscB);
     tab{k} = uitab(tabgp, 'Title', sprintf('Tab%d',k));
-    %tab{k} = uitab(tabgp, 'Title', sprintf('%s-%s',clabel,llabel));
+    % tab{k} = uitab(tabgp, 'Title', sprintf('%s-%s',clabel,llabel));
     ax0{k} = axes('parent',tab{k});
-    ax{k,1} = subplot(2,1,1);    
+    ax{k,1} = subplot(2,1,1);
     in_plot1;
     ax{k,2} = subplot(2,1,2);
     in_plot2;
@@ -92,34 +127,34 @@ gui.myWaitbar(FigureHandle, fw);
 hx.show(FigureHandle);
 
 
-    function in_crossplot(thiscA, thiscB)
-        %t = table(thiscA, thiscB);
-        %t = sortrows(t, [1, 2]);
-        %thiscA = t.thiscA;
-        %thiscB = t.thiscB;
-        
-        %iscategorical(thiscA)
-        %iscategorical(thiscB)
-        %categories(thiscA)
-        %categories(thiscB)
+function in_crossplot(thiscA, thiscB)
+        % t = table(thiscA, thiscB);
+        % t = sortrows(t, [1, 2]);
+        % thiscA = t.thiscA;
+        % thiscB = t.thiscB;
+
+        % iscategorical(thiscA)
+        % iscategorical(thiscB)
+        % categories(thiscA)
+        % categories(thiscB)
 
         thiscB = reordercats(thiscB, flipud(categories(thiscB)));
 
         [T, ~, ~, labelsxy] = crosstab(thiscA, thiscB);
-        
+
         labelsx = labelsxy(:, 1);
         labelsx = labelsx(~cellfun('isempty', labelsx));
         labelsy = labelsxy(:, 2);
         labelsy = labelsy(~cellfun('isempty', labelsy));
-  
+
     end
 
 
-    function in_plot1
+function in_plot1
         y = T;
         % assignin("base","y",y);
         b = bar(y, 'stacked', 'FaceColor', "flat");
-        %colormap(prism(size(y,2)));
+        % colormap(prism(size(y,2)));
         colormap(turbo);
         try
         for kx = 1:size(y, 2)
@@ -129,16 +164,16 @@ hx.show(FigureHandle);
         end
         xticks(1:length(labelsx));
         labelsx1 = strrep(labelsx, '_', '\_');
-        xticklabels(labelsx1);       
-        
+        xticklabels(labelsx1);
+
         xlabel(strrep(clabel, '_', '\_'))
         ylabel('# of cells')
         labelsy1 = strrep(labelsy, '_', '\_');
         lgd = legend(labelsy1, 'Location', 'bestoutside');
         title(lgd, strrep(llabel, '_', '\_'));
-    end        
+    end
 
-    function in_plot2
+function in_plot2
         y = T ./ sum(T, 2);
 
         % A = ceil(y*100)';
@@ -154,7 +189,7 @@ hx.show(FigureHandle);
         % assignin("base","Tx",Tx);
 
         b = bar(y, 'stacked', 'FaceColor', "flat");
-        %colormap(prism(size(y,2)));
+        % colormap(prism(size(y,2)));
         colormap(turbo);
         try
         for kx = 1:size(y, 2)
@@ -173,9 +208,9 @@ hx.show(FigureHandle);
         labelsy2 = strrep(labelsy, '_', '\_');
         lgd = legend(labelsy2, 'Location', 'bestoutside');
         title(lgd, strrep(llabel, '_', '\_'));
-    end        
+    end
 
-    function in_callback_saveCrossTable(~, ~)
+function in_callback_saveCrossTable(~, ~)
         % assignin("base","T",T);
         t = array2table(T);
         try
@@ -185,5 +220,10 @@ hx.show(FigureHandle);
         end
         gui.i_exporttable(t, true, 'Tcrosstabul', ...
             'CrosstabulTable',[],[], hx.FigHandle);
+    end
+
+function tf = i_iscontinuous(v)
+        tf = isnumeric(v) && ~islogical(v) && ...
+            numel(unique(v)) > min(20, numel(v) * 0.05);
     end
 end

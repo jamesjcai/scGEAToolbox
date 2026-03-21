@@ -1,100 +1,100 @@
 function [done, CellTypeList, i1, i2, cL1, cL2,...
-          outdir] = i_batchmodeprep(sce, prefixtag, ...
-          wrkdir, parentfig)
+      outdir] = i_batchmodeprep(sce, prefixtag, ...
+      wrkdir, parentfig)
 
-    if nargin<4, parentfig = []; end
-    
-    if nargin<3, wrkdir = []; end
-    done = false;
-    CellTypeList = []; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
-    
-    % if isscalar(unique(sce.c_cell_type_tx))
-    %     warning('Only one cell type or cell type is undetermined.','');
-    %     return;
-    % end
-    
-    [CellTypeSorted] = pkg.e_sortcatbysize(sce.c_cell_type_tx);
-    [CellTypeList] = in_selectcelltypes(CellTypeSorted, parentfig);
-    if isempty(CellTypeList), return; end
-    
-    [thisc, clabel] = in_select1class(sce, false, parentfig);
-    if isempty(thisc), return; end
-    if strcmp(clabel,'Cell Type')
-        gui.myHelpdlg(parentfig, ('Cannot select ''Cell Type'' as grouping varialbe.'));
-        return;
-    end
-    
-    % [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, parentfig);
-    % if (isscalar(i1) && i1 ==0 ) || (isscalar(i2) && i2 == 0) || isempty(cL1) || isempty(cL2)
-    %     return;
-    % end
-    
-    [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, parentfig);
-    if ~done, return; end
-    if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
-        return;
-    end
-    if isscalar(i1) || isscalar(i2), return; end
-    
-    
-    if ~isempty(wrkdir) && isfolder(wrkdir)
-        outdir = wrkdir;
-    else
-        answer=gui.myQuestdlg(parentfig, 'Select a folder to save the outupt Excel files. Continue?','');
-        if ~strcmp(answer,'Yes'), return; end    
-        outdir = uigetdir;
-        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
-            figure(parentfig);
-        end
-        if ~isfolder(outdir), return; end
-    end
-    
-    needoverwritten=false;
-    for k=1:length(CellTypeList)
-        outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
-            prefixtag, ...
-            matlab.lang.makeValidName(string(cL1)), ...
-            matlab.lang.makeValidName(string(cL2)), ...
-            matlab.lang.makeValidName(string(CellTypeList{k})));
-        filesaved = fullfile(outdir, outfile);
-        if exist(filesaved,'file')
-            needoverwritten=true;
-        end
-    end
-    if needoverwritten
-        answer=gui.myQuestdlg(parentfig, sprintf('Overwrite existing result file(s) in %s?', outdir),'',[],[],'warning');
-    else
-        answer=gui.myQuestdlg(parentfig, sprintf('Result files will be save in %s. Continue?', outdir), '');
-    end
+if nargin<4, parentfig = []; end
+
+if nargin<3, wrkdir = []; end
+done = false;
+CellTypeList = []; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
+
+% if isscalar(unique(sce.c_cell_type_tx))
+%     warning('Only one cell type or cell type is undetermined.','');
+%     return;
+% end
+
+[CellTypeSorted] = pkg.e_sortcatbysize(sce.c_cell_type_tx);
+[CellTypeList] = in_selectcelltypes(CellTypeSorted, parentfig);
+if isempty(CellTypeList), return; end
+
+[thisc, clabel] = in_select1class(sce, false, parentfig);
+if isempty(thisc), return; end
+if strcmp(clabel,'Cell Type')
+    gui.myHelpdlg(parentfig, ('Cannot select ''Cell Type'' as grouping varialbe.'));
+    return;
+end
+
+% [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, parentfig);
+% if (isscalar(i1) && i1 ==0 ) || (isscalar(i2) && i2 == 0) || isempty(cL1) || isempty(cL2)
+%     return;
+% end
+
+[i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, parentfig);
+if ~done, return; end
+if isempty(i1) || isempty(i2) || isempty(cL1) || isempty(cL2)
+    return;
+end
+if isscalar(i1) || isscalar(i2), return; end
+
+
+if ~isempty(wrkdir) && isfolder(wrkdir)
+    outdir = wrkdir;
+else
+    answer=gui.myQuestdlg(parentfig, 'Select a folder to save the outupt Excel files. Continue?','');
     if ~strcmp(answer,'Yes'), return; end
-    done = true;
+    outdir = uigetdir;
+    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+        figure(parentfig);
+    end
+    if ~isfolder(outdir), return; end
+end
+
+needoverwritten=false;
+for k=1:length(CellTypeList)
+    outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
+        prefixtag, ...
+        matlab.lang.makeValidName(string(cL1)), ...
+        matlab.lang.makeValidName(string(cL2)), ...
+        matlab.lang.makeValidName(string(CellTypeList{k})));
+    filesaved = fullfile(outdir, outfile);
+    if exist(filesaved,'file')
+        needoverwritten=true;
+    end
+end
+if needoverwritten
+    answer=gui.myQuestdlg(parentfig, sprintf('Overwrite existing result file(s) in %s?', outdir),'',[],[],'warning');
+else
+    answer=gui.myQuestdlg(parentfig, sprintf('Result files will be save in %s. Continue?', outdir), '');
+end
+if ~strcmp(answer,'Yes'), return; end
+done = true;
 
 end
 
 
 function [CellTypeList]=in_selectcelltypes(CellTypeSorted, parentfig)
-    CellTypeList=[];
-    %pause(1);
-    %[idx] = gui.i_selmultidialog(CellTypeSorted, CellTypeSorted);
-    %if isempty(idx), return; end
-    %if idx == 0, return; end
-    %CellTypeList = CellTypeSorted(idx);
+CellTypeList=[];
+% pause(1);
+% [idx] = gui.i_selmultidialog(CellTypeSorted, CellTypeSorted);
+% if isempty(idx), return; end
+% if idx == 0, return; end
+% CellTypeList = CellTypeSorted(idx);
 
-    if gui.i_isuifig(parentfig)
-        [indx2, tf2] = gui.myListdlg(parentfig, CellTypeSorted, ...
-            'Select cell types', ...
-            CellTypeList);
-    else
-        [indx2, tf2] = listdlg('PromptString', ...
-        {'Select Cell Types:'}, ...
-        'SelectionMode', 'multiple', 'ListString', CellTypeSorted, ...
-        'InitialValue',1:length(CellTypeSorted), ...
-        'ListSize', [220, 300]);
-    end
+if gui.i_isuifig(parentfig)
+    [indx2, tf2] = gui.myListdlg(parentfig, CellTypeSorted, ...
+        'Select cell types', ...
+        CellTypeList);
+else
+    [indx2, tf2] = listdlg('PromptString', ...
+    {'Select Cell Types:'}, ...
+    'SelectionMode', 'multiple', 'ListString', CellTypeSorted, ...
+    'InitialValue',1:length(CellTypeSorted), ...
+    'ListSize', [220, 300]);
+end
 
-    if tf2 == 1
-        CellTypeList = CellTypeSorted(indx2);
-    end
+if tf2 == 1
+    CellTypeList = CellTypeSorted(indx2);
+end
 end
 
 
@@ -102,7 +102,7 @@ end
         if nargin < 2, allowunique = false; end
         thisc = [];
         clabel = '';
-        
+
         listitems = {'Current Class (C)'};
         if ~isempty(sce.c_cluster_id)
             if allowunique
@@ -113,7 +113,7 @@ end
                 end
             end
         end
-        
+
         if ~isempty(sce.c_cell_cycle_tx)
             if allowunique
                 listitems = [listitems, 'Cell Cycle Phase'];
@@ -132,7 +132,7 @@ end
                 end
             end
         end
-        
+
         a = evalin('base', 'whos');
         b = struct2cell(a);
         v = false(length(a), 1);
@@ -146,12 +146,12 @@ end
             b = b(:, v);
             listitems = [listitems, 'Workspace Variable...'];
         end
-        
-        
+
+
         if gui.i_isuifig(parentfig)
-            [indx2, tf2] = gui.myListdlg(parentfig, listitems, ... 
+            [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
             'Select grouping variable:');
-        else    
+        else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select grouping variable:'}, ...
                 'SelectionMode', 'single', ...
@@ -167,7 +167,7 @@ end
                     thisc = sce.c_cluster_id;
                 case 'Batch ID' % batch id
                     thisc = sce.c_batch_id;
-                %case 'Cell Type' % cell type
+                % case 'Cell Type' % cell type
                 %    thisc = sce.c_cell_type_tx;
                 case 'Cell Cycle Phase' % cell cycle
                     thisc = sce.c_cell_cycle_tx;
@@ -175,14 +175,14 @@ end
                     thisc = i_pickvariable(parentfig);
             end
         end
-        
+
         function [c] = i_pickvariable
             c = [];
-    
+
             if gui.i_isuifig(parentfig)
-                [indx, tf] = gui.myListdlg(parentfig, b(1,:), ... 
+                [indx, tf] = gui.myListdlg(parentfig, b(1,:), ...
                 'Select grouping variable:');
-            else        
+            else
                 [indx, tf] = listdlg('PromptString', {'Select variable:'}, ...
                     'liststring', b(1, :), ...
                     'SelectionMode', 'single', ...
@@ -192,7 +192,7 @@ end
                 c = evalin('base', a(indx).name);
             end
         end
-    
+
     end
 
 
@@ -210,7 +210,7 @@ end
         [indxx, tfx] = gui.myListdlg(parentfig, listitems, ...
             'Select two groups', ...
             listitems([n-1, n]));
-    else        
+    else
         [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
             'SelectionMode', 'multiple', ...
             'ListString', listitems, ...
@@ -230,7 +230,7 @@ end
             cL1 = cLi(idx1);
             cL2 = cLi(idx2);
             if isscalar(i1) || isscalar(i2), return; end
-    
+
             [i1, i2, cL1, cL2, cancelled] = gui.i_whichvswhich(parentfig, i1, i2, cL1, cL2);
             if cancelled, return; end
             done = true;

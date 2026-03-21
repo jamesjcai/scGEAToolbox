@@ -1,16 +1,16 @@
 function saveH5AD(obj, filename)
-    % Save SingleCellExperiment2 into .h5ad format
-    %
-    % Features:
-    %   - Dense or sparse X
-    %   - obs/var with categorical encoding
-    %   - obs._index = cell IDs
-    %   - var._index = gene IDs
-    %   - uns (metadata), obsm (embeddings)
+% Save SingleCellExperiment2 into .h5ad format
+%
+% Features:
+%   - Dense or sparse X
+%   - obs/var with categorical encoding
+%   - obs._index = cell IDs
+%   - var._index = gene IDs
+%   - uns (metadata), obsm (embeddings)
 
-    arguments
-        obj
-        filename (1,1) string
+arguments
+    obj
+    filename (1,1) string
     end
 
     if isfile(filename)

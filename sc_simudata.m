@@ -1,20 +1,19 @@
 function [X] = sc_simudata(numgenes, numcells, methodtype)
-    % SC_SIMUDATA  Simulate single-cell RNA‑seq count data
+    % SC_SIMUDATA  Simulate single-cell RNA-seq count data
     %
     %   X = sc_simudata(numgenes, numcells, methodtype)
     %
     %   Inputs:
-    %     numgenes   – number of genes (default: 500)
-    %     numcells   – number of cells (default: 1000)
-    %     methodtype – 'simple' (default) or 'lun'
+    %     numgenes   - number of genes (default: 500)
+    %     numcells   - number of cells (default: 1000)
+    %     methodtype - 'simple' (default) or 'lun'
     %
     %   Output:
-    %     X – a numgenes × numcells simulated count matrix
+    %     X - a numgenes x numcells simulated count matrix
     %
     % References:
-    %   • Simple NB sampling: Gamma-NB model (Splat/splatter)
-    %   • Lun method: pooling across cells (PMID: 27122128)
-
+    %   * Simple NB sampling: Gamma-NB model (Splat/splatter)
+    %   * Lun method: pooling across cells (PMID: 27122128)
 
 % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-017-1305-0
 if nargin < 1, numgenes = 500; end
@@ -29,8 +28,8 @@ X = zeros(numgenes, numcells);
 switch lower(methodtype)
     case 'simple'
         % Define the shape and scale parameters of the gamma distribution
-        % Mean shape	α Shape parameter for the mean gene expression gamma distribution
-        % Mean rate	β Rate parameter for the mean gene expression gamma distribution
+        % Mean shape	a Shape parameter for the mean gene expression gamma distribution
+        % Mean rate	b Rate parameter for the mean gene expression gamma distribution
         shape = 2;
         scale = 0.5;
         % Generate random data from the gamma distribution
@@ -49,7 +48,7 @@ switch lower(methodtype)
         %cell.facs <- 2 ^ rnorm(nCells, sd = 0.5)
         f = 2.^randn(1, numcells) ./ 2;
         F = rv * f;
-        p = 0.1; % The NB dispersion is also set for each gene at φ i =0.1.
+        p = 0.1; % The NB dispersion is also set for each gene at phi_i = 0.1.
         % These parameter values were chosen to recapitulate aspects of real data [5]
         % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0947-7#Abs1
 
@@ -58,6 +57,7 @@ switch lower(methodtype)
         %         X(k, l) = nbinrnd(F(k, l), p); % negative binomial distribution
         %     end
         % end
-        X=nbinrnd(F,p);
+        X = nbinrnd(F, p);
     otherwise
+end
 end

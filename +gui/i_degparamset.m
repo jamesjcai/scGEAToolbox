@@ -7,10 +7,10 @@ if nargin<1, nogui=false; end
 % preftagname ='openscedlgindex';
 preftagname ='degtestparamset';
 defaultset = getpref('scgeatoolbox', preftagname, ...
-    {0.05, 1.0, 0.01, 'Adjusted P-value'});
+{0.05, 1.0, 0.01, 'Adjusted P-value'});
 
 if nogui
-    paramset = {0.05, 1.0, 0.01, 'Adjusted P-value'};   
+    paramset = {0.05, 1.0, 0.01, 'Adjusted P-value'};
 else
     paramset = [];
     definput = {num2str(defaultset{1}), num2str(defaultset{2}), num2str(defaultset{3})};
@@ -20,13 +20,13 @@ else
               'Adjusted P-value cutoff: e.g., 0.01 (default)'};
     dlgtitle = 'DE Result Filter';
     dims = [1, 80];
-    
+
     if gui.i_isuifig(parentfig)
         answer = gui.myInputdlg(prompt, dlgtitle, definput, parentfig);
     else
         answer = inputdlg(prompt, dlgtitle, dims, definput);
     end
-    
+
     if isempty(answer), return; end
     try
         mindiffpct = str2double(answer{1});

@@ -20,4 +20,3 @@ if exist(['@tensor', filesep, 'tensor.m'], 'file') ~= 2
 end
 
 end
-

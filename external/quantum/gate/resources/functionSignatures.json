@@ -53,12 +53,14 @@
                 [
                     [
                         {"name":"dev", "kind":"required", "type":["quantum.backend.QuantumDeviceAWS"]},
-                        {"name":"NumShots", "kind":"namevalue", "type":["scalar", "integer", ">=0"]}
+                        {"name":"NumShots", "kind":"namevalue", "type":["scalar", "integer", ">=0"]},
+                        {"name":"Observable", "kind":"namevalue", "type":["observable"]}
                     ],
                     [
                         {"name":"dev", "kind":"required", "type":["quantum.backend.QuantumDeviceIBM"]},
                         {"name":"NumShots", "kind":"namevalue", "type":["scalar", "integer", ">=0"]},
-                        {"name":"UseErrorMitigation", "kind":"namevalue", "type":["scalar", "logical"]}
+                        {"name":"UseErrorMitigation", "kind":"namevalue", "type":["scalar", "logical"]},
+                        {"name":"Observable", "kind":"namevalue", "type":["observable"]}
                     ]
                 ]
             }

@@ -9,11 +9,11 @@ else
     deft = 'Numerical/Continuous';
 end
 answer = gui.myQuestdlg(parentfig, 'What is the variable type?', '', ...
-    {'Categorical/Discrete', ...
-    'Numerical/Continuous', 'Unknown'}, deft);
+{'Categorical/Discrete', ...
+'Numerical/Continuous', 'Unknown'}, deft);
 if isempty(answer)
     answer = 'Unknown';
-    return; 
+    return;
 end
 
 % n=max(c);

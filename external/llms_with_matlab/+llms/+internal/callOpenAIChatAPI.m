@@ -37,7 +37,7 @@ function [text, message, response] = callOpenAIChatAPI(messages, functions, nvp)
 %   % Send a request
 %   [text, message] = llms.internal.callOpenAIChatAPI(messages, functions, APIKey=apiKey)
 
-%   Copyright 2023-2024 The MathWorks, Inc.
+%   Copyright 2023-2026 The MathWorks, Inc.
 
 arguments
     messages
@@ -57,11 +57,14 @@ arguments
     nvp.TimeOut
     nvp.StreamFun
     nvp.sendRequestFcn
+    nvp.Verbosity
+    nvp.ReasoningEffort
+    nvp.BaseURL
 end
 
-END_POINT = "https://api.openai.com/v1/chat/completions";
+END_POINT = nvp.BaseURL + "/chat/completions";
 
-parameters = buildParametersCall(messages, functions, nvp);
+parameters = llms.internal.buildOpenAIParameters(messages, functions, nvp);
 
 [response, streamedText] = nvp.sendRequestFcn(parameters,nvp.APIKey, END_POINT, nvp.TimeOut, nvp.StreamFun);
 
@@ -96,70 +99,4 @@ else
     text = "";
     message = struct();
 end
-end
-
-function parameters = buildParametersCall(messages, functions, nvp)
-% Builds a struct in the format that is expected by the API, combining
-% MESSAGES, FUNCTIONS and parameters in NVP.
-
-parameters = struct();
-parameters.messages = messages;
-
-parameters.stream = ~isempty(nvp.StreamFun);
-
-if ~isempty(functions)
-    parameters.tools = functions;
-end
-
-if ~isempty(nvp.ToolChoice)
-    parameters.tool_choice = nvp.ToolChoice;
-end
-
-if strcmp(nvp.ResponseFormat,"json")
-    parameters.response_format = struct('type','json_object');
-elseif isstruct(nvp.ResponseFormat)
-    parameters.response_format = struct('type','json_schema',...
-        'json_schema', struct('strict', true, 'name', 'computedFromPrototype', ...
-            'schema', llms.internal.jsonSchemaFromPrototype(nvp.ResponseFormat)));
-elseif startsWith(string(nvp.ResponseFormat), asManyOfPattern(whitespacePattern)+"{")
-    parameters.response_format = struct('type','json_schema',...
-        'json_schema', struct('strict', true, 'name', 'providedInCall', ...
-            'schema', llms.internal.verbatimJSON(nvp.ResponseFormat)));
-end
-
-if ~isempty(nvp.Seed)
-    parameters.seed = nvp.Seed;
-end
-
-parameters.model = nvp.ModelName;
-
-dict = mapNVPToParameters;
-
-nvpOptions = keys(dict);
-
-for opt = nvpOptions.'
-    if isfield(nvp, opt)
-        parameters.(dict(opt)) = nvp.(opt);
-    end
-end
-
-if isempty(nvp.StopSequences)
-    parameters = rmfield(parameters,dict("StopSequences"));
-end
-
-if nvp.MaxNumTokens == Inf
-    parameters = rmfield(parameters,dict("MaxNumTokens"));
-end
-
-end
-
-function dict = mapNVPToParameters()
-dict = dictionary();
-dict("Temperature") = "temperature";
-dict("TopP") = "top_p";
-dict("NumCompletions") = "n";
-dict("StopSequences") = "stop";
-dict("MaxNumTokens") = "max_completion_tokens";
-dict("PresencePenalty") = "presence_penalty";
-dict("FrequencyPenalty ") = "frequency_penalty";
 end

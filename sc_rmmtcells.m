@@ -1,5 +1,5 @@
 function [X, keptidx] = sc_rmmtcells(X, genelist, mtratio, mtgenenamepat, verbose)
-%Remove cells with high mtDNA ratio
+% Remove cells with high mtDNA ratio
 if nargin < 3, mtratio = 0.1; end
 if nargin < 4, mtgenenamepat = "mt-"; end
 if nargin < 5, verbose = false; end

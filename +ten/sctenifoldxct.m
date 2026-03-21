@@ -1,5 +1,5 @@
 function [T] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, varargin)
-%SCTENIFOLDXCT  Native MATLAB implementation of scTenifoldXct.
+% SCTENIFOLDXCT  Native MATLAB implementation of scTenifoldXct.
 %   Detects ligand-receptor-mediated cell-cell interactions by spectral
 %   manifold alignment of gene regulatory networks.  No Python required.
 %
@@ -125,7 +125,7 @@ end % main function
 %% ── LOCAL FUNCTIONS ──────────────────────────────────────────────────────
 
 function T = i_xct(X_s, ~, g, A_s, A_t, lig_db, rec_db, n_dim, mu_, pval_t, verbose)
-%I_XCT  Spectral manifold alignment for one direction (source → target).
+% I_XCT  Spectral manifold alignment for one direction (source → target).
 
 ng   = size(X_s, 1);   % number of genes (same for source and target)
 g_up = upper(string(g(:)));
@@ -249,7 +249,7 @@ rec_out  = g(ri_idx);
 w12_vals = full(W12(sub2ind([ng,ng], li_idx, ri_idx)));
 
 T = table(lig_out, rec_out, double(cand_d), w12_vals, p_vals, ...
-    'VariableNames', {'ligand','receptor','dist','correspondence','p_value'});
+'VariableNames', {'ligand','receptor','dist','correspondence','p_value'});
 T = T(T.p_value <= pval_t, :);
 T = sortrows(T, 'dist', 'ascend');
 

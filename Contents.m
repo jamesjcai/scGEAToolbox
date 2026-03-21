@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.2.1 15-Mar-2026
+% Version 26.2.2 20-Mar-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -15,7 +15,7 @@
 %   sc_genestat               - SC_GENESTAT  Compute per-gene statistics and optionally filter invalid values
 %   sc_genestats              - SC_GENESTATS  Compute per-gene statistics into a tidy table
 %   sc_grnview                - SC_GRNVIEW  Display a gene regulatory network as a graph GUI.
-%   sc_grnview2               - SC_GRNVIEW2  Display two gene regulatory networks side‑by‑side.
+%   sc_grnview2               - SC_GRNVIEW2  Display two gene regulatory networks side-by-side.
 %   sc_hvg                    - Identify HVGs
 %   sc_ifft                   - scGFT — Synthetic Cell Generation
 %   sc_impute                 - Imputation
@@ -31,6 +31,7 @@
 %   sc_qcfilter               - Basic QC filter
 %   sc_read10xdir             - Read 10x folder
 %   sc_read10xh5file          - Read 10x Genomics H5 file
+%   sc_readfile               - SC_READFILE  Load single-cell expression data files
 %   sc_readgeoaccess          - SC_READGEOACCESS  Download and parse GEO single-cell dataset by accession
 %   sc_readh5adfile           - Read H5AD file
 %   sc_readloomfile           - Read LOOM file
@@ -46,11 +47,13 @@
 %   sc_sce2rds                - Write SCE to Seurat/RDS file
 %   sc_selectc                - Select cells by library size and number of genes
 %   sc_selectg                - Select genes by expression levels
-%   sc_simudata               - SC_SIMUDATA  Simulate single-cell RNA‑seq count data
+%   sc_simudata               - SC_SIMUDATA  Simulate single-cell RNA-seq count data
 %   sc_snndpc                 - Clustering cell embeddings using SNNDPC - a SNN clustering algorithm
 %   sc_splinefit              - SC_SPLINEFIT identify genes with a profile deviated from normal
+%   sc_splinefit2             - Compare genes' expression profiles with spline fit regression
 %   sc_stemness               - SC_STEMNESS   Compute stemness score for single-cell data
 %   sc_tfactivity             - The activity level of a transcription factor (TF) in a given cell is the
+%   sc_trajectory             - SC_TRAJECTORY Estimate pseudotime trajectories from single-cell data
 %   sc_transform              - SC_TRANSFORM Transformations for single-cell data
 %   sc_tsne                   - tSNE embedding of cells
 %   sc_umap                   - UMAP embedding of cells

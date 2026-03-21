@@ -12,8 +12,8 @@ if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 isdebug = false;
 tmpfilelist = {'inputrdsfile.txt', 'output.h5', ...
-    'g.csv', 'X.csv', 'umap.csv', 'barcodes.csv', ...
-    'annotation.csv', 'metadata.csv'};
+'g.csv', 'X.csv', 'umap.csv', 'barcodes.csv', ...
+'annotation.csv', 'metadata.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 
@@ -41,9 +41,8 @@ if exist('output.h5', 'file')
     indices = pkg.e_guessh5field(filenm, {grouptag}, {'indices'}, true);
     indptr = pkg.e_guessh5field(filenm, {grouptag}, {'indptr'}, true);
     shape = pkg.e_guessh5field(filenm, {grouptag}, {'shape'}, true);
-    
-    
-    
+
+
     if ~isMATLABReleaseOlderThan('R2025a')
         X = spalloc(shape(1), shape(2), length(data), 'single');
     else
@@ -95,7 +94,6 @@ if exist(batchfile,'file')
 end
 
 
-
 % if exist('annotation.csv', 'file')
 %     disp('Reading celltype from annotation.csv');
 %     t = readtable('annotation.csv', 'Delimiter', ',');
@@ -115,7 +113,7 @@ if exist(celltypefile, 'file')
         if sce.NumCells == length(string(t.x))
             sce.c_cell_type_tx = string(t.x);
         end
-    end    
+    end
 end
 metadatafile = 'metadata.csv';
 if exist(metadatafile, 'file')

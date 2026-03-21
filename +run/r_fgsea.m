@@ -18,23 +18,23 @@ if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 tmpfilelist = {'input.txt', 'output.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
-%if exist('input.txt', 'file'), delete('input.txt'); end
-%if exist('output.txt', 'file'), delete('output.txt'); end
+% if exist('input.txt', 'file'), delete('input.txt'); end
+% if exist('output.txt', 'file'), delete('output.txt'); end
 
-%t=readtable('input_template.txt');
-%N=size(t,1);
-%if length(genelist)>N
+% t=readtable('input_template.txt');
+% N=size(t,1);
+% if length(genelist)>N
 %    genelist=genelist(1:N);
-%end
+% end
 
 genelist = upper(genelist);
-%a=-log(1-rand(length(genelist),1));
+% a=-log(1-rand(length(genelist),1));
 % a=12+randn(length(genelist),1);
 % drdist=sort(a,'descend');
 
 if ~isempty(drdistin) && length(genelist) == length(drdistin)
     drdist = drdistin;
-else    
+else
     [pw1, pw0] = cdgea;
     cd(pw0);
     dfile=fullfile(pw1,'assets','Misc','value_template_pos.txt');

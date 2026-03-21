@@ -9,62 +9,60 @@ function [Y] = sc_ifft(X, num_CCs_to_modify)
 
 if nargin < 2, num_CCs_to_modify = 10; end
 
-    [G, numc] = size(X);
-    % G = number of genes (also frequency components)
-    % numc = number of cells
+[G, numc] = size(X);
+% G = number of genes (also frequency components)
+% numc = number of cells
 
-    if issparse(X), X = full(X); end
-    X = pkg.norm_libsize(X, 1e4);
-    Xn = log1p(X);
+if issparse(X), X = full(X); end
+X = pkg.norm_libsize(X, 1e4);
+Xn = log1p(X);
 
-    % DFT along genes dimension (dim=1), per cell; ft_mtx is G-by-numc
-    ft_mtx = fft(Xn, [], 1);
-    assert(size(ft_mtx, 2) == numc)
+% DFT along genes dimension (dim=1), per cell; ft_mtx is G-by-numc
+ft_mtx = fft(Xn, [], 1);
+assert(size(ft_mtx, 2) == numc)
 
-    a = abs(ft_mtx);            % amplitudes, G-by-numc
-    a = a./vecnorm(a, 2, 2);    % Scaled amplitudes (Equation 20), per freq component across cells
-    sigma = var(a, 0, 2);       % variance per freq component across cells, G-by-1
+a = abs(ft_mtx);            % amplitudes, G-by-numc
+a = a./vecnorm(a, 2, 2);    % Scaled amplitudes (Equation 20), per freq component across cells
+sigma = var(a, 0, 2);       % variance per freq component across cells, G-by-1
 
-    synthesized_data = zeros(G, numc);
+synthesized_data = zeros(G, numc);
 
-    valid_k = 1:floor((G-1)/2);
-    num_to_mod = min(num_CCs_to_modify, length(valid_k));
-    parent_idx = randi([1 numc], numc, 1);
+valid_k = 1:floor((G-1)/2);
+num_to_mod = min(num_CCs_to_modify, length(valid_k));
+parent_idx = randi([1 numc], numc, 1);
 
-    for cn = 1:numc
-        X_modified = ft_mtx(:, cn);     % G-by-1 column for this cell
-        selected_k = valid_k(randperm(length(valid_k), num_to_mod));
-        for k = selected_k
-            if numc > 1
-                A_k = 2 + sqrt(sigma(k+1)) * randn();
-            else
-                A_k = 2 + randn();
-            end
-
-            % Apply modification to k-th component and its conjugate pair
-            % X'[k] = A_k * X[k] (Equation 23)
-            % Note: MATLAB uses 1-based indexing, so k+1 for component k
-            X_modified(k + 1) = A_k * X_modified(k + 1);
-
-            % Conjugate pair at N-k (which is G-k in 1-based indexing)
-            % X'[N-k] = A_k * X[N-k]
-            conj_idx = G - k + 1;
-            X_modified(conj_idx) = A_k * X_modified(conj_idx);
+for cn = 1:numc
+    X_modified = ft_mtx(:, cn);     % G-by-1 column for this cell
+    selected_k = valid_k(randperm(length(valid_k), num_to_mod));
+    for k = selected_k
+        if numc > 1
+            A_k = 2 + sqrt(sigma(k+1)) * randn();
+        else
+            A_k = 2 + randn();
         end
-        synthesized_data(:, cn) = real(ifft(X_modified));
+
+        % Apply modification to k-th component and its conjugate pair
+        % X'[k] = A_k * X[k] (Equation 23)
+        % Note: MATLAB uses 1-based indexing, so k+1 for component k
+        X_modified(k + 1) = A_k * X_modified(k + 1);
+
+        % Conjugate pair at N-k (which is G-k in 1-based indexing)
+        % X'[N-k] = A_k * X[N-k]
+        conj_idx = G - k + 1;
+        X_modified(conj_idx) = A_k * X_modified(conj_idx);
     end
-    synthesized_data = max(0, synthesized_data);
-
-    Y = convert_to_raw_counts(synthesized_data, X, Xn, parent_idx);
-
-    % if issparse(X)
-    %     Y = sparse(cast(full(Y), 'like', X));
-    % else
-    %     Y = cast(Y, 'like', X);
-    % end
+    synthesized_data(:, cn) = real(ifft(X_modified));
 end
+synthesized_data = max(0, synthesized_data);
 
+Y = convert_to_raw_counts(synthesized_data, X, Xn, parent_idx);
 
+% if issparse(X)
+%     Y = sparse(cast(full(Y), 'like', X));
+% else
+%     Y = cast(Y, 'like', X);
+% end
+end
 
 
 function raw_synth = convert_to_raw_counts(synth_norm, raw_orig, norm_orig, parent_idx)

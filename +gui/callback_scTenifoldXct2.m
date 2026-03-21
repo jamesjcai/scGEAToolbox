@@ -8,10 +8,10 @@ has_dlt = license('test', 'Neural_Network_Toolbox') && ...
           (exist('dlarray', 'builtin') || exist('dlarray', 'file'));
 
 methodlist = {
-    'Neural Network       (MATLAB Path A — Deep Learning Toolbox)',
-    'Spectral + PCNet     (MATLAB Path B)',
-    'Spectral + Pearson   (MATLAB Path B Lite — no extra toolbox)',
-    'Python               (scTenifoldXct2 package, original)'
+'Neural Network       (MATLAB Path A — Deep Learning Toolbox)',
+'Spectral + PCNet     (MATLAB Path B)',
+'Spectral + Pearson   (MATLAB Path B Lite — no extra toolbox)',
+'Python               (scTenifoldXct2 package, original)'
 };
 MTHD_NN     = 1;
 MTHD_SPEC   = 2;
@@ -22,7 +22,7 @@ def_midx = MTHD_NN;
 if ~has_dlt, def_midx = MTHD_SPEC; end
 
 [midx, tf] = gui.myListdlg(FigureHandle, methodlist, ...
-    'Select scTenifoldXct2 implementation:', methodlist(def_midx));
+'Select scTenifoldXct2 implementation:', methodlist(def_midx));
 if ~tf || isempty(midx), return; end
 
 % Block Path A if Deep Learning Toolbox is absent
@@ -94,8 +94,8 @@ a2 = sprintf('%s -> %s', celltype2, celltype1);
 
 twosided = false;
 answer = gui.myQuestdlg(FigureHandle, ...
-    'Select direction: Source (ligand) -> Target (receptor)', ...
-    '', {'Both', a1, a2}, 'Both');
+'Select direction: Source (ligand) -> Target (receptor)', ...
+'', {'Both', a1, a2}, 'Both');
 if isempty(answer), return; end
 switch answer
     case 'Both'
@@ -168,19 +168,19 @@ if twosided && iscell(Tres)
     T1 = Tres{1};
     T2 = Tres{2};
     if istable(T1) && height(T1) > 0
-        a  = sprintf("%s -> %s", ct1, ct2);
+        a  = sprintf("% s -> %s", ct1, ct2);
         T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
         T1.Properties.VariableNames{'Var1'} = 'direction';
     end
     if istable(T2) && height(T2) > 0
-        a  = sprintf("%s -> %s", ct2, ct1);
+        a  = sprintf("% s -> %s", ct2, ct1);
         T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
         T2.Properties.VariableNames{'Var1'} = 'direction';
     end
     T = [T1; T2];
 elseif istable(Tres) && height(Tres) > 0
     T = Tres;
-    a = sprintf("%s -> %s", ct1, ct2);
+    a = sprintf("% s -> %s", ct1, ct2);
     T = addvars(T, repelem(a, height(T), 1), 'Before', 1);
     T.Properties.VariableNames{'Var1'} = 'direction';
 end
@@ -257,28 +257,28 @@ end
 
 % ── Helper: select 2 groups from a list ───────────────────────────────────
 function [i1, i2, cL1, cL2] = aaa(listitems, ci, FigureHandle)
-    i1 = []; i2 = []; cL1 = []; cL2 = [];
-    n = length(listitems);
-    if n < 2, return; end
+i1 = []; i2 = []; cL1 = []; cL2 = [];
+n = length(listitems);
+if n < 2, return; end
 
-    if gui.i_isuifig(FigureHandle)
-        [indx, tf] = gui.myListdlg(FigureHandle, listitems, ...
-            'Select two groups:', listitems([n-1, n]));
-    else
-        [indx, tf] = listdlg('PromptString', {'Select two groups:'}, ...
-            'SelectionMode', 'multiple', ...
-            'ListString', listitems, ...
-            'InitialValue', [n-1, n], 'ListSize', [220, 300]);
-    end
+if gui.i_isuifig(FigureHandle)
+    [indx, tf] = gui.myListdlg(FigureHandle, listitems, ...
+        'Select two groups:', listitems([n-1, n]));
+else
+    [indx, tf] = listdlg('PromptString', {'Select two groups:'}, ...
+        'SelectionMode', 'multiple', ...
+        'ListString', listitems, ...
+        'InitialValue', [n-1, n], 'ListSize', [220, 300]);
+end
 
-    if tf == 1
-        if numel(indx) ~= 2
-            gui.myErrordlg(FigureHandle, 'Please select exactly 2 groups.');
-            return;
-        end
-        cL1 = listitems(indx(1));
-        cL2 = listitems(indx(2));
-        i1  = ci == cL1;
-        i2  = ci == cL2;
+if tf == 1
+    if numel(indx) ~= 2
+        gui.myErrordlg(FigureHandle, 'Please select exactly 2 groups.');
+        return;
     end
+    cL1 = listitems(indx(1));
+    cL2 = listitems(indx(2));
+    i1  = ci == cL1;
+    i2  = ci == cL2;
+end
 end

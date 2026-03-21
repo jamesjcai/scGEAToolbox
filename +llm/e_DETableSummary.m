@@ -1,194 +1,194 @@
 function [done, outfile] = e_DETableSummary(TbpUpEnrichr, TmfUpEnrichr, ...
                             TbpDnEnrichr, TmfDnEnrichr, infotagstr, wrkdir)
-    
-    done = false;
-    outfile = [];
-    
-    % Steps to test this function:
-    %
-    % (1) Download and install Ollama https://ollama.com/
-    % (2) Use Ollama to pull a model, e.g., Ollama pull deepseek-r1
-    % (3) In MATLAB, install the Add-On, Large Language Models (LLMs) with MATLAB
-    % (4) In SCGEATOOL, click menu Options -> Set LLM Provider & Model...
-    % (5) In SCGEATOOL, click menu Analysis -> All (DE, DV, DP) Analysis in Cell Type Batch Mode...
-    % (6) In MATLAB Command Window, run llm.function
-    
-    % if isempty(which('ollamaChat'))
-    %     error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
-    % end
 
-    % https://www.mathworks.com/matlabcentral/fileexchange/163796-large-language-models-llms-with-matlab/
-    % Add-On “Large Language Models (LLMs) with MATLAB”.
-    
-    if nargin<4, infotagstr = pkg.i_randinfostr; end
-    if nargin<5, wrkdir = []; end
-    
-    if ~isfolder(wrkdir)
-        wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
-        if isempty(wrkdir), return; end
+done = false;
+outfile = [];
+
+% Steps to test this function:
+%
+% (1) Download and install Ollama https://ollama.com/
+% (2) Use Ollama to pull a model, e.g., Ollama pull deepseek-r1
+% (3) In MATLAB, install the Add-On, Large Language Models (LLMs) with MATLAB
+% (4) In SCGEATOOL, click menu Options -> Set LLM Provider & Model...
+% (5) In SCGEATOOL, click menu Analysis -> All (DE, DV, DP) Analysis in Cell Type Batch Mode...
+% (6) In MATLAB Command Window, run llm.function
+
+% if isempty(which('ollamaChat'))
+%     error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
+% end
+
+% https://www.mathworks.com/matlabcentral/fileexchange/163796-large-language-models-llms-with-matlab/
+% Add-On “Large Language Models (LLMs) with MATLAB”.
+
+if nargin<4, infotagstr = pkg.i_randinfostr; end
+if nargin<5, wrkdir = []; end
+
+if ~isfolder(wrkdir)
+    wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
+    if isempty(wrkdir), return; end
+end
+
+preftagname = 'llmodelprovider';
+s = getpref('scgeatoolbox', preftagname);
+providermodel = strsplit(s,':');
+
+% assert(ismember(providermodel{1}, {'Ollama','Gemini','TAMUAIChat'}));
+
+warning off
+s_up = '';
+s_dn = '';
+if ~isempty(TbpUpEnrichr) || ~isempty(TmfUpEnrichr)
+    T1 = []; T2 = [];
+    if ~isempty(TbpUpEnrichr)
+        T1 = TbpUpEnrichr(:, [3 7]);
     end
-        
-    preftagname = 'llmodelprovider';
-    s = getpref('scgeatoolbox', preftagname);
-    providermodel = strsplit(s,':');
-
-    % assert(ismember(providermodel{1}, {'Ollama','Gemini','TAMUAIChat'}));
-
-    warning off
-    s_up = ''; 
-    s_dn = '';
-    if ~isempty(TbpUpEnrichr) || ~isempty(TmfUpEnrichr)
-        T1 = []; T2 = [];
-        if ~isempty(TbpUpEnrichr)
-            T1 = TbpUpEnrichr(:, [3 7]);
-        end
-        if ~isempty(TmfUpEnrichr)
-            T2 = TmfUpEnrichr(:, [3 7]);
-        end        
-        T = [T1; T2];
-        T.Properties.VariableNames={'Gene Ontology Term','Genes'};
-        
-        % T.Genes = strrep(T.Genes,',', ', ');
-        C = T.Genes;
-        C_new = cellfun(@(x) strrep(x, ',', ', '), C, 'UniformOutput', false);
-        T.Genes = C_new;
-    
-        s_up = jsonencode(table2struct(T));
+    if ~isempty(TmfUpEnrichr)
+        T2 = TmfUpEnrichr(:, [3 7]);
     end
-    
-    if ~isempty(TbpDnEnrichr) || ~isempty(TmfDnEnrichr)
-        T1 = []; T2 = [];
-        if ~isempty(TbpDnEnrichr)
-            T1 = TbpDnEnrichr(:, [3 7]);
-        end
-        if ~isempty(TmfDnEnrichr)
-            T2 = TmfDnEnrichr(:, [3 7]);
-        end
-        T = [T1; T2];
-        T.Properties.VariableNames={'Gene Ontology Term','Genes'};
-        C = T.Genes;
-        C_new = cellfun(@(x) strrep(x, ',', ', '), C, 'UniformOutput', false);
-        T.Genes = C_new;
-        s_dn = jsonencode(table2struct(T));
+    T = [T1; T2];
+    T.Properties.VariableNames={'Gene Ontology Term','Genes'};
+
+    % T.Genes = strrep(T.Genes,',', ', ');
+    C = T.Genes;
+    C_new = cellfun(@(x) strrep(x, ',', ', '), C, 'UniformOutput', false);
+    T.Genes = C_new;
+
+    s_up = jsonencode(table2struct(T));
+end
+
+if ~isempty(TbpDnEnrichr) || ~isempty(TmfDnEnrichr)
+    T1 = []; T2 = [];
+    if ~isempty(TbpDnEnrichr)
+        T1 = TbpDnEnrichr(:, [3 7]);
     end
-    warning on
-    
-    if isempty(s_up) && isempty(s_dn), return; end
-    
-    prompt1 = "You are a researcher working on gene function enrichment analysis try to find biological processes and molecular functions of a given gene sets. You are using Enrichr to do this. " + ...
-        "Enrichr is a gene function enrichment analysis tool. You will be given the output of Enrichr analysis below, which contains a list of gene ontology (GO) terms and associated genes. The GO terms are a mix of enriched terms of biological processes and molecular functions. Please summarize the results in text. " + ...
-        "Please provide an analysis of the output, highlighting key biological processes and molecular functions, along with their associated genes. " + ...
-        "Please write an executive summary to report the results of your analysis. ";
-    
-    feedbk_up = [];
-    feedbk_dw = [];
-    done1 = false;
-    done2 = false;
-    switch providermodel{1}
-        case 'Ollama'
-            % assert(strcmp(providermodel{1}, 'Ollama'))
-            try
-                aa=webread("http://localhost:11434");
-                disp(aa)
-            catch ME
-                disp('Ollama is not running.');
-                return;
-            end
-            %{
-            chat = ollamaChat(providermodel{2}, TimeOut = 1200);
-            prompt2 = "Here is the output of Enrichr: " + s_up;
-            feedbk_up = chat.generate(prompt1 + prompt2);
-            
-            prompt2 = "Here is the output of Enrichr: " + s_dn;
-            feedbk_dn = chat.generate(prompt1 + prompt2);
-            %}
-            prompt2 = "Here is the output of Enrichr: " + s_up;
-            [done1, feedbk_up] = llm.callOllama(prompt1 + prompt2, providermodel{2});
-            prompt2 = "Here is the output of Enrichr: " + s_dn;
-            [done2, feedbk_dn] = llm.callOllama(prompt1 + prompt2, providermodel{2});
+    if ~isempty(TmfDnEnrichr)
+        T2 = TmfDnEnrichr(:, [3 7]);
+    end
+    T = [T1; T2];
+    T.Properties.VariableNames={'Gene Ontology Term','Genes'};
+    C = T.Genes;
+    C_new = cellfun(@(x) strrep(x, ',', ', '), C, 'UniformOutput', false);
+    T.Genes = C_new;
+    s_dn = jsonencode(table2struct(T));
+end
+warning on
 
-        case 'TAMUAIChat'
-            prompt2 = "Here is the output of Enrichr: " + s_up;
-            [done1, feedbk_up] = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
-            prompt2 = "Here is the output of Enrichr: " + s_dn;
-            [done2, feedbk_dn] = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
-        case 'Gemini'
-            prompt2 = "Here is the output of Enrichr: " + s_up;
-            [done1, feedbk_up] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
-            prompt2 = "Here is the output of Enrichr: " + s_dn;
-            [done2, feedbk_dn] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
+if isempty(s_up) && isempty(s_dn), return; end
 
-        case 'OpenAI'
-            prompt2 = "Here is the output of Enrichr: " + s_up;
-            [done1, feedbk_up] = llm.callOpenAIChat([], prompt1 + prompt2, providermodel{2});
-            prompt2 = "Here is the output of Enrichr: " + s_dn;
-            [done2, feedbk_dn] = llm.callOpenAIChat([], prompt1 + prompt2, providermodel{2});
+prompt1 = "You are a researcher working on gene function enrichment analysis try to find biological processes and molecular functions of a given gene sets. You are using Enrichr to do this. " + ...
+    "Enrichr is a gene function enrichment analysis tool. You will be given the output of Enrichr analysis below, which contains a list of gene ontology (GO) terms and associated genes. The GO terms are a mix of enriched terms of biological processes and molecular functions. Please summarize the results in text. " + ...
+    "Please provide an analysis of the output, highlighting key biological processes and molecular functions, along with their associated genes. " + ...
+    "Please write an executive summary to report the results of your analysis. ";
 
-            %{
-            prompt2 = "Here is the output of Enrichr: " + s_up;
-            assignin("base","prompt1",prompt1);
-            assignin("base","prompt2",prompt2);
-            response = llm.geminiGenerateContent(prompt1 + prompt2);
-            if response.StatusCode == "OK"
-                feedbk_up = response.Body.Data.candidates.content.parts.text;
-            else
-                feedbk_up = response.Body.Data.error;
-            end
-            prompt2 = "Here is the output of Enrichr: " + s_dn;
-            response = llm.geminiGenerateContent(prompt1 + prompt2);
-            assignin("base","prompt3", prompt2);
-            if response.StatusCode == "OK"
-                feedbk_dn = response.Body.Data.candidates.content.parts.text;
-            else
-                feedbk_dn = response.Body.Data.error;
-            end
-            %}
-        otherwise
-            warning('Invalid LLM provider and/or model.');
+feedbk_up = [];
+feedbk_dw = [];
+done1 = false;
+done2 = false;
+switch providermodel{1}
+    case 'Ollama'
+        % assert(strcmp(providermodel{1}, 'Ollama'))
+        try
+            aa=webread("http://localhost:11434");
+            disp(aa)
+        catch ME
+            disp('Ollama is not running.');
             return;
-    end
-
-
-    if ~(done1 || done2), return; end
-    if isempty(feedbk_up) && isempty(feedbk_dn), return; end
-    
-    import mlreportgen.dom.*
-    
-    outfile = fullfile(wrkdir, "Res_"+matlab.lang.makeValidName(infotagstr));
-    doc = mlreportgen.dom.Document(outfile, 'docx');
-    open(doc);
-    
-    titstr = sprintf('%s Up-regulation', infotagstr);
-    i_todoc(doc, titstr, feedbk_up);
-    titstr = sprintf('%s Down-regulation', infotagstr);
-    i_todoc(doc, titstr, feedbk_dn);
-    close(doc);
-    done = true;
-
-    % outfile2 = char("Res2_"+matlab.lang.makeValidName(infotagstr));
-    % pkg.formatStringToWord(feedbk_up, outfile2);
-    
-
-    function i_todoc(doc, titstr, text)
-        p = Paragraph(titstr);
-        p.Style = {Bold(true), FontSize('14pt'), Color('blue')};
-        append(doc, p);
-        try
-            text = regexprep(text, '<think>.*?</think>', '');
-        catch ME
-            disp(ME.message);
         end
-        try
-            lines = splitlines(text);
-            for i = 1:length(lines)
-                if ~isempty(strtrim(lines{i}))
-                    p = mlreportgen.dom.Paragraph(lines{i});
-                    append(doc, p);
-                end
+        %{
+        chat = ollamaChat(providermodel{2}, TimeOut = 1200);
+        prompt2 = "Here is the output of Enrichr: " + s_up;
+        feedbk_up = chat.generate(prompt1 + prompt2);
+
+        prompt2 = "Here is the output of Enrichr: " + s_dn;
+        feedbk_dn = chat.generate(prompt1 + prompt2);
+        %}
+        prompt2 = "Here is the output of Enrichr: " + s_up;
+        [done1, feedbk_up] = llm.callOllama(prompt1 + prompt2, providermodel{2});
+        prompt2 = "Here is the output of Enrichr: " + s_dn;
+        [done2, feedbk_dn] = llm.callOllama(prompt1 + prompt2, providermodel{2});
+
+    case 'TAMUAIChat'
+        prompt2 = "Here is the output of Enrichr: " + s_up;
+        [done1, feedbk_up] = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
+        prompt2 = "Here is the output of Enrichr: " + s_dn;
+        [done2, feedbk_dn] = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
+    case 'Gemini'
+        prompt2 = "Here is the output of Enrichr: " + s_up;
+        [done1, feedbk_up] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
+        prompt2 = "Here is the output of Enrichr: " + s_dn;
+        [done2, feedbk_dn] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
+
+    case 'OpenAI'
+        prompt2 = "Here is the output of Enrichr: " + s_up;
+        [done1, feedbk_up] = llm.callOpenAIChat([], prompt1 + prompt2, providermodel{2});
+        prompt2 = "Here is the output of Enrichr: " + s_dn;
+        [done2, feedbk_dn] = llm.callOpenAIChat([], prompt1 + prompt2, providermodel{2});
+
+        %{
+        prompt2 = "Here is the output of Enrichr: " + s_up;
+        assignin("base","prompt1",prompt1);
+        assignin("base","prompt2",prompt2);
+        response = llm.geminiGenerateContent(prompt1 + prompt2);
+        if response.StatusCode == "OK"
+            feedbk_up = response.Body.Data.candidates.content.parts.text;
+        else
+            feedbk_up = response.Body.Data.error;
+        end
+        prompt2 = "Here is the output of Enrichr: " + s_dn;
+        response = llm.geminiGenerateContent(prompt1 + prompt2);
+        assignin("base","prompt3", prompt2);
+        if response.StatusCode == "OK"
+            feedbk_dn = response.Body.Data.candidates.content.parts.text;
+        else
+            feedbk_dn = response.Body.Data.error;
+        end
+        %}
+    otherwise
+        warning('Invalid LLM provider and/or model.');
+        return;
+end
+
+
+if ~(done1 || done2), return; end
+if isempty(feedbk_up) && isempty(feedbk_dn), return; end
+
+import mlreportgen.dom.*
+
+outfile = fullfile(wrkdir, "Res_"+matlab.lang.makeValidName(infotagstr));
+doc = mlreportgen.dom.Document(outfile, 'docx');
+open(doc);
+
+titstr = sprintf('%s Up-regulation', infotagstr);
+i_todoc(doc, titstr, feedbk_up);
+titstr = sprintf('%s Down-regulation', infotagstr);
+i_todoc(doc, titstr, feedbk_dn);
+close(doc);
+done = true;
+
+% outfile2 = char("Res2_"+matlab.lang.makeValidName(infotagstr));
+% pkg.formatStringToWord(feedbk_up, outfile2);
+
+
+function i_todoc(doc, titstr, text)
+    p = Paragraph(titstr);
+    p.Style = {Bold(true), FontSize('14pt'), Color('blue')};
+    append(doc, p);
+    try
+        text = regexprep(text, '<think>.*?</think>', '');
+    catch ME
+        disp(ME.message);
+    end
+    try
+        lines = splitlines(text);
+        for i = 1:length(lines)
+            if ~isempty(strtrim(lines{i}))
+                p = mlreportgen.dom.Paragraph(lines{i});
+                append(doc, p);
             end
-        catch ME
-            disp(ME.message);
         end
+    catch ME
+        disp(ME.message);
     end
+end
 
 end

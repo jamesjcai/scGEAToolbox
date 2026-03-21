@@ -1,12 +1,12 @@
 function [sout] = py_harmonypy(s, batchid, wkdir, isdebug)
 arguments
-    s(:, :) {mustBeNumeric}
-    batchid(1, :) {mustBePositive, mustBeInteger}
-    wkdir = []
-    isdebug = true
+s(:, :) {mustBeNumeric}
+batchid(1, :) {mustBePositive, mustBeInteger}
+wkdir = []
+isdebug = true
 end
-%if nargin < 4, isdebug = true; end
-%if nargin < 3, wkdir = []; end
+% if nargin < 4, isdebug = true; end
+% if nargin < 3, wkdir = []; end
 
 % prgfoldername = 'py_harmonypy';
 
@@ -32,7 +32,7 @@ catch
 end
 
 codefullpath = fullfile(codepth, 'require.py');
-%cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
+% cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
 %    x.Executable, codepth, filesep);
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 
@@ -48,10 +48,10 @@ end
 
 sout = [];
 % isdebug = false;
-% 
+%
 % %if nargin<3, usepylib=false; end
 % %if nargin<2, error('[s]=run.harmonypy(s,batchid)'); end
-% 
+%
 % oldpth = pwd();
 % [pyok, wrkpth, x] = run.pycommon(prgfoldername);
 % if ~pyok, return; end
@@ -59,10 +59,10 @@ sout = [];
 tmpfilelist = {'input.mat', 'output.mat'};
 %  if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
-%pw1=fileparts(mfilename('fullpath'));
-%wrkpth=fullfile(pw1,'external','py_harmonypy');
-%cd(wrkpth);
-%tmpfilelist={'output.csv','input1.csv','input2.csv'};
+% pw1=fileparts(mfilename('fullpath'));
+% wrkpth=fullfile(pw1,'external','py_harmonypy');
+% cd(wrkpth);
+% tmpfilelist={'output.csv','input1.csv','input2.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 if issparse(s), s = full(s); end
@@ -70,10 +70,9 @@ save('input.mat', '-v7.3', 's', 'batchid');
 disp('Input file written.');
 
 
-
 if isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
-    %pause(0.5);
+    % pause(0.5);
     gui.gui_waitbar(fw, [], [], 'Running Harmonypy...');
 end
 codefullpath = fullfile(codepth,'script.py');
@@ -104,8 +103,8 @@ end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 
-%if exist('./output.csv','file'), delete('./output.csv'); end
-%writematrix(s,'input1.csv');
+% if exist('./output.csv','file'), delete('./output.csv'); end
+% writematrix(s,'input1.csv');
 % writetable(array2table(s),'input1.csv');
 % batchidx=matlab.lang.makeValidName(string(batchid));
 % writetable(table(batchidx),'input2.csv','QuoteStrings',true);

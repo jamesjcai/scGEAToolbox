@@ -3,7 +3,7 @@ function [s, t] = r_SCEVAN(sce, wkdir, ~, species)
 if nargin<3, SUBCLONES = false; end
 if nargin<4, species = 'human'; end
 s = []; t = [];
-if nargin < 2 
+if nargin < 2
    wkdir = tempdir;
 end
 % PMID: 36841879
@@ -41,4 +41,3 @@ end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end
-

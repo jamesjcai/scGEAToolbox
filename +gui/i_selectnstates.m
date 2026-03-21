@@ -18,7 +18,7 @@ i_additem(full(sum(sce.X))', 'Library Size');
 i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
 % i_additem(zeros(sce.NumCells,1), 'Mt-reads Ratio');
 
-    function i_additem(itemv, itemn)
+function i_additem(itemv, itemn)
         if ~isempty(itemv) && length(unique(itemv)) >= 1
             if continuousonly
                 if isnumeric(itemv)
@@ -30,8 +30,8 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
         end
     end
 
-    listitems = [baselistitems, sce.list_cell_attributes(1:2:end)];
-    nx = length(baselistitems);
+listitems = [baselistitems, sce.list_cell_attributes(1:2:end)];
+nx = length(baselistitems);
 
     % a=evalin('base','whos');
     % b=struct2cell(a);
@@ -47,48 +47,48 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
     %     listitems=[listitems,'Customized C...'];
     % end
 
-    n = length(listitems);
-    if n < 1
+n = length(listitems);
+if n < 1
         gui.myWarndlg(parentfig, ['This function requires at least one ', ...
                         'grouping variable (e.g., BATCH_ID, ', ...
                         'CLUSTER_ID, or CELL_TYPE_TXT).']);
         return;
     end
 
-    n = length(listitems);
-    preftagname ='selectednstates';
-    defaultindx = getpref('scgeatoolbox', preftagname, [n-1, n]);    
-    if any(defaultindx > n) || any(defaultindx < 1), defaultindx = [n-1, n]; end
-    if isempty(initialsel)
+n = length(listitems);
+preftagname ='selectednstates';
+defaultindx = getpref('scgeatoolbox', preftagname, [n-1, n]);
+if any(defaultindx > n) || any(defaultindx < 1), defaultindx = [n-1, n]; end
+if isempty(initialsel)
         initialsel = defaultindx;
     end
 
        if gui.i_isuifig(parentfig)
-           %if ~isempty(initialsel) 
+           % if ~isempty(initialsel)
                [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
                     'Select cell state/grouping variable:', ...
                     listitems(initialsel));
-           %else
+           % else
            %    [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
            %         'Select cell state/grouping variable:');
-           %end
-        else    
-            %if ~isempty(initialsel)
+           % end
+        else
+            % if ~isempty(initialsel)
                 [indx2, tf2] = listdlg('PromptString', ...
                     {'Select cell state/grouping variable:'}, ...
                     'SelectionMode', 'multiple', ...
                     'ListString', listitems, ...
                     'InitialValue', initialsel, 'ListSize', [220, 300]);
-            %else
+            % else
             %    [indx2, tf2] = listdlg('PromptString', ...
             %        {'Select cell state/grouping variable:'}, ...
             %        'SelectionMode', 'multiple', ...
             %        'ListString', listitems, ...
             %        'ListSize', [220, 300]);
-            %end
+            % end
        end
 
-    if tf2 == 1
+if tf2 == 1
         thisc=cell(length(indx2),1);
         clabel=cell(length(indx2),1);
         for k=1:length(indx2)
@@ -97,7 +97,7 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
         setpref('scgeatoolbox', preftagname, indx2);
     end
 
-    function [thisc, clabel] = i_getidx(indx)
+function [thisc, clabel] = i_getidx(indx)
         clabel = listitems{indx};
         switch clabel
             case 'Library Size'

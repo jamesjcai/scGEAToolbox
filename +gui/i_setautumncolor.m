@@ -32,7 +32,7 @@ else
         end
     catch
         isDark = false;  % default to light mode if error occurs
-    end    
+    end
 end
 
 % start from base colormap
@@ -89,4 +89,3 @@ end
 colormap(ax, a);
 end
 %}
-

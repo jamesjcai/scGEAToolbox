@@ -7,51 +7,51 @@ lcolor2 = lcolors(2,:);
 [FigureHandle, sce_ori] = gui.gui_getfigsce(src);
 sce = copy(sce_ori);
 
-    if ~gui.gui_showrefinfo('DV Analysis', FigureHandle), return; end
+if ~gui.gui_showrefinfo('DV Analysis', FigureHandle), return; end
 
-    extprogname = 'scgeatool_DVAnalysis';
-    preftagname = 'externalwrkpath';
-    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
-    if isempty(wrkdir), return; end
+extprogname = 'scgeatool_DVAnalysis';
+preftagname = 'externalwrkpath';
+[wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
+if isempty(wrkdir), return; end
 
 
-    a=sce.NumGenes;
-    [sce] = gui.i_selectinfogenes(sce, [], FigureHandle);
-    b=sce.NumGenes;
-    fprintf('%d genes removed.\n', a-b);
-    
-    [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
-    if isscalar(i1) || isscalar(i2), return; end
+a=sce.NumGenes;
+[sce] = gui.i_selectinfogenes(sce, [], FigureHandle);
+b=sce.NumGenes;
+fprintf('%d genes removed.\n', a-b);
 
-    
-    c=zeros(size(i1));
-    c(i1)=1; c(i2)=2;
+[i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
+if isscalar(i1) || isscalar(i2), return; end
 
-    cL1 = matlab.lang.makeValidName(cL1);
-    cL2 = matlab.lang.makeValidName(cL2);
-    if isequal(cL1, cL2)
+
+c=zeros(size(i1));
+c(i1)=1; c(i2)=2;
+
+cL1 = matlab.lang.makeValidName(cL1);
+cL2 = matlab.lang.makeValidName(cL2);
+if isequal(cL1, cL2)
         tmptxtc = matlab.lang.makeUniqueStrings([cL1 cL2]);
         cL1 = tmptxtc(1);
         cL2 = tmptxtc(2);
     end
-    if ~all(c>0)
+if ~all(c>0)
         sce = sce.selectcells(c>0); % OK
         c=c(c>0);
     end
-    i1=c==1;
-    i2=c==2;
-    
-    sce1 = copy(sce);
-    sce1 = sce1.selectcells(i1); % OK
-    sce1 = sce1.qcfilter; % OK
-    
+i1=c==1;
+i2=c==2;
 
-    sce2 = copy(sce);
-    sce2 = sce2.selectcells(i2); % OK
-    sce2 = sce2.qcfilter; % OK
+sce1 = copy(sce);
+sce1 = sce1.selectcells(i1); % OK
+sce1 = sce1.qcfilter; % OK
 
 
-    if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
+sce2 = copy(sce);
+sce2 = sce2.selectcells(i2); % OK
+sce2 = sce2.qcfilter; % OK
+
+
+if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
         gui.myErrordlg(FigureHandle, ['Filtered SCE contains too' ...
             ' few cells (n < 10) or genes (n < 10).'],'','modal');
         return;
@@ -62,13 +62,13 @@ sce = copy(sce_ori);
     % assignin('base', "cL1", cL1);
     % assignin('base', "cL2", cL2);
 
-    a = 'Splinefit Method [PMID:40113778]';
-    b = 'Brennecke et al. (2013) [PMID:24056876]';
+a = 'Splinefit Method [PMID:40113778]';
+b = 'Brennecke et al. (2013) [PMID:24056876]';
 
             % answerx = gui.myQuestdlg(FigureHandle, ...
             %     'Which HVG detecting method to use?', '', ...
             %     {a, b}, a);
-    answerx = a;        
+answerx = a;
 
             switch answerx
                 case a
@@ -83,25 +83,25 @@ sce = copy(sce_ori);
                     methodtag='brennecke';
                 otherwise
                     return;
-            end    
+            end
                     gui.myWaitbar(FigureHandle, fw);
 
-    outfile = sprintf('%s_vs_%s_DV_%s_results', ...
+outfile = sprintf('%s_vs_%s_DV_%s_results', ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
         methodtag);
 
 drawnow;
 % in_callback_ExportTable;
-gui.TableViewerApp(T, FigureHandle);
+figtab = gui.TableViewerApp(T, FigureHandle);
 
 
 if strcmp(answerx, a)
-    if strcmp(gui.myQuestdlg(FigureHandle, 'Explore DV expression profile of genes?'), 'Yes')
-        hx = gui.myFigure(FigureHandle);
+    if strcmp(gui.myQuestdlg(figtab, 'Explore DV expression profile of genes?'), 'Yes')
+        hx = gui.myFigure(figtab, true);
         hFig = hx.FigHandle;
-        hFig.Position(3) = hFig.Position(3)*1.8;        
-        
+        hFig.Position(3) = hFig.Position(3)*1.8;
+
         hx.addCustomButton( 'off', {@in_callback_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
         hx.addCustomButton( 'off', {@in_callback_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
         hx.addCustomButton( 'off', @in_callback_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
@@ -111,45 +111,45 @@ if strcmp(answerx, a)
         hx.addCustomButton( 'off', @in_callback_ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
         hx.addCustomButton( 'on', @in_callback_ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
         hx.addCustomButton( 'off', @in_callback_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
-        
+
         hAx0 = subplot(2,2,[1 3]);
         h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
         hold on
         h2 = scatter3(hAx0, px2, py2, pz2, 'filled', 'MarkerFaceAlpha', .1);
         plot3(hAx0, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4, 'Color',lcolor1);
         plot3(hAx0, xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-', 'linewidth', 4, 'Color',lcolor2);
-        
+
         xlabel(hAx0,'Mean, log1p');
         ylabel(hAx0,'CV, log1p');
         zlabel(hAx0,'Dropout rate (% of zeros)');
-        
-        
+
+
         if ~isempty(g)
             dt = datacursormode(hFig);
             datacursormode(hFig, 'on');
             dt.UpdateFcn = {@in_myupdatefcn3, g};
         end
-        
-        
+
+
         idx = find(g==table2array(T(1,1)));
-        
-        
+
+
         hAx1 = subplot(2,2,2);
         x1 = X1(idx,:);
         sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
         xlim(hAx1,[1 size(X1,2)]);
-        
+
         title(hAx1, strrep(sprintf('%s',g(idx)),'_','\_') );
         [titxt] = gui.i_getsubtitle(x1, cL1{1});
         subtitle(hAx1, titxt);
         xlabel(hAx1,'Cell Index');
         ylabel(hAx1,'Expression Level');
-        
+
         hAx2 = subplot(2,2,4);
         x2 = X2(idx,:);
         sh2 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
         xlim(hAx2,[1 size(X2,2)]);
-        
+
         title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
         [titxt] = gui.i_getsubtitle(x2, cL2{1});
         subtitle(hAx2, titxt);
@@ -161,12 +161,12 @@ if strcmp(answerx, a)
         ylnew = [min(yl(:, 1)), max(yl(:, 2))];
         set([hAx1, hAx2], 'Ylim', ylnew);
         subplot(hAx0);
-        hx.show(FigureHandle);
+        hx.show(figtab);
     end
 end
 
 
-    function in_callback_Enrichr(~, ~)
+function in_callback_Enrichr(~, ~)
         answer = gui.myQuestdlg(hFig, 'Enrichr test with top DV genes. Continue?','');
         if ~strcmp(answer,'Yes'), return; end
         answer = gui.myQuestdlg(hFig, 'Select type of DV genes.','',...
@@ -183,45 +183,45 @@ end
         end
 
         [outgenelist, outbackgroundlist, enrichrtype] = ...
-            gui.gui_prepenrichr(Tin.gene(1:250), Tin.gene,... 
+            gui.gui_prepenrichr(Tin.gene(1:250), Tin.gene,...
                 sprintf('Run enrichment analysis with %s DV genes?', lower(answer)), ...
                 hFig);
         gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist);
-                
+
     end
 
-    function in_callback_viewTable(~, ~)
+function in_callback_viewTable(~, ~)
         fw = gui.myWaitbar(FigureHandle);
         gui.i_viewtable(T, hx.FigHandle);
         % gui.TableViewerApp(T, hx.FigHandle);
         gui.myWaitbar(FigureHandle, fw);
     end
 
-    function in_callback_ExportTable(~, ~)
+function in_callback_ExportTable(~, ~)
         [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', ...
                 outfile, [], "All_genes", FigureHandle);
         if ~isempty(filesaved)
-            %gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved));
+            % gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved));
             fprintf('Result has been saved in %s\n', filesaved);
         end
     end
 
-    function txt = in_myupdatefcn3(src, event_obj, g)
+function txt = in_myupdatefcn3(src, event_obj, g)
         if isequal(get(src, 'Parent'), hAx0)
             subplot(hAx0);
             % dtp = findobj(h1, 'Type', 'datatip');
             % if ~isempty(dtp), delete(dtp); end
             % dtp = findobj(h2, 'Type', 'datatip');
-            % if ~isempty(dtp), delete(dtp); end            
+            % if ~isempty(dtp), delete(dtp); end
             idx = event_obj.DataIndex;
             if idx > length(g)*2
-                txt = num2str(event_obj.Position(2)); 
+                txt = num2str(event_obj.Position(2));
                 return;
             end
             if idx > length(g)
                 idx = idx - length(g);
             end
-            
+
             x_cleanfigspace(false);
 
             % if ~isempty(h3), delete(h3); end
@@ -237,9 +237,9 @@ end
                 h3a = plot3(hAx0, px1(idx), py1(idx), pz1(idx), 'b.','MarkerSize',10);
                 h3b = plot3(hAx0, px2(idx), py2(idx), pz2(idx), 'r.','MarkerSize',10);
                 % daspect(hAx0,'auto');
-                %h3b = arrow3([px1(idx), py1(idx), pz1(idx)], ...
+                % h3b = arrow3([px1(idx), py1(idx), pz1(idx)], ...
                 %    [px2(idx), py2(idx), pz2(idx)]);
-                %h3b = quiver3(hAx0, px1(idx), py1(idx), pz1(idx), px2(idx), py2(idx), pz2(idx));
+                % h3b = quiver3(hAx0, px1(idx), py1(idx), pz1(idx), px2(idx), py2(idx), pz2(idx));
             txt = {g(idx)};
             x1 = X1(idx, :);
             if ~isempty(sh1) && isvalid(sh1), delete(sh1); end
@@ -269,7 +269,7 @@ end
         end
     end
 
-    function x_cleanfigspace(deldatatip)
+function x_cleanfigspace(deldatatip)
         if nargin<1, deldatatip = false; end
         if deldatatip
            dtp = findobj(h1, 'Type', 'datatip');
@@ -277,7 +277,7 @@ end
            dtp = findobj(h2, 'Type', 'datatip');
            if ~isempty(dtp), delete(dtp); end
         end
-        
+
        if ~isempty(h3), delete(h3); end
        if ~isempty(h3a), delete(h3a); end
        if ~isempty(h3b), delete(h3b); end
@@ -285,7 +285,7 @@ end
        if ~isempty(h5), delete(h5); end
     end
 
-    function in_callback_HighlightSelectedGenes(~, ~, typeid)
+function in_callback_HighlightSelectedGenes(~, ~, typeid)
        if nargin < 3, typeid = 1; end
 
        x_cleanfigspace(true);
@@ -299,7 +299,7 @@ end
        % if ~isempty(h3b), delete(h3b); end
        % if ~isempty(h4), delete(h4); end
        % if ~isempty(h5), delete(h5); end
-       
+
        switch typeid
            case 1
                 gsorted = natsort(g);
@@ -325,67 +325,67 @@ end
         h2.BrushData = idx;
         dt1 = datatip(h1, 'DataIndex', idx);
         dt2 = datatip(h2, 'DataIndex', idx);
-        
+
         x_cleanfigspace(false);
-        %if ~isempty(h3), delete(h3); end
-        %if ~isempty(h4), delete(h4); end
-        %if ~isempty(h5), delete(h5); end
-         
+        % if ~isempty(h3), delete(h3); end
+        % if ~isempty(h4), delete(h4); end
+        % if ~isempty(h5), delete(h5); end
+
          % h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
          %     [py1(idx), py2(idx)], ...
-         %     [pz1(idx), pz2(idx)],'k--','LineWidth',1);   
+         %     [pz1(idx), pz2(idx)],'k--','LineWidth',1);
 
          [nearidx] = dsearchn(xyz1, [px1(idx) py1(idx) pz1(idx)]);
-         
+
          % assignin('base',"xyz1",xyz1);
          % h4 = arrow3(xyz1(nearidx, :), [px1(idx), py1(idx), pz1(idx)]);
 
         h4 = plot3(hAx0, [px1(idx) xyz1(nearidx, 1)], ...
             [py1(idx), xyz1(nearidx, 2)], ...
             [pz1(idx), xyz1(nearidx, 3)],'-','LineWidth',2,'Color',lcolor1);
-         
+
          [nearidx] = dsearchn(xyz2, [px2(idx) py2(idx) pz2(idx)]);
 
          % h5 = arrow3(xyz2(nearidx, :), [px2(idx), py2(idx), pz2(idx)]);
-         
+
          h5 = plot3(hAx0, [px2(idx) xyz2(nearidx, 1)], ...
              [py2(idx), xyz2(nearidx, 2)], ...
-             [pz2(idx), xyz2(nearidx, 3)],'k-','LineWidth',2,'Color',lcolor2);   
+             [pz2(idx), xyz2(nearidx, 3)],'k-','LineWidth',2,'Color',lcolor2);
 
     end
 
-    function in_callback_EnrichrHVGs(~, ~)
+function in_callback_EnrichrHVGs(~, ~)
         k = gui.i_inputnumk(200, 1, 2000, 'Select top n genes');
         if ~isempty(k)
             gsorted = T.(T.Properties.VariableNames{1});
             gselected = gsorted(1:k);
-            fprintf('%d genes are selected.\n', length(gselected));        
+            fprintf('%d genes are selected.\n', length(gselected));
             gui.i_enrichtest(gselected, gsorted, k);
         end
     end
 
-    function in_callback_genecards(~, ~)
+function in_callback_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g(idx)),'-new');
     end
 
-    function in_callback_changeMarkerSize(~, ~)
+function in_callback_changeMarkerSize(~, ~)
         % h1.Marker
         if h1.SizeData > 40
             h1.SizeData = 10;
             h2.SizeData = 10;
         else
-            h1.SizeData = h1.SizeData + 2; 
+            h1.SizeData = h1.SizeData + 2;
             h2.SizeData = h2.SizeData + 2;
         end
     end
 
-    function in_callback_ChangeAlphaValue(~, ~)
+function in_callback_ChangeAlphaValue(~, ~)
         if h1.MarkerFaceAlpha <= 0.05
             h1.MarkerFaceAlpha = 1;
-            h2.MarkerFaceAlpha = 1; 
+            h2.MarkerFaceAlpha = 1;
         else
             h1.MarkerFaceAlpha = h1.MarkerFaceAlpha - 0.1;
-            h2.MarkerFaceAlpha = h2.MarkerFaceAlpha - 0.1; 
+            h2.MarkerFaceAlpha = h2.MarkerFaceAlpha - 0.1;
         end
     end
 

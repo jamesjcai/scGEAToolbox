@@ -1,11 +1,11 @@
 function [indx1, species] = i_selgenecollection(parentfig)
 if nargin < 1, parentfig = []; end
-%see also: i_selectcellscore % OK
+% see also: i_selectcellscore % OK
 
-%MSigDB Molecular Signatures
-%PanglaoDB Cell Type Markers
-%DoRothEA TF Targets
-%Custom Gene Sets
+% MSigDB Molecular Signatures
+% PanglaoDB Cell Type Markers
+% DoRothEA TF Targets
+% Custom Gene Sets
 
 species=[];
 
@@ -21,9 +21,9 @@ else
         'SelectionMode','single','ListString',selitems, ...
         'ListSize', [220, 300]);
 end
-    if tf1~=1, return; end
+if tf1~=1, return; end
 
-    if indx1==1
+if indx1==1
         species = gui.i_selectspecies(2, false, parentfig);
     else
         species='human';

@@ -1,5 +1,5 @@
 function [X, g, b, batchid, celltype, filenm] = sc_readh5adfile(filenm)
-%Read H5AD file
+% Read H5AD file
 % https://anndata.readthedocs.io/en/latest/fileformat-prose.html
 % https://www.mathworks.com/help/matlab/hdf5-files.html
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
@@ -29,14 +29,14 @@ hinfo = h5info(filenm);
 idx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/X"));
 
 
-%names = string(pkg.i_extractfield(hinfo.Groups, 'Name'));
-%idx = find(names == "/X");
+% names = string(pkg.i_extractfield(hinfo.Groups, 'Name'));
+% idx = find(names == "/X");
 
 % idx = find(string({hinfo.Groups.Name})=="/X")
 
-%data=h5read(filenm,[hinfo.Groups(idx).Name,'/data']);
-%indices=h5read(filenm,[hinfo.Groups(idx).Name,'/indices']);
-%indptr=h5read(filenm,[hinfo.Groups(idx).Name,'/indptr']);
+% data=h5read(filenm,[hinfo.Groups(idx).Name,'/data']);
+% indices=h5read(filenm,[hinfo.Groups(idx).Name,'/indices']);
+% indptr=h5read(filenm,[hinfo.Groups(idx).Name,'/indptr']);
 
 data = pkg.e_guessh5field(filenm, {'/X/'}, {'data'}, true);
 shapeGroupIdx = idx;  % default: read shape from /X
@@ -107,7 +107,6 @@ catch
 end
 
 
-
 if ~isMATLABReleaseOlderThan('R2025a')
     X = spalloc(shape(2), shape(1), length(data), 'single');
 else
@@ -126,7 +125,7 @@ end
 
 
 function values = readObsColumn(h5file, colname)
-%READOBSCOLUMN Extract a column from AnnData .h5ad obs table.
+% READOBSCOLUMN Extract a column from AnnData .h5ad obs table.
 %   values = READOBSCOLUMN(h5file, colname)
 %   h5file : path to .h5ad file
 %   colname: string, name of the obs column (e.g. 'celltype')
@@ -134,7 +133,7 @@ function values = readObsColumn(h5file, colname)
 %   Returns either a string array or categorical array.
 
     obsPath = ['/obs/' colname];
-    
+
     try
         % Case 1: column stored directly (string array, numeric, etc.)
         values = h5read(h5file, obsPath);
@@ -150,11 +149,11 @@ function values = readObsColumn(h5file, colname)
     catch
         % If direct read fails, probably categorical
     end
-    
+
     % Case 2: categorical (codes + categories)
     codesPath = [obsPath '/codes'];
     catsPath  = [obsPath '/categories'];
-    
+
     try
         codes = h5read(h5file, codesPath);
         cats  = h5read(h5file, catsPath);

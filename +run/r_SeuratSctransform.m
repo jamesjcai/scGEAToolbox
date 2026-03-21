@@ -11,7 +11,7 @@ end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.mat', 'output.h5', 'input.txt', 'output.txt', ...
-    'g.txt', 'output_data.txt', 'output_scale_data.txt'};
+'g.txt', 'output_data.txt', 'output_scale_data.txt'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 lastwarn('')
 if issparse(X), X = full(X); end

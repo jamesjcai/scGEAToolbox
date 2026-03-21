@@ -17,7 +17,7 @@ switch lower(langtag)
 end
 
 answer = gui.myQuestdlg(parentfig, qtxt, '', ...
-    {'Yes', 'Review Script', 'Cancel'}, 'Yes');
+{'Yes', 'Review Script', 'Cancel'}, 'Yes');
 switch answer
     case 'Cancel'
         return;
@@ -28,7 +28,7 @@ switch answer
         scriptfile = fullfile(folder, '..', 'external', ...
             stxt, scriptfile);
         ts = fileread(scriptfile);
-        %LF=char(10);
+        % LF=char(10);
         CR = char(13); %  carriage return character equivalent to char(13) or sprintf('\r').
         ts = strrep(ts, [CR, newline], newline);
 

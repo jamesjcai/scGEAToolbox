@@ -61,7 +61,7 @@ if ispref('scgeatoolbox', preftagname)
             end
             return;
         case 'Use another'
-            
+
         otherwise
             return;
     end
@@ -88,21 +88,21 @@ selectedProvider = listItems{selectedIndex};
 switch selectedProvider
     case 'Ollama'
         a = '';
-        try 
+        try
             a = webread("http://localhost:11434");
         catch
         end
         if strcmp(a, 'Ollama is running')
             a = webread('http://localhost:11434/api/tags');
-                %[a,str]=dos('Ollama list');
-                %if a == 0
-                %tokens = regexp(str, '([a-zA-Z0-9.-]+):latest', 'tokens');
-                %model_names = cellfun(@(x) x{1}, tokens, 'UniformOutput', false);
+                % [a,str]=dos('Ollama list');
+                % if a == 0
+                % tokens = regexp(str, '([a-zA-Z0-9.-]+):latest', 'tokens');
+                % model_names = cellfun(@(x) x{1}, tokens, 'UniformOutput', false);
 
 
            if size(a.models, 1) > 0
                model_names = string(cellfun(@(m) m.name, a.models, 'UniformOutput', false));
-            
+
            if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a model:');
             else
@@ -113,7 +113,7 @@ switch selectedProvider
             end
 
                 if ok2
-                    selectedModel = model_names{idx};                        
+                    selectedModel = model_names{idx};
                     setpref('scgeatoolbox', preftagname, ...
                         selectedProvider+":"+selectedModel);
                     done = true;
@@ -130,7 +130,7 @@ switch selectedProvider
             gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
         end
         loadenv(apikeyfile,"FileType","env");
-        if ~isempty(getenv("GEMINI_API_KEY"))        
+        if ~isempty(getenv("GEMINI_API_KEY"))
             url = sprintf('https://generativelanguage.googleapis.com/v1beta/models?key=%s', ...
                   getenv("GEMINI_API_KEY"));
             a = webread(url);
@@ -141,7 +141,7 @@ switch selectedProvider
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
                             'Select a model:', model_names(idx));
-                else                    
+                else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
                                   'ListString', model_names, ...
@@ -151,7 +151,7 @@ switch selectedProvider
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
                             'Select a model:');
-                else                
+                else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
                                   'ListString', model_names, ...
@@ -159,7 +159,7 @@ switch selectedProvider
                 end
             end
             if ok2
-                selectedModel = model_names{idx};                        
+                selectedModel = model_names{idx};
                 setpref('scgeatoolbox', preftagname, ...
                     selectedProvider+":"+selectedModel);
                 done = true;
@@ -172,16 +172,16 @@ switch selectedProvider
             gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
         end
         loadenv(apikeyfile,"FileType","env");
-        if ~isempty(getenv("TAMUAI_API_KEY"))        
+        if ~isempty(getenv("TAMUAI_API_KEY"))
             OPEN_WEBUI_API_ENDPOINT = "https://chat-api.tamu.ai";
             models_url = sprintf('%s/api/models', OPEN_WEBUI_API_ENDPOINT);
-            
+
             options = weboptions('HeaderFields', {'Authorization', ...
                 sprintf('Bearer %s', getenv("TAMUAI_API_KEY"))}, ...
                 'ContentType', 'json', 'Timeout', 50);
 
             fw = gui.myWaitbar(parentfig);
-            
+
             try
                 models_response = webread(models_url, options);
                 model_names = string(cellfun(@(s) s.id, models_response.data, 'UniformOutput', false));
@@ -208,7 +208,7 @@ switch selectedProvider
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
                             'Select a model:');
-                else                
+                else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
                                   'ListString', model_names, ...
@@ -216,7 +216,7 @@ switch selectedProvider
                 end
             end
             if ok2
-                selectedModel = model_names{idx};                        
+                selectedModel = model_names{idx};
                 setpref('scgeatoolbox', preftagname, ...
                     selectedProvider+":"+selectedModel);
                 done = true;
@@ -229,15 +229,15 @@ switch selectedProvider
             gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
         end
         loadenv(apikeyfile,"FileType","env");
-        if ~isempty(getenv("OpenAI_API_KEY"))        
+        if ~isempty(getenv("OpenAI_API_KEY"))
             OPEN_WEBUI_API_ENDPOINT = "https://api.openai.com/v1";
             models_url = sprintf('%s/models', OPEN_WEBUI_API_ENDPOINT);
-            
+
             options = weboptions('HeaderFields', {'Authorization', ...
                 sprintf('Bearer %s', getenv("OpenAI_API_KEY"))}, ...
                 'ContentType', 'json',...
                 'Timeout', 30);
-            
+
             try
                 models_response = webread(models_url, options);
                 model_names = string(arrayfun(@(s) s.id, models_response.data, 'UniformOutput', false));
@@ -261,7 +261,7 @@ switch selectedProvider
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
                             'Select a model:');
-                else               
+                else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
                                   'ListString', model_names, ...
@@ -269,7 +269,7 @@ switch selectedProvider
                 end
             end
             if ok2
-                selectedModel = model_names{idx};                        
+                selectedModel = model_names{idx};
                 setpref('scgeatoolbox', preftagname, ...
                     selectedProvider+":"+selectedModel);
                 done = true;

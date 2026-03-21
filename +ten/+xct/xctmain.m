@@ -1,5 +1,5 @@
 function [T] = xctmain(X_s, X_t, g, varargin)
-%XCTMAIN  Lightweight spectral cell-cell interaction analysis.
+% XCTMAIN  Lightweight spectral cell-cell interaction analysis.
 %   Pure base-MATLAB implementation — no extra toolboxes required.
 %   Uses Pearson co-expression as a GRN proxy instead of sc_pcnetpar,
 %   making it fully self-contained.  For the full PCNet-backed version
@@ -108,7 +108,7 @@ end % xctmain
 %% ── LOCAL FUNCTIONS ──────────────────────────────────────────────────────
 
 function T = i_align(X_s, X_t, g, lig_db, rec_db, n_dim, mu_, corr_thr, pval_t, verbose)
-%I_ALIGN  Core spectral alignment and null test for one direction.
+% I_ALIGN  Core spectral alignment and null test for one direction.
 
 ng   = size(X_s, 1);
 g_up = upper(g);
@@ -213,7 +213,7 @@ p_vals = sum(null_d(:) <= cand_d(:)', 1)' ./ numel(null_d);
 % ── Assemble output ───────────────────────────────────────────────────────
 w12_vals = full(W12(sub2ind([ng,ng], li_idx, ri_idx)));
 T = table(g(li_idx), g(ri_idx), cand_d, w12_vals, p_vals, ...
-    'VariableNames', {'ligand','receptor','dist','correspondence','p_value'});
+'VariableNames', {'ligand','receptor','dist','correspondence','p_value'});
 T = T(T.p_value <= pval_t, :);
 T = sortrows(T, 'dist', 'ascend');
 
@@ -225,7 +225,7 @@ end % i_align
 
 
 function W = i_coexpr(X, thr)
-%I_COEXPR  Thresholded Pearson co-expression matrix (sparse).
+% I_COEXPR  Thresholded Pearson co-expression matrix (sparse).
 %   Uses only base MATLAB — no Statistics Toolbox.
 %   X : genes × cells.  Returns sparse ng × ng matrix.
 
@@ -248,7 +248,7 @@ end % i_coexpr
 
 
 function X = i_lognorm(X)
-%I_LOGNORM  Library-size normalisation followed by log1p.
+% I_LOGNORM  Library-size normalisation followed by log1p.
 
 col_sums = sum(X, 1);
 col_sums(col_sums == 0) = 1;    % avoid /0 for empty cells

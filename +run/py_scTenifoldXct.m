@@ -39,12 +39,11 @@ else
 end
 
 
-
 if ~prepare_input_only
     fw = gui.myWaitbar(parentfig);
     gui.myWaitbar(parentfig, fw, false, [], ...
         'Checking Python environment...');
-    
+
     x = pyenv;
     try
         pkg.i_add_conda_python_path;
@@ -56,17 +55,17 @@ if ~prepare_input_only
     codepth = pkg.i_normalizepath(codepth);
 
     codefullpath = fullfile(codepth,'require.py');
-    %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
+    % cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
     %    x.Executable, codepth, filesep);
     cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
-    
+
     disp(cmdlinestr)
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
-            
+
         if isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
         % gui.myErrordlg(parentfig, sprintf('%s', cmdout));
-        a = sprintf("%s.", cmdout);
+        a = sprintf("% s.", cmdout);
         if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
             prepare_input_only = true;
         else
@@ -83,10 +82,10 @@ if ~prepare_input_only
 end
 
 tmpfilelist = {'X.mat', 'X.txt', 'g.txt', 'c.txt', 'output.txt', ...
-    'output1.txt', 'output2.txt', ...
-    'gene_name_Source.tsv', 'gene_name_Target.tsv', ...
-    'pcnet_Source.npz', 'pcnet_Target.npz', ...
-    'A1.mat', 'A2.mat', 'pcnet_Source.mat', 'pcnet_Target.mat'};
+'output1.txt', 'output2.txt', ...
+'gene_name_Source.tsv', 'gene_name_Target.tsv', ...
+'pcnet_Source.npz', 'pcnet_Target.npz', ...
+'A1.mat', 'A2.mat', 'pcnet_Source.mat', 'pcnet_Target.mat'};
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
@@ -107,7 +106,7 @@ sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
 
 
 if issparse(sce.X)
-    X = single(full(sce.X)); 
+    X = single(full(sce.X));
 else
     X = single(sce.X);
 end
@@ -122,7 +121,7 @@ writetable(t, 'gene_name_Target.tsv', 'filetype', 'text', 'Delimiter', '\t');
 disp('Input gene_names written.');
 
 useexist = false;
-if exist("pcnet_Source.mat", 'file') && exist("pcnet_Target.mat", 'file')    
+if exist("pcnet_Source.mat", 'file') && exist("pcnet_Target.mat", 'file')
     answer = gui.i_questdlgtimer(10, ...
         'pcnet_Source.mat and pcnet_Target.mat files existing. Use them?', ...
          '', 'Yes', ...
@@ -215,7 +214,7 @@ if ~prepare_input_only
         error('scTenifoldXct runtime error.');
     end
 end
-%end
+% end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);

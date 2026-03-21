@@ -63,9 +63,9 @@ X = log1p(X);
 wvalu = wvalu(idx2);
 wgene = wgene(idx2);
 
-%celltypev=string(Tm.Var1);
-%[celltypev,idx]=unique(celltypev);
-%Tm=Tm(idx,:);
+% celltypev=string(Tm.Var1);
+% [celltypev,idx]=unique(celltypev);
+% Tm=Tm(idx,:);
 
 celltypev = string(Tm.CellType);
 markergenev = string(Tm.PositiveMarkers);
@@ -83,13 +83,13 @@ for j = 1:length(celltypev)
     y = matches(g, genelist);
     if ~any(y), continue; end
     g = g(y);
-    %[~,idx]=ismember(g,genelist);
+    % [~,idx]=ismember(g,genelist);
     Z = zeros(NC, 1);
     ng = zeros(NC, 1);
     for i = 1:length(g)
         % if any(g(i)==wgene) && any(g(i)==genelist)
         gidx = g(i) == genelist;
-        %if any(gidx)
+        % if any(gidx)
         % if matches(g(i),validG)
         wi = wvalu(g(i) == wgene);
         for k = 1:NC
@@ -98,7 +98,7 @@ for j = 1:length(celltypev)
             Z(k) = Z(k) + z * wi;
             ng(k) = ng(k) + 1;
         end
-        %end
+        % end
     end
     for k = 1:NC
         if ng(k) > 0

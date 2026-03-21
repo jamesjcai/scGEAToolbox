@@ -21,7 +21,7 @@ hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
-%delete(findall(hFig, 'Tag', 'FigureToolBar'));
+% delete(findall(hFig, 'Tag', 'FigureToolBar'));
 % if ~isempty(cx)
 %     px = hFig.Position;
 %     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
@@ -47,7 +47,7 @@ for k=1:n
     % subtitle(ax0{k}, gui.i_getsubtitle(c));
     % gui.i_setautumncolor(c, a, true, any(c==0));
 end
-  
+
 
 tabgp.SelectionChangedFcn = @displaySelection;
 
@@ -70,7 +70,7 @@ gui.myWaitbar(parentfig, fw);
 ccx = true;
 
 
-    function in_mergetabs(~, ~)
+function in_mergetabs(~, ~)
         figure;
         for kx = 1:n
             hAx2 = nexttile;
@@ -79,8 +79,8 @@ ccx = true;
         end
     end
 
-    function in_callback_showbarplot(~,~)
-        [~, idx]=ismember(focalg, tabnamelist); 
+function in_callback_showbarplot(~,~)
+        [~, idx]=ismember(focalg, tabnamelist);
         [cx, cLx] = findgroups(string(thisc));
         a = zeros(max(cx), 1);
         for ks = 1:max(cx)
@@ -88,26 +88,26 @@ ccx = true;
         end
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
-        
+
         % assignin("base","y",y{idx});
         % assignin("base","thisc",thisc);
 
-        %mv = grpstats(y{idx},thisc,@mean);
+        % mv = grpstats(y{idx},thisc,@mean);
         mv = splitapply(@mean, y{idx}', cx);
         if ccx
-            bar(mv,'w');            
+            bar(mv,'w');
         else
             bar(mv);
         end
         ccx = ~ccx;
         hold on
-        %sv = splitapply(@std, y{idx}', cx)./sqrt(splitapply(@numel, y{idx}', cx));
+        % sv = splitapply(@std, y{idx}', cx)./sqrt(splitapply(@numel, y{idx}', cx));
         sv = grpstats(y{idx}, thisc, @std)./sqrt(grpstats(y{idx}, thisc, @numel));
         errorbar(1:length(mv), mv, zeros(size(sv)), sv, 'color', 'k' ,'linestyle','none');
-        
+
         disp('Error bar shows the standard error of the mean (SEM), i.e., the standard deviation and dividing it by the square root of the sample size')
         set(ax0{idx},'xticklabel',cLx);
-        
+
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         if length(tab)>1
             answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
@@ -116,18 +116,18 @@ ccx = true;
         end
     end
 
-    function i_updatebarplot(idx)
+function i_updatebarplot(idx)
         if nargin<1, idx=[]; end
         [~, cLx] = findgroups(string(thisc));
         for ks = 1:n
             if ks~=idx
                 delete(ax0{ks});
                 ax0{ks} = axes('parent',tab{ks});
-                
+
                 mv = grpstats(y{ks},thisc,@mean);
                 % mv = splitapply(@mean, y{ks}, thisc);
                 if ~ccx
-                    colc = 'w';            
+                    colc = 'w';
                 else
                     colc = '';
                 end
@@ -137,12 +137,12 @@ ccx = true;
                 % sv = splitapply(@std, y{ks}, thisc)./sqrt(splitapply(@numel, y{ks}, thisc));
                 errorbar(ax0{ks}, 1:length(mv), mv, zeros(size(sv)), sv, 'color', 'k' ,'linestyle','none');
                 set(ax0{ks},'xticklabel',cLx);
-                title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));  
+                title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));
             end
-        end    
+        end
     end
 
-    function displaySelection(~, event)
+function displaySelection(~, event)
         t = event.NewValue;
         txt = t.Title;
         % disp("Viewing gene " + txt);
@@ -150,23 +150,23 @@ ccx = true;
         focalg = tabnamelist(idx);
     end
 
-    function in_callback_genecards(~, ~)
+function in_callback_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
     end
 
-    function in_callback_updatealltab(idx)
+function in_callback_updatealltab(idx)
         if nargin<1, idx = []; end
         for ks=1:n
             if ks~=idx
                 delete(ax0{ks});
                 ax0{ks} = axes('parent',tab{ks});
                 pkg.i_bindviolinplot(y{ks}, thisc, colorit, cLorder);
-                title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));           
+                title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));
             end
-        end        
+        end
     end
 
-    function in_callback_invertcolor(~, ~)
+function in_callback_invertcolor(~, ~)
         colorit = ~colorit;
         [~,idx]=ismember(focalg, tabnamelist);
         delete(ax0{idx});
@@ -182,18 +182,18 @@ ccx = true;
         end
     end
 
-    function in_callback_updatesamplesizelabel(idx)
+function in_callback_updatesamplesizelabel(idx)
         if nargin<1, idx=[]; end
         for ks = 1:n
             if ks~=idx
-                b = ax0{ks};        
+                b = ax0{ks};
                 b.FontName='Palatino';
                 if isequal(cLorder, b.XTickLabel)
-                    a = zeros(length(cLorder), 1);            
+                    a = zeros(length(cLorder), 1);
                     for kx = 1:length(cLorder)
                         a(kx) = sum(thisc == cLorder(kx));
-                        cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
-                        b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));                
+                        cb=pad([string(b.XTickLabel{kx}); sprintf("(n=% d)",a(kx))],'both');
+                        b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));
                     end
                 else
                     b.XTickLabel = cLorder;
@@ -202,19 +202,19 @@ ccx = true;
         end
     end
 
-    function in_callback_addsamplesize(~, ~)
+function in_callback_addsamplesize(~, ~)
         [~,idx]=ismember(focalg, tabnamelist);
         b = ax0{idx};
         b.FontName='Palatino';
         if isequal(cLorder, b.XTickLabel)
-            a = zeros(length(cLorder), 1);            
+            a = zeros(length(cLorder), 1);
             for kx = 1:length(cLorder)
                 a(kx) = sum(thisc == cLorder(kx));
-                cb=pad([string(b.XTickLabel{kx}); sprintf("(n=%d)",a(kx))],'both');
-                b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));            
+                cb=pad([string(b.XTickLabel{kx}); sprintf("(n=% d)",a(kx))],'both');
+                b.XTickLabel{kx} = sprintf('%s\\newline%s', cb(:));
             end
         else
-            b.XTickLabel = cLorder;                
+            b.XTickLabel = cLorder;
         end
         if length(tab)>1
             answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
@@ -223,8 +223,8 @@ ccx = true;
         end
     end
 
-    function in_callback_sortbymean(~, ~)
-        [~,idx]=ismember(focalg, tabnamelist);       
+function in_callback_sortbymean(~, ~)
+        [~,idx]=ismember(focalg, tabnamelist);
         [cx, cLx] = findgroups(string(thisc));
 
         a = zeros(max(cx), 1);
@@ -239,26 +239,26 @@ ccx = true;
             isdescend = true;
         end
         cLx_sorted = cLx(idxx);
-        
+
         if isequal(cLx, cLx_sorted)
            gui.myHelpdlg(hFig, 'Groups has already been sorted.');
         else
             delete(ax0{idx});
-            ax0{idx} = axes('parent',tab{idx});       
+            ax0{idx} = axes('parent',tab{idx});
             cLorder = cLx_sorted;
             pkg.i_bindviolinplot(y{idx}, thisc, colorit, cLorder);
             title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
         end
     end
 
-    function in_callback_reordersamples(~, ~)
+function in_callback_reordersamples(~, ~)
         [~, cLorderx, noanswer] = gui.i_reordergroups(thisc);
         if noanswer, return; end
         [~,idx] = ismember(focalg, tabnamelist);
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
         pkg.i_bindviolinplot(y{idx}, thisc, colorit, cLorderx);
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));  
+        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
 
         if length(tab)>1
             answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
@@ -268,12 +268,12 @@ ccx = true;
         end
     end
 
-    function in_callback_selectsamples(~, ~)
+function in_callback_selectsamples(~, ~)
         [~, cLorder] = findgroups(string(thisc));
         [newidx] = gui.i_selmultidialog(cLorder, cLorder, hFig);
         if isempty(newidx), return; end
         picked=ismember(thisc, cLorder(newidx));
-       
+
         cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
         [~,idx]=ismember(focalg, tabnamelist);
         delete(ax0{idx});
@@ -283,10 +283,10 @@ ccx = true;
         pkg.i_bindviolinplot(y_picked, thisc_picked, colorit, cLorderx);
         title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
 
-        if length(tab)>1        
+        if length(tab)>1
             answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
-    
+
             for ks=1:n
                 y{ks} = y{ks}(picked);
             end
@@ -296,12 +296,12 @@ ccx = true;
         end
     end
 
-    function in_callback_testdata(~, ~)
+function in_callback_testdata(~, ~)
         for tabidx=1:n
             tabgp.SelectedTab=tab{tabidx};
             a = ax0{tabidx};
             thisy = y{tabidx};
-            %a = hFig.get("CurrentAxes");
+            % a = hFig.get("CurrentAxes");
             if isempty(OldTitle{tabidx})
                 OldTitle{tabidx} = a.Title.String;
                 if size(thisy, 2) ~= length(thisc)
@@ -320,7 +320,7 @@ ccx = true;
                     else
                         b='p_{anova} = N.A.; p_{kruskalwallis} = N.A.';
                     end
-                end    
+                end
                 if iscell(OldTitle{tabidx})
                     newtitle = OldTitle{tabidx};
                 else
@@ -336,7 +336,7 @@ ccx = true;
         [~,tabidx]=ismember(focalg, tabnamelist);
         tabgp.SelectedTab=tab{tabidx};
     end
-        
+
     % function i_testdataone(~,~)
     %     [~,idx]=ismember(focalg, tabnamelist);
     %     %delete(ax0{idx});
@@ -353,7 +353,7 @@ ccx = true;
     %         tbl = pkg.e_grptest(thisy, thisc);
     %         %h1=gca;
     %         %titre=string(h1.Title.String);
-    % 
+    %
     %         %     a=sprintf('%s\n%s=%.2e; %s=%.2e', ...
     %         %         strrep(string(ttxt),'_','\_'), ...
     %         %         strrep(tbl.Properties.VariableNames{1},'_','\_'), ...
@@ -367,7 +367,7 @@ ccx = true;
     %                 tbl.(tbl.Properties.VariableNames{1}), ...
     %                 tbl.Properties.VariableNames{2}, ...
     %                 tbl.(tbl.Properties.VariableNames{2}));
-    % 
+    %
     %             % b = sprintf('%s=%.2e; %s=%.2e', ...
     %             %     strrep(tbl.Properties.VariableNames{1}, '_', '_'), ...
     %             %     tbl.(tbl.Properties.VariableNames{1}), ...
@@ -380,7 +380,7 @@ ccx = true;
     %                 b='p_{anova}=N.A.; p_{kruskalwallis}=N.A.';
     %             end
     %         end
-    % 
+    %
     %         if iscell(OldTitle{idx})
     %             newtitle = OldTitle{idx};
     %         else
@@ -405,10 +405,10 @@ ccx = true;
      % end
 
 
-    function in_callback_savedata_alltab(~, ~)
+function in_callback_savedata_alltab(~, ~)
 %         [~,idx]=ismember(focalg, tabnamelist);
 %         thisy = y{idx};
-     
+
         T = table();
         for tabidx=1:n
             % g = tabnamelist(tabidx);
@@ -420,19 +420,19 @@ ccx = true;
          t = table(thisc(:));
          t.Properties.VariableNames = {'GroupID'};
          T = [t, T];
-         %T=sortrows(T,'ScoreLevel','descend');
-         %T=sortrows(T,'GroupID');
+         % T=sortrows(T,'ScoreLevel','descend');
+         % T=sortrows(T,'GroupID');
          gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
      end
- 
 
-    function in_callback_savedata(~, ~)
+
+function in_callback_savedata(~, ~)
         [~, idxlabel]= findgroups(string(thisc(:)));
         T=table();
         for tabidx=1:n
             g = tabnamelist(tabidx);
             thisy = y{tabidx};
-            
+
             a1=grpstats(thisy, thisc(:), @mean);
             a2=grpstats(thisy, thisc(:), @median);
             %{
@@ -441,7 +441,7 @@ ccx = true;
             a1=splitapply(@mean, thisy, thisc(:));
             a2=splitapply(@median, thisy, thisc(:));
             %}
-            
+
             t = table(a1, a2);
             t.Properties.RowNames = idxlabel;
             t.Properties.VariableNames = matlab.lang.makeValidName({sprintf('Mean_%s',g), sprintf('Median_%s',g)});

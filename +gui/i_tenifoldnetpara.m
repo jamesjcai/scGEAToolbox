@@ -10,7 +10,7 @@ savegrn = [];
 
 definput = {'10', '500'};
 prompt = {'Number of subsamples (nsubsmpl=[10..50]):', ...
-    'Number of cells per subsample (csubsmpl=[200..5000]):'};
+'Number of cells per subsample (csubsmpl=[200..5000]):'};
 dlgtitle = 'scTenifoldNet Settings';
 dims = [1, 50];
 
@@ -25,7 +25,7 @@ try
     nsubsmpl = str2double(answer{1});
     csubsmpl = str2double(answer{2});
     assert(isfinite(nsubsmpl) & nsubsmpl==floor(nsubsmpl));
-    assert(isfinite(csubsmpl) & csubsmpl==floor(csubsmpl));    
+    assert(isfinite(csubsmpl) & csubsmpl==floor(csubsmpl));
     assert((nsubsmpl >= 10) && (nsubsmpl <= 50));
     assert((csubsmpl >= 200) && (nsubsmpl <= 5000));
 catch

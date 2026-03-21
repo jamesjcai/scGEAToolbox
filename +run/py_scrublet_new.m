@@ -32,7 +32,7 @@ end
 codepth = pkg.i_normalizepath(codepth);
 
 codefullpath = fullfile(codepth,'require.py');
-%cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
+% cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
 %    x.Executable, codepth, filesep);
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 
@@ -45,9 +45,6 @@ if status ~= 0
     end
     error(cmdout);
 end
-
-
-
 
 
 tmpfilelist = {'input.mat', 'output.mat'};

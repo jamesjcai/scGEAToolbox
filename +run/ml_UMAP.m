@@ -4,15 +4,15 @@ if nargin<3, vnum = 45; end
 %   addpath /Users/Stephen/umap
 %   addpath /Users/Stephen/util
 %   javaaddpath('/Users/Stephen/umap/umap.jar');
-%if nargin<4, verbose=false; end
-%if nargin<3, plotit=false; end
+% if nargin<4, verbose=false; end
+% if nargin<3, plotit=false; end
 if nargin < 2, ndim = 3; end
 
 % umapversion = 'ml_UMAP44';
 if vnum == 45
     umapversion = 'ml_umap45';
 else
-    umapversion = 'ml_UMAP44';   
+    umapversion = 'ml_UMAP44';
 end
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
@@ -21,8 +21,8 @@ if ~(ismcc || isdeployed)
     pth2 = fullfile(pw1, '..', 'external', umapversion, 'util');
     addpath(pth2);
 
-    %pth3 = fullfile(pw1, '..', 'external', umapversion, 'umap.jar');
-    %javaaddpath(pth3);
+    % pth3 = fullfile(pw1, '..', 'external', umapversion, 'umap.jar');
+    % javaaddpath(pth3);
 end
 
 data = transpose(X);
@@ -39,15 +39,15 @@ if ncells > 500
     data = svdpca(data, 50, 'random');
 end
 
-%if ~ispc
+% if ~ispc
 %    [s] = run_umap_lite(data, 'n_components', ndim, 'verbose', false);
-%else
-    [s] = run_umap_lite_super(data, ndim);
-%end
+% else
+[s] = run_umap_lite_super(data, ndim);
+% end
 %{
 
 if nargout>1 || plotit
-    %if verbose
+    % if verbose
     [s,~,c]=run_umap_main(data, ...
         'n_components',ndim);
     % else
@@ -57,9 +57,9 @@ if nargout>1 || plotit
     % end
 else
 
-    %if ~(ismcc || isdeployed)
+    % if ~(ismcc || isdeployed)
     %    if verbose
-    %[s]=run_umap_lite(data,'n_components',ndim);
+    % [s]=run_umap_lite(data,'n_components',ndim);
     %     else
     %         [s]=run_umap_lite(data,'n_components',ndim,'verbose','none');
     %     end

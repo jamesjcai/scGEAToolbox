@@ -19,7 +19,7 @@ switch lower(method)
         if issparse(X1) || issparse(X2)
             X1a = sparse(length(genelist), size(X1, 2));
             X2a = sparse(length(genelist), size(X2, 2));
-        else        
+        else
             X1a = zeros(length(genelist), size(X1, 2));
             X2a = zeros(length(genelist), size(X2, 2));
         end

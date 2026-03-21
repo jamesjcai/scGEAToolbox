@@ -1,5 +1,5 @@
 function [T] = xctmain_nn(X_s, X_t, g, varargin)
-%XCTMAIN_NN  Neural-network manifold alignment for cell-cell interaction.
+% XCTMAIN_NN  Neural-network manifold alignment for cell-cell interaction.
 %   Path A: faithful MATLAB translation of the published scTenifoldXct
 %   training loop.  Requires Deep Learning Toolbox (R2022b+).
 %
@@ -147,7 +147,7 @@ end % xctmain_nn
 
 function T = i_align_nn(X_s, X_t, g, lig_db, rec_db, ...
                         n_dim, mu_, corr_thr, n_steps, lr, pval_t, verbose)
-%I_ALIGN_NN  Neural-network manifold alignment for one direction.
+% I_ALIGN_NN  Neural-network manifold alignment for one direction.
 
 ng        = size(X_s, 1);
 n_cells_s = size(X_s, 2);
@@ -269,7 +269,7 @@ p_vals = sum(null_d(:) <= cand_d(:)', 1)' ./ numel(null_d);
 % ── 9. Assemble output ────────────────────────────────────────────────────
 w12_vals = full(W12(sub2ind([ng,ng], li_idx, ri_idx)));
 T = table(g(li_idx), g(ri_idx), cand_d, w12_vals, p_vals, ...
-    'VariableNames', {'ligand','receptor','dist','correspondence','p_value'});
+'VariableNames', {'ligand','receptor','dist','correspondence','p_value'});
 T = T(T.p_value <= pval_t, :);
 T = sortrows(T, 'dist', 'ascend');
 
@@ -284,7 +284,7 @@ end % i_align_nn
 %% ── NEURAL NETWORK PRIMITIVES ────────────────────────────────────────────
 
 function [loss, grads] = i_grad_fn(ps, pt, Xs_dl, Xt_dl, L_dl)
-%I_GRAD_FN  Loss and gradients — called inside dlfeval.
+% I_GRAD_FN  Loss and gradients — called inside dlfeval.
 %
 %   loss = trace(P' · L · P) / 3000
 %   where P = U·V'  (SVD Stiefel retraction of stacked net outputs).
@@ -314,7 +314,7 @@ end % i_grad_fn
 
 
 function out = i_net_fwd(X, p)
-%I_NET_FWD  Forward pass through one 3-layer network.
+% I_NET_FWD  Forward pass through one 3-layer network.
 %
 %   X   : ng × n_cells  (each row = one gene's expression profile)
 %   p   : struct with fields W1,b1,W2,b2,W3,b3  (dlarray)
@@ -331,7 +331,7 @@ end % i_net_fwd
 
 
 function p = i_init_params(n_cells, n_dim)
-%I_INIT_PARAMS  Xavier-initialised parameter struct for one network.
+% I_INIT_PARAMS  Xavier-initialised parameter struct for one network.
 %   n_h = floor(sqrt(n_cells * n_dim))  (geometric mean, as in Python)
 %   H1  = 4 * n_h,  H2 = n_h
 
@@ -351,7 +351,7 @@ end % i_init_params
 
 
 function W = i_xavier(fan_in, fan_out, prec)
-%I_XAVIER  Xavier uniform weight matrix.
+% I_XAVIER  Xavier uniform weight matrix.
 lim = sqrt(6 / (fan_in + fan_out));
 W   = (rand(fan_in, fan_out, prec) * 2 - 1) .* lim;
 end % i_xavier
@@ -360,7 +360,7 @@ end % i_xavier
 %% ── SHARED HELPERS (duplicated from xctmain for self-containment) ────────
 
 function W = i_coexpr(X, thr)
-%I_COEXPR  Thresholded Pearson co-expression (sparse, base MATLAB only).
+% I_COEXPR  Thresholded Pearson co-expression (sparse, base MATLAB only).
 mu  = mean(X, 2);
 sig = std(X, 0, 2);
 sig(sig < eps) = 1;
@@ -374,7 +374,7 @@ end % i_coexpr
 
 
 function X = i_lognorm(X)
-%I_LOGNORM  Library-size normalisation + log1p.
+% I_LOGNORM  Library-size normalisation + log1p.
 cs = sum(X, 1);
 cs(cs == 0) = 1;
 X  = log1p(X ./ cs .* median(cs));

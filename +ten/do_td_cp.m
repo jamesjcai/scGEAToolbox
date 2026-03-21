@@ -4,10 +4,10 @@ T0 = tensor(XM0);
 % [~,U1]=cp_als(T0,5,'printitn',0);
 
 M2 = cp_als(T0, size(XM0, 3), 'maxiters', 100, ...
-    'init', 'nvecs', 'printitn', 1);
-%Use HOSVD initial guess
-%Use the 'nvecs' option to use the leading mode-n singular vectors as the initial guess.
-%M2 = cp_als(T0,5,'init','nvecs','printitn',0);
+'init', 'nvecs', 'printitn', 1);
+% Use HOSVD initial guess
+% Use the 'nvecs' option to use the leading mode-n singular vectors as the initial guess.
+% M2 = cp_als(T0,5,'init','nvecs','printitn',0);
 fM0 = full(M2);
 Xhat0 = fM0.data;
 % disp('done')

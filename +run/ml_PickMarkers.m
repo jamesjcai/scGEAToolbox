@@ -1,5 +1,5 @@
 function [gene_idxv, T] = ml_PickMarkers(X, genelist, c, topn, plotit)
-%PICKMARKERS - adapted from GC_htmp_DE.m
+% PICKMARKERS - adapted from GC_htmp_DE.m
 
 % This is a support function for SC_PICKMARKERS
 
@@ -8,12 +8,12 @@ if nargin < 4, topn = 10; end
 
 %% new data visualization
 numC = length(unique(c));
-%gene_idxv = [];
+% gene_idxv = [];
 cluster_order = [];
 
 [No_gene] = size(X, 1);
 % calculat mean of gene expression
-%gene_mean = zeros(No_gene,numC);
+% gene_mean = zeros(No_gene,numC);
 gene_DE_score = zeros(No_gene, numC);
 
 % gene_value_idx = zeros(No_gene,1);
@@ -68,9 +68,9 @@ end
 
 GL500 = [gene_idxv, gclusters, gscore];
 T = array2table(GL500, 'VariableNames', ...
-    {'Gene_indx', 'Cluster', 'DE_Score'});
+{'Gene_indx', 'Cluster', 'DE_Score'});
 T = addvars(T, string(genelistplus(gene_idxvplus)), ...
-    'NewVariableNames', 'Gene_Name', 'Before', 'Gene_indx');
+'NewVariableNames', 'Gene_Name', 'Before', 'Gene_indx');
 
 if plotit
     figure;
@@ -79,9 +79,9 @@ if plotit
     center = mean(idata, kk);
     scale = std(idata, 0, kk);
     tscale = scale;
-    %=Check for zeros and set them to 1 so not to scale them.
+    % =Check for zeros and set them to 1 so not to scale them.
     scale(tscale == 0) = 1;
-    %== Center and scale the data
+    % == Center and scale the data
     idata = bsxfun(@minus, idata, center);
     sdata = bsxfun(@rdivide, idata, scale);
     thresh = 3;
@@ -134,4 +134,4 @@ if plotit
 end
 end
 
-%print([folder '\HeatMap_Top' num2str(topn)],'-dpdf','-r300','-fillpage'); %'-dpdf',
+% print([folder '\HeatMap_Top' num2str(topn)],'-dpdf','-r300','-fillpage'); %'-dpdf',

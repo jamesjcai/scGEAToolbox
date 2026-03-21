@@ -22,14 +22,14 @@ isok = abs(a) >= mindiffpct & abs(T.avg_log2FC) >= minabsolfc & ...
        T.p_val_adj <= apvaluecut;
 
 fprintf(['\nDE genes with > %.2f%% difference in expression percentages, ' ...
-    'abs(log2FC) >= %.2f, and adjusted P-value < %.3f are retained.\n'], ...
-    mindiffpct*100,...
-    minabsolfc, apvaluecut);
+'abs(log2FC) >= %.2f, and adjusted P-value < %.3f are retained.\n'], ...
+mindiffpct*100,...
+minabsolfc, apvaluecut);
 
 Tup = T(T.avg_log2FC > 0 & isok, :);
 Tdn = T(T.avg_log2FC < 0 & isok, :);
 
-if ~isempty(sortbywhat) 
+if ~isempty(sortbywhat)
     answer = sortbywhat;
 else
     answer = gui.myQuestdlg(parentfig, 'Sort DE genes by adjusted P-value or fold change?','',...
@@ -39,7 +39,7 @@ end
 switch answer
     case 'Adjusted P-value'
         Tup = sortrows(Tup, 'abs_log2FC', 'descend');
-        Tup = sortrows(Tup, 'p_val_adj', 'ascend');        
+        Tup = sortrows(Tup, 'p_val_adj', 'ascend');
         Tdn = sortrows(Tdn, 'abs_log2FC', 'descend');
         Tdn = sortrows(Tdn, 'p_val_adj', 'ascend');
         disp('DE genes are sorted by adjusted P-value.');

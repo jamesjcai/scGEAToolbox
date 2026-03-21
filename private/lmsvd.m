@@ -104,7 +104,7 @@ S = S(1:r, 1:r);
 %%%% end of the main program %%%%
 
 %% %%%%%%% nested functions %%%%%%% %%
-    function set_param
+function set_param
 
         tol = 1e-8;
         maxit = 300;
@@ -306,11 +306,11 @@ end % set_param
                             if Lm > 50
                                 dT = diag(T);
                                 [sdT, idx] = sort(dT, 'descend');
-                                %csum = cumsum(sdT);
-                                %portion = csum/csum(end);
-                                %L = find(portion > .999,1)
+                                % csum = cumsum(sdT);
+                                % portion = csum/csum(end);
+                                % L = find(portion > .999,1)
                                 L = sum(sdT > 5e-8, 1);
-                                if L < .95 * Lm %disp([L Lm])
+                                if L < .95 * Lm % disp([L Lm])
                                     Lm = L;
                                     Icut = idx(1:Lm);
                                     Py = Py(:, Icut);
@@ -352,7 +352,7 @@ end % set_param
                             rvr = rv_sort(end-r+1:end);
                             chg_rvr = norm(rvr-rvr0) / norm(rvr);
                             hrvs(iter, :) = rvr;
-                        end %iter
+                        end % iter
                         Out.X = X;
                         Out.Y = Y;
                         Out.memo = memo;
@@ -372,4 +372,4 @@ end % set_param
                                 ptol = 5 * max(tol, sqrt(eps));
                         end
 
-                    end %solver
+                    end % solver

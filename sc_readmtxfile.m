@@ -1,5 +1,5 @@
 function [X, genelist, celllist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, barcodestxtfile, coln)
-%Read MTX file
+% Read MTX file
 if nargin < 4, coln = 2; end
 if nargin < 2, featurestxtfile = []; end
 

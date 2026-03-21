@@ -30,7 +30,7 @@ A = a - mean(a) - mean(a, 2) + mean(a(:));
 b = xpdist2(y);
 B = b - mean(b) - mean(b, 2) + mean(b(:));
 
-%mrow = mean(b,2);
+% mrow = mean(b,2);
 
 % mcol = mean(b);
 % mrow = mean(b,2);

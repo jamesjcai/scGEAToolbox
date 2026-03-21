@@ -5,9 +5,9 @@ if nargin<1, parentfig = []; end
 sce = [];
 
 [fname, pathname] = uigetfile( ...
-    {'*.mtx', 'MTX Format Files (*.mtx)'; ...
-    '*.*', 'All Files (*.*)'}, ...
-    'Pick a mtx format file');
+{'*.mtx', 'MTX Format Files (*.mtx)'; ...
+'*.*', 'All Files (*.*)'}, ...
+'Pick a mtx format file');
 if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
 if isequal(fname, 0), return; end
 prefixstr = extractBefore(fname, max([strfind(fname, 'matrix'), 1]));
@@ -80,8 +80,8 @@ if ~exist(barcodestxtfile, 'file')
         case 'No'
             barcodestxtfile = [];
         otherwise
-            %[X, g] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
-            %sce = SingleCellExperiment(X, g);
+            % [X, g] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
+            % sce = SingleCellExperiment(X, g);
             gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
             return;
     end
@@ -92,8 +92,8 @@ else
     switch answer
         case 'Yes'
         case 'No'
-            %gui.myHelpdlg(parentfig, ('Action Cancelled.','');
-            %return;
+            % gui.myHelpdlg(parentfig, ('Action Cancelled.','');
+            % return;
             barcodestxtfile = [];
         otherwise
             gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
@@ -102,7 +102,7 @@ else
 end
 
 answer = gui.myQuestdlg(parentfig, sprintf('Matrix file: %s\nFeature file: %s\nBarcode file (optional): %s\nContinne?', ...
-    matrixmtxfile, featurestxtfile, barcodestxtfile), 'Confirm File Selection');
+matrixmtxfile, featurestxtfile, barcodestxtfile), 'Confirm File Selection');
 if ~strcmp(answer, 'Yes'), return; end
 fw = gui.myWaitbar(parentfig);
 if exist(matrixmtxfile, 'file') && exist(featurestxtfile, 'file') && exist(barcodestxtfile, 'file')
@@ -115,7 +115,7 @@ else
     [X, g] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
     sce = SingleCellExperiment(X, g);
 end
-metainfo = sprintf("Source: %s", matrixmtxfile);
+metainfo = sprintf("Source: % s", matrixmtxfile);
 sce = sce.appendmetainfo(metainfo);
 
 gui.myWaitbar(parentfig, fw);

@@ -1,5 +1,5 @@
 function [X, g, b, c, filenm] = sc_read10xh5file(filenm)
-%Read 10x Genomics H5 file
+% Read 10x Genomics H5 file
 % https://www.mathworks.com/help/matlab/hdf5-files.html
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
 % https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/h5_matrices
@@ -37,7 +37,6 @@ indices = pkg.e_guessh5field(filenm, {grouptag}, {'indices'}, true);
 indptr = pkg.e_guessh5field(filenm, {grouptag}, {'indptr'}, true);
 shape = pkg.e_guessh5field(filenm, {grouptag}, {'shape'}, true);
 
-
 g = pkg.e_guessh5field(filenm, {grouptag, '/matrix/features/'}, {'gene_names', 'name'}, false);
 if isempty(g)
     warning('Gene names or feature names are not assigned.');
@@ -59,7 +58,6 @@ end
 
 b = pkg.e_guessh5field(filenm, {grouptag, '/matrix/features/'}, {'barcodes'}, false);
 if isempty(b), warning('B is not assigned.'); end
-
 
 %
 %     try
@@ -118,41 +116,37 @@ end
 
 end
 
-
-
 %{
 
 % function countMatrix = getMatrixFromH5(filename)
 %     info = h5info(filename, '/matrix');
-% 
+%
 %     barcodes = h5read(filename, '/matrix/barcodes');
 %     data = h5read(filename, '/matrix/data');
 %     indices = h5read(filename, '/matrix/indices');
 %     indptr = h5read(filename, '/matrix/indptr');
 %     shape = h5read(filename, '/matrix/shape');
-% 
+%
 %     matrix = sparse(indices+1, indptr+1, data, shape(2), shape(1));
-% 
+%
 %     featureRef = struct();
 %     featureGroup = info.Groups(strcmp({info.Groups.Name}, '/matrix/features'));
 %     featureRef.id = h5read(filename, '/matrix/features/id');
 %     featureRef.name = h5read(filename, '/matrix/features/name');
 %     featureRef.featureType = h5read(filename, '/matrix/features/feature_type');
-% 
+%
 %     tagKeys = h5read(filename, '/matrix/features/_all_tag_keys');
 %     for i = 1:length(tagKeys)
 %         key = char(tagKeys(i));
 %         featureRef.(key) = h5read(filename, ['/matrix/features/' key]);
 %     end
-% 
+%
 %     countMatrix = struct('featureRef', featureRef, 'barcodes', barcodes, 'matrix', matrix);
 % end
-% 
+%
 % filteredH5 = 'filtered_feature_bc_matrix.h5';
 % filteredMatrix = getMatrixFromH5(filteredH5);
 
 % https://www.10xgenomics.com/support/software/space-ranger/advanced/hdf5-feature-barcode-matrix-format
 
 %}
-
-

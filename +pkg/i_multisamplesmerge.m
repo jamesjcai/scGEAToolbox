@@ -42,12 +42,12 @@ end
 
 if guiwaitbar, gui.gui_waitbar_adv(fw); end
 
-%answerstruced = gui.myQuestdlg(FigureHandle, 'Process merged SCE data (tSNE, clustering, and cell type annotation)?', ...
+% answerstruced = gui.myQuestdlg(FigureHandle, 'Process merged SCE data (tSNE, clustering, and cell type annotation)?', ...
 %    '', {'Yes', 'Skip'}, 'Yes');
 % if strcmp(answerstruced, 'Yes')
     % [ndim] = gui.i_choose2d3d;
     ndim = 3;
-    if ~isempty(ndim)        
+    if ~isempty(ndim)
         FigureHandle=[];
         if isempty(speciestag)
             [speciestag] = gui.i_selectspecies(2, false, FigureHandle);
@@ -55,19 +55,18 @@ if guiwaitbar, gui.gui_waitbar_adv(fw); end
         if ~isempty(speciestag)
             if isempty(ndim), return; end
             sce = sce.embedcells('tsne3d', true, true, ndim);
-            %k = round(sce.NumCells/100);
-            %sce = sce.clustercells(k, 'kmeans', true);
+            % k = round(sce.NumCells/100);
+            % sce = sce.clustercells(k, 'kmeans', true);
             sce = sce.clustercells([], [], true);
-            %sce = pkg.e_celltypes2allclust(sce, speciestag, true);
+            % sce = pkg.e_celltypes2allclust(sce, speciestag, true);
             sce = sce.assigncelltype(speciestag, false);
         end
     end
-%end
+% end
 end
 
-    % 
+    %
     % sce = sce.qcfilter;
     % sce = sce.embedcells('tsne3d',true);
     % sce = sce.clustercells([], [], true);
     % sce = sce.assigncelltype(speciestag, false);
-

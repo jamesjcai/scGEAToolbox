@@ -72,7 +72,7 @@ classdef Violin < handle
 
     methods
         function obj = Violin(data, pos, varargin)
-            %Violin plots a violin plot of some data at pos
+            % Violin plots a violin plot of some data at pos
             %   VIOLIN(DATA, POS) plots a violin at x-position POS for
             %   a vector of DATA points.
             %

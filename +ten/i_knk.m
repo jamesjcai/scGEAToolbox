@@ -1,6 +1,6 @@
 function [T] = i_knk(A0, idx, genelist, dosort, lambdav)
 
-%see also: ten.knk2_knockoutTargetGene
+% see also: ten.knk2_knockoutTargetGene
 
 if nargin < 5, lambdav = 0; end
 if nargin < 4, dosort = true; end

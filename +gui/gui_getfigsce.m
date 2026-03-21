@@ -7,7 +7,7 @@ if nargin < 1 || isempty(src)
     return;
 end
 
-if isa(src, 'matlab.apps.AppBase')  
+if isa(src, 'matlab.apps.AppBase')
     parentfig = src.UIFigure;
     sce = src.sce;
     isui = true;

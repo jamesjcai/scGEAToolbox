@@ -3,8 +3,8 @@ function callback_EnrichrTab2Circos(src, ~, tab)
 if nargin<3, tab = []; end
 
 import mlreportgen.ppt.*;
-%pw1 = fileparts(mfilename('fullpath'));
-%pth = fullfile(pw1, '..', 'assets', 'myTemplate.pptx');
+% pw1 = fileparts(mfilename('fullpath'));
+% pth = fullfile(pw1, '..', 'assets', 'myTemplate.pptx');
 
 [FigureHandle] = gui.gui_getfigsce(src);
 
@@ -12,7 +12,7 @@ if isempty(tab)
 answer1 = gui.myQuestdlg(FigureHandle, "Select the source of Enrichr result table.","", ...
     {'Web Enrichr', 'Matlab Enrichr'}, 'Web Enrichr');
 
-switch answer1 
+switch answer1
     case 'Matlab Enrichr'
         a = evalin('base', 'whos');
         b = struct2cell(a);
@@ -41,7 +41,7 @@ switch answer1
             case 'Paste Text'
             defaulttxt = sprintf('Term\tGenes\nPathway 1\tMDH1;AFMID;CAT;HYI;ACO1\nPathway 2\tAFMID;CAT;KMO;ALDH8A1;DHTKD1\nPathway 3\tGSTZ1;FAHD1;FAH;ADH5\nPathway 4\tGYS2;GBE1;PGM2\nPathway 5\tTHTPA;NFS1\n');
             % defaulttxt = sprintf('Term\tGenes\nGlyoxylate and dicarboxylate metabolism\tMDH1;AFMID;CAT;HYI;ACO1\nTryptophan metabolism\tAFMID;CAT;KMO;ALDH8A1;DHTKD1\nTyrosine metabolism\tGSTZ1;FAHD1;FAH;ADH5\nStarch and sucrose metabolism\tGYS2;GBE1;PGM2\nThiamine metabolism\tTHTPA;NFS1\nFatty acid biosynthesis\tOXSM;MCAT\nPyruvate metabolism\tMDH1;GLO1;ADH5\nPeroxisome\tSCP2;CAT;PEX1;NUDT12\nPurine metabolism\tNME7;ENTPD5;ADK;PGM2;PAICS\nPhosphonate and phosphinate metabolism\tCHPT1\nCitrate cycle (TCA cycle)\tMDH1;ACO1\nPentose phosphate pathway\tPGM2;RBKS\nbeta-Alanine metabolism\tALDH6A1;HIBCH\n');
-                
+
             if gui.i_isuifig(FigureHandle)
                 [userInput] = gui.myInputdlg({'Paste table text'}, ...
                     'Enrichr Results', {defaulttxt}, FigureHandle);
@@ -59,7 +59,7 @@ switch answer1
                 fprintf(fid, '%s\n', string(userInput{1}));  % Write first input only (modify for multiple)
                 fclose(fid);
                 tab = readtable(a,"FileType","text",'Delimiter','\t', ...
-                    'VariableNamingRule', 'modify');              
+                    'VariableNamingRule', 'modify');
             case 'Open File'
                 if gui.i_isuifig(FigureHandle)
                     [fname, pathname] = uigetfile(FigureHandle, ...
@@ -75,7 +75,7 @@ switch answer1
                 if isequal(fname, 0), return; end
                 tabfile = fullfile(pathname, fname);
                 warning off
-                tab = readtable(tabfile, 'FileType', 'text','Delimiter','\t');                
+                tab = readtable(tabfile, 'FileType', 'text','Delimiter','\t');
                 warning on
             otherwise
                 return;
@@ -86,8 +86,7 @@ end
 end
 
 
-
-    if all(ismember({'Term','Genes'}, tab.Properties.VariableNames))
+if all(ismember({'Term','Genes'}, tab.Properties.VariableNames))
         listitems = tab.Term;
 
 
@@ -124,7 +123,7 @@ end
         gui.myWarndlg(FigureHandle, 'Invalid input.');
         return;
     end
-   
+
 % taking out all gene names
 allg = {};
 g_by_term = {};
@@ -178,18 +177,18 @@ hx.show(FigureHandle);
 
 sz = 10;
 
-    function in_callback_savedata(~,~)
+function in_callback_savedata(~,~)
         gui.i_exporttable(tab(indx2,:), true, ...
             'Tcircostabl','CircosTermTable',[],[], hx.FigHandle);
     end
 
-    function in_resizefont(~, ~)
+function in_resizefont(~, ~)
         sz = sz + 1;
         if sz > 20, sz = 5; end
         CC.setFont('FontName','Arial','FontSize', sz);
     end
 
-    function in_PickColorMap(~, ~)
+function in_PickColorMap(~, ~)
         CC.setChordColorByMap(gui.i_getrandcolormap);
     end
 end

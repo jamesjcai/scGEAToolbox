@@ -25,21 +25,19 @@ hx.show();
 assignin("base","h",h)
 
 
- 
 h1=h(1);
-%h.DataTipTemplate.DataTipRows = T.genelist(idx);
+% h.DataTipTemplate.DataTipRows = T.genelist(idx);
 for k=0:5
-    %T.genelist{end-k}
-    %h1.XData(end-k)
-    %h1.YData(end-k)
+    % T.genelist{end-k}
+    % h1.XData(end-k)
+    % h1.YData(end-k)
      % datatip(h, 'DataIndex', idx(k));
      text(h1.XData(end-k), h1.YData(end-k), sorted_g{end-k}, 'Rotation', 45);
      % annotation("textarrow", h1.XData(end-k), h1.YData(end-k),'String', "aa");
 end
 
 
-
-    function in_callback_savetable(~, ~)
+function in_callback_savetable(~, ~)
         answer = gui.myQuestdlg(hFig, 'Export & save data to:', '', ...
             {'Workspace', 'TXT/CSV file', 'Excel file'}, 'Workspace');
         if ~isempty(answer)
@@ -74,7 +72,6 @@ end
             end
         end
     end
-
 
 
 end

@@ -1,5 +1,5 @@
 function [A] = e_filtadjc(A, q, makesparse)
-%Filter adjacnecy matrix A with cutoff Q
+% Filter adjacnecy matrix A with cutoff Q
 %
 % A - adjacency matrix
 

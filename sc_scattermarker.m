@@ -69,7 +69,7 @@ elseif isStringScalar(targetg)
         % c = X(genelist == targetg, :);
         idx = strcmp(genelist, targetg);
         c = full(X(idx, :));
-        
+
         titxt = '';
         switch methodid
             case 1
@@ -80,7 +80,7 @@ elseif isStringScalar(targetg)
                 gui.i_stemscatter([x, y], c);
                 h1 = gca;
                 grid(h1, "on");
-                title(h1, targetg)
+                title(h1, targetg);
                 titxt = gui.i_getsubtitle(c);
                 subtitle(h1, titxt);
             case 2
@@ -95,13 +95,12 @@ elseif isStringScalar(targetg)
                 set(h1, 'ZTickLabel', []);
                 grid(h1, "on");
 
-                title(h1, targetg)
+                title(h1, targetg);
 
                 titxt = gui.i_getsubtitle(c);
                 subtitle(h1, titxt);
-                
-            case 3
 
+            case 3
 
             case 4
                 h1 = subplot(1, 2, 1);
@@ -111,7 +110,7 @@ elseif isStringScalar(targetg)
                 hFig = gcf;
                 hFig.Position(3) = hFig.Position(3) * 2;
             case 5 % ============ 5
-             
+
                 if size(s, 2) >= 3
                     x = s(:, 1);
                     y = s(:, 2);
@@ -135,7 +134,7 @@ elseif isStringScalar(targetg)
                 set(h1, 'ZTickLabel', []);
                 grid(h1, 'on');
                 % h1.YDataSource='explorer2IDX';
-                title(h1, targetg)
+                title(h1, targetg);
 
                 titxt = gui.i_getsubtitle(c);
                 subtitle(h1, titxt);
@@ -168,7 +167,7 @@ elseif isStringScalar(targetg)
 
 
         a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
-        gui.i_setautumncolor(c, a, true, any(c==0));
+        gui.i_setautumncolor(c, a, true, any(c == 0));
 
         ori_c = c;
 
@@ -202,46 +201,43 @@ elseif isStringScalar(targetg)
 end
 
     function i_RescaleExpr(~, ~)
-        c = log2(1+c);
-        [ax, bx] = view(h2);
-        delete(s2);
-        s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
-        view(h2, ax, bx);
-        %title(h2,titxt);
-        title(h2, targetg);
-        subtitle(h2, titxt);
+    c = log2(1+c);
+    [ax, bx] = view(h2);
+    delete(s2);
+    s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
+    view(h2, ax, bx);
+    %title(h2,titxt);
+    title(h2, targetg);
+    subtitle(h2, titxt);
 
-        [ax, bx] = view(h1);
-        delete(s1);
-        s1 = scatter3(h1, x, y, z, sz, c, 'filled');
-        view(h1, ax, bx);
-        colorbar(h1);
-        
-        %title(h1,titxt);
-        title(h1, targetg);
-        subtitle(h1, titxt);
+    [ax, bx] = view(h1);
+    delete(s1);
+    s1 = scatter3(h1, x, y, z, sz, c, 'filled');
+    view(h1, ax, bx);
+    colorbar(h1);
+
+    %title(h1,titxt);
+    title(h1, targetg);
+    subtitle(h1, titxt);
     end
 
-
     function i_ResetExpr(~, ~)
-        c = ori_c;
-        delete(s2);
-        s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
+    c = ori_c;
+    delete(s2);
+    s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
 
-        %view(h2,ayy,byy);
+    %view(h2,ayy,byy);
 
-        delete(s1);
-        s1 = scatter3(h1, x, y, z, sz, c, 'filled');
-        %view(h1,axx,bxx);
-        title(h1, targetg);
-        subtitle(h1, titxt);
-        title(h2, targetg);
-        subtitle(h2, titxt);
+    delete(s1);
+    s1 = scatter3(h1, x, y, z, sz, c, 'filled');
+    %view(h1,axx,bxx);
+    title(h1, targetg);
+    subtitle(h1, titxt);
+    title(h2, targetg);
+    subtitle(h2, titxt);
     end
 
 end
-
-
 
     function i_genecards(~, ~, g)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g));
@@ -320,4 +316,3 @@ end
         % [caz,cel]=view;
         % view([-45,-45,300]);
     end
-        

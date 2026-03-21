@@ -43,7 +43,7 @@ methods
         else
             X = single(X); % Works in R2025a+
         end
-            
+
         obj.X = X;
         obj.g = g;
         obj.s = s;
@@ -80,7 +80,7 @@ methods
                 actualLength, expectedLength);
         end
         obj.g = value;
-    end    
+    end
 
     function m = get.NumCells(obj)
         m = size(obj.X, 2);
@@ -118,7 +118,7 @@ methods
     obj = sortcells(obj, idx);
     exportToJsonl(obj, outfile, dataset_id, titleText)
     sce2 = toSCE2(obj)
-   
+
     function obj = removecells(obj, idx)
         try
             obj.X(:, idx) = [];
@@ -248,7 +248,7 @@ methods
         %     options.libsize (1,1) double {mustBePositive} = 1000
         %     options.mtratio (1,1) double {mustBeInRange(options.mtratio,0,1)} = 0.15
         %     options.min_cells_nonzero (1,1) double {mustBeNonnegative} = 15
-        % end        
+        % end
         if nargin < 4 || isempty(min_cells_nonzero), min_cells_nonzero = 15; end
         if nargin < 3 || isempty(mtratio), mtratio = 0.15; end
         if nargin < 2 || isempty(libsize), libsize = 1000; end
@@ -298,7 +298,7 @@ methods
     end
 
     function newobj = subsetcopy(obj, idx)
-        %SUBSETCOPY Return a copy of the object with only selected cells
+        % SUBSETCOPY Return a copy of the object with only selected cells
         %
         % Usage:
         %   sce1 = sce.subsetcopy(j1);

@@ -7,3 +7,4 @@ t = table();
 t.genes = string(g(:));
 t = [t, array2table(X)];
 writetable(t, filename, 'Delimiter', delim, 'filetype', 'text');
+end

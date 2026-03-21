@@ -4,7 +4,7 @@ function [glist] = i_selectngenes(sce, predefinedlist, parentfig)
 if nargin < 2, predefinedlist = []; end
 if nargin < 3, parentfig = []; end
 
-%isui = gui.i_isuifig(parentfig);
+% isui = gui.i_isuifig(parentfig);
 
 % internal function used by callback_BuildGeneNetwork
 glist = [];
@@ -41,7 +41,7 @@ switch answer
     case 'Paste'
         rng("shuffle");
         n = length(gsorted);
-        if isempty(predefinedlist)            
+        if isempty(predefinedlist)
             tg = gui.i_inputgenelist(gsorted(randperm(n, ...
                 min([20, length(gsorted)]))), false, parentfig);
         else
@@ -81,14 +81,14 @@ switch answer
         [idx] = gui.i_selmultidialog(gsorted, predefinedlist, parentfig);
         if isempty(idx), return; end
         if idx == 0, return; end
-        %if length(idx)<2
+        % if length(idx)<2
         %    gui.myWarndlg(parentfig, 'Need at least 2 genes');
         %    return;
-        %else
+        % else
         glist = gsorted(idx);
-        %g='Dhfr, Lmbr1, Reck, Rnf168, Rpl26, Snrnp27, Tmem160'
-        %g=["Tcf7","Lef1","Bcl6","Ctla4","Lag3","Pdcd1"];
-        %end
+        % g='Dhfr, Lmbr1, Reck, Rnf168, Rpl26, Snrnp27, Tmem160'
+        % g=["Tcf7","Lef1","Bcl6","Ctla4","Lag3","Pdcd1"];
+        % end
     otherwise
         return;
 end

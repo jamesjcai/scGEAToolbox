@@ -1,6 +1,6 @@
 function [U, S, V] = ai_randPCA(A, k, its, l)
 
-%PCA  Low-rank approximation in SVD form.
+% PCA  Low-rank approximation in SVD form.
 %
 %
 %   [U,S,V] = PCA(A)  constructs a nearly optimal rank-6 approximation
@@ -227,7 +227,7 @@ if (m >= n)
     %
     % Apply A to a random matrix, obtaining H.
     %
-    %rand('seed',rand('seed'));
+    % rand('seed',rand('seed'));
     rng('default');
 
     if (isreal(A))
@@ -238,7 +238,7 @@ if (m >= n)
         H = A * ((2 * rand(n, l) - ones(n, l)) + 1i * (2 * rand(n, l) - ones(n, l)));
     end
 
-    %rand('twister',rand('twister'));
+    % rand('twister',rand('twister'));
     rng('default');
 
     %
@@ -293,7 +293,7 @@ if (m < n)
     %
     % Apply A' to a random matrix, obtaining H.
     %
-    %rand('seed',rand('seed'));
+    % rand('seed',rand('seed'));
     rng('default');
 
     if (isreal(A))
@@ -304,7 +304,7 @@ if (m < n)
         H = (((2 * rand(l, m) - ones(l, m)) + 1i * (2 * rand(l, m) - ones(l, m))) * A)';
     end
 
-    %rand('twister',rand('twister'));
+    % rand('twister',rand('twister'));
     rng('default');
 
     %

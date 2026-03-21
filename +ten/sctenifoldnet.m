@@ -68,8 +68,8 @@ X1 = sc_norm(X1(validg, :), "type", "libsize");
 X0 = log1p(X0);
 X1 = log1p(X1);
 
-%X0=sc_transform(X0);
-%X1=sc_transform(X1);
+% X0=sc_transform(X0);
+% X1=sc_transform(X1);
 
 rng('default');
 
@@ -80,7 +80,7 @@ toc
 tic
 disp('Tensor decomposition')
 [A0] = i_td1(XM, tdmethod);
-%[A0]=e_filtadjc(A0,0.95);
+% [A0]=e_filtadjc(A0,0.95);
 toc
 if savegrn
     tic
@@ -96,7 +96,7 @@ toc
 tic
 disp('Tensor decomposition')
 A1 = i_td1(XM, tdmethod);
-%A1=e_filtadjc(A1,0.95);
+% A1=e_filtadjc(A1,0.95);
 toc
 if savegrn
     tic

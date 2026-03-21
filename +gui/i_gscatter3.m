@@ -8,9 +8,9 @@ if nargin < 2, c = ones(size(s, 1), 1); end
 x = s(:, 1);
 y = s(:, 2);
 
-%if iscell(c) || isstring(c)
-    c = findgroups(string(c));
-%end
+% if iscell(c) || isstring(c)
+c = findgroups(string(c));
+% end
 kc = numel(unique(c));
 
 if size(s, 2) >= 3, z = s(:, 3); end
@@ -24,7 +24,7 @@ switch methodid
                 h = scatter(hAx, x, y, 10, c);
             end
         elseif size(s, 2) >= 3
-            
+
             if isempty(hAx)
                 h = scatter3(x, y, z, 10, c);
             else
@@ -54,7 +54,7 @@ switch methodid
 end
 
 
-    if isempty(hAx)
+if isempty(hAx)
         grid on
         colormap(pkg.i_mycolorlines(kc));
     else

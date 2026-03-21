@@ -15,7 +15,7 @@ if nargin < 2, dim = 2; end
 %     'scale first', ...
 %     'scale iqr', ...
 %     'range [0 1]', ...
-%     'range [1 10]', ...    
+%     'range [1 10]', ...
 %     'center mean', ...
 %     'center median', ...
 %     'center scale', ...
@@ -24,9 +24,9 @@ if nargin < 2, dim = 2; end
 
 switch methodid
     case 1
-        %Y = zscore(Y, 0, 2);   %         
-        %assignin("base","Y",Y);
-        %assignin("base","dim",dim);
+        % Y = zscore(Y, 0, 2);   %
+        % assignin("base","Y",Y);
+        % assignin("base","dim",dim);
         Y = normalize(Y, dim, 'zscore');
     case 2
         Y = normalize(Y, dim, 'zscore', 'robust');
@@ -44,7 +44,7 @@ switch methodid
     case 7
         Y = normalize(Y, dim, 'scale', 'first');
     case 8
-        Y = normalize(Y, dim, 'scale', 'iqr');       
+        Y = normalize(Y, dim, 'scale', 'iqr');
     case 9
         Y = normalize(Y, dim, 'range', [0 1]);
     case 10
@@ -68,7 +68,7 @@ end
 if doclip
     try
         Y = clipxx(Y, quantile(Y(:), 0.05), quantile(Y(:), 0.95));
-    catch        
+    catch
         y = Y;
         y(Y<quantile(Y(:), 0.05))=quantile(Y(:), 0.05);
         y(Y>quantile(Y(:), 0.95))=quantile(Y(:), 0.95);

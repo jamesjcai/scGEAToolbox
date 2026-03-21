@@ -6,7 +6,7 @@ function callback_GetCellSignatureMatrix(src, ~)
 %     if ~strcmp(answer,'Yes'), return; end
 
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 preselected = [];
 
@@ -76,21 +76,21 @@ if ~isstring(c_cellid)
     c_cellid=string(c_cellid);
 end
 T = array2table(Y, 'VariableNames', ...
-    listitems(indx2), 'RowNames', ...
-    matlab.lang.makeUniqueStrings(c_cellid));
+listitems(indx2), 'RowNames', ...
+matlab.lang.makeUniqueStrings(c_cellid));
 T.Properties.DimensionNames{1} = 'Cell_ID';
 needwait = true;
 gui.i_exporttable(T, needwait,'Tcellsignmt','CellSignatTable', ...
-    [],[],FigureHandle);
+[],[],FigureHandle);
 
         % "Tcellattrib","CellAttribTable"
         % "Tviolindata","ViolinPlotTable"
         % "Tcrosstabul","CrosstabulTable"
         % "Tcellsignmt","CellSignatTable"
 
-%assignin('base','Y',Y);
-%assignin('base','listitems',listitems(indx2));
-%assignin('base','labelx',listitems(indx2));
+% assignin('base','Y',Y);
+% assignin('base','listitems',listitems(indx2));
+% assignin('base','labelx',listitems(indx2));
 
 labelx = listitems(indx2)';
 % T=table(Y,'VariableNames', ...
@@ -110,7 +110,7 @@ allowunique = false;
 [thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);
 if isempty(thisc), return; end
 
-    if n == 1
+if n == 1
         gui.i_violinplot(Y, thisc, labelx, true, [], [], FigureHandle);
         xlabel('Cell group');
         ylabel('Cellular score');
@@ -121,8 +121,8 @@ if isempty(thisc), return; end
         gui.i_violinplot(Y(:, 2), thisc, labelx{2}, true, [], [], FigureHandle);
         xlabel('Cell group');
         ylabel('Cellular score');
-    
-    elseif n >= 3    
+
+    elseif n >= 3
         gui.i_spiderplot(Y, thisc, labelx, sce);
     end
 end

@@ -7,15 +7,15 @@ noanswer = true;
 [c, cL] = findgroups(string(thisc));
 newidx = 1:numel(cL);
 if isscalar(cL)
-    %gui.myErrordlg(parentfig, 'Only one cell type or cluster.');
+    % gui.myErrordlg(parentfig, 'Only one cell type or cluster.');
     noanswer = false;
     return;
 end
 
 [answer] = gui.myQuestdlg(parentfig, 'Manually order groups?', '', ...
-    {'Yes', 'No', 'Cancel'}, 'No');
+{'Yes', 'No', 'Cancel'}, 'No');
 if isempty(answer), return; end
-    switch answer
+switch answer
         case 'Yes'
             if ~isempty(preorderedcL)
                 [newidx] = gui.i_selmultidialog(cL, preorderedcL, parentfig);

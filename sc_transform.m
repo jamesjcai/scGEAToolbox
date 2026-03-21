@@ -1,13 +1,13 @@
 function [X] = sc_transform(X, varargin)
-    % SC_TRANSFORM Transformations for single-cell data
-    %
-    % Supports:
-    %   - PearsonResiduals
-    %   - kNNSmoothing
-    %   - SCTransform / SCT
-    %   - FreemanTukey
-    %
-    % Example: X = sc_transform(X, 'type', 'PearsonResiduals');
+% SC_TRANSFORM Transformations for single-cell data
+%
+% Supports:
+%   - PearsonResiduals
+%   - kNNSmoothing
+%   - SCTransform / SCT
+%   - FreemanTukey
+%
+% Example: X = sc_transform(X, 'type', 'PearsonResiduals');
 
 % https://www.biorxiv.org/content/10.1101/2021.06.24.449781v1.full
 % acosh transformation based on the delta method
@@ -21,8 +21,8 @@ validTypes = {'PearsonResiduals', 'kNNSmoothing', 'SCTransform', ...
 checkType = @(x) any(validatestring(x, validTypes));
 
 addRequired(p, 'X', @isnumeric);
-addOptional(p, 'type', defaultType, checkType)
-parse(p, X, varargin{:})
+addOptional(p, 'type', defaultType, checkType);
+parse(p, X, varargin{:});
 
 if issparse(X), X = full(X); end
 
@@ -33,7 +33,7 @@ switch lower(p.Results.type)
         % https://gist.github.com/hypercompetent/51a3c428745e1c06d826d76c3671797c
 
         u = (sum(X, 2) * sum(X, 1)) ./ sum(X(:));
-        s = sqrt(u+(u.^2)./100);
+        s = sqrt(u + (u.^2) ./ 100);
         X = (X - u) ./ s;
         X(isnan(X)) = 0;
         n = size(X, 2);
@@ -51,18 +51,18 @@ switch lower(p.Results.type)
         % sc_sct
         % sctransform: Variance Stabilizing Transformations for Single Cell UMI Data
         % Hafemeister & Satija 2019
-        % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1        
+        % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1
         [X] = run.r_SeuratSctransform(X, string(1:size(X, 1)));
 
         % https://satijalab.org/seurat/archive/v4.3/sctransform_v2_vignette
-        
+
     case 'freemantukey'
         % https://github.com/flo-compbio/monet/blob/master/monet/util/expression.py
         % Applies the Freeman-Tukey transformation to stabilize variance."
         % https://www.biorxiv.org/content/10.1101/2020.06.08.140673v2.full
         % https://www.nature.com/articles/nmeth.2930
         X = sc_norm(X, 'type', 'deseq');
-        X = sqrt(X) + sqrt(X+1);
+        X = sqrt(X) + sqrt(X + 1);
 end
 end
 
@@ -92,7 +92,7 @@ function [mat_smooth] = knn_smooth(raw_mat, k, varargin)
 %                         ----------------
 %   The smoothed expression matrix.
 
-%default
+% default
 num_of_pc = 10;
 
 if ~isempty(varargin)
@@ -100,13 +100,13 @@ if ~isempty(varargin)
 end
 
 mat_smooth = raw_mat;
-num_of_steps = ceil(log2(k+1));
+num_of_steps = ceil(log2(k + 1));
 disp_text = ['number of steps: ', num2str(num_of_steps)];
 disp(disp_text)
 for s = 1:num_of_steps
-    k_step = min(2^s-1, k);
+    k_step = min(2^s - 1, k);
     mat_tpm = median(sum(mat_smooth)) * bsxfun(@rdivide, mat_smooth, sum(mat_smooth));
-    mat_trans = sqrt(mat_tpm) + sqrt(mat_tpm+1);
+    mat_trans = sqrt(mat_tpm) + sqrt(mat_tpm + 1);
     [~, ~] = sort(sum(mat_smooth, 2), 'descend');
     disp_texp = ['preforming pca ', num2str(s), '/', num2str(num_of_steps), ' times'];
     disp(disp_texp)
@@ -114,7 +114,7 @@ for s = 1:num_of_steps
     score = mat_trans' * V;
     disp_texp = ['preforming pca - done! ', num2str(s), '/', num2str(num_of_steps), ' times'];
     disp(disp_texp)
-    [knn_idx, ~] = knnsearch(score, score, 'K', k_step+1);
+    [knn_idx, ~] = knnsearch(score, score, 'K', k_step + 1);
     disp_texp = ['calculating knn ', num2str(s), '/', num2str(num_of_steps), ' times'];
     disp(disp_texp)
     for cell = 1:size(mat_smooth, 2)

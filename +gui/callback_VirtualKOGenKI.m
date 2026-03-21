@@ -22,8 +22,8 @@ end
 
 
 answer = gui.myQuestdlg(FigureHandle, sprintf(['Ready to construct network ' ...
-    'and then knock out gene #%d (%s). Continue?'], ...
-    idx, sce.g(idx)));
+'and then knock out gene #%d (%s). Continue?'], ...
+idx, sce.g(idx)));
 if ~strcmpi(answer, 'Yes'), return; end
 
 extprogname = 'py_GenKI';
@@ -32,11 +32,11 @@ preftagname = 'externalwrkpath';
 if isempty(wkdir), return; end
 
 try
-    %fw = gui.myWaitbar(FigureHandle);
+    % fw = gui.myWaitbar(FigureHandle);
     [T] = run.py_GenKI(sce.X, sce.g, idx, wkdir);
-    %gui.myWaitbar(FigureHandle, fw);
+    % gui.myWaitbar(FigureHandle, fw);
 catch ME
-    %gui.myWaitbar(FigureHandle, fw);
+    % gui.myWaitbar(FigureHandle, fw);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end

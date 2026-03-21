@@ -11,7 +11,6 @@ if nargin < 2, ncom = 3; end
 
 opts.maxit = 150;
 
-
 % X is supposed to be LogNormalized, i.e., [X]=log1p(sc_norm(X));
 X = X';
 if dozscore
@@ -31,11 +30,11 @@ parfor k = 1:n
         [~, ~, coeff] = lmsvd(Xi, ncom, opts);
     else
         [~, ~, coeff] = svds(Xi, ncom);
-        %[~,~,coeff]=rsvd(Xi,ncom);
+        % [~,~,coeff]=rsvd(Xi,ncom);
     end
     score = Xi * coeff;
     score = (score ./ (vecnorm(score).^2));
-    Beta = sum(y.*score);
+    Beta = sum(y .* score);
     B(k, :) = coeff * Beta';
 end
 warning on

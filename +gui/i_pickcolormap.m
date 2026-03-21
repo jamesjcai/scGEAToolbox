@@ -27,7 +27,7 @@ if tf == 1
     if strcmp(a, 'autumn (default)')
         a = 'autumn';
     end
-    if setzerocolor        
+    if setzerocolor
         gui.i_setautumncolor(1:5, a);
     else
         colormap(a);

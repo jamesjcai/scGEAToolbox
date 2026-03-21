@@ -13,15 +13,8 @@ end
 
 hFig.Position(3)=0.75*hFig.Position(3);
 hFig.Position(4)=0.75*hFig.Position(4);
-dialogWidth = hFig.Position(3);
-dialogHeight = hFig.Position(4);
 
-% Compute center position relative to parentfig
-parentPos = parentfig.Position;
-dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
-dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;
-hFig.Position(1)=dialogX;
-hFig.Position(2)=dialogY;
+gui.i_movegui2parent(hFig, parentfig);
 
 
 g = uigridlayout(hFig,[3 3]);
@@ -48,7 +41,7 @@ btn = uibutton(g,"Text",oktext);
 btn.Layout.Row = 3;
 btn.Layout.Column = 2 + (nargout==0);
 btn.ButtonPushedFcn = @(src,event) textEntered(src,event,btn);
-%btn.Position(3) = 50;
+% btn.Position(3) = 50;
 
 if nargout > 0
     btn2 = uibutton(g,"Text","Cancel");
@@ -57,21 +50,20 @@ if nargout > 0
     btn2.ButtonPushedFcn = @(src,event) textEntered(src,event,btn2);
 end
 
-% gui.i_movegui2parent(hFig, parentfig);
 drawnow;
 pause(0.7);
 hFig.Visible=true;
 uiwait(hFig);
 
 function textEntered(~,~,btn)
-    if strcmp(btn.Text,oktext)
-        y = true;
-        answer = arrayfun(@(f) f.Value, txa, 'UniformOutput', false);
-    else
-        y = false;
-        answer = {};
-    end
-    delete(hFig);
+if strcmp(btn.Text,oktext)
+    y = true;
+    answer = arrayfun(@(f) f.Value, txa, 'UniformOutput', false);
+else
+    y = false;
+    answer = {};
+end
+delete(hFig);
 end
 
 end

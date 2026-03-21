@@ -4,8 +4,8 @@ function [sample_likelihoods, T] = py_MELD(X, batchid)
 % data manifold are enriched or depleted in cells with a specific
 % feature.
 arguments
-    X(:, :) {mustBeNumeric}
-    batchid(1, :) {mustBePositive, mustBeInteger}
+X(:, :) {mustBeNumeric}
+batchid(1, :) {mustBePositive, mustBeInteger}
 end
 sample_likelihoods = [];
 T = [];

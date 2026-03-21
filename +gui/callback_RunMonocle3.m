@@ -15,22 +15,21 @@ end
 % s = getpref('scgeatoolbox', preftagname);
 % s1 = sprintf('%s_workingfolder', extprogname);
 % wkdir = fullfile(s, s1);
-% 
+%
 % if ~exist(wkdir,"dir")
 %     mkdir(wkdir);
 % else
 %     answer = gui.myQuestdlg(FigureHandle, 'Directory existing. Overwrite?');
 %     if ~strcmp(answer,'Yes'), return; end
 % end
-% 
+%
 % fprintf('CURRENTWDIR = "%s"\n', wkdir);
-
 
 
 a = findall(FigureHandle, 'type', 'axes');
 h = findall(a, 'type', 'scatter');
 ptsSelected = logical(h.BrushData.');
-if ~any(ptsSelected)    
+if ~any(ptsSelected)
     % gui.myHelpdlg(FigureHandle, 'Please use the brush in the axes toolbar to select root cell(s).', '');
     answer = gui.myQuestdlg(FigureHandle, 'Use brush to select root cell(s). Ready?','');
     if ~strcmp(answer, 'Yes'), return; end
@@ -39,7 +38,7 @@ if ~any(ptsSelected)
     b.Enable="on";
     disp('Waiting for user to finish brushing...');
     uiwait(FigureHandle);  % Pauses the execution until uiresume is called
-    disp('User finished brushing!');  
+    disp('User finished brushing!');
     b.Enable="off";
     if any(ptsSelected)
         answer = gui.myQuestdlg(FigureHandle, 'Root cell(s) selected. Continue?','');
@@ -68,9 +67,9 @@ switch answer
         return;
 end
 
-%[ok] = gui.i_confirmscript('Run Pseudotime Analysis (Monocle3)?', ...
+% [ok] = gui.i_confirmscript('Run Pseudotime Analysis (Monocle3)?', ...
 %    extprogname, 'r');
-%if ~ok, return; end
+% if ~ok, return; end
 
 fw = gui.myWaitbar(FigureHandle);
 try
@@ -104,9 +103,8 @@ needupdatesce = true;
 gui.myHelpdlg(FigureHandle, 'Monocle3 pseudotime T and embedding S have been saved in SCE.');
 
 
-    function in_checkselected(~, ~)
+function in_checkselected(~, ~)
         ptsSelected = logical(h.BrushData.');
         uiresume(FigureHandle);
     end
 end
-

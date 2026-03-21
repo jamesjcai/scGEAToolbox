@@ -1,5 +1,5 @@
-classdef SplashScreen < matlab.mixin.SetGet 
-    %SplashScreen  create a splashscreen
+classdef SplashScreen < matlab.mixin.SetGet
+    % SplashScreen  create a splashscreen
     %
     %   s = SplashScreen(title,imagefile) creates a splashscreen using
     %   the specified image. The title is the name of the window as shown
@@ -18,10 +18,10 @@ classdef SplashScreen < matlab.mixin.SetGet
     %   delete( s )
     %
     %   See also: SplashScreen/addText
-    
+
     %   Copyright 2008-2011 The MathWorks, Inc.
     %   Revision: 1.1
-    
+
     %% Public properties
     properties
         Visible = 'on'       % Is the splash-screen visible on-screen [on|off]
@@ -31,13 +31,13 @@ classdef SplashScreen < matlab.mixin.SetGet
         ProgressRatio = 0    % The ratio shown on the progress bar (in range 0 to 1)
         Tag = ''             % User tag for this object
     end % Public properties
-    
+
     %% Read-only properties
     properties ( GetAccess = public, SetAccess = private )
         Width = 0            % Width of the window
         Height = 0           % Height of the window
     end % Read-only properties
-    
+
     %% Private properties
     properties ( Access = private )
         Icon = []
@@ -46,10 +46,10 @@ classdef SplashScreen < matlab.mixin.SetGet
         Label = []
         Frame = []
     end % Read-only properties
-    
+
     %% Public methods
     methods
-        
+
         function obj = SplashScreen( title, imagename, varargin )
             % Construct a new splash-screen object
             if nargin<2
@@ -67,23 +67,23 @@ classdef SplashScreen < matlab.mixin.SetGet
             % Create the interface
             obj.createInterfaceComponents( title, fullname );
             obj.updateAll();
-            
+
             % Set any user-specified properties
             for ii=1:2:nargin-2
                 param = varargin{ii};
                 value = varargin{ii+1};
                 obj.(param) = value;
             end
-            
+
             % If the user hasn't overridden the default, finish by putting
             % it onscreen
             if strcmpi(obj.Visible,'on')
                 obj.Frame.setVisible(true);
             end
         end % SplashScreen
-        
+
         function addText( obj, x, y, text, varargin )
-            %addText  Add some text to the background image
+            % addText  Add some text to the background image
             %
             %   S.addText(X,Y,STR,...) adds some text to the splashscreen S
             %   showing the string STR. The text is located at pixel
@@ -101,18 +101,18 @@ classdef SplashScreen < matlab.mixin.SetGet
             %   s.addText( 30, 50, 'My Cool App', 'FontSize', 30, 'Color', [0 0 0.6] )
             %
             %   See also: SplashScreen
-            
+
             % We write into the original image so that the text is
             % permanent
             gfx = obj.OriginalImage.getGraphics();
-            
+
             % Set the font size etc
             [font,color,shadow] = parseFontArguments( varargin{:} );
             gfx.setFont( font );
-            
+
             % Switch on anti-aliasing
             gfx.setRenderingHint( java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON );
-            
+
             % Draw the text semi-transparent as a shadow
             if shadow
                 gfx.setPaint( java.awt.Color.black );
@@ -126,29 +126,29 @@ classdef SplashScreen < matlab.mixin.SetGet
                 gfx.setComposite( ac );
                 gfx.drawString( text, x+1, y+1 );
             end
-            
+
             % Now the text itself
             gfx.setPaint( color );
             ac = java.awt.AlphaComposite.getInstance( java.awt.AlphaComposite.SRC_OVER, 1.0 );
             gfx.setComposite( ac );
             gfx.drawString( text, x, y );
-            
-            
+
+
             % Now update everything else
             obj.updateAll();
         end % addText
-        
+
         function delete(obj)
-            %delete  destroy this object and close all graphical components
+            % delete  destroy this object and close all graphical components
             if ~isempty(obj.Frame)
                 dispose(obj.Frame);
             end
         end % delete
     end % Public methods
-    
+
     %% Data-access methods
     methods
-        
+
         function val = get.Width(obj)
             if isempty(obj.Icon)
                 val = 0;
@@ -156,7 +156,7 @@ classdef SplashScreen < matlab.mixin.SetGet
                 val = obj.Icon.getIconWidth();
             end
         end % get.Width
-        
+
         function val = get.Height(obj)
             if isempty(obj.Icon)
                 val = 0;
@@ -164,7 +164,7 @@ classdef SplashScreen < matlab.mixin.SetGet
                 val = obj.Icon.getIconHeight();
             end
         end % get.Height
-        
+
         function set.Visible(obj,val)
             if ~ischar( val ) || ~any( strcmpi( {'on','off'}, val ) )
                 error( 'SplashScreen:BadValue', 'Property ''ProgressBar'' must be ''on'' or ''off''' );
@@ -172,7 +172,7 @@ classdef SplashScreen < matlab.mixin.SetGet
             obj.Visible = lower( val );
             obj.Frame.setVisible( strcmpi(val,'ON') ); %#ok<MCSUP>
         end % set.Visible
-        
+
         function set.Border(obj,val)
             if ~ischar( val ) || ~any( strcmpi( {'on','off'}, val ) )
                 error( 'SplashScreen:BadValue', 'Property ''Border'' must be ''on'' or ''off''' );
@@ -180,7 +180,7 @@ classdef SplashScreen < matlab.mixin.SetGet
             obj.Border = val;
             obj.updateAll();
         end % set.Border
-        
+
         function set.ProgressBar(obj,val)
             if ~ischar( val ) || ~any( strcmpi( {'on','off'}, val ) )
                 error( 'SplashScreen:BadValue', 'Property ''ProgressBar'' must be ''on'' or ''off''' );
@@ -188,7 +188,7 @@ classdef SplashScreen < matlab.mixin.SetGet
             obj.ProgressBar = val;
             obj.updateProgressBar();
         end % set.ProgressBar
-        
+
         function set.ProgressRatio(obj,val)
             if ~isnumeric( val ) || ~isscalar( val ) || val<0 || val > 1
                 error( 'SplashScreen:BadValue', 'Property ''ProgressRatio'' must be a scalar between 0 and 1' );
@@ -196,7 +196,7 @@ classdef SplashScreen < matlab.mixin.SetGet
             obj.ProgressRatio = val;
             obj.updateProgressBar();
         end % set.ProgressRatio
-        
+
         function set.ProgressPosition(obj,val)
             if ~isnumeric( val ) || ~isscalar( val ) || val<1 || val > obj.Height %#ok<MCSUP>
                 error( 'SplashScreen:BadValue', 'Property ''ProgressPosition'' must be a vertical position inside the window' );
@@ -204,23 +204,23 @@ classdef SplashScreen < matlab.mixin.SetGet
             obj.ProgressPosition = val;
             obj.updateAll();
         end % set.ProgressPosition
-        
+
         function set.Tag(obj,val)
             if ~ischar( val )
                 error( 'SplashScreen:BadValue', 'Property ''Tag'' must be a character array' );
             end
             obj.Tag = val;
         end % set.Tag
-        
+
     end % Data-access methods
-    
-    
+
+
     %% Private methods
     methods ( Access = private )
-        
+
         function createInterfaceComponents( obj, title, imageFile )
             import javax.swing.*;
-            
+
             % Load the image
             jImFile = java.io.File( imageFile );
             try
@@ -230,22 +230,22 @@ classdef SplashScreen < matlab.mixin.SetGet
             end
             % Read it again into the copy we'll draw on
             obj.BufferedImage = javax.imageio.ImageIO.read( jImFile );
-            
+
             % Create the icon
             obj.Icon = ImageIcon( obj.BufferedImage );
-            
+
             % Create the frame and fill it with the image
             obj.Frame = JFrame( title );
             obj.Frame.setUndecorated( true );
             obj.Label = JLabel( obj.Icon );
             p = obj.Frame.getContentPane();
             p.add( obj.Label );
-            
+
             % Resize and reposition the window
             obj.Frame.setSize( obj.Icon.getIconWidth(), obj.Icon.getIconHeight() );
             %{
             % pos = get(0,'MonitorPositions');
-            pos = get(0,'ScreenSize');            
+            pos = get(0,'ScreenSize');
             x0 = pos(1,1) + (pos(1,3)-obj.Icon.getIconWidth())/2;
             y0 = pos(1,2) + (pos(1,4)-obj.Icon.getIconHeight())/2;
             obj.Frame.setLocation( x0, y0 );
@@ -260,16 +260,16 @@ classdef SplashScreen < matlab.mixin.SetGet
             obj.Frame.toFront();
             obj.Frame.setAlwaysOnTop(true);
         end % createInterfaceComponents
-        
+
         function updateAll( obj )
             % Update the entire image
-            
+
             % Copy in the original
             w = obj.Frame.getWidth();
             h = obj.Frame.getHeight();
             gfx = obj.BufferedImage.getGraphics();
             gfx.drawImage( obj.OriginalImage, 0, 0, w, h, 0, 0, w, h, [] );
-            
+
             % Maybe draw a border
             if strcmpi( obj.Border, 'on' )
                 % Switch on anti-aliasing
@@ -280,13 +280,13 @@ classdef SplashScreen < matlab.mixin.SetGet
                 gfx.setPaint( java.awt.Color.black );
                 gfx.drawRect( 0, 0, w-1, h-1 );
             end
-            
+
             obj.updateProgressBar();
         end % updateAll
-        
+
         function updateProgressBar( obj )
             % Update the progressbar and other bits
-            
+
             % First paint over the progressbar area with the original image
             gfx = obj.BufferedImage.getGraphics();
             border = 10;
@@ -299,10 +299,10 @@ classdef SplashScreen < matlab.mixin.SetGet
             x2 = w-2;
             y2 = h-py;
             gfx.drawImage( obj.OriginalImage, x1, y1, x2, y2, x1, y1, x2, y2, [] );
-            
+
             if strcmpi( obj.ProgressBar, 'on' )
                 % Draw the progress bar over the image
-                
+
                 % Switch on anti-aliasing
                 gfx.setRenderingHint( java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON );
                 % Draw a semi-transparent rectangle for the background
@@ -317,13 +317,13 @@ classdef SplashScreen < matlab.mixin.SetGet
                 gfx.setPaint( java.awt.Color.white );
                 gfx.fillRoundRect( border+1, h-py-size+1, progWidth, size-2, size, size );
             end
-            
+
             % Update the on-screen image
             obj.Frame.repaint();
         end % updateProgressBar
-        
+
     end % Private methods
-    
+
 end % classdef
 
 
@@ -386,7 +386,7 @@ if nargin
                 color = java.awt.Color( rgb(1), rgb(2), rgb(3) );
             case 'SHADOW'
                 if ~ischar( values{ii} ) || ~ismember( upper( values{ii} ), {'ON','OFF'} )
-                    error( 'UIExtras:SplashScreen:BadParameter', 'Option ''Shadow'' must be ''on'' or ''off''.' );                    
+                    error( 'UIExtras:SplashScreen:BadParameter', 'Option ''Shadow'' must be ''on'' or ''off''.' );
                 end
                 shadow = strcmpi( values{ii}, 'on' );
             otherwise
@@ -399,7 +399,7 @@ end % parseFontArguments
 
 
 function col = iInterpretColor(str)
-%interpretColor  Interpret a color as an RGB triple
+% interpretColor  Interpret a color as an RGB triple
 %
 %   rgb = uiextras.interpretColor(col) interprets the input color COL and
 %   returns the equivalent RGB triple. COL can be one of:
@@ -441,7 +441,7 @@ if ischar( str )
         end
     elseif all( ismember( str, '1234567890.,; []' ) )
         % Try the '[0 0 1]' thing first
-        col = str2double( str ); 
+        col = str2double( str );
         if numel(col) == 3
             % Conversion worked, so just check for silly values
             col(col<0) = 0;

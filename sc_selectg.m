@@ -1,6 +1,6 @@
 function [X, genelist, idx] = sc_selectg(X, genelist, ...
     min_cells_nonzero, isexpressed_cutoff)
-%Select genes by expression levels
+% Select genes by expression levels
 %
 % https://www.nature.com/articles/s41592-018-0254-1
 % 11,308 genes with at least 2 cells having more than

@@ -29,7 +29,7 @@ if uselog, X = log1p(X); end
 
 a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
 
-%z = zeros(size(X, 2)*length(tgene),1);
+% z = zeros(size(X, 2)*length(tgene),1);
 z = [];
 for kx = 1:length(tgene)
     z =[z, X(g == tgene(kx), :)];
@@ -37,16 +37,16 @@ end
 
 for kx = 1:length(tgene)
 
-    if ~isMATLABReleaseOlderThan('R2025a')        
+    if ~isMATLABReleaseOlderThan('R2025a')
         hx = figure;
         for ky = 1:length(cL)
             cellidx = c==ky;
             nexttile;
-    
-            % sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);   
-    
+
+            % sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);
+
             ydata = X(g == tgene(kx), cellidx);
-        
+
             if size(s,2)>2
                 scatter3(s(cellidx, 1), s(cellidx, 2), s(cellidx, 3), 5, ydata, 'filled');
             else
@@ -59,15 +59,15 @@ for kx = 1:length(tgene)
         sgtitle(tgene(kx));
     else
         hx=gui.myFigure(parentfig);
-        %hx = figure;
+        % hx = figure;
         for ky = 1:length(cL)
             cellidx = c==ky;
             nexttile;
-    
-            % sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);   
-    
+
+            % sc_scattermarker(Xt, sce.g, sce.s, glist(k), 1, 5, false);
+
             ydata = X(g == tgene(kx), cellidx);
-        
+
             if size(s,2)>2
                 scatter3(s(cellidx, 1), s(cellidx, 2), s(cellidx, 3), 5, ydata, 'filled');
             else

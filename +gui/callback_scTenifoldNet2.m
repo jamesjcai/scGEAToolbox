@@ -11,7 +11,6 @@ catch ME
 end
 
 if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]', FigureHandle), return; end
-    
 
 
 extprogname = 'scTenifoldNet';
@@ -23,13 +22,13 @@ if isfolder(wkdir)
 end
 
 answer = gui.myQuestdlg(FigureHandle, 'Construct networks de novo or use existing networks in Workspace?', ...
-    'Input Networks', {'Construct de novo', 'Use existing'}, 'Construct de novo');
+'Input Networks', {'Construct de novo', 'Use existing'}, 'Construct de novo');
 switch answer
     case 'Use existing'
         a = evalin('base', 'whos');
         b = struct2cell(a);
-        %valididx=ismember(b(4,:),'double');
-        %a=a(valididx);
+        % valididx=ismember(b(4,:),'double');
+        % a=a(valididx);
         if isempty(b)
             gui.myHelpdlg(FigureHandle, 'No variable in the WorkSpace.');
             return;
@@ -38,7 +37,7 @@ switch answer
         if gui.i_isuifig(FigureHandle)
             [indx, tf] = gui.myListdlg(FigureHandle, b(1,:), ...
                 'Select two networks:');
-        else        
+        else
             [indx, tf] = listdlg('PromptString', {'Select two networks:'}, ...
                 'liststring', b(1, :), ...
                 'SelectionMode', 'multiple', ...
@@ -58,7 +57,7 @@ switch answer
         if gui.i_isuifig(FigureHandle)
             [indx, tf] = gui.myListdlg(FigureHandle, b(1,:), ...
                 'Select a gene list');
-        else        
+        else
             [indx, tf] = listdlg('PromptString', {'Select a gene list:'}, ...
                 'liststring', b(1, :), ...
                 'SelectionMode', 'single', ...
@@ -85,7 +84,7 @@ switch answer
         [i1, i2] = gui.i_select2smplgrps(sce, false, FigureHandle);
         if isscalar(i1) || isscalar(i2), return; end
 
-        [nsubsmpl, csubsmpl, savegrn] = gui.i_tenifoldnetpara;
+        [nsubsmpl, csubsmpl, savegrn] = gui.i_tenifoldnetpara(FigureHandle);
         if isempty(nsubsmpl) || isempty(csubsmpl) || isempty(savegrn), return; end
         if csubsmpl >= min([size(sce.X(:, i1), 2), size(sce.X(:, i2), 2)])
             gui.myErrordlg(FigureHandle, 'csubsmpl should be smaller than sce.NumCells.');
@@ -117,7 +116,7 @@ tstr = matlab.lang.makeValidName(string(datetime));
 save(sprintf('T_DRgenes_%s', tstr), 'T');
 fprintf('The result has been saved in T_DRgenes_%s.mat\n', tstr);
 
-%figure;
+% figure;
 ten.e_mkqqplot(T);
 answer223=gui.myQuestdlg(FigureHandle, 'Run GSEA analysis?');
 if ~isempty(answer223) && strcmp(answer223, 'Yes')
@@ -146,4 +145,3 @@ if gseaok
     gui.i_exporttable(Tr, true, 'Tgseaoutput', 'GSEAResultTable');
 end
 end
-

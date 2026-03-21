@@ -1,179 +1,179 @@
 function selectedItems = myChecklistdlg(parentfig, items, varargin)
-    % CHECKLISTDIALOG Create a dialog with checklist for multi-selection
-    %
-    % selectedItems = checklistDialog(items) creates a dialog with a checklist
-    % of items for user selection. Returns cell array of selected items.
-    %
-    % selectedItems = checklistDialog(items, 'Title', title) sets dialog title
-    % selectedItems = checklistDialog(items, 'Prompt', prompt) sets prompt text
-    % selectedItems = checklistDialog(items, 'DefaultSelection', indices) 
-    %   sets default selected items by indices
-    %
-    % Example:
-    %{
-    items = {'Option 1', 'Option 2', 'Option 3', 'Option 4'};
-    selected = gui.myChecklistdlg([], items, 'Title', 'Select Options');
-    %}
-    
-    % Parse input arguments
-    p = inputParser;
-    addParameter(p, 'parentfig', []);
-    addRequired(p, 'items', @(x) iscell(x) || isstring(x) || ischar(x));
-    addParameter(p, 'Title', 'Select Items', @ischar);
-    addParameter(p, 'Prompt', 'Select one or more items:', @ischar);
-    addParameter(p, 'DefaultSelection', [], @isnumeric);
-    parse(p, items, varargin{:});
-    
-    % Convert items to cell array if needed
-    if ischar(items)
-        items = {items};
-    elseif isstring(items)
-        items = cellstr(items);
-    end
-    
-    % Initialize return variable
-    selectedItems = {};
-    
+% CHECKLISTDIALOG Create a dialog with checklist for multi-selection
+%
+% selectedItems = checklistDialog(items) creates a dialog with a checklist
+% of items for user selection. Returns cell array of selected items.
+%
+% selectedItems = checklistDialog(items, 'Title', title) sets dialog title
+% selectedItems = checklistDialog(items, 'Prompt', prompt) sets prompt text
+% selectedItems = checklistDialog(items, 'DefaultSelection', indices)
+%   sets default selected items by indices
+%
+% Example:
+%{
+items = {'Option 1', 'Option 2', 'Option 3', 'Option 4'};
+selected = gui.myChecklistdlg([], items, 'Title', 'Select Options');
+%}
 
-    dialogWidth = 350;
-    dialogHeight = 400;
-    dialogX = 100;
-    dialogY = 100;
-    if ~isempty(parentfig)
-        parentPos = parentfig.Position;
-        dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
-        dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;
-    end
+% Parse input arguments
+p = inputParser;
+addParameter(p, 'parentfig', []);
+addRequired(p, 'items', @(x) iscell(x) || isstring(x) || ischar(x));
+addParameter(p, 'Title', 'Select Items', @ischar);
+addParameter(p, 'Prompt', 'Select one or more items:', @ischar);
+addParameter(p, 'DefaultSelection', [], @isnumeric);
+parse(p, items, varargin{:});
 
-    % Create the dialog figure
-    fig = uifigure('Name', p.Results.Title, ...
-                   'Position', [dialogX, dialogY, dialogWidth, dialogHeight], ...
-                   'WindowStyle', 'modal', ...
-                   'Resize', 'off');
-    
-    if ~isMATLABReleaseOlderThan('R2025a')
-        try
-            theme(fig, parentfig.Theme.BaseColorStyle);
-        catch ME
-            disp(ME.message);
-        end
-    end    
-    % Create main grid layout
-    mainGrid = uigridlayout(fig, [4, 1]);
-    mainGrid.RowHeight = {'fit', '1x', 'fit', 'fit'};
-    mainGrid.Padding = [20, 20, 20, 20];
-    mainGrid.RowSpacing = 15;
-    
-    % Add prompt label
-    promptLabel = uilabel(mainGrid, 'Text', p.Results.Prompt);
-    
-    % Create scrollable panel for checklist
-    scrollPanel = uipanel(mainGrid, 'BorderType', 'line', ...
-                         'BackgroundColor', [1, 1, 1]);
-    
-    % Create grid layout for checkboxes
-    numItems = length(items);
-    checkGrid = uigridlayout(scrollPanel, [numItems, 1]);
-    checkGrid.RowHeight = repmat({'fit'}, 1, numItems);
-    checkGrid.Padding = [10, 10, 10, 10];
-    checkGrid.RowSpacing = 5;
-    
-    % Create checkboxes
-    checkboxes = cell(numItems, 1);
-    for i = 1:numItems
-        checkboxes{i} = uicheckbox(checkGrid, 'Text', items{i});
-        % Set default selection if specified
-        if ismember(i, p.Results.DefaultSelection)
-            checkboxes{i}.Value = true;
-        end
-    end
-    
-    % Create selection info label
-    selectionInfo = uilabel(mainGrid, 'Text', 'Selected: 0 items', ...
-                           'FontColor', [0.5, 0.5, 0.5]);
-    
-    % Add callback to update selection count
-    updateSelectionCount();
-    for i = 1:numItems
-        checkboxes{i}.ValueChangedFcn = @(~,~) updateSelectionCount();
-    end
-    
-    % Create button panel
-    buttonPanel = uipanel(mainGrid, 'BorderType', 'none', ...
-                         'BackgroundColor', fig.Color);
-    buttonGrid = uigridlayout(buttonPanel, [1, 4]);
-    buttonGrid.ColumnWidth = {'1x', '1x', '1x', '1x'};
-    buttonGrid.ColumnSpacing = 10;
-    
-    % Spacer
-    % uilabel(buttonGrid, 'Text', 'ccc');
-    
-    % Select All button
-    selectAllBtn = uibutton(buttonGrid, 'Text', 'Select All', ...
-                           'ButtonPushedFcn', @selectAllCallback);
-    
-    % Clear All button
-    clearAllBtn = uibutton(buttonGrid, 'Text', 'Clear All', ...
-                          'ButtonPushedFcn', @clearAllCallback);
+% Convert items to cell array if needed
+if ischar(items)
+    items = {items};
+elseif isstring(items)
+    items = cellstr(items);
+end
 
-    % Cancel button
-    cancelBtn = uibutton(buttonGrid, 'Text', 'Cancel', ...
-                        'ButtonPushedFcn', @cancelCallback);
+% Initialize return variable
+selectedItems = {};
 
 
-    % OK button
-    okBtn = uibutton(buttonGrid, 'Text', 'OK', ...
-                    'ButtonPushedFcn', @okCallback, ...
-                    'FontWeight', 'bold');
-    
-    
-    % Wait for user interaction
-    uiwait(fig);
+dialogWidth = 350;
+dialogHeight = 400;
+dialogX = 100;
+dialogY = 100;
+if ~isempty(parentfig)
+    parentPos = parentfig.Position;
+    dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
+    dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;
+end
 
-    if ~isempty(parentfig) && isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
-        figure(parentfig);
-    end
+% Create the dialog figure
+fig = uifigure('Name', p.Results.Title, ...
+               'Position', [dialogX, dialogY, dialogWidth, dialogHeight], ...
+               'WindowStyle', 'modal', ...
+               'Resize', 'off');
 
-    % Nested callback functions
-    function updateSelectionCount()
-        selectedCount = sum(cellfun(@(x) x.Value, checkboxes));
-        selectionInfo.Text = sprintf('Selected: %d items', selectedCount);
+if ~isMATLABReleaseOlderThan('R2025a')
+    try
+        theme(fig, parentfig.Theme.BaseColorStyle);
+    catch ME
+        disp(ME.message);
     end
-    
-    function selectAllCallback(~, ~)
-        for j = 1:numItems
-            checkboxes{j}.Value = true;
-        end
-        updateSelectionCount();
-    end
-    
-    function clearAllCallback(~, ~)
-        for j = 1:numItems
-            checkboxes{j}.Value = false;
-        end
-        updateSelectionCount();
-    end
-    
-    function okCallback(~, ~)
-        % Get selected items
-        selectedIndices = cellfun(@(x) x.Value, checkboxes);
-        selectedItems = items(selectedIndices);
+end
+% Create main grid layout
+mainGrid = uigridlayout(fig, [4, 1]);
+mainGrid.RowHeight = {'fit', '1x', 'fit', 'fit'};
+mainGrid.Padding = [20, 20, 20, 20];
+mainGrid.RowSpacing = 15;
 
-        % Close dialog
-        if isvalid(fig)
-            uiresume(fig);
-            delete(fig);
-        end
-    end
+% Add prompt label
+promptLabel = uilabel(mainGrid, 'Text', p.Results.Prompt);
 
-    function cancelCallback(~, ~)
-        % Return empty selection
-        selectedItems = {};
+% Create scrollable panel for checklist
+scrollPanel = uipanel(mainGrid, 'BorderType', 'line', ...
+                     'BackgroundColor', [1, 1, 1]);
 
-        % Close dialog
-        if isvalid(fig)
-            uiresume(fig);
-            delete(fig);
-        end
+% Create grid layout for checkboxes
+numItems = length(items);
+checkGrid = uigridlayout(scrollPanel, [numItems, 1]);
+checkGrid.RowHeight = repmat({'fit'}, 1, numItems);
+checkGrid.Padding = [10, 10, 10, 10];
+checkGrid.RowSpacing = 5;
+
+% Create checkboxes
+checkboxes = cell(numItems, 1);
+for i = 1:numItems
+    checkboxes{i} = uicheckbox(checkGrid, 'Text', items{i});
+    % Set default selection if specified
+    if ismember(i, p.Results.DefaultSelection)
+        checkboxes{i}.Value = true;
     end
+end
+
+% Create selection info label
+selectionInfo = uilabel(mainGrid, 'Text', 'Selected: 0 items', ...
+                       'FontColor', [0.5, 0.5, 0.5]);
+
+% Add callback to update selection count
+updateSelectionCount();
+for i = 1:numItems
+    checkboxes{i}.ValueChangedFcn = @(~,~) updateSelectionCount();
+end
+
+% Create button panel
+buttonPanel = uipanel(mainGrid, 'BorderType', 'none', ...
+                     'BackgroundColor', fig.Color);
+buttonGrid = uigridlayout(buttonPanel, [1, 4]);
+buttonGrid.ColumnWidth = {'1x', '1x', '1x', '1x'};
+buttonGrid.ColumnSpacing = 10;
+
+% Spacer
+% uilabel(buttonGrid, 'Text', 'ccc');
+
+% Select All button
+selectAllBtn = uibutton(buttonGrid, 'Text', 'Select All', ...
+                       'ButtonPushedFcn', @selectAllCallback);
+
+% Clear All button
+clearAllBtn = uibutton(buttonGrid, 'Text', 'Clear All', ...
+                      'ButtonPushedFcn', @clearAllCallback);
+
+% Cancel button
+cancelBtn = uibutton(buttonGrid, 'Text', 'Cancel', ...
+                    'ButtonPushedFcn', @cancelCallback);
+
+
+% OK button
+okBtn = uibutton(buttonGrid, 'Text', 'OK', ...
+                'ButtonPushedFcn', @okCallback, ...
+                'FontWeight', 'bold');
+
+
+% Wait for user interaction
+uiwait(fig);
+
+if ~isempty(parentfig) && isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+    figure(parentfig);
+end
+
+% Nested callback functions
+function updateSelectionCount()
+selectedCount = sum(cellfun(@(x) x.Value, checkboxes));
+selectionInfo.Text = sprintf('Selected: %d items', selectedCount);
+end
+
+function selectAllCallback(~, ~)
+for j = 1:numItems
+    checkboxes{j}.Value = true;
+end
+updateSelectionCount();
+end
+
+function clearAllCallback(~, ~)
+for j = 1:numItems
+    checkboxes{j}.Value = false;
+end
+updateSelectionCount();
+end
+
+function okCallback(~, ~)
+% Get selected items
+selectedIndices = cellfun(@(x) x.Value, checkboxes);
+selectedItems = items(selectedIndices);
+
+% Close dialog
+if isvalid(fig)
+    uiresume(fig);
+    delete(fig);
+end
+end
+
+function cancelCallback(~, ~)
+% Return empty selection
+selectedItems = {};
+
+% Close dialog
+if isvalid(fig)
+    uiresume(fig);
+    delete(fig);
+end
+end
 end

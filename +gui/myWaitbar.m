@@ -8,8 +8,7 @@ if nargin < 3 || isempty(witherror), witherror = false; end
 if nargin < 1, parentfig = []; end
 
 
-
-    if ~gui.i_isuifig(parentfig)
+if ~gui.i_isuifig(parentfig)
         if nargin < 2 || isempty(fw)
             % hFig = gcf;
             hFig = get(groot,'CurrentFigure');
@@ -22,7 +21,7 @@ if nargin < 1, parentfig = []; end
                 end
             catch
             end
-        
+
             fw.Visible = "on";
             pause(.5)
             fprintf('Processing your data...');
@@ -53,8 +52,8 @@ if nargin < 1, parentfig = []; end
 
         if nargin < 2 || isempty(fw)
             % hFig = gcf;
-            %hFig = get(groot,'CurrentFigure');
-            %hUiFigHandle = findall(0, 'Type', 'figure', 'BeingDeleted', 'off');
+            % hFig = get(groot,'CurrentFigure');
+            % hUiFigHandle = findall(0, 'Type', 'figure', 'BeingDeleted', 'off');
 
             fw = uiprogressdlg(parentfig, 'Title', 'Please wait...', ...
                 'Message', mesg);
@@ -87,4 +86,3 @@ if nargin < 1, parentfig = []; end
         end
     end
 end
-

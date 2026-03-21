@@ -24,19 +24,19 @@ catch
 
 end
 
-%prgfoldername = 'py_GenKI';
-%narginchk(3, 3);
-%assert(size(X, 1) == length(g));
+% prgfoldername = 'py_GenKI';
+% narginchk(3, 3);
+% assert(size(X, 1) == length(g));
 
-%T = [];
-%[pyok, wrkpth, x] = run.pycommon(prgfoldername);
-%if ~pyok
+% T = [];
+% [pyok, wrkpth, x] = run.pycommon(prgfoldername);
+% if ~pyok
 %    error('GenKI (requires Python) has not been installed or set up correctly.')
-%end
+% end
 codepth = pkg.i_normalizepath(codepth);
 
 codefullpath = fullfile(codepth,'require.py');
-%cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
+% cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
 %    x.Executable, codepth, filesep);
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 
@@ -80,7 +80,7 @@ end
 try
     tmpfilelist = {'X.mat', 'g.txt', 'pcnet_Source.mat', ...
         'idx.mat', 'output.csv', fullfile('GRNs', 'pcNet_example.npz')};
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end    
+    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     if issparse(X)
         X = single(full(X));
     else
@@ -108,10 +108,10 @@ end
 if isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Building pcnet\_Source network...');
 end
-    A1 = sc_pcnetpar(X);
-    A1 = A1 ./ max(abs(A1(:)));
-    A = ten.e_filtadjc(A1, 0.75, false);
-    save('pcnet_Source.mat', 'A', '-v7.3');
+A1 = sc_pcnetpar(X);
+A1 = A1 ./ max(abs(A1(:)));
+A = ten.e_filtadjc(A1, 0.75, false);
+save('pcnet_Source.mat', 'A', '-v7.3');
 if isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'pcnet\_Source.mat saved.');
 end
@@ -127,7 +127,6 @@ if status == 0 && isvalid(fw)
 end
 
 
-
 % fw=gui.gui_waitbar([],[],'Running GenKI...');
 
 %    cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
@@ -135,7 +134,7 @@ end
 %    disp(cmdlinestr)
 %    [status]=system(cmdlinestr,'-echo');
 
-%[status] = run.pycommon2(x, wrkpth, prgfoldername);
+% [status] = run.pycommon2(x, wrkpth, prgfoldername);
 
 % if isvalid(fw)
 %     gui.gui_waitbar(fw,[],'Running GenKI is complete');

@@ -51,7 +51,7 @@ gui.sc_scattergenes(X, genelistx, 'mean_dropr');
 %% 3D scatter plot with spline fit
 
 figure;
-gui.sc_scatter3genes(X, genelistx, true, true);
+gui.i_hvgsplinefitplot(X, genelistx, true, true);
 %% Feature selection and show top 50 differentially deviated (DD) genes
 
 T = sc_splinefit2(X, Y, genelistx, genelisty);

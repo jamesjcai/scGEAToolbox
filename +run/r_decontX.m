@@ -1,5 +1,5 @@
 function [X, contamination] = r_decontX(X, wkdir, isdebug)
-%Run decontX decontamination
+% Run decontX decontamination
 %
 % see also: run.r_SoupX
 % https://cran.r-project.org/web/packages/SoupX/vignettes/pbmcTutorial.html
@@ -45,8 +45,8 @@ else
     end
 end
 
-    X = h5read(outputfile, '/X');
-    contamination = h5read(outputfile, '/contamination');
+X = h5read(outputfile, '/X');
+contamination = h5read(outputfile, '/contamination');
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 % cd(oldpth);

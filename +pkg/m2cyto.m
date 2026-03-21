@@ -19,7 +19,7 @@ end
 
 fid = fopen(fname, 'w');
 [ii, jj, ~] = find(A);
-%if nargin == 3,
+% if nargin == 3,
 [~, ~, att] = find(link_attrib);
 fprintf(fid, 'Source\tTarget\tWeight\n');
 for ik = 1:length(att) % nnz(A)

@@ -13,13 +13,13 @@ else
     Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
     if isempty(Rpath)
         error('R environment has not been set up.');
-    end    
+    end
 end
 
-%if isempty(pkg.i_findrpath)
+% if isempty(pkg.i_findrpath)
 %   msg=('Rscript.exe is not found');
 %   return;
-%end
+% end
 
 
 folder = fileparts(mfilename('fullpath'));

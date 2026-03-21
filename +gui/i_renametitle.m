@@ -1,9 +1,9 @@
 function i_renametitle(src, ~)
 [parentfig] = gui.gui_getfigsce(src);
-    ax = gca; % Get the current axes
-    titleObj = ax.Title; % Access the Title property of the axes
-    
-    if isempty(titleObj.String)
+ax = gca; % Get the current axes
+titleObj = ax.Title; % Access the Title property of the axes
+
+if isempty(titleObj.String)
         title(ax, 'Title');
         % %fprintf('The current plot does not have a title.\n');
         % prompt = {'Enter a title for the plot:'};
@@ -11,7 +11,7 @@ function i_renametitle(src, ~)
         % dims = [1 50]; % Single-line input dialog
         % defaultAnswer = {''};
         % userInput = inputdlg(prompt, dlgTitle, dims, defaultAnswer);
-        % 
+        %
         % % Check if user entered a title
         % if ~isempty(userInput) && ~isempty(userInput{1})
         %     newTitle = userInput{1}; % Extract the entered title
@@ -21,5 +21,5 @@ function i_renametitle(src, ~)
         %     %fprintf('No title was set since the input was empty.\n');
         % end
     end
-    gui.myHelpdlg(parentfig, 'Double-click on the title to make change.');
+gui.myHelpdlg(parentfig, 'Double-click on the title to make change.');
 end

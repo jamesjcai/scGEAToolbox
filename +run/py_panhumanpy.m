@@ -31,34 +31,34 @@ end
 
 codepth = pkg.i_normalizepath(codepth);
 
-    if ~prepare_input_only
+if ~prepare_input_only
 
         codefullpath = fullfile(codepth,'require.py');
         cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
-        
+
         disp(cmdlinestr)
         [status, cmdout] = system(cmdlinestr, '-echo');
         if status ~= 0
             cd(oldpth);
             error(cmdout);
-        else 
+        else
             disp('Code requirement check is done.')
         end
     end
 
-%try
-    pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
-    tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
+% try
+pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
+tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
         'input.h5ad', 'output.h5ad'};
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
-    [Xnorm] = pkg.norm_libsize(sce.X, 10000);
-    Xnorm = log1p(full(Xnorm));
-    Xnorm = single(Xnorm);
+[Xnorm] = pkg.norm_libsize(sce.X, 10000);
+Xnorm = log1p(full(Xnorm));
+Xnorm = single(Xnorm);
 
-    g = cellstr(sce.g);
-    save('X.mat','-v7.3',"Xnorm","g");
-    
+g = cellstr(sce.g);
+save('X.mat','-v7.3',"Xnorm","g");
+
 codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);

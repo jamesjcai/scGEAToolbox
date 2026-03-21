@@ -1,5 +1,5 @@
 function [sce, metadata] = sc_readrdsfile(filename)
-%Read Seurat/RDS file
+% Read Seurat/RDS file
 %
 %see also: sc_sce2rds
 sce = [];

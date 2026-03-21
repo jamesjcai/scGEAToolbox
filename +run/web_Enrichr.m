@@ -26,7 +26,6 @@ fx = sprintf('input_page_%s.html', b);
 outfile = fullfile(wkdir, fx);
 
 
-
 fid = fopen(infile, 'r');
 a = textscan(fid, '%s', 'delimiter', '\n');
 fclose(fid);

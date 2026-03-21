@@ -1,6 +1,6 @@
     function i_cloneaxes(hAx1, hAx2)
         copyobj(allchild(hAx1), hAx2);
-        
+
         props = {'XLim','YLim','ZLim','XScale','YScale','ZScale',...
                  'XDir','YDir','ZDir','Colormap','CLim','View',...
                  'XTicklabel','XTickLabelRotation','YTicklabel'};
@@ -10,7 +10,7 @@
             catch
             end
         end
-        
+
         xlabel(hAx2, get(get(hAx1,'XLabel'),'String'));
         ylabel(hAx2, get(get(hAx1,'YLabel'),'String'));
         title(hAx2,  get(get(hAx1,'Title'),'String'));

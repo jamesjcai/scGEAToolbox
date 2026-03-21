@@ -4,9 +4,9 @@ function callback_ExploreCellularCrosstalk(src, ~)
 sce = copy(sce_ori);
 if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle), return; end
 
-    answer = gui.myQuestdlg(FigureHandle, 'This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
-    if ~strcmp(answer, 'Yes'), return; end
-                
+answer = gui.myQuestdlg(FigureHandle, 'This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
+if ~strcmp(answer, 'Yes'), return; end
+
         if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx)) < 2
             if ~isempty(sce.c_cluster_id) && numel(unique(sce.c_cluster_id)) > 1
                 answer = gui.myQuestdlg(FigureHandle, sprintf('Cell type (C_CELL_TYPE_TX) is undefined.\nWould you like to use cluster id (C_CLUSTER_ID) to define cell groups?'));
@@ -48,7 +48,7 @@ if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle),
         gui.TableViewerApp(T, FigureHandle, "TalklrRes");
 end
 
-%{        
+%{
         labels = {'Save OUT to variable named:'};
         vars = {'OUT'};
         values = {OUT};
@@ -68,7 +68,7 @@ end
                     OUT.KL(k));
             end
             gui.i_exporttable(T, true, 'Tccrosstalk', 'CrossTalkTable', ...
-                [],[], FigureHandle);            
+                [],[], FigureHandle);
 
             i_displyres(listitems);
 
@@ -78,7 +78,7 @@ end
                 if gui.i_isuifig(FigureHandle)
                     [indx2, tf2] = gui.myListdlg(FigureHandle, ...
                         listitems, 'Select ligand-receptor pairs to plot');
-                else                
+                else
                     [indx2, tf2] = listdlg('PromptString', ...
                         {'Select ligand-receptor pairs to plot'}, ...
                         'SelectionMode', 'single', 'ListString', listitems, ...
@@ -94,29 +94,29 @@ end
                         hFig = hx.FigHandle;
                         hFig.Position(3) = hFig.Position(3) * 2.2;
 
-                        %subplot(1, 2, 1)
+                        % subplot(1, 2, 1)
                         nexttile
                         sc_scattermarker(sce.X, sce.g, sce.s, ...
                             sce.g(idx1), 1, [], false);
                         title(sce.g(idx1));
 
-                        %subplot(1, 2, 2)
+                        % subplot(1, 2, 2)
                         nexttile
                         sc_scattermarker(sce.X, sce.g, sce.s, sce.g(idx2), 1, [], false);
                         title(sce.g(idx2));
-                        
+
                         nexttile
-                        
+
                         ligand_mat = OUT.ligand_mat;
                         receptor_mat = OUT.receptor_mat;
                         ligandok = OUT.ligandok;
                         receptorok = OUT.receptorok;
-                    
+
                         a = ligand_mat(k, :);
                         b = receptor_mat(k, :);
                         m = (a' * b) .* ((a > 0)' * (b > 0));
                         m = m ./ sum(m(m > 0));
-                    
+
                         % figname = sprintf('%s (ligand) -> %s (receptor)', ...
                         %     ligandok(k), receptorok(k));
                         G = pkg.i_makegraph(m, OUT.cL);
@@ -129,7 +129,7 @@ end
                             w = 3;
                             G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
                             p.LineWidth = G.Edges.LWidths;
-                        end    
+                        end
                         % sc_grnview(m, OUT.cL, figname);
                         hx.show(FigureHandle);
                     end

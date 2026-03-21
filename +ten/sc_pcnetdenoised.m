@@ -1,5 +1,5 @@
 function [A] = sc_pcnetdenoised(X, varargin)
-%Construct network using scTenifoldNet (accurate, robust, but slow)
+% Construct network using scTenifoldNet (accurate, robust, but slow)
 % A=sc_pcnetdenoised(X);
 %
 % X is gene x cell matrix
@@ -48,25 +48,25 @@ if exist('@tensor/tensor.m', 'file') ~= 2
     error('Need Tensor Toolbox for MATLAB (https://www.tensortoolbox.org/)');
 end
 
-    if exist('sc_pcnetpar.m', 'file') ~= 2
+if exist('sc_pcnetpar.m', 'file') ~= 2
         error('Need sc_pcnetpar.m in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
     end
 
-    if donorm
+if donorm
         X = sc_norm(X, "type", "libsize");
         X = log1p(X);
-        %X=sc_transform(X);
+        % X=sc_transform(X);
     end
 
-    %tic
-    [XM] = ten.i_nc(X, nsubsmpl, 3, csubsmpl, usebootstrp);
-    %toc
+    % tic
+[XM] = ten.i_nc(X, nsubsmpl, 3, csubsmpl, usebootstrp);
+    % toc
 
-    %tic
-    disp('Tensor decomposition')
-    [A] = ten.i_td1(XM, tdmethod);
-    %toc
-    if savegrn
+    % tic
+disp('Tensor decomposition')
+[A] = ten.i_td1(XM, tdmethod);
+    % toc
+if savegrn
         tstr = matlab.lang.makeValidName(string(datetime));
         save(sprintf('A_%s', tstr), 'A', '-v7.3');
     end

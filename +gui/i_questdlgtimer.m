@@ -1,6 +1,6 @@
 function ButtonName = i_questdlgtimer(TimeOutValue, Question, Title, ...
     Btn1, Btn2, Btn3, Default)
-%QUESTDLG_TIMER Question dialog box.
+% QUESTDLG_TIMER Question dialog box.
 %  ButtonName = QUESTDLG_TIMER(Time, Question) creates a dialog box that
 %  automatically wraps the cell array or string (vector or matrix)
 %  Question to fit an appropriately sized window.  The name of the
@@ -74,7 +74,7 @@ end
 
 
         if nargin < 2
-            
+
 
             error('MATLAB:questdlg_timer:TooFewArguments', 'Too few arguments for QUESTDLG_TIMER');
         end
@@ -207,7 +207,7 @@ end
                         FigPos(3) - DefOffset - BtnWidth];
                     BtnXOffset(2) = (BtnXOffset(1) + BtnXOffset(3)) / 2;
                 end
-                
+
 
                 MsgTxtYOffset = DefOffset + BtnYOffset + BtnHeight;
                 MsgTxtWidth = FigPos(3) - DefOffset - MsgTxtXOffset - IconWidth;
@@ -299,7 +299,7 @@ end
                 textExtent = get(texthandle, 'extent');
 
                 % (g357851)textExtent and extent from uicontrol are not the same. For window, extent from uicontrol is larger
-                %than textExtent. But on Mac, it is reverse. Pick the max value.
+                % than textExtent. But on Mac, it is reverse. Pick the max value.
                 MsgTxtWidth = max([MsgTxtWidth, NewMsgTxtPos(3) + 2, textExtent(3)]);
                 MsgTxtHeight = max([MsgTxtHeight, NewMsgTxtPos(4) + 2, textExtent(4)]);
 
@@ -367,20 +367,20 @@ end
 [iconData, alphaData] = matlab.ui.internal.dialog.DialogUtils.imreadDefaultIcon('quest');
 Img=image('CData',iconData, 'AlphaData', alphaData, 'Parent',IconAxes);
 set(IconAxes, ...
-    'Visible','off'           , ...
-    'YDir'   ,'reverse'       , ...
-    'XLim'   ,get(Img,'XData')+[-0.5 0.5], ...
-    'YLim'   ,get(Img,'YData')+[-0.5 0.5]  ...
-    );
+'Visible','off'           , ...
+'YDir'   ,'reverse'       , ...
+'XLim'   ,get(Img,'XData')+[-0.5 0.5], ...
+'YLim'   ,get(Img,'YData')+[-0.5 0.5]  ...
+);
 
-                
+
                 % load dialogicons.mat questIconData questIconMap;
                 % IconData = questIconData;
                 % questIconMap(256, :) = get(QuestFig, 'color');
                 % IconCMap = questIconMap;
 
-                %Img = image('CData', IconData, 'Parent', IconAxes);
-                %set(QuestFig, 'Colormap', IconCMap);
+                % Img = image('CData', IconData, 'Parent', IconAxes);
+                % set(QuestFig, 'Colormap', IconCMap);
                 % set(IconAxes, ...
                 %     'Visible', 'off', ...
                 %     'YDir', 'reverse', ...
@@ -450,14 +450,13 @@ set(IconAxes, ...
 end
 
 
-
             %--------------------------------------------------------------------------
 
             function setdefaultbutton(figHandle, btnHandle)
                 % WARNING: This feature is not supported in MATLAB and the API and
                 % functionality may change in a future release.
 
-                %SETDEFAULTBUTTON Set default button for a figure.
+                % SETDEFAULTBUTTON Set default button for a figure.
                 %  SETDEFAULTBUTTON(BTNHANDLE) sets the button passed in to be the default button
                 %  (the button and callback used when the user hits "enter" or "return"
                 %  when in a dialog box.

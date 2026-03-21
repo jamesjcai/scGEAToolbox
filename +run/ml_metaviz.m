@@ -34,7 +34,7 @@ try
 catch
     data = svdpca(Xn, 50, 'random');
 end
-%data=Xn;
+% data=Xn;
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 1/nstep, 'Meta Visualization - PCA...'); end
 [~, S{1}] = pca(data, NumComponents = ndim);
@@ -49,13 +49,13 @@ end
 
 try
     if showwaitbar, gui.gui_waitbar_adv(fw, 1/nstep, 'Meta Visualization - MDS...'); end
-    %D=squareform(pdist(data));
+    % D=squareform(pdist(data));
     S{end+1} = pkg.e_embedbyd(sqrt(DS), ndim, 2);
 catch
 
 end
 
-%[y]=pkg.ai_isomap(log(sc_norm(X)+1)');
+% [y]=pkg.ai_isomap(log(sc_norm(X)+1)');
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA1...'); end
 S{end+1} = pkg.ai_kpca(DS, ndim, 30, true);
@@ -77,23 +77,23 @@ S{end+1} = tsne(data, Perplexity = 50, NumDimensions = ndim);
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 1/3...'); end
 S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
-    'n_neighbors', 15, 'verbose', 'none');
+'n_neighbors', 15, 'verbose', 'none');
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 2/3...'); end
 S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
-    'n_neighbors', 30, 'verbose', 'none');
+'n_neighbors', 30, 'verbose', 'none');
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 3/3...'); end
 S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
-    'n_neighbors', 50, 'verbose', 'none');
+'n_neighbors', 50, 'verbose', 'none');
 
 if dophate
     if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 1/3...'); end
     S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 5);
-    
+
     if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 2/3...'); end
     S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 15, 'pot_method', 'sqrt');
-    
+
     if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 3/3...'); end
     S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
 end
@@ -107,7 +107,7 @@ end
 if showwaitbar, gui.gui_waitbar_adv(fw); end
 end
 
-%figure; scatter(Y(:,1),Y(:,2));
+% figure; scatter(Y(:,1),Y(:,2));
 
 %{
 disp('sTSNE2')
@@ -186,7 +186,7 @@ for k = 1:K
     m.Data((n^2)*(k - 1)+1:(n^2)*(k)) = d ./ vecnorm(d);
 end
 
-%isequal(D(:),m.Data)
+% isequal(D(:),m.Data)
 
 %%
 m.Offset = 0;
@@ -194,8 +194,8 @@ for x = 1:n % n of cells
     d = reshape(m.Data(x:n:N), [n, K]);
     S = 1 - squareform(pdist(d', 'cosine'));
 
-    %S1=1-squareform(pdist(squeeze(D(x,:,:))','cosine'));
-    %isequal(S,S1)
+    % S1=1-squareform(pdist(squeeze(D(x,:,:))','cosine'));
+    % isequal(S,S1)
 
     [v, ~] = eigs(double(S), 1);
     w(:, x) = abs(v);
@@ -212,7 +212,7 @@ for l = 1:n % cell
         t = s + n - 1;
         % isequal(s:t,D(:,l,k)')
         d = d + w(k, l)' .* m.Data(s:t);
-        %d=d+w(k,l)'.*D(:,l,k);
+        % d=d+w(k,l)'.*D(:,l,k);
     end
     M(:, l) = d;
 end

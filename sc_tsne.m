@@ -1,7 +1,7 @@
 function s = sc_tsne(X, ndim, donorm, dolog1p)
-%tSNE embedding of cells
+% tSNE embedding of cells
 
-%see also: RUN.MT_PHATE, RUN.MT_UMAP
+% see also: RUN.MT_PHATE, RUN.MT_UMAP
 % s_phate=run.PHATE(X,3,true);
 % s_umap=run.UMAP(X,3);
 narginchk(1, 4)
@@ -19,7 +19,7 @@ pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, 'external', 'ml_PHATE');
 if ~(ismcc || isdeployed), addpath(pth); end
 
-%if bygene, X=X.'; end
+% if bygene, X=X.'; end
 if donorm
     X = sc_norm(X);
     disp('Library-size normalization...done.')
@@ -40,19 +40,19 @@ data = X.';
 %if ncells>500
 %	data = svdpca(data, 50, 'random');
 %end
-    if ngenes > 500
-        if ndim < 10
-            s = tsne(data, 'NumDimensions', ndim, ...
-                'Algorithm', 'barneshut', 'NumPCAComponents', 50, ...
-                'Standardize', false);
-        else
-            s = tsne(data, 'NumDimensions', ndim, ...
-                'Algorithm', 'barneshut', 'NumPCAComponents', 5*ndim, ...
-                'Standardize', false);
-        end
+if ngenes > 500
+    if ndim < 10
+        s = tsne(data, 'NumDimensions', ndim, ...
+            'Algorithm', 'barneshut', 'NumPCAComponents', 50, ...
+            'Standardize', false);
     else
         s = tsne(data, 'NumDimensions', ndim, ...
-            'Algorithm', 'exact', 'NumPCAComponents', 0, ...
+            'Algorithm', 'barneshut', 'NumPCAComponents', 5*ndim, ...
             'Standardize', false);
     end
+else
+    s = tsne(data, 'NumDimensions', ndim, ...
+        'Algorithm', 'exact', 'NumPCAComponents', 0, ...
+        'Standardize', false);
+end
 end

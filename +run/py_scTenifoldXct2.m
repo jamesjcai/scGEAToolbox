@@ -2,16 +2,16 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
                            twosided, wkdir, isdebug, ...
                            prepare_input_only, parentfig)
 
-    T = [];
-    iscomplete = false;
-    if nargin < 9, parentfig = []; end
-    if nargin < 8, prepare_input_only = false; end
-    if nargin < 7, isdebug = true; end
-    if nargin < 6, wkdir = []; end
-    if nargin < 5, twosided = true; end
+T = [];
+iscomplete = false;
+if nargin < 9, parentfig = []; end
+if nargin < 8, prepare_input_only = false; end
+if nargin < 7, isdebug = true; end
+if nargin < 6, wkdir = []; end
+if nargin < 5, twosided = true; end
 
     % ── Native MATLAB fast path (no Python required) ──────────────────────
-    if isempty(wkdir) && ~prepare_input_only
+if isempty(wkdir) && ~prepare_input_only
         try
             T = ten.sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided);
             iscomplete = true;
@@ -23,69 +23,69 @@ function [T, iscomplete] = py_scTenifoldXct2(sce1, sce2, celltype1, celltype2, .
     end
     % ── Python fallback (original implementation) ─────────────────────────
 
-    oldpth = pwd();
-    pw1 = fileparts(mfilename('fullpath'));
-    codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldXct2');
-    
-    if isempty(wkdir) || ~isfolder(wkdir)
+oldpth = pwd();
+pw1 = fileparts(mfilename('fullpath'));
+codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldXct2');
+
+if isempty(wkdir) || ~isfolder(wkdir)
         cd(codepth);
     else
         disp('Using working directory provided.');
         cd(wkdir);
     end
-    
+
 if ~prepare_input_only
 
     fw = gui.myWaitbar(parentfig);
     gui.myWaitbar(parentfig, fw, false, [], ...
-        'Checking Python environment...');    
+        'Checking Python environment...');
 
     x = pyenv;
     try
         pkg.i_add_conda_python_path;
     catch
-    
+
     end
     codepth = pkg.i_normalizepath(codepth);
 
-    
+
     codefullpath = fullfile(codepth,'require.py');
-    %cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
+    % cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
     %    x.Executable, codepth, filesep);
     cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
-    
+
     disp(cmdlinestr)
     [status, cmdout] = system(cmdlinestr, '-echo');
-    if status ~= 0            
+    if status ~= 0
         if isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
         % waitfor(errordlg(sprintf('%s',cmdout)));
         % error(cmdout);
         % error('Python scTenifoldXct has not been installed properly.');
-        a = sprintf("%s.", cmdout);
+        a = sprintf("% s.", cmdout);
         if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
             prepare_input_only = true;
         else
             cd(oldpth);
             return;
         end
-        
+
     end
     if isvalid(fw)
         gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete');
         pause(1);
         gui.myWaitbar(parentfig, fw);
-    end    
+    end
 end
 
-    
-    tmpfilelist = {'X1.mat', 'X2.mat', 'g1.txt', 'c1.txt', 'g2.txt', 'c2.txt', 'output.txt', ...
+
+tmpfilelist = {'X1.mat', 'X2.mat', 'g1.txt', 'c1.txt', 'g2.txt', 'c2.txt', 'output.txt', ...
         '1/gene_name_Source.tsv', '1/gene_name_Target.tsv', ...
         '2/gene_name_Source.tsv', '2/gene_name_Target.tsv', ...
         '1/pcnet_Source.mat', '1/pcnet_Target.mat', ...
         '2/pcnet_Source.mat', '2/pcnet_Target.mat'};
-    
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    
+
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+
     % load(fullfile(pw1,'..','assets','Ligand_Receptor','Ligand_Receptor.mat'), ...
     %     'ligand','receptor');
     % validg=unique([ligand receptor]);
@@ -93,17 +93,17 @@ end
     % X=sce.X(y,:);
     % g=sce.g(y);
     % writematrix(sce.X,'X.txt');
-    
 
-    in_prepareX(sce1, 1);
-    in_prepareX(sce2, 2);
 
-    fw = gui.myWaitbar(parentfig);
-    gui.myWaitbar(parentfig, fw, false, [], ...
+in_prepareX(sce1, 1);
+in_prepareX(sce2, 2);
+
+fw = gui.myWaitbar(parentfig);
+gui.myWaitbar(parentfig, fw, false, [], ...
         'Step 2 of 4: Building S1 network...', 0.5);
-    
+
     % fw = gui.gui_waitbar([], [], 'Step 2 of 4: Building S1 networks...');
-    try
+try
         in_prepareA(sce1, 1);
     catch ME
         if isvalid(fw)
@@ -115,10 +115,10 @@ end
     end
     % gui.gui_waitbar(fw, [], 'Building S1 networks is complete');
 
-    gui.myWaitbar(parentfig, fw, false, [], ...
+gui.myWaitbar(parentfig, fw, false, [], ...
         'Step 3 of 4: Building S1 network...', 0.75);
     % fw = gui.gui_waitbar([], [], 'Step 3 of 4: Building S2 networks...');
-    try
+try
         in_prepareA(sce2, 2);
     catch ME
         if isvalid(fw)
@@ -129,7 +129,7 @@ end
     end
     % gui.gui_waitbar(fw, [], 'Building S2 network is complete');
     % fw = gui.gui_waitbar([], [], 'Step 4 of 4: Running scTenifoldXct.py...');
-    gui.myWaitbar(parentfig, fw, false, [], ...
+gui.myWaitbar(parentfig, fw, false, [], ...
         'Step 4 of 4: Running scTenifoldXct.py...', 0.9);
 
 codefullpath = fullfile(codepth,'script.py');
@@ -161,7 +161,7 @@ end
     % pr = rt.exec(cmdlinestr);
     % [status]=pr.waitFor();
 
-    if isvalid(fw)
+if isvalid(fw)
         if prepare_input_only
             % gui.gui_waitbar(fw, [], 'Input preparation is complete.');
             gui.myWaitbar(parentfig, fw, false, [], 'Input preparation is complete.');
@@ -169,13 +169,13 @@ end
             % gui.gui_waitbar(fw, [], 'Running scTenifoldXct2.py is complete.');
             gui.myWaitbar(parentfig, fw, false, [], 'Running scTenifoldXct2.py is complete.');
         end
-    end    
+    end
 
-    if isvalid(fw)
+if isvalid(fw)
         gui.myWaitbar(parentfig, fw);
     end
 
-    if ~prepare_input_only
+if ~prepare_input_only
 
     if status == 0 && exist('output1.txt', 'file')
         T = readtable('output1.txt');
@@ -196,16 +196,15 @@ end
     %     T = readtable('output.txt');
     %     iscomplete = true;
     % end
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-    cd(oldpth);
-
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+cd(oldpth);
 
 
 % --------------------------------------------------
 % --------------------------------------------------
 % --------------------------------------------------
 
-    function in_prepareX(sce, id)
+function in_prepareX(sce, id)
         if ~exist(sprintf('%d', id), 'dir')
             mkdir(sprintf('%d', id));
         end
@@ -217,7 +216,7 @@ end
         sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
         % sce=sce.qcfilter;
         if issparse(sce.X)
-            X = single(full(sce.X)); 
+            X = single(full(sce.X));
         else
             X = single(sce.X);
         end
@@ -232,8 +231,8 @@ end
             'filetype', 'text', 'Delimiter', '\t');
         disp('Input gene_names written.');
     end
-        
-    function in_prepareA(sce, id)
+
+function in_prepareA(sce, id)
         disp('Building A1 network...')
         A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
         disp('A1 network built.')
@@ -269,7 +268,7 @@ end
     %     % A=0.5*(A1+A1.');
     %     A = ten.e_filtadjc(A1, 0.75, false);
     %     save(sprintf('%d/pcnet_Source.mat', id), 'A', '-v7.3');
-    % 
+    %
     %     if isempty(A2)
     %         if useexist && exist(sprintf('%d/usr_Target.mat', id), 'file')
     %             disp('Loading existing A2 network...');

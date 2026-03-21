@@ -7,7 +7,7 @@ if nargin < 3
     genesets = ["GO_Biological_Process_2025", ...
                 "GO_Molecular_Function_2025", ...
                 "KEGG_2021_Human", ...
-                "Reactome_Pathways_2024"]; 
+                "Reactome_Pathways_2024"];
 end
 
 if nargin < 2, backgroundlist = []; end
@@ -38,14 +38,14 @@ if isempty(backgroundlist)
     response = send(request, URI(base_url));
     res = jsondecode(response.Body.Data);
     user_list_id = res.userListId;
-    
-    
+
+
     for id = 1:n
         gene_set_library = genesets(id); % "KEGG_2015";
         % output{id, 2} = gene_set_library;
         ENRICHR_URL = "https://maayanlab.cloud/Enrichr/enrich";
-        query_string = sprintf("?userListId=%d&backgroundType=%s", ...
-                       user_list_id, gene_set_library); 
+        query_string = sprintf("?userListId=% d&backgroundType=%s", ...
+                       user_list_id, gene_set_library);
         url = ENRICHR_URL + query_string;
         response = jsondecode(convertCharsToStrings(char(webread(url))));
         % res = response.(gene_set_library);
@@ -56,7 +56,7 @@ if isempty(backgroundlist)
         %     end
         % end
         % res = res(isok);
-        % T = table; 
+        % T = table;
         % for k = 1:length(res)
         %     T = [T; cell2table(res{k}','VariableNames', headertxt)];
         % end
@@ -85,7 +85,7 @@ else    % using background
     for id = 1:n
         gene_set_library = genesets(id); % "KEGG_2015";
         % output{id, 2} = gene_set_library;
-   
+
         base_url = "https://maayanlab.cloud/speedrichr/api/backgroundenrich";
         formData = MultipartFormProvider('userListId', num2str(user_list_id), ...
                     'backgroundid', background_id, ...
@@ -115,7 +115,7 @@ else    % using background
         T2.TermName=string(T2.TermName);
         T2(:,end-1:end)=[];
 
-        %} 
+        %}
         T2 = in_response2T(response, gene_set_library, minumgene, pvaluecut);
         output{id} = T2;
     end
@@ -124,37 +124,37 @@ end
 end
 
 function [T] = in_response2T(response, gene_set_library, minumgene, pvaluecut)
-        
-        T = table;
 
-        headertxt = ["Rank", "Term name", "P-value", "Odds ratio", "Combined score",...
-            "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
-        headertxt = matlab.lang.makeValidName(headertxt);
+    T = table;
 
-        % disp(gene_set_library)
-        
-        res = response.(gene_set_library);
-        isok = false(length(res),1);
-        for k = 1:length(res)
-            if size(res{k}{6}, 1) >= minumgene && res{k}{3} < pvaluecut
-                isok(k) = true;
-            end
+    headertxt = ["Rank", "Term name", "P-value", "Odds ratio", "Combined score",...
+        "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
+    headertxt = matlab.lang.makeValidName(headertxt);
+
+    % disp(gene_set_library)
+
+    res = response.(gene_set_library);
+    isok = false(length(res),1);
+    for k = 1:length(res)
+        if size(res{k}{6}, 1) >= minumgene && res{k}{3} < pvaluecut
+            isok(k) = true;
         end
-        res = res(isok);
-        
-        for k = 1:length(res)
-            t = cell2table(res{k}', 'VariableNames', headertxt);
-            s = sprintf("%s,", t.OverlappingGenes{1}{:});
-            t.OverlappingGenes{1} = char(extractBefore(s, strlength(s)));
-            T = [T; t];
-        end
-        Ta = table(repmat(gene_set_library, size(T,1), 1), ...
-                'VariableNames',{'GeneSetLibrary'});
-        T = [Ta T];
-        if ~isempty(T)
-            T.TermName = string(T.TermName);
-            T(:,end-1:end)=[];
-        end
+    end
+    res = res(isok);
+
+    for k = 1:length(res)
+        t = cell2table(res{k}', 'VariableNames', headertxt);
+        s = sprintf("% s,", t.OverlappingGenes{1}{:});
+        t.OverlappingGenes{1} = char(extractBefore(s, strlength(s)));
+        T = [T; t];
+    end
+    Ta = table(repmat(gene_set_library, size(T,1), 1), ...
+            'VariableNames',{'GeneSetLibrary'});
+    T = [Ta T];
+    if ~isempty(T)
+        T.TermName = string(T.TermName);
+        T(:,end-1:end)=[];
+    end
 end
 
 
@@ -162,7 +162,7 @@ end
 
 %{
 ENRICHR_URL = "https://maayanlab.cloud/Enrichr/export";
-query_string = sprintf("?userListId=%d&filename=%s&backgroundType=%s", ...
+query_string = sprintf("?userListId=% d&filename=%s&backgroundType=%s", ...
     user_list_id, 'example_enrichment', gene_set_library);
 url = ENRICHR_URL + query_string;
 response = webread(url); % jsondecode(convertCharsToStrings(char(webread(url))));
@@ -191,11 +191,11 @@ user_list_id = res.userListId;
 
 gene_set_library = "KEGG_2015";
 ENRICHR_URL = "https://maayanlab.cloud/Enrichr/enrich";
-query_string = sprintf("?userListId=%d&backgroundType=%s", ...
-               user_list_id, gene_set_library); 
+query_string = sprintf("?userListId=% d&backgroundType=%s", ...
+               user_list_id, gene_set_library);
 res = jsondecode(convertCharsToStrings(char(webread(ENRICHR_URL + query_string))));
 
 
 % https://www.mathworks.com/matlabcentral/answers/2148269-try-to-call-the-rest-apis-provided-by-enrichr-from-matlab-but-webwrite-does-not-work#answer_1506069
 
-%} 
+%}

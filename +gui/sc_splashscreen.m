@@ -1,6 +1,6 @@
 function [fx, v1] = sc_splashscreen(fx, r, showloading)
 % SC_SPLASHSCREEN - Display or update the application's splash screen.
-% 
+%
 % Usage:
 %   [fx, v1] = sc_splashscreen();                % Initialize splash screen
 %   sc_splashscreen(fx, r);                      % Update progress bar
@@ -21,13 +21,13 @@ if nargin<3, showloading = true; end
 if nargin<2, r = 0.0; end
 if nargin<1
     v1 = pkg.i_get_versionnum;
-    mfolder = fileparts(mfilename('fullpath')); 
+    mfolder = fileparts(mfilename('fullpath'));
 
 
-    %pngfilename = 'splash.png';
-    %splashpng = fullfile(mfolder, '..','assets', 'Images', pngfilename);
+    % pngfilename = 'splash.png';
+    % splashpng = fullfile(mfolder, '..','assets', 'Images', pngfilename);
 
-    
+
     splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
     a = dir(splashdir);
 
@@ -41,7 +41,7 @@ if nargin<1
 
     if ~isfile(splashpng)
         error('Splash image file not found: %s', splashpng);
-    end    
+    end
     fx = gui.SplashScreen('', splashpng, ...
                     'ProgressBar', 'on', ...
                     'ProgressPosition', 5, ...

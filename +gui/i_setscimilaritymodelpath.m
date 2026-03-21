@@ -11,6 +11,13 @@ if ispref('scgeatoolbox', preftagname)
 end
 
 if isempty(selectedDir) || ~isfolder(selectedDir)
+
+    answer = gui.myQuestdlg(parentfig, 'Download SCimilarity models. Note, this is a large tarball - downloading and uncompressing can take a several minutes.');
+    if strcmp('Yes', answer)
+        web('https://zenodo.org/records/10685499');
+    else
+        return;
+    end
     answer = gui.myQuestdlg(parentfig, 'Scimilarity model path has not been set up. Locate it?');
     if strcmp('Yes', answer)
         [done] = ix_setpath;
@@ -25,40 +32,40 @@ else
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer
         case 'Use this'
-            %done = true;
+            % done = true;
         case 'Use another'
             if ~ix_setpath
                 return;
             end
-            %done = true;
+            % done = true;
             gui.myHelpdlg(parentfig, ...
                 'Scimilarity model path is set successfully.');
             return;
         case {'Cancel', ''}
             selectedDir = '';
-            %done = false;
+            % done = false;
         otherwise
             selectedDir = '';
-            %done = false;
+            % done = false;
     end
 end
 
-%if ~done && (isempty(selectedDir) || ~isfolder(selectedDir))
+% if ~done && (isempty(selectedDir) || ~isfolder(selectedDir))
 %    gui.myWarndlg(parentfig, 'SCimilarity model path is not set.');
-%end
+% end
 
 
-    function [y] = ix_setpath
+function [y] = ix_setpath
         y = false;
         promptTitle = 'Select a folder that contains the model';
         selectedDir = uigetdir(pwd, promptTitle);
         if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
             figure(parentfig);
         end
-        
+
         if selectedDir == 0
             fprintf('Folder selection canceled.\n');
-            selectedDir = '';            
+            selectedDir = '';
         else
             fprintf('Selected folder: %s\n', selectedDir);
             y = true;

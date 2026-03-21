@@ -1,6 +1,6 @@
 function [ok, wrkpth, x] = pycommon(prgwkdir)
 arguments
-    prgwkdir{mustBeTextScalar}
+prgwkdir{mustBeTextScalar}
 end
 
 ok = false;
@@ -30,7 +30,7 @@ if status ~= 0
     if isvalid(fw)
         gui.gui_waitbar(fw, [], 'Checking Python...error.');
     end
-    %waitfor(errordlg(sprintf('%s',cmdout)));
+    % waitfor(errordlg(sprintf('%s',cmdout)));
     disp(cmdout);
     error('%s has not been installed properly.', ...
         upper(prgwkdir));

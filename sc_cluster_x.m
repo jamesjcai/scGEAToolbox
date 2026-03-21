@@ -1,7 +1,7 @@
 function [c] = sc_cluster_x(X, k, varargin)
-%sc_cluster_x - cluster cells using UMI matrix X
+% sc_cluster_x - cluster cells using UMI matrix X
 %
-%see also: sc_cluster_s
+% see also: sc_cluster_s
 
 p = inputParser;
 defaultType = 'sc3';
@@ -15,7 +15,7 @@ addRequired(p, 'k', checkK);
 addOptional(p, 'type', defaultType, checkType);
 addOptional(p, 'usehvgs', true);
 
-parse(p, X, k, varargin{:})
+parse(p, X, k, varargin{:});
 
 if p.Results.usehvgs
     disp('Using 2000 HVGs.')

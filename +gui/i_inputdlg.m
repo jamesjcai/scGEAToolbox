@@ -13,7 +13,7 @@ gui.i_inputdlg('prompt', 'dlgtitle', 'definput', f)
      dialogHeight = 100 + 90; % Adjust height based on the number of inputs
 
     % Compute center position relative to parentfig
-    if ~isempty(parentfig)
+if ~isempty(parentfig)
         parentPos = parentfig.Position;
         dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
         dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;
@@ -29,7 +29,7 @@ gui.i_inputdlg('prompt', 'dlgtitle', 'definput', f)
         movegui(fig, 'center');
     end
 
-    if ~isMATLABReleaseOlderThan("R2025a")
+if ~isMATLABReleaseOlderThan("R2025a")
         try
             % fig.Theme.BaseColorStyle = parentfig.Theme.BaseColorStyle;
             theme(fig, parentfig.Theme.BaseColorStyle);
@@ -39,7 +39,7 @@ gui.i_inputdlg('prompt', 'dlgtitle', 'definput', f)
     end
 
 dimPanel = uipanel(fig, 'Position', [20 20 300 150], ...
-    'Title', prompt);
+'Title', prompt);
 
 if iscell(definput)
     definput = definput{1};
@@ -75,7 +75,7 @@ else
     answer = {};
 end
 
-    function cancelFcn()
+function cancelFcn()
         uiresume(fig);
         delete(fig);
     end
@@ -86,5 +86,3 @@ end
 % else
 %     answer = [];
 % end
-
-

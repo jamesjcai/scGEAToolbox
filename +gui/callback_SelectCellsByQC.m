@@ -40,29 +40,29 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 'ListSize', [260, 300]);
         end
 
-    if tf ~= 1
+if tf ~= 1
        % requirerefresh = false;
         return;
     end
 
-    hasDuplicates = numel(unique(sce.g)) < numel(sce.g);
-    if hasDuplicates
+hasDuplicates = numel(unique(sce.g)) < numel(sce.g);
+if hasDuplicates
         [requirerefresh, sce] = gui.gui_rmdugenes(sce, FigureHandle);
     end
 
 %    sceXori = sce.X;
 %    scegori = sce.g;
 
-    if sce.NumCells*sce.NumGenes < 4e8
+if sce.NumCells*sce.NumGenes < 4e8
         sceori = copy(sce);
         % disp('Ready for reversible.');
     else
         answer = gui.myQuestdlg(FigureHandle, 'You are about to change the SCE data. This cannot be undone.');
-        if ~strcmp(answer, 'Yes'), return; end        
+        if ~strcmp(answer, 'Yes'), return; end
         sceori = [];
     end
 
-    switch listitems{indx}
+switch listitems{indx}
         case {'SC_QCFILTER (Basic QC for Cells/Genes)',...
                 'SC_QCFILTER (Enabling Whitelist Genes)'}
 
@@ -98,7 +98,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 'Min nonzero genes per cell (200 or 500):'};
             dlgtitle = 'QC Cutoffs';
             dims = [1, 80];
-            
+
             if gui.i_isuifig(FigureHandle)
                 answer = gui.myInputdlg(prompt, dlgtitle, definput, FigureHandle);
             else
@@ -124,8 +124,8 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 return;
             end
 
-            
-            fw = gui.myWaitbar(FigureHandle);            
+
+            fw = gui.myWaitbar(FigureHandle);
             memerror = false;
             try
                 sce = sce.qcfilterwhitelist(libsize, mtratio, ...
@@ -142,8 +142,8 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 end
                 end
             end
-                    
-               
+
+
             if memerror
                 % disp('Making X sparse.');
                 if ~isa(sce.X, 'double')
@@ -159,9 +159,9 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
                 %         min_cells_nonzero,numgenes);
                 % sce.X=Xobj.data;
 
-                %[X,g]=sc_qcfilter_lite(sce.X,sce.g,libsize,mtratio,...
+                % [X,g]=sc_qcfilter_lite(sce.X,sce.g,libsize,mtratio,...
                 %        min_cells_nonzero,numgenes);
-                %sce=SingleCellExperiment(X,g);
+                % sce=SingleCellExperiment(X,g);
 
                 try
                     sce = sce.qcfilterwhitelist(libsize, mtratio, ...
@@ -184,7 +184,6 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             mtratio*100, libsize, numgenes, a, sce.NumGenes, sce.NumCells);
 
 
-
 %            fprintf(['\n"We removed cells with more than %.f%% mitochondrial reads and ', ...
 %                'with less than %d the total number of detected molecules (library size). '], );
 %            fprintf(['\nWe also removed the cells expressing fewer than %d unique genes ', ...
@@ -198,14 +197,14 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
 
             gui.myWaitbar(FigureHandle, fw);
             %   [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
-            %   [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);        
+            %   [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);
 
         case 'Remove Empty Genes'
 
             fw = gui.myWaitbar(FigureHandle);
             sce = sce.selectkeepgenes(1, 1);
             gui.myWaitbar(FigureHandle, fw);
-            
+
         case 'Remove Genes by Expression' % remove genes by expression
             answer = inputdlg('Expressed in less than % of cells (e.g., 0.05=5%) or # of cells (e.g., 10).', ...
                 'Remove Genes', [1, 50], {'0.05'});
@@ -236,19 +235,19 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');
-                        if any(idx)                            
+                        if any(idx)
                             sce.X(idx, :) = [];
                             sce.g(idx) = [];
                         end
                         a2 = length(sce.g);
                         fprintf('%d genes with name contains ''orf'' or ''-AS'' are found and removed.\n',a1-a2);
                     end
-                    
+
                     c = c + 1;
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = startsWith(sce.g, 'LINC');
-                        if any(idx)                            
+                        if any(idx)
                             sce.X(idx, :) = [];
                             sce.g(idx) = [];
                         end
@@ -260,7 +259,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = find(~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]")));
-                        if any(idx)                            
+                        if any(idx)
                             sce.X(idx, :) = [];
                             sce.g(idx) = [];
                         end
@@ -272,7 +271,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
                         idx = endsWith(sce.g, 'Rik');
-                        if any(idx)                            
+                        if any(idx)
                             sce.X(idx, :) = [];
                             sce.g(idx) = [];
                         end
@@ -299,7 +298,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                         sce.g(idx) = [];
                         gui.myWaitbar(FigureHandle, fw);
                     elseif strcmp(answer1, 'Unselected')
-                        fw = gui.myWaitbar(FigureHandle);                        
+                        fw = gui.myWaitbar(FigureHandle);
                         sce.X = sce.X(idx, :);
                         sce.g = sce.g(idx);
                         gui.myWaitbar(FigureHandle, fw);
@@ -313,7 +312,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         case '(a) Remove Mt-Genes' % remove mt-genes
             sce = sce.rmmtgenes;
         case '(b) Remove Hemoglobin Genes'
-            sce = sce.rmhemoglobingenes;            
+            sce = sce.rmhemoglobingenes;
         case '(c) Remove Ribosomal Genes'
             sce = sce.rmribosomalgenes;
         case '(d) Remove Genes Without Approved Symbols'
@@ -332,7 +331,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     case 'Yes'
                         fw = gui.myWaitbar(FigureHandle);
                         sce.X(idx, :) = [];
-                        sce.g(idx) = [];                        
+                        sce.g(idx) = [];
                         gui.myWaitbar(FigureHandle, fw);
                     otherwise
                         % requirerefresh = false;
@@ -359,7 +358,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             sce = sce.rmhemoglobingenes;
             sce = sce.rmribosomalgenes;
             [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
-            if any(idx)                
+            if any(idx)
                 sce.X(idx, :) = [];
                 sce.g(idx) = [];
             end
@@ -395,7 +394,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             lbsz_mt = sum(sce.X(idx, :), 1);
             cj = 100 * (lbsz_mt ./ lbsz);
             if issparse(cj), cj = full(cj); end
-            ttxtj = "mtDNA%";
+            ttxtj = "mtDNA% ";
 
             ci = sum(sce.X);
             if issparse(ci), ci = full(ci); end
@@ -445,9 +444,9 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             return;
     end
 
-    %if ismember(indx,[7 8 9])
-    %if ismember(listitems{idx},{'','',''})
-    if needremove
+    % if ismember(indx,[7 8 9])
+    % if ismember(listitems{idx},{'','',''})
+if needremove
         if issparse(idx), idx = full(idx); end
         if ~isempty(idx) && any(~idx)
             answer = gui.myQuestdlg(FigureHandle, sprintf('Remove or highlight %d cells?', sum(~idx)), ...
@@ -470,11 +469,11 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         end
     end
 
-    newcn = sce.NumCells;
-    newgn = sce.NumGenes;
+newcn = sce.NumCells;
+newgn = sce.NumGenes;
 
-    if newgn==0
-        if ~isempty(sceori)            
+if newgn==0
+        if ~isempty(sceori)
             gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
             sce = copy(sceori);
             disp('Original SCE copied back 1.');
@@ -484,8 +483,8 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         end
         return;
     end
-    if newcn==0
-        if ~isempty(sceori)            
+if newcn==0
+        if ~isempty(sceori)
             gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
             sce = copy(sceori);
             disp('Original SCE copied back 2.');
@@ -495,12 +494,12 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         end
         return;
     end
-    if oldcn-newcn==0 && oldgn-newgn==0
+if oldcn-newcn==0 && oldgn-newgn==0
         gui.myHelpdlg(FigureHandle, "No cells and genes are removed.");
         return;
     end
-    
-    if ~isempty(sceori)
+
+if ~isempty(sceori)
         answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
                 oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
                 {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
@@ -514,7 +513,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
     else
         requirerefresh = true;
     end
-    gui.myGuidata(FigureHandle, sce, src);
+gui.myGuidata(FigureHandle, sce, src);
 end
 
 

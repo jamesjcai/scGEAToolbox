@@ -6,12 +6,12 @@ if nargin < 7, ttxt = []; end
 DOTSIZE = 0.5;
 cL=cL(:);
 
-%g=g(end:-1:1);
+% g=g(end:-1:1);
 if nargin < 6, uselog = true; end
 [yes] = ismember(tgene, g);
 if ~any(yes)
     warning('No genes found.');
-    return; 
+    return;
 end
 z = length(tgene) - sum(yes);
 if z > 0
@@ -20,9 +20,9 @@ end
 tgene = tgene(yes);
 
 % tgene=string(T.gene(1:10));
-%idx=(1:length(tgene))';
-%x=[-ones(size(idx)); ones(size(idx))]./2;
-%y=repmat(idx,length(cL),1);
+% idx=(1:length(tgene))';
+% x=[-ones(size(idx)); ones(size(idx))]./2;
+% y=repmat(idx,length(cL),1);
 
 l = ones(length(tgene)*length(cL), 1);
 sz = l;
@@ -83,9 +83,9 @@ if uselog, vl = log1p(vl); end
 txgene = [" "; tgene(:)];
 
 % figure;
-%sz=randi(100,1,length(x));
-%scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
-%hold on
+% sz=randi(100,1,length(x));
+% scatter([-.5 .5],[-1 -1],[1 500],'k','filled');
+% hold on
 
 hx=gui.myFigure(parentfig);
 hFig = hx.FigHandle;
@@ -107,8 +107,8 @@ af{6} = text(max(x)+1.4, 3, '10%', 'BackgroundColor', 'none');
 
 xlim([0.5, length(cL) + 2.5]);
 ylim([0.5, max([4, length(txgene)]) - 0.5]);
-%colorbar
-%colorbar('northoutside');
+% colorbar
+% colorbar('northoutside');
 
 set(gca, 'YTick', 0:length(tgene))
 set(gca, 'YTickLabel', txgene)
@@ -119,7 +119,7 @@ colormap(flipud(summer));
 box on
 grid on
 
-%hFig.Position(3) = hFig.Position(3) * 0.7;
+% hFig.Position(3) = hFig.Position(3) * 0.7;
 
 cb = colorbar('eastoutside');
 ax = gca;
@@ -139,7 +139,7 @@ if nargout > 0, return; end
 hx.show(parentfig);
 
 
-    function in_callback_savetable(~, ~)
+function in_callback_savetable(~, ~)
         answer = gui.myQuestdlg(parentfig, 'Export & save data to:', '', ...
             {'Workspace', 'TXT/CSV file', 'Excel file'}, 'Workspace');
         if ~isempty(answer)
@@ -185,7 +185,7 @@ hx.show(parentfig);
         end
     end
 
-    function in_callback_resizedot(~, ~)
+function in_callback_resizedot(~, ~)
         dotsz = dotsz * 0.9;
         if dotsz < 0.2, dotsz = 1.0; end
         delete(afa);
@@ -201,8 +201,8 @@ hx.show(parentfig);
         af{5} = scatter(max(x)+1, 3, dotsz*500*0.1, 'k');
     end
 
-    function i_renamecat(~, ~)
-        tg = gui.i_inputgenelist(string(cL), true);
+function i_renamecat(~, ~)
+        tg = gui.i_inputgenelist(string(cL), true, parentfig);
         if isempty(tg), return; end
         if length(tg) == length(cL)
             set(gca, 'XTick', 0:length(cL));
@@ -213,7 +213,7 @@ hx.show(parentfig);
         end
     end
 
-    function in_callback_resetcolor(~, ~)
+function in_callback_resetcolor(~, ~)
         dotsz = DOTSIZE;
         set(gca, 'FontSize', 10);
         in_callback_resizedot;

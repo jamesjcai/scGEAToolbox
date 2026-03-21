@@ -3,16 +3,16 @@ function [requirerefresh] = callback_RenameBatchID(src, ~)
 requirerefresh = false;
 
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 
 if isempty(sce.c_batch_id)
     sce.c_batch_id = string(ones(sce.NumCells, 1));
-    %gui.myErrordlg(FigureHandle, 'sce.c_batch_id undefined');
-    %return;
+    % gui.myErrordlg(FigureHandle, 'sce.c_batch_id undefined');
+    % return;
 end
-%answer = gui.myQuestdlg(FigureHandle, 'Rename batch ID?');
-%if ~strcmp(answer, 'Yes'), return; end
+% answer = gui.myQuestdlg(FigureHandle, 'Rename batch ID?');
+% if ~strcmp(answer, 'Yes'), return; end
 
 if ~isstring(sce.c_batch_id)
     sce.c_batch_id = string(sce.c_batch_id);

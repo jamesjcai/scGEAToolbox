@@ -40,9 +40,7 @@ if size(X, 1) ~= numel(g)
 end
 
 
-
 Xori = X;
-
 
 dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
 if normit
@@ -57,8 +55,8 @@ cv2 = vx ./ u.^2;
 xi = 1 ./ u;
 yi = cv2;
 
-removedidx1 = false(length(xi),1);
-removedidx2 = false(length(xi),1);
+removedidx1 = false(length(xi), 1);
+removedidx2 = false(length(xi), 1);
 if ignorelow
     % removing genes with the dropoff rate >= 0.95
     idx1 = dropr >= 0.95;
@@ -69,14 +67,14 @@ if ignorehigh
     removedidx2(u > quantile(u, 0.99)) = true;
 end
 
-xi(removedidx1|removedidx2)=[];
-yi(removedidx1|removedidx2)=[];
+xi(removedidx1 | removedidx2) = [];
+yi(removedidx1 | removedidx2) = [];
 
 m = size(X, 2);
 df = m - 1;
 
 mdl = fitglm(xi, yi, 'linear', 'Distribution', 'gamma', 'link', 'identity');
-cv2fit = mdl.predict(1./u);
+cv2fit = mdl.predict(1 ./ u);
 b = mdl.Coefficients.Estimate;
 
 
@@ -87,7 +85,7 @@ cv2th = b(1) + minBiolDisp + b(1) * minBiolDisp;
 testDenom = (u * b(2) + u.^2 * cv2th) / (1 + cv2th / m);
 fitratio = vx ./ testDenom;
 
-pval = chi2cdf(fitratio*df, df, 'upper');
+pval = chi2cdf(fitratio * df, df, 'upper');
 % OR 1-chi2cdf(fitratio*df,df);
 residualcv2 = log(fitratio); % log(cv2)-log(cv2fit);
 
@@ -109,12 +107,12 @@ end
 if plotit
     %[~,~]=maxk(fitratio,100);
     %    figure;
-    hx=gui.myFigure;
+    hx = gui.myFigure([], true);
 
     hFig = hx.FigHandle;
-    hFig.Position(3)=hFig.Position(3)*1.8;
-    %hAx = axes('Parent', FigureHandle);
-    hAx1 = subplot(2,2,[1 3]);
+    hFig.Position(3) = hFig.Position(3) * 1.8;
+    % hAx = axes('Parent', FigureHandle);
+    hAx1 = subplot(2, 2, [1 3]);
     % tb = findall(hFig, 'Tag', 'FigureToolBar');
     hx.addCustomButton('off', @in_callback_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     hx.addCustomButton('off', @in_HighlightSelectedGenes, 'curve-array.jpg', 'Highlight selected genes');
@@ -122,7 +120,7 @@ if plotit
     hx.addCustomButton('off', @ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
     hx.addCustomButton('off', @EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Enrichment analysis...');
     hx.addCustomButton('off', @ChangeAlphaValue, 'Brightness-3--Streamline-Core.jpg', 'Change MarkerFaceAlpha value');
-    
+
     h = scatter(hAx1, log(u), log(cv2), 'filled', 'MarkerFaceAlpha', .1);
     hold on
     % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');
@@ -148,21 +146,19 @@ if plotit
         dt = datacursormode(hFig);
         dt.UpdateFcn = {@in_myupdatefcn3, g};
     end
-    hold(hAx1,'off');
+    hold(hAx1, 'off');
 
-    hAx2 = subplot(2,2,2);
-    x1 = Xsorted(1,:);
+    hAx2 = subplot(2, 2, 2);
+    x1 = Xsorted(1, :);
     sh = plot(hAx2, 1:length(x1), x1);
-    xlim(hAx2,[1 size(X,2)]);
+    xlim(hAx2, [1 size(X, 2)]);
     title(hAx2, gsorted(1));
     [titxt] = gui.i_getsubtitle(x1);
     subtitle(hAx2, titxt);
-    xlabel(hAx2,'Cell Index');
-    ylabel(hAx2,'Expression Level');
+    xlabel(hAx2, 'Cell Index');
+    ylabel(hAx2, 'Expression Level');
     hx.show;
 end
-
-
 
 
     function ChangeAlphaValue(~, ~)
@@ -173,18 +169,18 @@ end
         end
     end
 
-    function in_HighlightSelectedGenes(~,~)
-        %Myc, Oct3/4, Sox2, Klf4
-        [glist] = gui.i_selectngenes(SingleCellExperiment(X,g),...
-            intersect(upper(g),["MYC", "POU5F1", "SOX2", "KLF4"]));
-        if ~isempty(glist)            
-            [y,idx]=ismember(glist,g);
-            idx=idx(y);            
+    function in_HighlightSelectedGenes(~, ~)
+        % Myc, Oct3/4, Sox2, Klf4
+        [glist] = gui.i_selectngenes(SingleCellExperiment(X, g), ...
+            intersect(upper(g), ["MYC", "POU5F1", "SOX2", "KLF4"]));
+        if ~isempty(glist)
+            [y, idx] = ismember(glist, g);
+            idx = idx(y);
             % idv = zeros(1, length(hvgidx));
             % idv(idx)=1;
             % h.BrushData = idv;
-            for k=1:length(idx)
-                dt = datatip(h,'DataIndex',idx(k));
+            for k = 1:length(idx)
+                dt = datatip(h, 'DataIndex', idx(k));
             end
         end
     end
@@ -200,9 +196,9 @@ end
 
     function ExportTable(~, ~)
         gui.i_exporttable(T, true, 'Thvgreslist', 'HVGResultTable');
-        % Tdegenelist 
+        % Tdegenelist
         % 'Tviolindata','ViolinPlotTable'
-        % 'Thvgreslist', 'HVGResultTable' 
+        % 'Thvgreslist', 'HVGResultTable'
     end
 
     function ExportGeneNames(~, ~)
@@ -213,19 +209,17 @@ end
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));
 
-
-        gselected=g(ptsSelected);
-        [yes,idx]=ismember(gselected,T.genes);
-        Tx=T(idx,:);
-        Tx=sortrows(Tx,4,'descend');
+        gselected = g(ptsSelected);
+        [yes, idx] = ismember(gselected, T.genes);
+        Tx = T(idx, :);
+        Tx = sortrows(Tx, 4, 'descend');
         if ~all(yes), error('Running time error.'); end
-        tgenes=Tx.genes;
+        tgenes = Tx.genes;
 
-
-        labels = {'Save selected gene names to variable:',...
+        labels = {'Save selected gene names to variable:', ...
             'Save HVG table:'};
-        vars = {'g','T'};
-        values = {tgenes,T};
+        vars = {'g', 'T'};
+        values = {tgenes, T};
         export2wsdlg(labels, vars, values, ...
             'Save Data to Workspace');
     end
@@ -238,21 +232,18 @@ end
         end
         fprintf('%d genes are selected.\n', sum(ptsSelected));
 
-        gselected=g(ptsSelected);
-        [yes,idx]=ismember(gselected,T.genes);
-        Tx=T(idx,:);
-        Tx=sortrows(Tx,4,'descend');
+        gselected = g(ptsSelected);
+        [yes, idx] = ismember(gselected, T.genes);
+        Tx = T(idx, :);
+        Tx = sortrows(Tx, 4, 'descend');
         if ~all(yes), error('Running time error.'); end
-        tgenes=Tx.genes;
-        
+        tgenes = Tx.genes;
+
         gui.i_enrichtest(tgenes, g, numel(tgenes));
     end
-        
-       
-    
-   
-    function txt = in_myupdatefcn3(src, event_obj, g)  
-    
+
+    function txt = in_myupdatefcn3(src, event_obj, g)
+
         if isequal(get(src, 'Parent'), hAx1)
             idx = event_obj.DataIndex;
             txt = {g(idx)};
@@ -261,12 +252,12 @@ end
                 delete(sh);
             end
             sh = plot(hAx2, 1:length(x1), x1);
-            xlim(hAx2,[1 size(X,2)]);
-            title(hAx2, g(idx));    
+            xlim(hAx2, [1 size(X, 2)]);
+            title(hAx2, g(idx));
             [titxt] = gui.i_getsubtitle(x1);
             subtitle(hAx2, titxt);
-            xlabel(hAx2,'Cell Index');
-            ylabel(hAx2,'Expression Level');
+            xlabel(hAx2, 'Cell Index');
+            ylabel(hAx2, 'Expression Level');
         else
             txt = num2str(event_obj.Position(2));
         end

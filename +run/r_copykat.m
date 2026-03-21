@@ -32,7 +32,7 @@ if string(lower(speciesid))=="human"
 elseif string(lower(speciesid))=="mouse"
     codefullpath = fullfile(codepath,'script_mm10.R');
 else
-    codefullpath = fullfile(codepath,'script.R');    
+    codefullpath = fullfile(codepath,'script.R');
 end
 pkg.i_runrcode(codefullpath, Rpath);
 pause(3);
@@ -54,6 +54,3 @@ end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end
-
-
-

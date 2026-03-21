@@ -23,7 +23,7 @@ switch answer
                'MATLAB Online and may not work properly in ' ...
                'standalone applications.']);
            return;
-        end        
+        end
         if ismcc || isdeployed
             makePPTCompilable();
             gui.myWarndlg(parentfig, ['This function may not work properly in ' ...
@@ -57,19 +57,19 @@ switch answer
             gui.myErrordlg(parentfig, ME.message);
             return;
         end
-        
+
         warning off
         for k = 1:N
             if isvalid(F{k})
                 images{k} = [tempname, '.png'];
-                
-                %option 1
-                %saveas(F{k}, images{k});
-                
-                %option 2
-                %exportapp(F{k}, images{k});
 
-                %option 3
+                % option 1
+                % saveas(F{k}, images{k});
+
+                % option 2
+                % exportapp(F{k}, images{k});
+
+                % option 3
                 %
                 % set(F{k}, 'Color', 'white');
                 % tabGroups = findall(F{k}, 'Type', 'uitabgroup');
@@ -95,9 +95,9 @@ switch answer
 
                 frame = getframe(F{k});
                 imwrite(frame.cdata, images{k});
-                
-                %images{k} = [tempname,'.emf'];
-                %saveas(F{k},images{k},'meta');
+
+                % images{k} = [tempname,'.emf'];
+                % saveas(F{k},images{k},'meta');
 
                 if ~isempty(glist{1})
                     slide3 = add(ppt, 'Small Title and Content');
@@ -117,7 +117,7 @@ switch answer
         gui.myWaitbar(parentfig, fw);
         rptview(ppt);
     otherwise
-       
+
 end
 
 end
@@ -142,11 +142,11 @@ for k = 1:3
     fig = figure;
     plot(rand(10,1), 'LineWidth', 2);
     title(['Vector Figure ' num2str(k)]);
-    
+
     % Save figure as EMF (vector format)
     emfFile = ['figure' num2str(k) '.emf'];
     print(fig, emfFile, '-dmeta'); % Save as EMF
-    
+
     % Add slide to PowerPoint
     slide = add(ppt, 'Title and Content');
     replace(slide, 'Title', ['Vector Figure ' num2str(k)]);

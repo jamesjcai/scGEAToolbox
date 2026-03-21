@@ -19,7 +19,7 @@ needupdatesce = false;
 aa = 'Yes, compare scores (violinplot)';
 bb = 'No, just show values (heatmap)';
 
-    answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a score for each cell. After the scores are calculated, do you want to ', ...
+answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a score for each cell. After the scores are calculated, do you want to ', ...
                 'compare score values between different cell groups?']), '', ...
                 {bb, aa}, bb);
             switch answer2
@@ -54,7 +54,7 @@ bb = 'No, just show values (heatmap)';
                         [indxx, tfx] = gui.myListdlg(FigureHandle, listitems, ...
                             'Select two groups:', ...
                             listitems);
-                    else                    
+                    else
                         [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
                             'SelectionMode', 'multiple', ...
                             'ListString', listitems, ...
@@ -76,10 +76,10 @@ bb = 'No, just show values (heatmap)';
             drawnow;
             [selecteditem, speciestag] = gui.i_selgenesetcollection(FigureHandle);
             if isempty(selecteditem), return; end
-            %try
+            % try
 
             switch selecteditem
-                    %case 'Global Coordination Level (GCL) [PMID:33139959]'
+                    % case 'Global Coordination Level (GCL) [PMID:33139959]'
 
                 case 'Define a New Score...'
                     ttxt = 'Customized Score';
@@ -105,11 +105,11 @@ bb = 'No, just show values (heatmap)';
                     switch answer
                         case 'Yes, save'
                             ttxt = string(ttxt);
-                            if any(strcmp(ttxt, sce.list_cell_attributes(1:2:end)))                            
-                                fprintf("Duplicate found: %s is renamed to ", ttxt); 
+                            if any(strcmp(ttxt, sce.list_cell_attributes(1:2:end)))
+                                fprintf("Duplicate found: % s is renamed to ", ttxt);
                                 a = matlab.lang.makeUniqueStrings([string(sce.list_cell_attributes(1:2:end)) ttxt]);
                                 ttxt = a(end);
-                                fprintf("%s.\n", ttxt);
+                                fprintf("% s.\n", ttxt);
                             else
                                 sce.list_cell_attributes = [sce.list_cell_attributes, ...
                                     {ttxt, y(:)}];
@@ -141,7 +141,7 @@ bb = 'No, just show values (heatmap)';
                             methodid, false);
                     end
                     gui.myWaitbar(FigureHandle, fw);
-                    
+
 
                 case 'PanglaoDB Cell Type Markers'
                     if isempty(speciestag)
@@ -179,7 +179,7 @@ bb = 'No, just show values (heatmap)';
                     if gui.i_isuifig(FigureHandle)
                         [indx, tf] = gui.myListdlg(FigureHandle, listitems, ...
                             'Select Class:');
-                    else                    
+                    else
                         [indx, tf] = listdlg('PromptString', ...
                             {'Select Class'}, ...
                             'SelectionMode', 'single', 'ListString', listitems, ...
@@ -194,9 +194,9 @@ bb = 'No, just show values (heatmap)';
                     posg(strlength(posg) == 0) = [];
                     ttxt = ctselected;
                     if isempty(posg) || isempty(ctselected), return; end
-                    
+
                     [y] = gui.e_cellscore(sce, posg);
-                    
+
                 case 'Predefined Custom Gene Sets'
                     % if ~gui.gui_showrefinfo('Predefined Cell Score', FigureHandle), return; end
                     [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
@@ -204,7 +204,7 @@ bb = 'No, just show values (heatmap)';
                     if gui.i_isuifig(FigureHandle)
                         [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
                             'Select Score:');
-                    else                    
+                    else
                         [indx2, tf2] = listdlg('PromptString', 'Select Score', ...
                             'SelectionMode', 'multiple', 'ListString', ...
                             listitems, 'ListSize', [260, 300]);
@@ -229,14 +229,14 @@ bb = 'No, just show values (heatmap)';
                     if gui.i_isuifig(FigureHandle)
                         [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
                             'Select a transcription factor (TF):');
-                    else                   
+                    else
                         [indx2, tf2] = listdlg('PromptString', 'Select a transcription factor (TF)', ...
                             'SelectionMode', 'single', 'ListString', ...
                             listitems, 'ListSize', [220, 300]);
                     end
                     if tf2 ~= 1, return; end
-                    %species = gui.i_selectspecies(2);
-                    %if isempty(species), return; end
+                    % species = gui.i_selectspecies(2);
+                    % if isempty(species), return; end
 
                     methodid = 4;
 
@@ -246,7 +246,7 @@ bb = 'No, just show values (heatmap)';
                     % else
                     %     methodid = 4;
                     % end
-                    
+
                     if methodid ~= 4, fw = gui.myWaitbar(FigureHandle); end
                     try
                         [cs, tflist] = sc_tfactivity(sce.X, sce.g, [], ...
@@ -274,10 +274,10 @@ bb = 'No, just show values (heatmap)';
                 otherwise
                     return;
             end
-            %catch ME
+            % catch ME
             %    %gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             %    return;
-            %end
+            % end
 
             if isempty(y), return; end
 
@@ -288,9 +288,9 @@ bb = 'No, just show values (heatmap)';
             if ~exist("ttxt", "var"), ttxt = []; end
 
             if showcomparision
-                %if iscell(y)
+                % if iscell(y)
                     gui.sc_uitabgrpfig_vioplot(y, ttxt, thisc, FigureHandle);
-                %else
+                % else
 %                    gui.i_violinplot(y, thisc, ttxt, true, [], posg, FigureHandle);
 %                    xlabel('Cell group');
 %                    ylabel('Cellular score');
@@ -302,10 +302,10 @@ bb = 'No, just show values (heatmap)';
                 %     [h1]=sc_scattermarker(sce.X,sce.g,...
                 %                  sce.s,g,methodid);
                 if iscell(y)
-                    % t=array2table(cell2mat({rand(10,1),rand(10,1),rand(10,1)}),'VariableNames',{'aa','bb','cc'});                    
+                    % t=array2table(cell2mat({rand(10,1),rand(10,1),rand(10,1)}),'VariableNames',{'aa','bb','cc'});
                     % assignin("base",'y',y);
                     % assignin("base",'ttxt',ttxt);
-                    % assignin("base",'k',k);                  
+                    % assignin("base",'k',k);
 
                     if length(y)>1
                         drawnow;

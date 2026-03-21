@@ -36,30 +36,30 @@ end
 codepth = pkg.i_normalizepath(codepth);
 
 
-    if ~prepare_input_only
+if ~prepare_input_only
         codefullpath = fullfile(codepth,'require.py');
         cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
-        
+
         disp(cmdlinestr)
         [status, cmdout] = system(cmdlinestr, '-echo');
         if status ~= 0
             cd(oldpth);
             error(cmdout);
-        else 
+        else
             disp('Code requirement check is done.')
         end
     end
 
-%try
-    pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
-    tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
+% try
+pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
+tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
         'input.h5ad', 'output.h5ad'};
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
-    [Xnorm] = pkg.norm_libsize(sce.X, 10000);
-    Xnorm = log1p(full(Xnorm));
-    Xnorm = single(Xnorm);
-    
+[Xnorm] = pkg.norm_libsize(sce.X, 10000);
+Xnorm = log1p(full(Xnorm));
+Xnorm = single(Xnorm);
+
     % if ~isempty(target_celltypes)
     %    writetable(table(target_celltypes),'tg.csv','WriteVariableNames',false);
     % end
@@ -70,9 +70,8 @@ codepth = pkg.i_normalizepath(codepth);
     % writetable(T,'c.csv');
 
 
-    
-    g = cellstr(sce.g);
-    if ~isempty(target_celltypes)
+g = cellstr(sce.g);
+if ~isempty(target_celltypes)
         tg = cellstr(target_celltypes);
         save('X.mat','-v7.3',"Xnorm","modeldir","tg","g");
     else
@@ -123,23 +122,23 @@ end
 
 
 function selectedDir = selectFolder()
-    % selectFolder - Prompts the user to select a folder and returns the folder path
-    %
-    % Output:
-    %   selectedDir - The full path of the selected folder as a string. 
-    %                 If the user cancels the selection, it returns an empty string.
+% selectFolder - Prompts the user to select a folder and returns the folder path
+%
+% Output:
+%   selectedDir - The full path of the selected folder as a string.
+%                 If the user cancels the selection, it returns an empty string.
 
-    % Prompt title for folder selection
-    promptTitle = 'Select a folder that contains the model';
+% Prompt title for folder selection
+promptTitle = 'Select a folder that contains the model';
 
-    % Open a folder selection dialog box
-    selectedDir = uigetdir(pwd, promptTitle);
+% Open a folder selection dialog box
+selectedDir = uigetdir(pwd, promptTitle);
 
-    % Check if the user canceled the selection
-    if selectedDir == 0
-        fprintf('Folder selection canceled.\n');
-        selectedDir = '';
-    else
-        fprintf('Selected folder: %s\n', selectedDir);
-    end
+% Check if the user canceled the selection
+if selectedDir == 0
+    fprintf('Folder selection canceled.\n');
+    selectedDir = '';
+else
+    fprintf('Selected folder: %s\n', selectedDir);
+end
 end

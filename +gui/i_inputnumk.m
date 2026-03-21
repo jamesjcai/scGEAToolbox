@@ -7,7 +7,7 @@ if nargin < 2 || isempty(a), a = 1; end
 if nargin < 1, defaultk = 10; end
 k = [];
 prompt = {sprintf('%s (%d..%d):', ...
-    descstr, a, b)};
+descstr, a, b)};
 dlgtitle = '';
 dims = [1, 50];
 if isnumeric(defaultk)
@@ -17,7 +17,7 @@ else
 end
 
 if gui.i_isuifig(parentfig)
-    %answer = gui.myInputdlg(prompt, dlgtitle, definput, parentfig);    
+    % answer = gui.myInputdlg(prompt, dlgtitle, definput, parentfig);
     answer = gui.i_inputdlg(prompt, definput, parentfig);
 else
     answer = inputdlg(prompt, dlgtitle, dims, definput);

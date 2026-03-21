@@ -156,30 +156,30 @@ s = size(pvals);
 if (length(s) > 2) || s(1) > 1
     [p_sorted, sort_ids] = sort(reshape(pvals, 1, prod(s)));
 else
-    %p-values are already a row vector
+    % p-values are already a row vector
     [p_sorted, sort_ids] = sort(pvals);
 end
-[~, unsort_ids] = sort(sort_ids); %indexes to return p_sorted to pvals order
-m = length(p_sorted); %number of tests
+[~, unsort_ids] = sort(sort_ids); % indexes to return p_sorted to pvals order
+m = length(p_sorted); % number of tests
 
 if strcmpi(method, 'pdep')
-    %BH procedure for independence or positive dependence
+    % BH procedure for independence or positive dependence
     thresh = (1:m) * q / m;
     wtd_p = m * p_sorted ./ (1:m);
 
 elseif strcmpi(method, 'dep')
-    %BH procedure for any dependency structure
+    % BH procedure for any dependency structure
     denom = m * sum(1./(1:m));
     thresh = (1:m) * q / denom;
     wtd_p = denom * p_sorted ./ (1:m);
-    %Note, it can produce adjusted p-values greater than 1!
-    %compute adjusted p-values
+    % Note, it can produce adjusted p-values greater than 1!
+    % compute adjusted p-values
 else
     error('Argument ''method'' needs to be ''pdep'' or ''dep''.');
 end
 
 if nargout > 3
-    %compute adjusted p-values; This can be a bit computationally intensive
+    % compute adjusted p-values; This can be a bit computationally intensive
     adj_p = zeros(1, m) * NaN;
     [wtd_p_sorted, wtd_p_sindex] = sort(wtd_p);
     nextfill = 1;
@@ -196,7 +196,7 @@ if nargout > 3
 end
 
 rej = p_sorted <= thresh;
-max_id = find(rej, 1, 'last'); %find greatest significant pvalue
+max_id = find(rej, 1, 'last'); % find greatest significant pvalue
 if isempty(max_id)
     crit_p = 0;
     h = pvals * 0;
@@ -221,4 +221,3 @@ if strcmpi(report, 'yes')
     end
 
 end
-

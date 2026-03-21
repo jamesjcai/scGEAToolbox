@@ -28,7 +28,6 @@ arguments
     model
     messages
     functions
-    nvp.ToolChoice
     nvp.Temperature
     nvp.TopP
     nvp.MinP
@@ -55,7 +54,7 @@ if isscalar(nvp.StopSequences)
     nvp.StopSequences = [nvp.StopSequences, nvp.StopSequences];
 end
 
-parameters = buildParametersCall(model, messages, functions, nvp);
+parameters = llms.internal.buildOllamaParameters(model, messages, functions, nvp);
 
 [response, streamedText] = nvp.sendRequestFcn(parameters,[],URL,nvp.TimeOut,nvp.StreamFun);
 
@@ -78,59 +77,4 @@ else
     text = "";
     message = struct();
 end
-end
-
-function parameters = buildParametersCall(model, messages, functions, nvp)
-% Builds a struct in the format that is expected by the API, combining
-% MESSAGES, FUNCTIONS and parameters in NVP.
-
-parameters = struct();
-parameters.model = model;
-parameters.messages = messages;
-
-parameters.stream = ~isempty(nvp.StreamFun);
-
-if ~isempty(functions)
-    parameters.tools = functions;
-end
-
-if isfield(nvp,"ToolChoice") && ~isempty(nvp.ToolChoice)
-    parameters.tool_choice = nvp.ToolChoice;
-end
-
-options = struct;
-
-if strcmp(nvp.ResponseFormat,"json")
-    parameters.format = "json";
-elseif isstruct(nvp.ResponseFormat)
-    parameters.format = llms.internal.jsonSchemaFromPrototype(nvp.ResponseFormat);
-elseif startsWith(string(nvp.ResponseFormat), asManyOfPattern(whitespacePattern)+"{")
-    parameters.format = llms.internal.verbatimJSON(nvp.ResponseFormat);
-end
-
-if ~isempty(nvp.Seed)
-    options.seed = nvp.Seed;
-end
-
-dict = mapNVPToParameters;
-
-nvpOptions = keys(dict);
-for opt = nvpOptions.'
-    if isfield(nvp, opt) && ~isempty(nvp.(opt)) && ~isequaln(nvp.(opt),Inf)
-        options.(dict(opt)) = nvp.(opt);
-    end
-end
-
-parameters.options = options;
-end
-
-function dict = mapNVPToParameters()
-dict = dictionary();
-dict("Temperature") = "temperature";
-dict("TopP") = "top_p";
-dict("MinP") = "min_p";
-dict("TopK") = "top_k";
-dict("TailFreeSamplingZ") = "tfs_z";
-dict("StopSequences") = "stop";
-dict("MaxNumTokens") = "num_predict";
 end

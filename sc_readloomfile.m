@@ -1,5 +1,5 @@
 function [X, g, b, filenm] = sc_readloomfile(filenm)
-%Read LOOM file
+% Read LOOM file
 % http://linnarssonlab.org/loompy/index.html
 
 X = [];
@@ -26,7 +26,6 @@ X = pkg.e_guessh5field(filenm, {'/matrix/'}, {''}, true);
 %g=h5read(filenm,'/row_attrs/Gene');
 g = pkg.e_guessh5field(filenm, {'/row_attrs/'}, {'Gene', 'gene_ids', 'gene_name'}, false);
 if isempty(g), warning('G is not assigned.'); end
-
 
 b = pkg.e_guessh5field(filenm, {'/col_attrs/'}, {'CellID', 'Cell'}, false);
 if isempty(b), warning('B is not assigned.'); end

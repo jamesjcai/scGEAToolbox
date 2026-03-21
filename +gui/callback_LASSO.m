@@ -1,24 +1,24 @@
 function callback_LASSO(src, ~)
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
-    %[axx, bxx] = view(findall(FigureHandle,'type','axes'));
+[FigureHandle, sce] = gui.gui_getfigsce(src);
+% [axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
-    answer = gui.myQuestdlg(FigureHandle, 'Select a dependent variable y. Continue?','');
-    if ~strcmp(answer,'Yes'), return; end
+answer = gui.myQuestdlg(FigureHandle, 'Select a dependent variable y. Continue?','');
+if ~strcmp(answer,'Yes'), return; end
 
-    [thisx, ~] = gui.i_select1state(sce, false, false, false, true, FigureHandle);
-    if isempty(thisx), return; end
-    if ~isnumeric(thisx)
-        gui.myWarndlg(FigureHandle, 'This function works with continuous varibles only.');
-        return;
-    end
+[thisx, ~] = gui.i_select1state(sce, false, false, false, true, FigureHandle);
+if isempty(thisx), return; end
+if ~isnumeric(thisx)
+    gui.myWarndlg(FigureHandle, 'This function works with continuous varibles only.');
+    return;
+end
 
-    [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
-    if isempty(Xt), return; end
-    
-    gui.i_resetrngseed(src, [], false);
+[Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
+if isempty(Xt), return; end
 
-    gui.LassoAnalysisApp(Xt', thisx, sce.g);
+gui.i_resetrngseed(src, [], false);
+
+gui.LassoAnalysisApp(Xt', thisx, sce.g);
 
 end
 %{
@@ -40,7 +40,6 @@ end
             gui.i_scattertabs(y, glist, thisx, xlabelv, FigureHandle);
 
 
-       
            % i_plot_pseudotimeseries(X, genelist, t, genes)
            % %Plot pseudotime series
 
@@ -59,8 +58,8 @@ end
                 gui.i_scattertabs(thisyv, ylabelv, thisx, xlabelv, FigureHandle);
             else
                 gui.myHelpdlg(FigureHandle, 'No valid cell state variables.');
-            end            
+            end
     end
-    
-end    
+
+end
 %}

@@ -29,22 +29,22 @@ set(fh, 'WindowButtonDownFcn', @mouseDownCallback);
 %     'String','Done','Units','normalized','Position',[0.0 0.5 0.4 0.2],'Visible','on');
 
 ab = uicontrol(fh, 'String', ...
-    'Cancel', 'Units', 'normalized', ...
-    'Position', [0.65, 0.02, 0.2, 0.056], ...
-    'Callback', @i_CloseFig, ...
-    'Tag', 'button');
+'Cancel', 'Units', 'normalized', ...
+'Position', [0.65, 0.02, 0.2, 0.056], ...
+'Callback', @i_CloseFig, ...
+'Tag', 'button');
 
 uicontrol(fh, 'String', ...
-    'Set Cutoffs...', 'Units', 'normalized', ...
-    'Position', [0.20, 0.02, 0.2, 0.056], ...
-    'Callback', @i_SetValues, ...
-    'Tag', 'button');
+'Set Cutoffs...', 'Units', 'normalized', ...
+'Position', [0.20, 0.02, 0.2, 0.056], ...
+'Callback', @i_SetValues, ...
+'Tag', 'button');
 
 
 waitfor(fh);
 
 
-    function i_CloseFig(~, varargin)
+function i_CloseFig(~, varargin)
         idxx = idx;
         % delete(fh);
         closereq;
@@ -90,7 +90,7 @@ waitfor(fh);
                 xydata = guidata(figHandle);
                 if ~isempty(h2), delete(h2); end
                 h2 = scatter(ax, xydata(~idx, 1), xydata(~idx, 2), 'xr');
-                %set(ax,'ActivePositionProperty','OuterPosition');
+                % set(ax,'ActivePositionProperty','OuterPosition');
                 set(fh, 'Resize', 'off')
             catch
                 errordlg('Wrong inputs')
@@ -151,7 +151,7 @@ waitfor(fh);
                             min(abs((yy - axes1.YLim)./diff(axes1.YLim)))
                         if abs(xx-lh1.Value) < abs(xx-lh2.Value)
                             if ~isempty(lh1), delete(lh1); end
-                            %lh1=xline(xx,'r-');
+                            % lh1=xline(xx,'r-');
                             lh1 = xline(0, 'g-', 'LineWidth', 1);
                         else
                             if ~isempty(lh2), delete(lh2); end
@@ -160,7 +160,7 @@ waitfor(fh);
                     else
                         if abs(yy-lh3.Value) < abs(yy-lh4.Value)
                             if ~isempty(lh3), delete(lh3); end
-                            %lh3=yline(yy,'r-');
+                            % lh3=yline(yy,'r-');
                             lh3 = yline(0, 'g-', 'LineWidth', 1);
                         else
                             if ~isempty(lh4), delete(lh4); end
@@ -177,12 +177,12 @@ waitfor(fh);
                         sum(ia & ja), length(ia), 100*sum(idx)./length(ia), ...
                         length(ia)-sum(ia & ja), length(ia), 100*(length(ia) - sum(idx))./length(ia));
                     set(ab, "String", "Done")
-                    %hold(ax,'off');
-                    %h1=scatter(ax,xydata(idx,1),xydata(idx,2),'o');
+                    % hold(ax,'off');
+                    % h1=scatter(ax,xydata(idx,1),xydata(idx,2),'o');
                     hold(ax, 'on')
                     if ~isempty(h2), delete(h2); end
                     h2 = scatter(ax, xydata(~idx, 1), xydata(~idx, 2), 'xr');
-                    %set(ax,'ActivePositionProperty','OuterPosition');
+                    % set(ax,'ActivePositionProperty','OuterPosition');
                     set(fh, 'Resize', 'off')
                 end
         end

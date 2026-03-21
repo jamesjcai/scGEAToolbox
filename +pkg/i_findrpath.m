@@ -7,7 +7,7 @@ function Rpath = i_findrpath
 
 mfolder = fileparts(mfilename('fullpath'));
 rpathf = fullfile(mfolder, ...
-    '..', '..', 'assets', 'Rpath.txt');
+'..', '..', 'assets', 'Rpath.txt');
 if exist(rpathf, 'file')
     fid = fopen(rpathf);
     Rpath = fgetl(fid);
@@ -37,7 +37,7 @@ for i = 1:length(n)
     D = dir([programPath, filesep, 'R']);
     if ~isempty(D)
         A = {D.name};
-        B = find(cell2mat(cellfun(@(s) contains(s, 'R-'), A, 'uniformoutput', 0))); %,1)
+        B = find(cell2mat(cellfun(@(s) contains(s, 'R-'), A, 'uniformoutput', 0))); % ,1)
         if ~isempty(B)
             isfound = 1;
             if isscalar(B)
@@ -144,4 +144,4 @@ else
     out_Index_empty = false(size(A, 1), size(A, 2));
 end
 Lia = out_Index_str | out_Index_num | out_Index_NaN | out_Index_empty;
-end %end of cellismember
+end % end of cellismember

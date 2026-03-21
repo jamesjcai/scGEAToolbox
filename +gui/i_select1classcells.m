@@ -7,11 +7,11 @@ ptsSelected = [];
         [thisc, clabel] = gui.i_select1state(sce, ...
             false, false, true, false, parentfig);
 
-%[thisc, clabel] = gui.i_select1class(sce,[],[],[],parentfig);
+% [thisc, clabel] = gui.i_select1class(sce,[],[],[],parentfig);
 if isempty(thisc), return; end
 
 answer2 = gui.myQuestdlg(parentfig, sprintf('How to sort members of ''%s''?',clabel), '', ...
-    {'Alphabetic', 'Size (Descending Order)'}, 'Alphabetic');
+{'Alphabetic', 'Size (Descending Order)'}, 'Alphabetic');
 switch answer2
     case 'Alphabetic'
         [~, cLi] = findgroups(string(thisc));
@@ -33,7 +33,7 @@ end
 
 if tfx == 1
     ptsSelected = ismember(string(thisc), cLisorted(indxx));
-    %ptsSelected=ismember(ci,indxx);
+    % ptsSelected=ismember(ci,indxx);
     if askunselect
         answer = gui.myQuestdlg(parentfig, 'Select or unselect?', '', {'Select', 'Unselect', ...
             'Cancel'}, 'Select');

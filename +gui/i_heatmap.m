@@ -17,7 +17,7 @@ if isempty(dim) || isempty(methodid), return; end
 [Y] = gui.i_norm4heatmap(Yori, dim, methodid);
 
 % szgn = grpstats(c, c, @numel);
-szgn = splitapply(@numel, c, c); 
+szgn = splitapply(@numel, c, c);
 a = zeros(1, max(c));
 b = zeros(1, max(c));
 for kx = 1:max(c)
@@ -39,7 +39,7 @@ hFig=hx.FigHandle;
 h = imagesc(Y);
 set(gca, 'XTick', a-b);
 set(gca, 'XTickLabel', strrep(cL, '_', '\_'));
-%set(gca,'XTickLabelRotation',0);
+% set(gca,'XTickLabelRotation',0);
 set(gca, 'YTick', 1:length(glist));
 set(gca, 'YTickLabel', glist);
 set(gca, 'TickLength', [0, 0]);
@@ -61,7 +61,7 @@ hx.addCustomButton('on', @in_callback_savetable, 'floppy-disk-arrow-in.jpg', 'Ex
 hx.addCustomButton('off', @in_callback_changenorm, 'mw-pickaxe-mining.jpg', 'Change normalization method...');
 hx.addCustomButton('off', @in_callback_dotplotx, 'icon-mat-blur-linear-10.gif', 'Dot plot...');
 
-hx.show(parentfig);        
+hx.show(parentfig);
 fliped = false;
 
 MX = glist;
@@ -73,7 +73,7 @@ Z = zeros(length(glist), length(cL));
 %     Z(:, k) = mean(Y(:, c == k), 2);
 % end
 
-%[Z] = gui.i_norm4heatmap(Z);
+% [Z] = gui.i_norm4heatmap(Z);
 
 % figure;
 % h2=heatmap(strrep(cL,'_','\_'),MX,Z);
@@ -85,8 +85,8 @@ Z = zeros(length(glist), length(cL));
 % h2.CellLabelColor='none';
 % h2.ColorLimits=[min(Z(:)), max(Z(:))];
 
-    function in_callback_changenorm(~, ~)
-        [methodid, dim] = gui.i_selnormmethod;
+function in_callback_changenorm(~, ~)
+        [methodid, dim] = gui.i_selnormmethod(parentfig);
 
         % [Xt] = gui.i_transformx(sce.X, true, 8, parentfig);
         % if isempty(Xt), return; end
@@ -96,7 +96,7 @@ Z = zeros(length(glist), length(cL));
 
         [Y] = gui.i_norm4heatmap(Yori, dim, methodid);
         % Y = log1p(Y);
-        delete(h);        
+        delete(h);
         h = imagesc(Y);
         set(gca, 'XTick', a-b);
         set(gca, 'XTickLabel', strrep(cL, '_', '\_'));
@@ -104,17 +104,17 @@ Z = zeros(length(glist), length(cL));
         set(gca, 'YTickLabel', glist);
         set(gca, 'TickLength', [0, 0]);
         % colormap(flipud(bone));
-        box on        
+        box on
     end
 
-    function in_callback_flipxy(~, ~)
-        %delete(h);
+function in_callback_flipxy(~, ~)
+        % delete(h);
         fliped = ~fliped;
         if fliped
             h = imagesc(Y');
             set(gca, 'YTick', a-b);
             set(gca, 'YTickLabel', strrep(cL, '_', '\_'));
-            %set(gca,'YTickLabelRotation',90);
+            % set(gca,'YTickLabelRotation',90);
             set(gca, 'XTick', 1:length(glist));
             set(gca, 'XTickLabel', glist);
             set(gca, 'XTickLabelRotation', 90);
@@ -123,14 +123,14 @@ Z = zeros(length(glist), length(cL));
             h = imagesc(Y);
             set(gca, 'XTick', a-b);
             set(gca, 'XTickLabel', strrep(cL, '_', '\_'));
-            %set(gca,'XTickLabelRotation',0);
+            % set(gca,'XTickLabelRotation',0);
             set(gca, 'YTick', 1:length(glist));
             set(gca, 'YTickLabel', glist);
             set(gca, 'TickLength', [0, 0]);
         end
     end
 
-    function in_callback_renamecat(~, ~)
+function in_callback_renamecat(~, ~)
         tg = gui.i_inputgenelist(string(cL), true);
         if isempty(tg), return; end
         if length(tg) == length(cL)
@@ -140,15 +140,15 @@ Z = zeros(length(glist), length(cL));
         else
             gui.myErrordlg(parentfig, 'Wrong input.');
         end
-    end    
+    end
 
-    function in_callback_resetcolor(~, ~)
+function in_callback_resetcolor(~, ~)
         set(gca, 'FontSize', 10);
         colormap default
-    end        
+    end
 
 
-    function in_callback_savetable(~, ~)
+function in_callback_savetable(~, ~)
         labels = {'Save Y to variable named:', ...
             'Save glist to variable named:', ...
             'Save cL to variable named:'};
@@ -158,7 +158,7 @@ Z = zeros(length(glist), length(cL));
             'Save Data to Workspace');
     end
 
-    function in_callback_exporttable(~, ~, T, needwait, defname)
+function in_callback_exporttable(~, ~, T, needwait, defname)
         if nargin < 5, defname = []; end
         if nargin < 4, needwait = false; end
         if ~isempty(defname)
@@ -185,11 +185,11 @@ Z = zeros(length(glist), length(cL));
     end
 
 
-    function in_callback_summarymap(~, ~)
+function in_callback_summarymap(~, ~)
         for ky = 1:length(cL)
             Z(:, ky) = mean(Y(:, c == ky), 2);
         end
-        
+
         hx1=gui.myFigure(parentfig);
 
         [mx,idx]=unique(MX,'stable');
@@ -209,11 +209,11 @@ Z = zeros(length(glist), length(cL));
         hx1.show(hFig);
     end
 
-    function in_callback_summarymapT(~, ~)
+function in_callback_summarymapT(~, ~)
             for ky = 1:length(cL)
                 Z(:, ky) = mean(Y(:, c == ky), 2);
             end
-        
+
         hx2=gui.myFigure(parentfig);
         % assignin("base","Z",Z);
         % assignin("base","MX",MX);
@@ -239,12 +239,12 @@ Z = zeros(length(glist), length(cL));
         hx2.show(hFig);
     end
 
-    function in_callback_dotplotx(~, ~)
+function in_callback_dotplotx(~, ~)
         try
             gui.i_dotplot(sce.X, sce.g, c, cL, MX);
         catch ME
             gui.myErrordlg(parentfig, ME.message, ME.identifier);
         end
     end
-    
+
 end

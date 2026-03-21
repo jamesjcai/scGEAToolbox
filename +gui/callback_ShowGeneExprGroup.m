@@ -2,7 +2,7 @@ function callback_ShowGeneExprGroup(src, ~)
 
 
   [FigureHandle, sce] = gui.gui_getfigsce(src);
-% [axx, bxx] = view(findall(FigureHandle,'type','axes'));    
+% [axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
     allowunique = false;
     [thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);
@@ -17,7 +17,7 @@ function callback_ShowGeneExprGroup(src, ~)
             [glist] = gui.i_selectngenes(sce, [], FigureHandle);
             if isempty(glist), return; end
             % answer = gui.myQuestdlg(FigureHandle, "Select the type of expression values","",...
-            %     "Raw UMI Counts","Library Size-Normalized",)            
+            %     "Raw UMI Counts","Library Size-Normalized",)
 
             gui.i_feaplotarray(sce, glist, thisc, false, FigureHandle);
         case 'Cell State'
@@ -25,7 +25,7 @@ function callback_ShowGeneExprGroup(src, ~)
             s = sce.s;
             [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [1], FigureHandle);
             if isempty(thisyv) || isempty(ylabelv), return; end
-            
+
             y = thisyv{1};
             ylabelv = string(ylabelv);
 
@@ -50,5 +50,5 @@ function callback_ShowGeneExprGroup(src, ~)
             sgtitle(strrep(ylabelv,'_','\_'));
             hx.show(FigureHandle);
     end
-            
+
 end

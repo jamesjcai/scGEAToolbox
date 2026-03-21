@@ -1,76 +1,76 @@
 function callback_CalculateGeneStats(src, ~)
-    % Callback function for Calculate Gene Stats
-    % Prompts the user to calculate gene expression statistics and export the results.
+% Callback function for Calculate Gene Stats
+% Prompts the user to calculate gene expression statistics and export the results.
 
-    % Prompt user for calculation confirmation
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+% Prompt user for calculation confirmation
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
-    answer = gui.myQuestdlg(FigureHandle, 'Calculate gene expression mean, CV, and dropout rate. Save output to a table.', 'Confirmation');
-    if ~strcmp(answer, 'Yes'), return; end
+answer = gui.myQuestdlg(FigureHandle, 'Calculate gene expression mean, CV, and dropout rate. Save output to a table.', 'Confirmation');
+if ~strcmp(answer, 'Yes'), return; end
 
-    % Retrieve single-cell experiment data
-    Xt = gui.i_transformx(sce.X, [], [], FigureHandle);
-    if isempty(Xt), return; end
-    gt = sce.g;
+% Retrieve single-cell experiment data
+Xt = gui.i_transformx(sce.X, [], [], FigureHandle);
+if isempty(Xt), return; end
+gt = sce.g;
 
-    if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Select genes? Click No to include all genes."))
-        % sce.X = Xt;
-        [glist] = gui.i_selectngenes(sce, [], FigureHandle);
-        if isempty(glist) || all(strlength(glist) == 0), return; end
-        [y, idx] = ismember(glist, sce.g);
-        %assignin("base","glist",glist);
-        %assignin("base","g",sce.g);
-        if ~any(y), return; end
-        Xt = Xt(idx,:);
-        gt = sce.g(idx);
+if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Select genes? Click No to include all genes."))
+    % sce.X = Xt;
+    [glist] = gui.i_selectngenes(sce, [], FigureHandle);
+    if isempty(glist) || all(strlength(glist) == 0), return; end
+    [y, idx] = ismember(glist, sce.g);
+    % assignin("base","glist",glist);
+    % assignin("base","g",sce.g);
+    if ~any(y), return; end
+    Xt = Xt(idx,:);
+    gt = sce.g(idx);
+end
+
+% Grouping cells based on user input
+groupingConfirmed = gui.myQuestdlg(FigureHandle, ['Grouping cells? Select Yes to pick a grouping variable. ' ...
+'Select No to include all cells.'], 'Grouping');
+
+if strcmp(groupingConfirmed, 'Yes')
+    thisc = gui.i_select1class(sce,[],[],[],FigureHandle);
+    if isempty(thisc), return; end
+    [c, cL] = findgroups(string(thisc));
+
+    newidx = gui.i_selmultidialog(cL, natsort(cL), FigureHandle);
+    if isempty(newidx), return; end
+
+    cx = c;
+    c = zeros(size(c));
+    for k = 1:length(newidx)
+        c(cx == newidx(k)) = k;
+    end
+    cL = cL(newidx);
+
+    % Initialize the table with default statistics
+    T = sc_genestats(Xt(:, c == 1), gt);
+    for j = 2:4
+        T.Properties.VariableNames{j} = sprintf('%s_%s', T.Properties.VariableNames{j}, cL(1));
     end
 
-    % Grouping cells based on user input
-    groupingConfirmed = gui.myQuestdlg(FigureHandle, ['Grouping cells? Select Yes to pick a grouping variable. ' ...
-        'Select No to include all cells.'], 'Grouping');
-    
-    if strcmp(groupingConfirmed, 'Yes')
-        thisc = gui.i_select1class(sce,[],[],[],FigureHandle);
-        if isempty(thisc), return; end
-        [c, cL] = findgroups(string(thisc));
-
-        newidx = gui.i_selmultidialog(cL, natsort(cL), FigureHandle);
-        if isempty(newidx), return; end
-
-        cx = c;
-        c = zeros(size(c));
-        for k = 1:length(newidx)
-            c(cx == newidx(k)) = k;
-        end
-        cL = cL(newidx);
-        
-        % Initialize the table with default statistics
-        T = sc_genestats(Xt(:, c == 1), gt);
+    % Calculate and merge gene stats for each group
+    for k = 2:length(cL)
+        t = sc_genestats(Xt(:, c == k), gt);
         for j = 2:4
-            T.Properties.VariableNames{j} = sprintf('%s_%s', T.Properties.VariableNames{j}, cL(1));
+            t.Properties.VariableNames{j} = sprintf('%s_%s', ...
+                t.Properties.VariableNames{j}, cL(k));
         end
 
-        % Calculate and merge gene stats for each group
-        for k = 2:length(cL)
-            t = sc_genestats(Xt(:, c == k), gt);            
-            for j = 2:4
-                t.Properties.VariableNames{j} = sprintf('%s_%s', ...
-                    t.Properties.VariableNames{j}, cL(k));
-            end
-
-            %size(T)
-            %size(t)
-            T = [T, t(:, 2:4)];
-        end
-
-    else
-        % Calculate statistics for all cells if no grouping
-        T = sc_genestats(Xt, gt);
+        % size(T)
+        % size(t)
+        T = [T, t(:, 2:4)];
     end
 
-    % gui.i_viewtable(T, FigureHandle);
-    gui.TableViewerApp(T, FigureHandle, "GeneStats");
+else
+    % Calculate statistics for all cells if no grouping
+    T = sc_genestats(Xt, gt);
+end
 
-    % Export the results to a table
-    % gui.i_exporttable(T, true, 'GeneStatsTable',[],[],[], FigureHandle);    
+% gui.i_viewtable(T, FigureHandle);
+gui.TableViewerApp(T, FigureHandle, "GeneStats");
+
+% Export the results to a table
+% gui.i_exporttable(T, true, 'GeneStatsTable',[],[],[], FigureHandle);
 end

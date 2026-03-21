@@ -28,7 +28,7 @@ catch ME
         'ReadVariableNames', true);
 end
 
-%T=sortrows(T,"ScoreType");
+% T=sortrows(T,"ScoreType");
 
 if ischar(scoretypeid) || isstring(scoretypeid)
     idx = find(matches(T.ScoreType, scoretypeid, 'IgnoreCase', true));
@@ -82,7 +82,7 @@ for k = 1:length(posg)
     end
 end
 fprintf('=============\n*Expressed genes (n = %d)\n', ...
-    sum(isexpressed));
+sum(isexpressed));
 
 % fprintf('\n=============\n%s\n-------------\n','Marker Genes');
 % for k=1:length(posg)

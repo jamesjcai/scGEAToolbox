@@ -1,8 +1,8 @@
 function i_scattertabs(y, tabnamelist, thisx, xlabelv, parentfig)
-%see also: gui.i_violinplot, gui.sc_uitabgrpfig_vioplot
+% see also: gui.i_violinplot, gui.sc_uitabgrpfig_vioplot
 
-%assignin('base',"y",y)
-%assignin('base',"thisx",thisx)
+% assignin('base',"y",y)
+% assignin('base',"thisx",thisx)
 
 if nargin<4, parentfig = []; end
 tabnamelist = string(tabnamelist);
@@ -24,7 +24,7 @@ hx = gui.myFigure(parentfig);
 hFig=hx.FigHandle;
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
-%delete(findall(hFig, 'Tag', 'FigureToolBar'));
+% delete(findall(hFig, 'Tag', 'FigureToolBar'));
 % if ~isempty(cx)
 %     px = hFig.Position;
 %     px_new = [cx(1)-px(3)/2 cx(2)-px(4)/2];
@@ -52,7 +52,7 @@ for ks = 1:n
     % pkg.i_violinplot(y{ks}, thisx, true, cLorder);
     title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));
 end
-  
+
 tabgp.SelectionChangedFcn=@displaySelection;
 
 hx.addCustomButton('off', @in_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
@@ -75,7 +75,7 @@ hx.show(parentfig);
 
      function in_curvefitter(~, ~)
          if ~(ismcc || isdeployed)
-            [~,tabidx]=ismember(focalg, tabnamelist);            
+            [~,tabidx]=ismember(focalg, tabnamelist);
             thisy = y{tabidx};
              if ~(ismcc || isdeployed)
                 %#exclude curveFitter
@@ -83,8 +83,8 @@ hx.show(parentfig);
              end
          end
      end
-         
-    function displaySelection(~,event)
+
+function displaySelection(~,event)
         t = event.NewValue;
         txt = t.Title;
         % disp("Viewing gene " + txt);
@@ -92,7 +92,7 @@ hx.show(parentfig);
         focalg = tabnamelist(idx);
     end
 
-    function in_BoxOnOff(~,~)
+function in_BoxOnOff(~,~)
         for tabidx=1:n
             if ~ybox
                 box(ax0{tabidx},'on');
@@ -100,16 +100,16 @@ hx.show(parentfig);
                 box(ax0{tabidx},'off');
             end
             ybox = ~ybox;
-        end        
+        end
     end
 
-    function in_PickPlotMarker(~, ~)
-        %answer = gui.myQuestdlg(parentfig, 'Box on?','');
-        %ybox = false;
-        %if isempty(answer), return; end
-        %if strcmp(answer,'Yes'), ybox = true; end
+function in_PickPlotMarker(~, ~)
+        % answer = gui.myQuestdlg(parentfig, 'Box on?','');
+        % ybox = false;
+        % if isempty(answer), return; end
+        % if strcmp(answer,'Yes'), ybox = true; end
         s1 = 10 * randi(10);
-        s2 = 50 * randi(10);        
+        s2 = 50 * randi(10);
         for tabidx=1:n
             if h0{tabidx}.Marker == '.'
                 h0{tabidx}.Marker = 'o';
@@ -126,27 +126,27 @@ hx.show(parentfig);
         end
     end
 
-    function in_addlocfit(~, ~)
+function in_addlocfit(~, ~)
         for tabidx=1:n
             tabgp.SelectedTab=tab{tabidx};
             thisax = ax0{tabidx};
             thisy = y{tabidx};
-            %[~,tabidx]=ismember(focalg, tabnamelist);
-            %thisy = y{tabidx};
+            % [~,tabidx]=ismember(focalg, tabnamelist);
+            % thisy = y{tabidx};
             [y_fit] = pkg.e_locfit(thisy(:), thisx(:));
-            %[y_fit2] = malowess(thisx(:), thisy(:));
+            % [y_fit2] = malowess(thisx(:), thisy(:));
 
             if license('test','Curve_Fitting_Toolbox') && ~isempty(which('curveFitter'))
                 y_fit2 = smooth(thisx(:), thisy(:), 0.5, 'lowess');
-                %y_fit2 = fit([thisx(:), thisy(:)], 'lowess', 'Span', 0.2);
+                % y_fit2 = fit([thisx(:), thisy(:)], 'lowess', 'Span', 0.2);
                 % assignin("base",'y',thisy(:))
                 % assignin("base",'x',thisx(:))
                 % assignin("base",'y_fit1',y_fit)
-                %assignin("base",'y_fit2',y_fit2)
+                % assignin("base",'y_fit2',y_fit2)
             end
-            
 
-            %thisax = ax0{tabidx};
+
+            % thisax = ax0{tabidx};
             hold(thisax,"on");
             [sortedx, idxx]=sort(thisx(:));
             plot(thisax, sortedx, y_fit(idxx), '-','LineWidth', 2);
@@ -157,7 +157,7 @@ hx.show(parentfig);
         tabgp.SelectedTab=tab{tabidx};
     end
 
-    function in_addlocfitx(~, ~)
+function in_addlocfitx(~, ~)
         % [~,tabidx]=ismember(focalg, tabnamelist);
         % thisy = y{tabidx};
         % [y_fit] = pkg.e_locfit(thisy(:), thisx(:));
@@ -170,7 +170,7 @@ hx.show(parentfig);
         [idxx] = gui.i_selmultidialog(tabnamelist, tabnamelist, hFig);
         if isempty(idxx), return; end
         if idxx == 0, return; end
-        
+
         tabnamelist_a = tabnamelist(idxx);
 
         Y = [];
@@ -194,7 +194,7 @@ hx.show(parentfig);
         hold on
         [sortedx, idxx]=sort(thisx(:));
         Y_fit = Y_fit(idxx,:);
-        
+
         Pk = [];
         for k = 1:size(Y_fit, 2)
             if zs
@@ -207,15 +207,15 @@ hx.show(parentfig);
         box on
         tabnamelist_a = strrep(tabnamelist_a,'_','\_');
         legend(Pk, tabnamelist_a, 'location', 'eastoutside');
-        xlim([0, max(thisx(:))]);        
+        xlim([0, max(thisx(:))]);
     end
 
-    function in_addregress(~, ~)
+function in_addregress(~, ~)
         for tabidx=1:n
             tabgp.SelectedTab=tab{tabidx};
             thisax = ax0{tabidx};
             thisy = y{tabidx};
-            %a = hFig.get("CurrentAxes");
+            % a = hFig.get("CurrentAxes");
             if isempty(OldTitle{tabidx})
                 OldTitle{tabidx} = thisax.Title.String;
                 if size(thisy, 2) ~= length(thisx)
@@ -260,16 +260,16 @@ hx.show(parentfig);
         [~,tabidx]=ismember(focalg, tabnamelist);
         tabgp.SelectedTab=tab{tabidx};
     end
-        
-    function in_savedata(~, ~)        
+
+function in_savedata(~, ~)
         T=table(thisx);
         T.Properties.VariableNames = matlab.lang.makeValidName({xlabelv});
-        for tabidx=1:n            
+        for tabidx=1:n
             thisy = y{tabidx};
-            t = table(thisy(:));            
+            t = table(thisy(:));
             t.Properties.VariableNames = matlab.lang.makeValidName(tabnamelist(tabidx));
             T = [T, t];
-        end        
+        end
         gui.i_exporttable(T, true, 'Tscatterdata','ScatterPlotTable');
     end
 end

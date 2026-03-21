@@ -7,7 +7,7 @@ arcLength = [0; cumsum(distances)]; % Arc length parameter
 
 % Define new parameter values for interpolation
 % numInterpPoints = 1000;
-arcLengthInterp = linspace(0, arcLength(end), numInterpPoints); 
+arcLengthInterp = linspace(0, arcLength(end), numInterpPoints);
 
 % Interpolate x, y, and z separately
 xInterp = interp1(arcLength, xyz(:,1), arcLengthInterp, 'spline');
@@ -26,7 +26,7 @@ y = sin(t);  % Example y-coordinates
 z = t;       % Example z-coordinates
 
 % Compute cumulative arc length
-xyz = [x, y, z]; 
+xyz = [x, y, z];
 
 % Plot results
 figure;

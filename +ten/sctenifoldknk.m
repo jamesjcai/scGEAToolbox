@@ -57,13 +57,13 @@ end
     %        error('Need sc_pcnet.m in the scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
     %    end
 
-    X = sc_norm(X, "type", "libsize");
-    X = log1p(X);
+X = sc_norm(X, "type", "libsize");
+X = log1p(X);
 
-    [XM] = i_nc(X, nsubsmpl, 3, csubsmpl, usebootstrp);
-    [A0] = i_td1(XM, tdmethod);
-    if savegrn
-        tstr = matlab.lang.makeValidName(strrep(sprintf("GRN_created_on_%s", datetime)," ", "_at_"));
+[XM] = i_nc(X, nsubsmpl, 3, csubsmpl, usebootstrp);
+[A0] = i_td1(XM, tdmethod);
+if savegrn
+        tstr = matlab.lang.makeValidName(strrep(sprintf("GRN_created_on_% s", datetime)," ", "_at_"));
         save(tstr, 'A0', 'genelist', '-v7.3');
         fprintf('\nConstructed gene regulatory network (GRN) is saved in A0_%s.mat\n', tstr);
     end
@@ -71,5 +71,5 @@ end
     %     A1(idx,:)=0;
     %     [aln0,aln1]=i_ma(A0,A1);
     %     T=i_dr(aln0,aln1,genelist,dosort);
-    T = ten.i_knk(A0, idx, genelist, dosort);
+T = ten.i_knk(A0, idx, genelist, dosort);
 end

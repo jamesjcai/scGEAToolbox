@@ -3,11 +3,11 @@ function sc_multiembeddingview(sce, embeddingtags, parentfig)
 if isempty(embeddingtags)
     embeddingtags = fieldnames(sce.struct_cell_embeddings);
 end
-    hx=gui.myFigure(parentfig);
-    hFig=hx.FigHandle;
-    hFig.Position(3) = hFig.Position(3) * 1.8;
-    axesv = cell(length(embeddingtags),1);
-    for k = 1:length(embeddingtags)
+hx=gui.myFigure(parentfig);
+hFig=hx.FigHandle;
+hFig.Position(3) = hFig.Position(3) * 1.8;
+axesv = cell(length(embeddingtags),1);
+for k = 1:length(embeddingtags)
         s = sce.struct_cell_embeddings.(embeddingtags{k});
         if size(s,2)>1 && size(s,1)==sce.NumCells
             axesv{k} = nexttile;
@@ -16,17 +16,17 @@ end
         end
     end
 
-   
+
    % evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
-    hBr = brush(hFig);
-    hBr.ActionPostCallback = {@onBrushAction, axesv};
+hBr = brush(hFig);
+hBr.ActionPostCallback = {@onBrushAction, axesv};
 
-    hx.addCustomButton('off',  @in_showgeneexp, 'google-docs.jpg', 'Select a gene to show expression...');
-    hx.addCustomButton('off',  @in_showcellstate, 'bookmark-book.jpg', 'Show cell state...');
-    hx.show(parentfig);
+hx.addCustomButton('off',  @in_showgeneexp, 'google-docs.jpg', 'Select a gene to show expression...');
+hx.addCustomButton('off',  @in_showcellstate, 'bookmark-book.jpg', 'Show cell state...');
+hx.show(parentfig);
 
-     
-    function in_showcellstate(~, ~)
+
+function in_showcellstate(~, ~)
         [thisc, clabel] = gui.i_select1state(sce, false, false, true, false, hFig);
         if isempty(thisc), return; end
         [c, cL] = findgroups(string(thisc));
@@ -48,7 +48,7 @@ end
         end
     end
 
-    function in_showgeneexp(~, ~)
+function in_showgeneexp(~, ~)
         [gsorted] = gui.i_sortgenenames(sce, hFig);
         if isempty(gsorted), return; end
         figure(hFig);
@@ -62,7 +62,7 @@ end
 
         if tf == 1
             c = full(sce.X(sce.g == gsorted(indx), :));
-            
+
             for kx = 1:length(axesv)
                s = sce.struct_cell_embeddings.(embeddingtags{kx});
                gui.i_gscatter3(s, c, 1, 1, axesv{kx});
@@ -72,7 +72,7 @@ end
         end
     end
 
-    function onBrushAction(~, event, axv)
+function onBrushAction(~, event, axv)
         for kx=1:length(axv)
             if isequal(event.Axes, axv{kx})
                 idx = kx;
@@ -87,4 +87,4 @@ end
         end
     end
 
-end    
+end

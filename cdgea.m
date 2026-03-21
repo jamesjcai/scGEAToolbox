@@ -18,7 +18,7 @@ if ~strcmp(pw0, pw1) && ~isconfirmed
         {'always', 'never'; 'Yes', 'No'}, ... % Values and button strings
         'ExtraOptions', 'Cancel', ... % Additional button
         'DefaultButton', 'Yes');
-    
+
     switch selectedButton
         case {'always', 'Yes'}
             cd(pw1); % Change directory to scGEAToolbox folder

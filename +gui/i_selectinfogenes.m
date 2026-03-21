@@ -7,9 +7,9 @@ end
 if isempty(spciestag), return; end
 
 prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ...
-    'Remove Hemoglobin Genes (HBA1, HBB, Hba-a1, etc.)?', ...
-    'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
-    'Remove Genes Without Approved Symbols?'};
+'Remove Hemoglobin Genes (HBA1, HBB, Hba-a1, etc.)?', ...
+'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
+'Remove Genes Without Approved Symbols?'};
 dlgtitle = '';
 dims = [1, 80];
 
@@ -26,17 +26,17 @@ if isempty(answer), return; end
 fw = gui.myWaitbar(parentfig);
 if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
     sce = sce.rmmtgenes;
-    disp('Mt-genes removed.');    
+    disp('Mt-genes removed.');
 end
 
 if strcmpi(answer{2},'Yes') || strcmpi(answer{2},'Y')
     sce = sce.rmhemoglobingenes;
-    disp('Hemoglobin genes removed.');    
+    disp('Hemoglobin genes removed.');
 end
 
 if strcmpi(answer{3},'Yes') || strcmpi(answer{3},'Y')
     sce = sce.rmribosomalgenes;
-    disp('Ribosomal genes removed.');    
+    disp('Ribosomal genes removed.');
 end
 
 if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
@@ -51,7 +51,7 @@ if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
     end
     ApprovedSymbol = string(T.GeneName);
     [idx0] = ismember(upper(sce.g), upper(ApprovedSymbol));
-    a1 = length(sce.g);    
+    a1 = length(sce.g);
     sce.X(~idx0, :) = [];
     sce.g(~idx0) = [];
     a2 = length(sce.g);
@@ -60,4 +60,3 @@ end
 gui.myWaitbar(parentfig, fw);
 
 % ---------------------------------
-

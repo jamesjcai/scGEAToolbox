@@ -1,20 +1,20 @@
 function obj = loadH5AD(filename)
-    % Load a .h5ad file into SingleCellExperiment2
-    %
-    %   obj = SingleCellExperiment2.loadH5AD("file.h5ad")
-    %
-    % Supports:
-    %   - Dense and CSR sparse /X
-    %   - Categorical obs/var decoding
-    %   - Metadata (/uns)
-    %   - Embeddings (/obsm)
+% Load a .h5ad file into SingleCellExperiment2
+%
+%   obj = SingleCellExperiment2.loadH5AD("file.h5ad")
+%
+% Supports:
+%   - Dense and CSR sparse /X
+%   - Categorical obs/var decoding
+%   - Metadata (/uns)
+%   - Embeddings (/obsm)
 
-    arguments
-        filename (1,1) string
+arguments
+    filename (1,1) string
     end
 
     if ~isfile(filename)
-        error("File not found: %s", filename);
+        error("File not found: % s", filename);
     end
 
     %% --- Load X ---
@@ -142,10 +142,10 @@ end
 
 %% --- Helper: check existence of dataset ---
 function tf = h5exists(filename, path)
-    tf = false;
-    try
-        h5info(filename, path);
-        tf = true;
-    catch
-    end
+tf = false;
+try
+    h5info(filename, path);
+    tf = true;
+catch
+end
 end

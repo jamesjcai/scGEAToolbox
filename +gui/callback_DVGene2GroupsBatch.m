@@ -4,11 +4,11 @@ function callback_DVGene2GroupsBatch(src, ~)
 sce = copy(sce_ori);
 
 if ~gui.gui_showrefinfo('DV in Batch Mode', FigureHandle), return; end
-    
-    extprogname = 'scgeatool_DVAnalysis_Batch';
-    preftagname = 'externalwrkpath';
-    [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
-    if isempty(wrkdir), return; end
+
+extprogname = 'scgeatool_DVAnalysis_Batch';
+preftagname = 'externalwrkpath';
+[wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
+if isempty(wrkdir), return; end
 
 prefixtag = 'DV';
 
@@ -18,16 +18,16 @@ b=sce.NumGenes;
 fprintf('%d genes removed.\n', a-b);
 
 [done, CellTypeList, i1, i2, cL1, cL2, ...
-    outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir, FigureHandle);
+outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir, FigureHandle);
 if ~done, return; end
 
-%[runenrichr] = gui.i_enrichrprep;
+% [runenrichr] = gui.i_enrichrprep;
 [runenrichr] = gui.myQuestdlg(FigureHandle, 'Run Enrichr with top 250 DV genes? Results will be saved in the output Excel files.','');
 if strcmp(runenrichr,'Cancel'), return; end
 
 fw = gui.myWaitbar(FigureHandle);
 for k=1:length(CellTypeList)
-   
+
     gui.myWaitbar(FigureHandle, fw, false, '', ...
         sprintf('Processing %s ...', CellTypeList{k}), ...
         (k-1)/length(CellTypeList));
@@ -46,7 +46,7 @@ for k=1:length(CellTypeList)
         warning('Filtered SCE contains too few cells (n < 10) or genes (n < 10).');
         continue;
     end
-    
+
     [T] = gui.e_dvanalysis_splinefit(sce1, sce2, cL1, cL2);
 
     outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
@@ -54,16 +54,16 @@ for k=1:length(CellTypeList)
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
         matlab.lang.makeValidName(string(CellTypeList{k})));
-        filesaved = fullfile(outdir, outfile);        
-         
+        filesaved = fullfile(outdir, outfile);
+
         Tup = T(T.DiffSign > 0, :);
         Tdn = T(T.DiffSign < 0, :);
-        
+
         [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2);
 
         % Item = T.Properties.VariableNames';
         % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
-        % 
+        %
         % Description = {'gene name';'log mean in sample 1';...
         %     'log CV in sample 1'; 'dropout rate in sample 1';...
         %     'distance to curve 1';'p-value of distance in sample 1';...
@@ -81,7 +81,6 @@ for k=1:length(CellTypeList)
         %     Tnt = table(Item);
         %     warning('Variables must have the same number of rows.');
         % end
-
 
 
         try
@@ -103,7 +102,7 @@ for k=1:length(CellTypeList)
             end
         end
         % - end of enrichr
-        
+
 end
 gui.myWaitbar(FigureHandle, fw);
 

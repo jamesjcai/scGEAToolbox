@@ -20,7 +20,7 @@ if ~isempty(whitelist)
 end
 
 [~, keptg, keptidxv] = sc_qcfilter(sce.X, sce.g, libszcutoff, mtratio, ...
-    min_cells_nonzero, gnnumcutoff);
+min_cells_nonzero, gnnumcutoff);
 
 for k = 1:length(keptidxv)
     sce = selectcells(sce, keptidxv{k}); % OK
@@ -36,16 +36,16 @@ if ~isempty(whitelist)
         Xresv = Xresv(:, keptidxv{k});
     end
     [y, idxx] = ismember(whitelist, sce.g);
-    
+
     if any(y)
         idxx=idxx(y);
-        %assignin("base","X1",obj.X(idxx, :));
-        %assignin("base","g1",obj.g(idxx));
+        % assignin("base","X1",obj.X(idxx, :));
+        % assignin("base","g1",obj.g(idxx));
         sce.X(idxx, :) = [];
         sce.g(idxx) = [];
     end
-    %assignin("base","Xresv",Xresv)
-    %assignin("base","whitelist",whitelist)
+    % assignin("base","Xresv",Xresv)
+    % assignin("base","whitelist",whitelist)
     sce.X = [sce.X; Xresv];
     sce.g = [sce.g; whitelist(:)];
 end

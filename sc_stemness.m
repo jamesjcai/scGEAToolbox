@@ -1,57 +1,57 @@
 function s = sc_stemness(X, g)
-    % SC_STEMNESS   Compute stemness score for single-cell data
-    %
-    %   s = sc_stemness(X, g)
-    %
-    %   Inputs:
-    %     X : genes × cells expression matrix (numeric, non-empty)
-    %     g : cell array of gene names (matching rows of X)
-    %
-    %   Output:
-    %     s : 1 × cells vector of normalized stemness scores (Spearman)
-    %
-    %   Uses a default stemness signature loaded from:
-    %     assets/scCancer/pcbc_stemsig.txt
+% SC_STEMNESS   Compute stemness score for single-cell data
+%
+%   s = sc_stemness(X, g)
+%
+%   Inputs:
+%     X : genes x cells expression matrix (numeric, non-empty)
+%     g : cell array of gene names (matching rows of X)
+%
+%   Output:
+%     s : 1 x cells vector of normalized stemness scores (Spearman)
+%
+%   Uses a default stemness signature loaded from:
+%     assets/scCancer/pcbc_stemsig.txt
 
-    %arguments
-    %    X double {mustBeNonempty}  % Ensure the gene expression matrix is a non-empty numeric array
-    %end
-   % https://www.nature.com/articles/sdata201730
-   % https://github.com/czythu/scCancer
-   % https://github.com/wguo-research/scCancer/tree/master/inst/txt
-   % https://academic.oup.com/bib/article/22/3/bbaa127/5867555?login=false
+% arguments
+%     X double {mustBeNonempty}  % Ensure the gene expression matrix is a non-empty numeric array
+% end
+% https://www.nature.com/articles/sdata201730
+% https://github.com/czythu/scCancer
+% https://github.com/wguo-research/scCancer/tree/master/inst/txt
+% https://academic.oup.com/bib/article/22/3/bbaa127/5867555?login=false
 
 pw1 = fileparts(mfilename('fullpath'));
 dbfile1 = fullfile(pw1, 'assets', 'scCancer', 'pcbc_stemsig.txt');
 if ~exist(dbfile1, 'file'), error('Missing file pcbc_stemsig.txt.'); end
-   
-    % Load default stemness signature if not provided
-    T = readtable(dbfile1, 'FileType', 'text', 'ReadVariableNames', false);
-        
-    % Ensure common genes between stem signature and input matrix
-    [~, ix, iy] = intersect(T.Var1, g);
-    %X = sc_norm(X);
-    %X = log1p(X);
-    X = X(iy, :);
-    if issparse(X), X = full(X); end
-    stem_sig_common = T.Var2(ix, :);
-    
-    % Initialize the stemness score array
-    % s = zeros(size(X, 2), 1);
-    
-    % Calculate Spearman correlation for each cell (column in X)
-    % for i = 1:width(X_common)
-    %     s(i) = corr(X_common(:, i), stem_sig_common(:), ...
-    %         'Type', 'Spearman');
-    % end
-    
-    s = corr(X, stem_sig_common, ...
-        "Type","Spearman");
-    
-    % Normalize the stemness scores between 0 and 1
-    %s = s - min(s);
-    %s = s / max(s);
-    s = normalize(s, "range");
+
+% Load default stemness signature if not provided
+T = readtable(dbfile1, 'FileType', 'text', 'ReadVariableNames', false);
+
+% Ensure common genes between stem signature and input matrix
+[~, ix, iy] = intersect(T.Var1, g);
+% X = sc_norm(X);
+% X = log1p(X);
+X = X(iy, :);
+if issparse(X), X = full(X); end
+stem_sig_common = T.Var2(ix, :);
+
+% Initialize the stemness score array
+% s = zeros(size(X, 2), 1);
+
+% Calculate Spearman correlation for each cell (column in X)
+% for i = 1:width(X_common)
+%     s(i) = corr(X_common(:, i), stem_sig_common(:), ...
+%         'Type', 'Spearman');
+% end
+
+s = corr(X, stem_sig_common, ...
+    "Type", "Spearman");
+
+% Normalize the stemness scores between 0 and 1
+% s = s - min(s);
+% s = s / max(s);
+s = normalize(s, "range");
 end
 
 % https://github.com/wguo-research/scCancer/blob/master/R/scAnnotation.R#L1058

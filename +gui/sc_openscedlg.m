@@ -1,10 +1,10 @@
 function [sce, filename] = sc_openscedlg(~, ~, parentfig)
-    if nargin<3, parentfig = []; end
+if nargin<3, parentfig = []; end
 
-    sce = [];
-    filename = [];
+sce = [];
+filename = [];
 
-    list = {'SCE Data File(s) (*.mat)...', ...
+list = {'SCE Data File(s) (*.mat)...', ...
         'TXT/TSV/CSV File (*.txt)...', ...
         'Seurat/Rds File (*.rds)...', ...
         'AnnData/H5ad File (*.h5ad)...', ...
@@ -26,10 +26,10 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
 
 
     % preftagname ='scimilmodelpath'
-    preftagname ='openscedlgindex';
-    defaultindx = getpref('scgeatoolbox', preftagname, length(list));
+preftagname ='openscedlgindex';
+defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
-    if gui.i_isuifig(parentfig)
+if gui.i_isuifig(parentfig)
         figure(parentfig);
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx), false);
@@ -47,18 +47,18 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             'Name', 'Import Data', ...
             'InitialValue', defaultindx);
     end
-    
-    figure(parentfig);
-    if tf ~= 1, return; end
-    ButtonName = list{indx};
-    setpref('scgeatoolbox', preftagname, indx);
+
+figure(parentfig);
+if tf ~= 1, return; end
+ButtonName = list{indx};
+setpref('scgeatoolbox', preftagname, indx);
     %         ButtonName = gui.myQuestdlg(parentfig, ('Select Input Data Type', ...
     %                               'SC_SCATTER', ...
     %                               'SCE Data .mat', ...
     %                               '10x Genomics .mtx', ...
     %                               'TSV/CSV .txt', 'SCE Data .mat');
 
-    switch ButtonName
+switch ButtonName
         case 'SCE Data File(s) (*.mat)...'
             [filenm, pathname] = uigetfile( ...
                 {'*.mat', 'SCE Data Files (*.mat)'; ...
@@ -97,7 +97,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                                 k./length(filenm));
                             load(filename, 'sce');
                             insce{k} = sce;
-                            metainfo = sprintf("Source: %s", filename);
+                            metainfo = sprintf("Source: % s", filename);
                             insce{k} = insce{k}.appendmetainfo(metainfo);
                         end
                     end
@@ -130,7 +130,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             try
                 [X, g] = sc_readtsvfile(filename);
                 sce = SingleCellExperiment(X, g);
-                metainfo = sprintf("Source: %s", filename);
+                metainfo = sprintf("Source: % s", filename);
                 sce = sce.appendmetainfo(metainfo);
             catch ME
                 gui.myWaitbar(parentfig, fw, true);
@@ -171,7 +171,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                     if strcmp('Yes', gui.myQuestdlg(parentfig, 'View metadata?'))
                         gui.TableViewerApp(metadata, parentfig);
                     end
-                end                
+                end
             end
         case 'AnnData/H5ad File (*.h5ad)...'
             [filenm, pathname] = uigetfile( ...
@@ -186,7 +186,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 [X, g, b, bid, cty, filename] = sc_readh5adfile(filename);
                 if ~isempty(X)
                     sce = SingleCellExperiment(X, g);
-                    metainfo = sprintf("Source: %s", filename);
+                    metainfo = sprintf("Source: % s", filename);
                     sce = sce.appendmetainfo(metainfo);
                     if ~isempty(b), sce.c_cell_id = b; end
                     if ~isempty(bid), sce.c_batch_id = bid; end
@@ -202,7 +202,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
-            end            
+            end
         case '10x Genomics H5 File(s) (*.h5)...'
             [filenm, pathname] = uigetfile( ...
                 {'*.h5;*.hdf5', 'HDF5 Files (*.h5)'; ...
@@ -229,8 +229,8 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                             [X, g, b, c] = sc_read10xh5file(filename);
                             if ~isempty(X)
                                 insce{k} = SingleCellExperiment(X, g);
-                                metainfo = sprintf("Source: %s", filename);
-                                insce{k} = insce{k}.appendmetainfo(metainfo);                                        
+                                metainfo = sprintf("Source: % s", filename);
+                                insce{k} = insce{k}.appendmetainfo(metainfo);
                                 if ~isempty(b), insce{k}.c_cell_id = b; end
                                 if ~isempty(c)
                                     insce{k}.c_batch_id = c;
@@ -240,7 +240,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                                 end
                             end
                         end
-                    end                            
+                    end
                     sce = sc_mergesces(insce, methodtag);
                 catch ME
                     gui.myWaitbar(parentfig, fw, true);
@@ -255,7 +255,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                         [X, g, b, c] = sc_read10xh5file(filename);
                         if ~isempty(X)
                             sce = SingleCellExperiment(X, g);
-                            metainfo = sprintf("Source: %s", filenm);
+                            metainfo = sprintf("Source: % s", filenm);
                             sce = sce.appendmetainfo(metainfo);
                             if ~isempty(b), sce.c_cell_id = b; end
                             if ~isempty(c), sce.c_batch_id = c; end
@@ -274,7 +274,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 [X, g, b, filename] = sc_readloomfile;
                 if ~isempty(X)
                     sce = SingleCellExperiment(X, g);
-                    metainfo = sprintf("Source: %s", filename);
+                    metainfo = sprintf("Source: % s", filename);
                     sce = sce.appendmetainfo(metainfo);
                     if ~isempty(b), sce.c_cell_id = b; end
                 else
@@ -305,7 +305,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 return;
             end
             sce = SingleCellExperiment(X, g);
-            metainfo = sprintf("Source: %s", selpath);
+            metainfo = sprintf("Source: % s", selpath);
             sce = sce.appendmetainfo(metainfo);
             if ~isempty(celllist) && length(celllist) == sce.NumCells
                 sce.c_cell_id = celllist;
@@ -321,7 +321,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             selpath = uigetdir;
             if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
                 figure(parentfig);
-            end            
+            end
             if selpath == 0, return; end
             try
                 fw = gui.myWaitbar(parentfig);
@@ -337,7 +337,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 return;
             end
             sce = SingleCellExperiment(X, g);
-            metainfo = sprintf("Source: %s", selpath);
+            metainfo = sprintf("Source: % s", selpath);
             sce = sce.appendmetainfo(metainfo);
             if ~isempty(celllist) && length(celllist) == sce.NumCells
                 sce.c_cell_id = celllist;
@@ -349,9 +349,9 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             end
         case 'GEO Accession Number(s)...'
 
-            preftagname1 ='previousgeoaccs';    
+            preftagname1 ='previousgeoaccs';
             previousgeoaccs = getpref('scgeatoolbox', preftagname1, 'GSM7855468');
-            
+
             figure(parentfig);
             if gui.i_isuifig(parentfig)
                 acc = gui.myInputdlg({'Input(s) (e.g., GSM7855468 or GSM3308549-52):'}, ...
@@ -363,13 +363,13 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
 
             if isempty(acc), return; end
             setpref('scgeatoolbox', preftagname1, acc{1});
-            %acc = strtrim(deblank(acc{1}));
-            %acc = strrep(acc,' ','');
+            % acc = strtrim(deblank(acc{1}));
+            % acc = strrep(acc,' ','');
             acc = regexprep(acc{1},'[^a-zA-Z0-9,;\-]','');
             if isempty(acc) || ~strlength(acc) > 4
                 gui.i_bringtofront(parentfig);
-                return; 
-            end            
+                return;
+            end
             if contains(acc,'-')
                 accx = pkg.i_expandrange(acc);
                 if strcmp('Yes', gui.myQuestdlg(parentfig, ...
@@ -381,7 +381,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 end
             end
             acc = upper(acc);
-            
+
             if strlength(acc) > 4 && ~isempty(regexp(acc, 'G.+', 'once'))
                 accv = unique(strsplit(acc, {',', ';', ' '}), 'stable');
                 if length(accv) > 1
@@ -399,7 +399,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                         gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
-                else                        
+                else
                     try
                         fw = gui.myWaitbar(parentfig);
                         [sce] = sc_readgeoaccess(acc);
@@ -429,7 +429,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 return;
             end
             sce = SingleCellExperiment(X, g);
-            metainfo = sprintf("Source: %s", answer1);
+            metainfo = sprintf("Source: % s", answer1);
             sce = sce.appendmetainfo(metainfo);
             if ~isempty(celllist) && length(celllist) == sce.NumCells
                 sce.c_cell_id = celllist;
@@ -438,7 +438,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             prompt = {'Enter link to .h5 file:'};
             dlgtitle = 'Input Download Links';
             definput = {'https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4666nnn/GSM4666986/suppl/GSM4666986_BL41_filtered_feature_bc_matrix.h5'};
-            
+
             if gui.i_isuifig(parentfig)
                 answer = gui.myInputdlg(prompt, dlgtitle, definput, parentfig);
             else
@@ -457,7 +457,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
                 fprintf('[X, g, b] = sc_read10xh5file(''%s'');\n', f);
                 [X, g, b, c] = sc_read10xh5file(f);
                 sce = SingleCellExperiment(X, g);
-                metainfo = sprintf("Source: %s", answer{1});
+                metainfo = sprintf("Source: % s", answer{1});
                 sce = sce.appendmetainfo(metainfo);
                 if ~isempty(b), sce.c_cell_id = b; end
                 if ~isempty(c), sce.c_batch_id = c; end
@@ -474,10 +474,10 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             a = evalin('base', 'whos');
             if isempty(a)
                 gui.myHelpdlg(parentfig, 'No SCE in Workspace.');
-                return;                
+                return;
             end
             b = struct2cell(a);
-            valididx = ismember(b(4, :), 'SingleCellExperiment');            
+            valididx = ismember(b(4, :), 'SingleCellExperiment');
             if ~any(valididx)
                 gui.myHelpdlg(parentfig, 'No SCE in Workspace.');
                 return;
@@ -525,7 +525,7 @@ function [sce, filename] = sc_openscedlg(~, ~, parentfig)
             else
                 return;
             end
-            %promotesave = false;
+            % promotesave = false;
         case 'Load Example Data...'
             answerstruced = gui.myQuestdlg(parentfig, 'Load processed or raw data?', ...
                     '', {'Processed', 'Raw', 'Cancel'}, 'Processed');
@@ -564,20 +564,20 @@ end
 
 
 function [y] = in_multifilesgo(parentfig)
-    [answer]=gui.myQuestdlg(parentfig, ...
-        'Multiple files selected. After reading each file, data will be merged. Continue?','');
-    switch answer
-        case 'Yes'
-            y=true;
-            return;
-    end
-    y=false;
+[answer]=gui.myQuestdlg(parentfig, ...
+    'Multiple files selected. After reading each file, data will be merged. Continue?','');
+switch answer
+    case 'Yes'
+        y=true;
+        return;
+end
+y=false;
 end
 
 
-    function [sce] = in_simulatedata(parentfig)
-        %gui.i_bringtofront(parentfig);
-        %figure(parentfig);
+function [sce] = in_simulatedata(parentfig)
+        % gui.i_bringtofront(parentfig);
+        % figure(parentfig);
         sce=[];
         definput = {'3000', '5000'};
         prompt = {'Number of genes:', ...
@@ -599,13 +599,13 @@ end
         catch
             gui.myWarndlg(parentfig, 'Invalid parameter values.');
             return;
-        end        
+        end
         try
             fw = gui.myWaitbar(parentfig);
             [X] = sc_simudata(numgenes, numcells, 'lun');
             X = pkg.e_uint2sparse(X);
             [sce] = SingleCellExperiment(X);
-            sce.c_batch_id = string([ones(round(sce.NumCells/2),1);... 
+            sce.c_batch_id = string([ones(round(sce.NumCells/2),1);...
                 2*ones(sce.NumCells-round(sce.NumCells/2),1)]);
             gui.myWaitbar(parentfig, fw);
         catch ME
@@ -613,5 +613,3 @@ end
             gui.myErrordlg(parentfig, ME.message, ME.identifier);
         end
     end
-
-

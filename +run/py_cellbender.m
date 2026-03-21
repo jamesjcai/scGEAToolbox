@@ -12,7 +12,6 @@ end
 if nargin < 3, isdebug = true; end
 
 
-
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..',  'external', prgfoldername);
@@ -42,9 +41,9 @@ disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
     cd(oldpth);
-    %if isvalid(fw)
+    % if isvalid(fw)
     %    gui.gui_waitbar(fw, true);
-    %end
+    % end
     error(cmdout);
 end
 if nargin < 1, input_h5 = []; end
@@ -53,7 +52,7 @@ if ~exist(input_h5,"file")
         {'*.h5;*.hdf5', 'HDF5 Files (*.h5)'; ...
         '*.*', 'All Files (*.*)'}, ...
         'Pick 10x Genomics H5 file(s)','MultiSelect','off');
-    if isequal(filenm, 0), return; end            
+    if isequal(filenm, 0), return; end
     input_h5 = fullfile(pathname, filenm);
 end
 
@@ -62,14 +61,14 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 % input_h5 = """"+input_h5+"""";
 
 writelines(input_h5,"input.txt");
-%save('input.mat', '-v7.3', 'input_h5');
+% save('input.mat', '-v7.3', 'input_h5');
 disp('Input file written.');
 
-%if isvalid(fw)
+% if isvalid(fw)
 %    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
 %    pause(0.5);
 %    gui.gui_waitbar(fw, [], [], 'Running CellBender...');
-%end
+% end
 % fw = gui.gui_waitbar([],[],'Running Scrublet...');
 
 try
@@ -89,12 +88,12 @@ disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
 
 if status == 0 && exist('output_filtered.h5', 'file')
-    output_h5 = fullfile(pwd, 'output_filtered.h5');    
+    output_h5 = fullfile(pwd, 'output_filtered.h5');
 end
 
-%if status == 0 && isvalid(fw)
+% if status == 0 && isvalid(fw)
 %    gui.gui_waitbar(fw, [], 'CellBender is complete');
-%end
+% end
 
 % if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);

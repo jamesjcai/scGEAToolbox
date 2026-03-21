@@ -1,6 +1,6 @@
 function [lgu, dropr, lgcv, genes, X_sorted, ...
-    removedgeneidx, removedT] = sc_genestat_sparse_blocked(X, genelist, ...
-    sortit, removeinf, blockSize)
+removedgeneidx, removedT] = sc_genestat_sparse_blocked(X, genelist, ...
+sortit, removeinf, blockSize)
 % SC_GENESTAT_SPARSE_BLOCKED Computes gene statistics for scRNA-seq data,
 % optimized for large, sparse matrices by processing cells in blocks.
 %
@@ -83,13 +83,13 @@ if sortit
     % A common way is to replace NaNs with Inf for sorting purposes if sorting ascending
     % or with -Inf if sorting descending, or use a custom sort.
     % Here, we'll sort and then handle NaNs in the filtering step if removeinf is true.
-    
+
     sortData = [lgu, dropr, lgcv];
-    
+
     % Sort rows: 1st col (lgu) asc, 3rd col (lgcv) asc, 2nd col (dropr) asc
     % Note: sortrows sorts NaNs last by default for ascending order.
     [~, si] = sortrows(sortData, [1, 3, 2]);
-    
+
     lgu = lgu(si);
     dropr = dropr(si);
     lgcv = lgcv(si);
@@ -135,4 +135,3 @@ end
 % X_sorted will have rows removed.
 % The output X is now X_sorted to reflect changes.
 end
- 

@@ -1,6 +1,6 @@
 function [X, genelist, celllist, ftdone] = sc_read10xdir(selpath, coln)
-%Read 10x folder
-%Read files from a 10x Genomics cellranger output folder
+% Read 10x folder
+% Read files from a 10x Genomics cellranger output folder
 %[X,genelist,celllist]=sc_read10xdir(selpath,coln);
 %[X,genelist,celllist]=sc_read10xdir(pwd(),2);
 
@@ -19,6 +19,7 @@ if isempty(out)
         disp('Found folder ''filtered_feature_bc_matrix''');
     end
 end
+
 
 if ~isempty(aff)
     mmfname = fullfile(selpath, sprintf('%smatrix.mtx', aff));

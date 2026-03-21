@@ -2,7 +2,7 @@ function [OUT] = e_fgseanet(Tf, varargin)
 % Merge similar gene sets (Jaccard index > cutoff) in fGSEA report
 
 p = inputParser;
-addOptional(p, 'JaccardCutoff', 0.6, @(x) x > 0 & x < 1)
+addOptional(p, 'JaccardCutoff', 0.6, @(x) x > 0 & x < 1);
 addOptional(p, 'PlotNetwork', true, @islogical);
 addOptional(p, 'ShowNotepad', true, @islogical);
 parse(p, varargin{:});
@@ -31,13 +31,13 @@ for k = 1:n
     % nodenamesfull{k}=sprintf('%d_%s',k,Tf.pathway{k});
     % nodenamesfull{k}=sprintf('%s',Tf.pathway{k});
     nodenamesfull{k} = sprintf('%d_%s', k, Tf.pathway{k});
-    %a=sprintf('%d\\_%s',k,Tf.pathway{k});
-    %a=extractBefore(a,min(20,length(a)));
+    % a=sprintf('%d\\_%s',k,Tf.pathway{k});
+    % a=extractBefore(a,min(20,length(a)));
     nodenames{k} = sprintf('%d', k);
 end
 
 %%
-%B=A.*(abs(A)>quantile(abs(A(:)),0.95));
+% B=A.*(abs(A)>quantile(abs(A(:)),0.95));
 B = A .* (A > jaccardcutoff);
 % G=digraph(A,Tf.pathway);
 G = digraph(B, nodenames);
@@ -82,7 +82,7 @@ for k = 1:max(bins)
     fprintf(fid, '\t%s\n', nodenamesfull{bins == idx(k)});
     OUT{k, 2} = deblank(sprintf('%s\n', nodenamesfull{bins == idx(k)}));
 end
-%fprintf(fid,'---------------\n');
+% fprintf(fid,'---------------\n');
 fclose(fid);
 
 if shownotepad

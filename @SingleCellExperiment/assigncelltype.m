@@ -21,4 +21,3 @@ for ik = 1:max(c)
 end
 obj.c_cell_type_tx = cL(c);
 end
-

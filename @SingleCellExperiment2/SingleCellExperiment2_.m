@@ -1,5 +1,5 @@
 classdef SingleCellExperiment2_ < handle & matlab.mixin.Copyable
-    %SINGLECELLEXPERIMENT Container for single-cell RNA-seq experiments.
+    % SINGLECELLEXPERIMENT Container for single-cell RNA-seq experiments.
     %
     %   Stores gene expression matrix (sparse), cell and gene annotations,
     %   embeddings, clusterings, and metadata.
@@ -21,7 +21,7 @@ classdef SingleCellExperiment2_ < handle & matlab.mixin.Copyable
         clusterings struct   % e.g. kmeans, sc3
 
         % Metadata
-        metadata struct      % creation info, notes, version, etc.        
+        metadata struct      % creation info, notes, version, etc.
     end
 
     properties (Dependent, SetAccess=private)
@@ -51,10 +51,10 @@ classdef SingleCellExperiment2_ < handle & matlab.mixin.Copyable
             end
 
             % initialize annotations
-            obj.geneAnn = struct(); 
+            obj.geneAnn = struct();
             obj.geneAnn.names = g;
 
-            obj.cellAnn = struct(); 
+            obj.cellAnn = struct();
             obj.cellAnn.ID    = string(1:size(X,2));
             obj.cellAnn.batch = repmat("1", obj.NumCells,1);
             obj.cellAnn.cluster = ones(obj.NumCells,1);
@@ -207,81 +207,81 @@ classdef SingleCellExperiment2_ < handle & matlab.mixin.Copyable
 
     methods (Static)
         function obj = fromMatrix(X, g)
-            %FROMMATRIX Create a SingleCellExperiment2 from matrix + gene names
+            % FROMMATRIX Create a SingleCellExperiment2 from matrix + gene names
             %
             %   obj = SingleCellExperiment2.fromMatrix(X, g)
             %
             %   X : genes x cells expression matrix
             %   g : gene names (string/cell array, length = #genes)
-    
+
             if nargin < 2
                 error("fromMatrix requires X (matrix) and g (gene names).");
             end
-    
+
             % Create object
             obj = SingleCellExperiment2_();
-    
+
             % Assign core data
             obj.X = X;
-    
+
             % Ensure geneAnn struct initialized
             obj.geneAnn = struct();
             obj.geneAnn.names = g(:);
-    
+
             % Ensure cellAnn struct initialized
             obj.cellAnn = struct();
             obj.cellAnn.labels = [];
             obj.cellAnn.qualityScores = [];
-    
+
             % Initialize embeddings/clusterings
             obj.embeddings = struct();
             obj.clusterings = struct();
-    
+
             % Metadata
             obj.metadata = struct();
             obj.metadata.source = "fromMatrix";
             obj.metadata.created = datetime;
         end
-    
+
         function obj = demoData(name)
-            %DEMODATA Load a demonstration dataset
+            % DEMODATA Load a demonstration dataset
             %
             %   obj = SingleCellExperiment2.demoData("pbmc3k")
-        
+
             arguments
                 name (1,1) string {mustBeMember(name, ["pbmc3k","toy","empty"])}
             end
-        
+
             switch name
                 case "pbmc3k"
                     data = load("pbmc3k_demo.mat");
-                    
+
                     if isfield(data, "sce2")
                         % Already a SingleCellExperiment2 object
                         obj = data.sce2;
-        
+
                     elseif isfield(data, "X") && isfield(data, "g")
                         % Build from raw matrix + gene names
                         obj = SingleCellExperiment2_.fromMatrix(data.X, data.g);
-        
+
                     else
                         error("pbmc3k_demo.mat must contain either sce2 or (X,g).");
                     end
-        
+
                 case "toy"
                     % Small toy dataset
                     X = poissrnd(1, 50, 10);          % 50 genes × 10 cells
                     g = "Gene" + (1:50)';
                     obj = SingleCellExperiment2_.fromMatrix(X, g);
-        
+
                 case "empty"
                     obj = SingleCellExperiment2_();    % returns empty object
                     obj.metadata.source = "emptyDemo";
             end
-        
+
             % Add demo flag
             obj.metadata.demo = true;
         end
     end
-    
+
 end

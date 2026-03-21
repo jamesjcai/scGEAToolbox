@@ -56,9 +56,9 @@ if ~noattrib
     % end
 end
 
-%if ~(ismcc || isdeployed)
+% if ~(ismcc || isdeployed)
 listitems = [listitems, 'Load Variable from File...'];
-%end
+% end
 
 if isempty(listitems), return; end
 
@@ -152,14 +152,14 @@ if tf2 == 1
                 string(sce.list_cell_attributes(1:2:end)));
             thisc = sce.list_cell_attributes{idx*2};
 
-            %nx=length(baselistitems);
-            %clabel = sce.list_cell_attributes{2 * (indx2 - nx) - 1};
-            %thisc = sce.list_cell_attributes{2 * (indx2 - nx)};
+            % nx=length(baselistitems);
+            % clabel = sce.list_cell_attributes{2 * (indx2 - nx) - 1};
+            % thisc = sce.list_cell_attributes{2 * (indx2 - nx)};
     end
 end
 
 
-    function [c, x] = i_pickvariable
+function [c, x] = i_pickvariable
         c = [];
         x = '';
         %     a=evalin('base','whos');
@@ -171,9 +171,9 @@ end
         %         end
         %     end
         %     if any(v)
-        %valididx=ismember(b(4,:),'double');
-        %a=a(valididx);
-        
+        % valididx=ismember(b(4,:),'double');
+        % a=a(valididx);
+
         if gui.i_isuifig(parentfig)
             [indx, tf] = gui.myListdlg(parentfig, b(1, :), 'Select workspace variable:');
         else
@@ -193,7 +193,7 @@ end
             x = '';
             T = sce.table_attributes;
             att = sce.table_attributes.Properties.VariableNames;
-            
+
         if gui.i_isuifig(parentfig)
             [indx, tf] = gui.myListdlg(parentfig, att, ...
                 'Select a SCE attribute variable:');

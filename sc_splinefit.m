@@ -1,6 +1,6 @@
 function [T, Xsorted_completed, gsorted_completed, ...
     xyz1] = sc_splinefit(X, genelist, sortit, plotit, removenan)
-%SC_SPLINEFIT identify genes with a profile deviated from normal
+% SC_SPLINEFIT identify genes with a profile deviated from normal
 %
 % USAGE:
 % >> [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
@@ -19,10 +19,10 @@ if nargin < 2 || isempty(genelist)
     genelist = string(1:size(X, 1));
 end
 
-idx = sum(X,2)==0;
-if any(idx)   
-   genelist(idx)=[];
-   X(idx,:)=[];
+idx = sum(X, 2) == 0;
+if any(idx)
+   genelist(idx) = [];
+   X(idx, :) = [];
    warning('Empty genes are removed.');
 end
 
@@ -35,12 +35,11 @@ else
         removedgidx, removedT] = pkg.sc_genestat_sparse_blocked(X, genelist, sortit, removenan);
 end
 
-
 if removenan && ~isempty(removedgidx)
     gsorted_completed = [gsorted; genelist(removedgidx)];
-    Xsorted_completed = [Xsorted; X(removedgidx,:)];
-    assert(isequal(size(Xsorted_completed),size(X)),'SC_SPLINEFIT')
-    assert(length(gsorted_completed) == length(genelist),'SC_SPLINEFIT')
+    Xsorted_completed = [Xsorted; X(removedgidx, :)];
+    assert(isequal(size(Xsorted_completed), size(X)), 'SC_SPLINEFIT')
+    assert(length(gsorted_completed) == length(genelist), 'SC_SPLINEFIT')
 else
     gsorted_completed = gsorted;
     Xsorted_completed = Xsorted;
@@ -50,7 +49,7 @@ end
 % dropr=zscore(dropr);
 % lgcv=zscore(lgcv);
 
-%[~,i]=max(lgcv);
+% [~,i]=max(lgcv);
 
 xyz = [lgu, lgcv, dropr];
 
@@ -60,38 +59,35 @@ xyz = [lgu, lgcv, dropr];
 % dropr=dropr(j);
 % lgcv=lgcv(j);
 
-%xyz=[lgu dropr lgcv]';
+% xyz=[lgu dropr lgcv]';
 
-%s = cumsum([0;sqrt(diff(lgu(:)).^2 + diff(dropr(:)).^2 ...
-%    + diff(lgcv(:)).^2)]);
-s = cumsum([0; sqrt(diff(lgu(:)).^2+diff(lgcv(:)).^2 ...
-    +diff(dropr(:)).^2)]);
+% s = cumsum([0;sqrt(diff(lgu(:)).^2 + diff(dropr(:)).^2 ...
+%     + diff(lgcv(:)).^2)]);
+s = cumsum([0; sqrt(diff(lgu(:)).^2 + diff(lgcv(:)).^2 ...
+    + diff(dropr(:)).^2)]);
 
-warning('off','MATLAB:rankDeficientMatrix')
+warning('off', 'MATLAB:rankDeficientMatrix')
 % assignin("base","xyz",xyz)
 % assignin("base","s",s)
 pp1 = splinefit(s, xyz.', 15, 0.75);
 xyz1 = ppval(pp1, s)';
-warning('on','MATLAB:rankDeficientMatrix')
+warning('on', 'MATLAB:rankDeficientMatrix')
 
 [nearidx, d] = dsearchn(xyz1, xyz);
 
-fitmeanv=xyz1(:,1);
-x=xyz(:,1); y=xyz(:,2);
-d(x>max(fitmeanv))=d(x>max(fitmeanv))./100;
-d(x<min(fitmeanv))=d(x<min(fitmeanv))./10;
-d((y-xyz1(:, 2))<0)=d((y-xyz1(:, 2))<0)./100;
+fitmeanv = xyz1(:, 1);
+x = xyz(:, 1); y = xyz(:, 2);
+d(x > max(fitmeanv)) = d(x > max(fitmeanv)) ./ 100;
+d(x < min(fitmeanv)) = d(x < min(fitmeanv)) ./ 10;
+d((y - xyz1(:, 2)) < 0) = d((y - xyz1(:, 2)) < 0) ./ 100;
 
-
-%D = pdist2(xyz, xyz1);
-%d = min(D, [], 2);
+% D = pdist2(xyz, xyz1);
+% d = min(D, [], 2);
 dx = d(d <= quantile(d, 0.9));
 
 distFit = fitdist([-dx; dx], 'Normal');
 pval = normcdf(d, 0, distFit.sigma, 'upper');
 [~, ~, ~, fdr] = pkg.e_fdr_bh(pval);
-
-
 
 if ~isempty(gsorted)
     genes = gsorted;
@@ -101,8 +97,8 @@ else
 end
 % 'variablenames',{'Genes','Log10_Mean','Dropout_Rate','Log10_CV','Deviation_3DFeature'});
 
-%T.d(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
-%T.d(T.dropr < (0.01)) = 0;     % ignore genes with dropout rate < 0.01 (removes ribosomal and mitochondrial genes)
+% T.d(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
+% T.d(T.dropr < (0.01)) = 0;     % ignore genes with dropout rate < 0.01 (removes ribosomal and mitochondrial genes)
 
 % disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
 
@@ -112,9 +108,9 @@ if ~isempty(removedT) && istable(removedT)
 end
 
 if sortit
-    [T,idx] = sortrows(T, 'd', 'descend');
+    [T, idx] = sortrows(T, 'd', 'descend');
     gsorted_completed = gsorted_completed(idx);
-    Xsorted_completed = Xsorted_completed(idx,:);
+    Xsorted_completed = Xsorted_completed(idx, :);
 end
 
 if length(gsorted_completed) ~= length(genelist)

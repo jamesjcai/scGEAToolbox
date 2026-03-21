@@ -14,7 +14,7 @@ else
     % colormap(gui.distinguishable_colors(kc));
     % colormap(pkg.i_mycolormap(kc));
     %
-    % see also: i_gscatter3    
+    % see also: i_gscatter3
     % see also: gui.sc_multigroupings
 end
 

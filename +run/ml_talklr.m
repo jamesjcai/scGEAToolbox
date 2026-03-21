@@ -1,5 +1,5 @@
 function [OUT, T] = ml_talklr(X, g, c)
-%TALKLR - uncovers ligand-receptor mediated intercellular crosstalk
+% TALKLR - uncovers ligand-receptor mediated intercellular crosstalk
 %
 % Usage: [OUT]=run.talklr(X,g,c)
 % X - gene-by-cell expression matrix
@@ -25,7 +25,7 @@ end
 M = M .* log2(M*(n^2));
 M(isnan(M)) = 0;
 KL = real(sum(M, 2));
-%Tok=[OUT.Tok, table(KL)];
+% Tok=[OUT.Tok, table(KL)];
 Tok = [table(KL)];
 [Tok, idx] = sortrows(Tok, 'KL', 'descend');
 
@@ -56,13 +56,13 @@ function [M, OUT] = ii_talkr(X, g, c)
 n = numel(cL);
 
 pw = fileparts(mfilename('fullpath'));
-%dbfile=fullfile(pw,'..','assets','Ligand_Receptor','Ligand_Receptor.mat');
-%load(dbfile,'ligand','receptor','T');
+% dbfile=fullfile(pw,'..','assets','Ligand_Receptor','Ligand_Receptor.mat');
+% load(dbfile,'ligand','receptor','T');
 dbfile = fullfile(pw, '..', 'assets','Ligand_Receptor', 'Ligand_Receptor_more.mat');
 load(dbfile, 'ligand', 'receptor');
 
 
-%T=T(:,2:6);
+% T=T(:,2:6);
 
 g = upper(g);
 
@@ -78,7 +78,7 @@ switch methodid
     case 2
         Xm = zeros(numel(g), n);
         for k = 1:n
-                
+
             try
                 [t] = sc_splinefit(X(:, cx == k), g, false);
                 [y, id] = ismember(g, t.genes);
@@ -87,7 +87,7 @@ switch methodid
                 [t] = sc_hvg(X(:, cx == k), g, false);
                 [y, id] = ismember(g, t.genes);
                 Xm(y, k) = table2array(t(id(y), 4));
-            end            
+            end
         end
         Xm(Xm < 0) = 0;
         cutoff = 0.05;
@@ -104,15 +104,15 @@ iy = ismember(receptor, g);
 idx = ix & iy;
 ligandok = ligand(idx);
 receptorok = receptor(idx);
-%Tok=T(idx,:);
+% Tok=T(idx,:);
 
 [y1, idx1] = ismember(ligandok, g);
 [y2, idx2] = ismember(receptorok, g);
 assert(all(y1))
 assert(all(y2))
 
-%ligandok=ligandok(idx1);
-%receptorok=receptorok(idx2);
+% ligandok=ligandok(idx1);
+% receptorok=receptorok(idx2);
 
 ligand_mat = Xm(idx1, :);
 receptor_mat = Xm(idx2, :);
@@ -130,24 +130,24 @@ for k = 1:n
     M(:, (n * (k - 1) + 1):n*k) = ligand_mat(:, k) .* receptor_mat;
 end
 M = M ./ sum(M, 2);
-%M=M.*log2(M*(n^2));
-%M(isnan(M))=0;
+% M=M.*log2(M*(n^2));
+% M(isnan(M))=0;
 
-%M=zeros(size(ligand_mat,1),n^2);
-%M=[];
-%for k=1:n
+% M=zeros(size(ligand_mat,1),n^2);
+% M=[];
+% for k=1:n
 %    M=[M ligand_mat(:,k).*receptor_mat];
-%end
+% end
 % a2=ligand_mat(:,2).*receptor_mat;
 % a3=ligand_mat(:,3).*receptor_mat;
 % M=[a1 a2 a3];
-%M=M./sum(M,2);
-%size(M)
+% M=M./sum(M,2);
+% size(M)
 
 OUT.cL = cL;
 OUT.ligand_mat = ligand_mat;
 OUT.receptor_mat = receptor_mat;
 OUT.ligandok = ligandok;
 OUT.receptorok = receptorok;
-%OUT.Tok=Tok;
+% OUT.Tok=Tok;
 end

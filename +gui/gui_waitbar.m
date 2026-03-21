@@ -3,7 +3,7 @@ if nargin < 4, newmesg = ''; end
 if nargin < 3 || isempty(mesg), mesg = 'Processing your data'; end
 if nargin < 2 || isempty(witherror), witherror = false; end
 if nargin < 1 || isempty(f)
-    
+
     % hFig = gcf;
     hFig = get(groot,'CurrentFigure');
     f = waitbar(0, 'Please wait...','Visible','off', ...

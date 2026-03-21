@@ -1,10 +1,10 @@
 function [M, C] = e_cellscorecorrmat(X, g, gsets, methodid, ~)
 
-    if nargin<4, methodid = 2; end
+if nargin<4, methodid = 2; end
 
-    % preftagname = 'llapikeyenvfile';
+% preftagname = 'llapikeyenvfile';
     %{
-    pw1 = fileparts(mfilename('fullpath'));    
+    pw1 = fileparts(mfilename('fullpath'));
     defaultscorefilename = 'cellscorecorrmat.xlsx';
     defaultscorefile = fullfile(pw1, '..', 'assets', 'CellScores', defaultscorefilename);
     goodfile = false;
@@ -19,7 +19,7 @@ function [M, C] = e_cellscorecorrmat(X, g, gsets, methodid, ~)
     end
     if ~goodfile, return; end
     gsets = T.PositiveMarkers;
-   
+
 % unique(strsplit(string(gsets{2}),','))
 
     preftagname = 'cellscorecorrmatfile';
@@ -38,18 +38,18 @@ function [M, C] = e_cellscorecorrmat(X, g, gsets, methodid, ~)
 
 C = zeros(size(X, 2), length(gsets));
 
-for k = 1:length(gsets)    
+for k = 1:length(gsets)
     tgsPos = unique(strsplit(string(gsets{k}),','));
     [cs] = sc_cellscore(X, g, tgsPos, [], methodid);
     C(:, k) = cs(:);
 end
 M = corr(C,'Type','Spearman');
 
-% 
-% 
+%
+%
 % for k = 1:n
 %     [y{k}, ~, posg] = pkg.e_cellscores(sce.X, sce.g, ...
 %         indx2(k), methodid, false);
 %     ttxt{k} = T.ScoreType(indx2(k));
 % end
-% 
+%

@@ -20,13 +20,13 @@ switch option
             load(dbfile,'setmatrx','setnames','setgenes');
             isloaded=true;
         catch ME
-            warning(ME.message);            
+            warning(ME.message);
         end
 
         if ~isloaded
             setnames = string(fields(Col));
             glist=[];
-            for k=1:length(setnames)  
+            for k=1:length(setnames)
                 glist=[glist;Col.(setnames{k}).geneSymbols];
             end
             glist=unique(glist);
@@ -38,7 +38,7 @@ switch option
             end
             % save(sprintf('msigdb_%s',ctag),'setmatrx','setnames','setgenes');
         end
-   
+
     case {'TF',2,'DoRothEA TF Targets'}
         pw1 = fileparts(mfilename('fullpath'));
         fname = fullfile(pw1, '..','assets', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
@@ -48,7 +48,7 @@ switch option
         [tid, tflist] = findgroups(string(Ttfgn.tf));
         t = zeros(max(tid), max(gid));
         t(sub2ind([max(tid), max(gid)], tid, gid)) = Ttfgn.mor;
-        
+
         setmatrx=logical(t);
         setnames=string(tflist);
         setgenes=string(gnlist);
@@ -68,5 +68,3 @@ switch option
             setmatrx(k,:)=ismember(setgenes,tgsPos);
         end
 end
-
-

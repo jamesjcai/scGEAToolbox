@@ -1,5 +1,5 @@
 function [markerlist] = ml_scGeneFit(X, g, c, num_markers)
-%Genetic marker selection using linear programming
+% Genetic marker selection using linear programming
 %
 % https://github.com/solevillar/scGeneFit
 % https://www.nature.com/articles/s41467-021-21453-4

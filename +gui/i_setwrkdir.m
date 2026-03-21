@@ -1,6 +1,6 @@
 function [done] = i_setwrkdir(preftagname, parentfig)
-%I_SETWRKDIR - set workding directory
-%see also: I_SETPYENV, I_SETRENV 
+% I_SETWRKDIR - set workding directory
+% see also: I_SETPYENV, I_SETRENV
 
 if nargin<2, parentfig = []; end
 [done] = false;
@@ -14,7 +14,7 @@ if ~ispref('scgeatoolbox', preftagname)
         'not been set up. Locate a folder?']);
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
-        [~,b]=system("echo %username%");
+        [~,b]=system("echo % username%");
         pathdefult = sprintf('C:\\Users\\%s\\Documents\\', ...
             string(deblank(b)));
     else
@@ -36,7 +36,7 @@ else
 end
 
 
-    function [done] = ix_setwdpath(deflt, parentfig)
+function [done] = ix_setwdpath(deflt, parentfig)
         done = false;
         answer=gui.myQuestdlg(parentfig, 'Where to save working files?','',...
             {'Use Temporary Folder', ...
@@ -48,7 +48,7 @@ end
                 if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
                     figure(parentfig);
                 end
-                
+
                 if seltpath==0, return; end
                 if ~isfolder(seltpath), return; end
             case 'Use Temporary Folder'

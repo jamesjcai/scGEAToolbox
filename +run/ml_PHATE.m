@@ -1,5 +1,5 @@
 function s = ml_PHATE(X, ndim, plotit, bygene, genelist)
-%RUN_PHATE
+% RUN_PHATE
 %
 % PHATE is a data reduction method specifically designed for visualizing
 % **high** dimensional data in **low** dimensional spaces. Details on
@@ -42,12 +42,12 @@ end
 data = data';
 
 % sqrt transform
-%data = log(data+1);
+% data = log(data+1);
 data = sqrt(data);
 
 
 s = phate(data, 't', 20, 'ndim', ndim, 'k', 10, 'npca', min([100, size(X,2)]));
-%s = phate(data, 'ndim', ndim);
+% s = phate(data, 'ndim', ndim);
 
 %%
 if plotit

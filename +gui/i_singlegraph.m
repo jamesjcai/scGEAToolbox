@@ -15,7 +15,7 @@ end
 mfolder = fileparts(mfilename('fullpath'));
 
 load(fullfile(mfolder, ...
-    '..', 'assets', 'TFome', 'tfome_tfgenes.mat'), 'tfgenes');
+'..', 'assets', 'TFome', 'tfome_tfgenes.mat'), 'tfgenes');
 
 
 w = 3;
@@ -59,7 +59,7 @@ hx.show(parentfig);
 oldidx = 0;
 oldG1 = [];
 
-    function in_networkvis_curvy(~, ~)
+function in_networkvis_curvy(~, ~)
         fw = gui.myWaitbar(hFig);
         gui.i_networkvis(G1, [p1.XData' p1.YData'], true, ...
             p1.NodeFontSize, hFig);
@@ -73,7 +73,7 @@ oldG1 = [];
         gui.myWaitbar(hFig, fw);
   end
 
-    function in_RefreshAll(~, ~)
+function in_RefreshAll(~, ~)
         if ~isempty(oldG1)
             G1 = oldG1;
         end
@@ -81,7 +81,7 @@ oldG1 = [];
         title(h1,figname);
     end
 
-    function SendToGephiLite(~, ~)
+function SendToGephiLite(~, ~)
         fw = gui.myWaitbar(hFig);
         fname = pkg.m2gexf(G1);
         gui.myWaitbar(hFig, fw);
@@ -105,7 +105,7 @@ oldG1 = [];
         end
     end
 
-    function SaveAdj(~, ~)
+function SaveAdj(~, ~)
         if ~(ismcc || isdeployed)
             answer = gui.myQuestdlg(hFig, 'Export & save network to:', '', ...
                 {'Workspace', 'File'}, 'Workspace');
@@ -142,7 +142,7 @@ oldG1 = [];
         end
     end
 
-    function ChangeFontSize(~, ~)
+function ChangeFontSize(~, ~)
         i_changefontsize(p1);
         function i_changefontsize(p)
             if p.NodeFontSize >= 20
@@ -150,18 +150,18 @@ oldG1 = [];
             else
                 p.NodeFontSize = p.NodeFontSize + 1;
             end
-        end            
+        end
     end
 
-    function ChangeWeight(~, ~)
-        %a=3:10;
-        %w=a(randi(length(a),1));
+function ChangeWeight(~, ~)
+        % a=3:10;
+        % w=a(randi(length(a),1));
         w = w + 1;
         if w > 10, w = 2; end
         p1.LineWidth = rescale(p1.LineWidth, 1, w);
-        
+
         % i_changeweight(p1, w);
-        %i_changeweight(p2,G2,w);
+        % i_changeweight(p2,G2,w);
         % function i_changeweight(p, b)
         %     %G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
         %     %p.LineWidth = G.Edges.LWidths;
@@ -169,7 +169,7 @@ oldG1 = [];
         % end
     end
 
-    function ChangeLayout(~, ~)
+function ChangeLayout(~, ~)
         a = ["auto", "layered", "subspace", "force", "circle", "reset"];
         l = l + 1;
         if l > 5, l = 1; end
@@ -183,12 +183,12 @@ oldG1 = [];
         end
     end
 
-    function ChangeDirected(~, ~)
+function ChangeDirected(~, ~)
         if isempty(oldG1), oldG1 = G1; end
         if isa(G1, 'digraph')
             oldG1 = G1;
             [p1, G1] = i_changedirected(p1, G1, h1);
-        elseif isa(G1, 'graph') && ~isempty(oldG1) && isa(oldG1, 'digraph') 
+        elseif isa(G1, 'graph') && ~isempty(oldG1) && isa(oldG1, 'digraph')
             G1 = oldG1;
             p1 = drawnetwork(G1, h1);
             % [p1, G1] = i_changedirected(p1, oldG1, h1);
@@ -207,8 +207,8 @@ oldG1 = [];
             p.YData = y;
         end
     end
-                            
-    function ChangeCutoff(~, ~)
+
+function ChangeCutoff(~, ~)
         list = {'0.00 (show all edges)', ...
             '0.30', '0.35', '0.40', '0.45', ...
             '0.50', '0.55', '0.60', ...
@@ -239,13 +239,13 @@ oldG1 = [];
                 otherwise
                     return;
             end
-            %[p2]=i_replotg(p2,G2,h2,cutoff);
+            % [p2]=i_replotg(p2,G2,h2,cutoff);
         end
     end
-   
 
-    function [p] = drawnetwork(G, h)
-        %G.Edges.Weight = rand(length(G.Edges.Weight),1);
+
+function [p] = drawnetwork(G, h)
+        % G.Edges.Weight = rand(length(G.Edges.Weight),1);
         p = plot(h, G, 'ButtonDownFcn', @startDragFcn);
         layout(p,'force');
         %         if isa(G,'digraph')
@@ -262,7 +262,7 @@ oldG1 = [];
         %       p.EdgeCData(G.Edges.Weight<0)=2;
 
         ix = ismember(string(upper(G.Nodes.Name)), tfgenes);
-        
+
 
         if any(ix)
             cc = repmat(p.NodeLabelColor, G.numnodes, 1);
@@ -270,9 +270,9 @@ oldG1 = [];
             p.NodeLabelColor = cc;
         end
 
-        %p.NodeFontSize = 2 * p.NodeFontSize;
+        % p.NodeFontSize = 2 * p.NodeFontSize;
 
-        %title(h,sprintf('%d nodes',G.numnodes));
+        % title(h,sprintf('%d nodes',G.numnodes));
         % https://www.mathworks.com/matlabcentral/answers/296070-change-label-font-in-graph-plots
         %{
         nl = p.NodeLabel;
@@ -292,18 +292,18 @@ oldG1 = [];
         end
     end
 
-    function AnimateCutoff(~, ~)
+function AnimateCutoff(~, ~)
         listc = 0.05:0.05:0.95;
         f = waitbar(0, 'Cutoff = 0.05', 'Name', 'Edge Pruning...', ...
             'CreateCancelBtn', 'setappdata(gcbf,''canceling'',1)');
         setappdata(f, 'canceling', 0);
-    
+
         m = length(listc);
         for k = 1:m
             if getappdata(f, 'canceling')
                 break
             end
-    
+
             cutoff = listc(k);
             waitbar(k/m, f, sprintf('Cutoff = %g', cutoff));
             try
@@ -311,14 +311,14 @@ oldG1 = [];
             catch ME
                 disp(ME.message);
             end
-            %p2=i_replotg(p2,G2,h2,cutoff);
+            % p2=i_replotg(p2,G2,h2,cutoff);
             drawnow;
         end
-        %close(f)
+        % close(f)
         delete(f)
     end
 
-    function [p, G] = i_replotg(p, G, h, cutoff)
+function [p, G] = i_replotg(p, G, h, cutoff)
         a = h.Title.String;
         x = p.XData;
         y = p.YData;
@@ -338,15 +338,15 @@ oldG1 = [];
     end
 
     % Callback to initiate dragging
-    function startDragFcn(hObj, ~)
+function startDragFcn(hObj, ~)
         % Get data for the clicked point
         % fig = ancestor(hObj, 'figure');
         set(hFig, 'WindowButtonMotionFcn', {@draggingFcn, hObj});
         set(hFig, 'WindowButtonUpFcn', @stopDragFcn);
     end
-    
+
     % Function to drag the point
-    function draggingFcn(~, ~, hObj)
+function draggingFcn(~, ~, hObj)
             % Current cursor position in data coordinates
             cp = get(gca, 'CurrentPoint');
             % Update the y-data of the nearest point
@@ -367,9 +367,9 @@ oldG1 = [];
             set(hObj, 'XData', xData); % Update y value
             set(hObj, 'YData', yData);
     end
-    
+
     % Function to stop dragging
-    function stopDragFcn(~, ~)
+function stopDragFcn(~, ~)
         % fig = gcbf;
         set(hFig, 'WindowButtonMotionFcn', '');
         set(hFig, 'WindowButtonUpFcn', '');
@@ -379,113 +379,111 @@ oldG1 = [];
 end
 
 function h = WattsStrogatz(N, K, beta)
-        % H = WattsStrogatz(N,K,beta) returns a Watts-Strogatz model graph with N
-        % nodes, N*K edges, mean node degree 2*K, and rewiring probability beta.
-        %
-        % beta = 0 is a ring lattice, and beta = 1 is a random graph.
+% H = WattsStrogatz(N,K,beta) returns a Watts-Strogatz model graph with N
+% nodes, N*K edges, mean node degree 2*K, and rewiring probability beta.
+%
+% beta = 0 is a ring lattice, and beta = 1 is a random graph.
 
-        % Connect each node to its K next and previous neighbors. This constructs
-        % indices for a ring lattice.
-        s = repelem((1:N)', 1, K);
-        t = s + repmat(1:K, N, 1);
-        t = mod(t-1, N) + 1;
+% Connect each node to its K next and previous neighbors. This constructs
+% indices for a ring lattice.
+s = repelem((1:N)', 1, K);
+t = s + repmat(1:K, N, 1);
+t = mod(t-1, N) + 1;
 
-        % Rewire the target node of each edge with probability beta
-        for source = 1:N
-            switchEdge = rand(K, 1) < beta;
+% Rewire the target node of each edge with probability beta
+for source = 1:N
+    switchEdge = rand(K, 1) < beta;
 
-            newTargets = rand(N, 1);
-            newTargets(source) = 0;
-            newTargets(s(t == source)) = 0;
-            newTargets(t(source, ~switchEdge)) = 0;
+    newTargets = rand(N, 1);
+    newTargets(source) = 0;
+    newTargets(s(t == source)) = 0;
+    newTargets(t(source, ~switchEdge)) = 0;
 
-            [~, ind] = sort(newTargets, 'descend');
-            t(source, switchEdge) = ind(1:nnz(switchEdge));
-        end
+    [~, ind] = sort(newTargets, 'descend');
+    t(source, switchEdge) = ind(1:nnz(switchEdge));
+end
 
-        h = graph(s, t);
+h = graph(s, t);
 end
 
 
 %{
 function customeMarker(x, y, f)
-    [X,Y] = xy2XY(x, y);
-    px = cell(length(x),1);
+[X,Y] = xy2XY(x, y);
+px = cell(length(x),1);
 
-    %bkcolor = gui.i_getthemebkgcolor(f);
+% bkcolor = gui.i_getthemebkgcolor(f);
 
-    for k=1:length(x)
-        p = patch(X(k,:), Y(k,:), 1-bkcolor, ...
-            'EdgeColor', 1-bkcolor, 'LineWidth', .1);
-        px{k} = p;
-    end
-    set(f, 'SizeChangedFcn', @(src,event) updatePatchSize(px, x, y));
+for k=1:length(x)
+    p = patch(X(k,:), Y(k,:), 1-bkcolor, ...
+        'EdgeColor', 1-bkcolor, 'LineWidth', .1);
+    px{k} = p;
+end
+set(f, 'SizeChangedFcn', @(src,event) updatePatchSize(px, x, y));
 end
 %}
 
 function [X, Y] = xy2XY(x, y, dx, dy, markerSize)
-    if nargin < 5, markerSize = 0.08; end
-    if nargin < 4, dy = 1; end
-    if nargin < 3, dx = 1; end
+if nargin < 5, markerSize = 0.08; end
+if nargin < 4, dy = 1; end
+if nargin < 3, dx = 1; end
 
-    X = zeros(length(x), 3); 
-    Y = zeros(length(x), 3);
-    XY = [x, y];
-    d = XY(1:end-1,:) - XY(2:end,:);
-    slopex = d(:,2)./d(:,1);
-    signx = sign(d(:,2));
-    theta = atan(slopex);       % Angle in radians
-    theta = rad2deg(theta);     % Convert to degrees
-    p = XY(1:end-1,:) - 0.5*d;
-    x0 = p(:,1); y0 = p(:,2);
+X = zeros(length(x), 3);
+Y = zeros(length(x), 3);
+XY = [x, y];
+d = XY(1:end-1,:) - XY(2:end,:);
+slopex = d(:,2)./d(:,1);
+signx = sign(d(:,2));
+theta = atan(slopex);       % Angle in radians
+theta = rad2deg(theta);     % Convert to degrees
+p = XY(1:end-1,:) - 0.5*d;
+x0 = p(:,1); y0 = p(:,2);
 
-    %ax = axes(f);
-    % Triangle marker definition (relative size)
-    % markerSize = 0.08; % Keep this small so it doesn't scale with the figure
-    %X_ = markerSize * [-1, 1, 0];  % X-coordinates (relative to center)
-    %Y_ = markerSize * [-1, -1, 1]; % Y-coordinates 
+% ax = axes(f);
+% Triangle marker definition (relative size)
+% markerSize = 0.08; % Keep this small so it doesn't scale with the figure
+% X_ = markerSize * [-1, 1, 0];  % X-coordinates (relative to center)
+% Y_ = markerSize * [-1, -1, 1]; % Y-coordinates
 
-    baseLength = 1;  % Length of the base
-    height = 2;      % Height of the triangle
-    X_ = dx * markerSize * [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
-    Y_ = dy * markerSize * [0, 0, height]; % Y-coordinates (before rotation)
+baseLength = 1;  % Length of the base
+height = 2;      % Height of the triangle
+X_ = dx * markerSize * [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
+Y_ = dy * markerSize * [0, 0, height]; % Y-coordinates (before rotation)
 
-    % assignin("base", "A", A);
-    
-    c = 1;
-    for k = 1:length(x0)
-        if isnan(x0(k)), continue; end
-        if slopex(k)>0
-            t = theta(k) + 90 * signx(k);
-        else
-            t = theta(k) - 90 * signx(k);
-        end
-        R = [cosd(t), -sind(t); sind(t), cosd(t)];
-        rotatedXY = R * [X_; Y_]; % Apply rotation
-        X(c,:) = rotatedXY(1, :) + x0(k);
-        Y(c,:) = rotatedXY(2, :) + y0(k);
-        c = c + 1;
+% assignin("base", "A", A);
+
+c = 1;
+for k = 1:length(x0)
+    if isnan(x0(k)), continue; end
+    if slopex(k)>0
+        t = theta(k) + 90 * signx(k);
+    else
+        t = theta(k) - 90 * signx(k);
     end
+    R = [cosd(t), -sind(t); sind(t), cosd(t)];
+    rotatedXY = R * [X_; Y_]; % Apply rotation
+    X(c,:) = rotatedXY(1, :) + x0(k);
+    Y(c,:) = rotatedXY(2, :) + y0(k);
+    c = c + 1;
+end
 end
 
 % Callback function to update marker size when zooming
 function updatePatchSize(patchObj, x, y)
-    markerSize = 0.08;
-    ax = gca;
-    originalUnits = ax.Units; % Store original unit
-    ax.Units = 'pixels';
-    axPos = ax.Position;
-    xLimits = xlim(ax);
-    yLimits = ylim(ax);    
-    dx = (xLimits(2) - xLimits(1)) * markerSize / axPos(3);
-    dy = (yLimits(2) - yLimits(1)) * markerSize / axPos(4);
-    ax.Units = originalUnits;    % Restore original units (important!)
-    dx = 1000*dx;
-    dy = 1000*dy;
-    [X,Y] = xy2XY(x, y, dx, dy);
-    for k = 1:length(x)
-        set(patchObj{k}, 'XData', X(k,:), 'YData', Y(k,:));
-    end
+markerSize = 0.08;
+ax = gca;
+originalUnits = ax.Units; % Store original unit
+ax.Units = 'pixels';
+axPos = ax.Position;
+xLimits = xlim(ax);
+yLimits = ylim(ax);
+dx = (xLimits(2) - xLimits(1)) * markerSize / axPos(3);
+dy = (yLimits(2) - yLimits(1)) * markerSize / axPos(4);
+ax.Units = originalUnits;    % Restore original units (important!)
+dx = 1000*dx;
+dy = 1000*dy;
+[X,Y] = xy2XY(x, y, dx, dy);
+for k = 1:length(x)
+    set(patchObj{k}, 'XData', X(k,:), 'YData', Y(k,:));
 end
-
-
+end

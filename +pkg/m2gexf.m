@@ -1,15 +1,8 @@
 function fname = m2gexf(G, filename)
-%M2GEXF Export a MATLAB graph/digraph to GEXF format (Gephi).
+% M2GEXF Export a MATLAB graph/digraph to GEXF format (Gephi).
 
-if nargin < 2
-    fname = [tempname, '.gexf'];
-else
-    if ~endsWith(filename, '.gexf')
-        fname = [filename, '.gexf'];
-    else
-        fname = filename;
-    end
-end
+if nargin < 2, filename = ''; end
+fname = i_graph_filename(filename, 'gexf');
 
 if isa(G, 'digraph')
     edgetype = 'directed';
@@ -36,11 +29,7 @@ fprintf(fid, '  <graph defaultedgetype="%s" mode="static">\n', edgetype);
 % Nodes
 fprintf(fid, '    <nodes>\n');
 for k = 1:n
-    lbl = char(ndname(k));
-    lbl = strrep(lbl, '&', '&amp;');
-    lbl = strrep(lbl, '<', '&lt;');
-    lbl = strrep(lbl, '>', '&gt;');
-    lbl = strrep(lbl, '"', '&quot;');
+    lbl = i_xml_escape(char(ndname(k)));
     fprintf(fid, '      <node id="%d" label="%s"/>\n', k - 1, lbl);
 end
 fprintf(fid, '    </nodes>\n');

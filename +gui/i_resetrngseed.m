@@ -3,9 +3,9 @@ function i_resetrngseed(src, ~, needconfirm)
 if nargin < 3, needconfirm = true; end
 
 [parentfig, ~] = gui.gui_getfigsce(src);
-    answer = gui.myQuestdlg(parentfig, "Set random seed.","", ...
+answer = gui.myQuestdlg(parentfig, "Set random seed.","", ...
         {'Default Seed', 'Random Seed', 'Set Seed'}, 'Default Seed');
-    switch answer
+switch answer
         case 'Default Seed'
             rng("default");
             if needconfirm

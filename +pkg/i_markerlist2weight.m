@@ -1,8 +1,8 @@
 function [Tm, Tw] = i_markerlist2weight(sce, FigureHandle)
 if nargin<2, FigureHandle = []; end
-%Tm=readtable('markerlist_hs.txt','ReadVariableNames',false);
-%celltypev=string(Tm.Var1);
-%markergenev=string(Tm.Var2);
+% Tm=readtable('markerlist_hs.txt','ReadVariableNames',false);
+% celltypev=string(Tm.Var1);
+% markergenev=string(Tm.Var2);
 Tm = [];
 Tw = [];
 if nargin < 1, sce = []; end

@@ -1,5 +1,5 @@
 function [A] = sc_pcnet(X, ncom, fastersvd, dozscore, guiwaitbar)
-%Construct GRN network A using PC regression (pcnet)
+% Construct GRN network A using PC regression (pcnet)
 %
 % [X]=log1p(sc_norm(X));     % pcnet input should be LogNormalized
 % [A]=sc_pcnet(X,ncom);      % X = expression matrix of genes x cells
@@ -8,8 +8,8 @@ function [A] = sc_pcnet(X, ncom, fastersvd, dozscore, guiwaitbar)
 % https://github.com/cran/dna/blob/master/src/rpcnet.c
 % https://rdrr.io/cran/dna/f/inst/doc/Introduction.pdf
 
-%opts = struct('UseParallel', 'auto');  % or "on"/"off"
-%A = sc_pcnet(X, opts);
+% opts = struct('UseParallel', 'auto');  % or "on"/"off"
+% A = sc_pcnet(X, opts);
 
 
 arguments
@@ -20,11 +20,10 @@ arguments
     guiwaitbar(1, 1) logical = false
 end
 
-%if nargin<5 || isempty(guiwaitbar), guiwaitbar=false; end
-%if nargin<4 || isempty(dozscore), dozscore=true; end
-%if nargin<3 || isempty(fastersvd), fastersvd=false; end
-%if nargin<2 || isempty(ncom), ncom=3; end
-
+% if nargin<5 || isempty(guiwaitbar), guiwaitbar=false; end
+% if nargin<4 || isempty(dozscore), dozscore=true; end
+% if nargin<3 || isempty(fastersvd), fastersvd=false; end
+% if nargin<2 || isempty(ncom), ncom=3; end
 
 opts.maxit = 150;
 
@@ -32,7 +31,7 @@ opts.maxit = 150;
 % the total counts for that cell and multiplied by the
 % scale.factor. This is then natural-log transformed using log1p.
 % https://satijalab.org/seurat/reference/normalizedata
-%[X]=sc_norm(X);
+% [X]=sc_norm(X);
 
 X = X.';
 if dozscore
@@ -58,13 +57,13 @@ for k = 1:n
     else
         [~, ~, coeff] = svds(Xi, ncom);
         % https://www.mathworks.com/matlabcentral/fileexchange/47835-randomized-singular-value-decomposition
-        %[~,~,coeff]=rsvd(Xi,ncom);   % not recommanded
+        % [~,~,coeff]=rsvd(Xi,ncom);   % not recommanded
     end
     score = Xi * coeff;
     % [coeff,score]=pca(Xi);
     % coeff=coeff(:,1:ncom);
     score = (score ./ (vecnorm(score).^2));
-    Beta = sum(y.*score);
+    Beta = sum(y .* score);
     A(k, A(k, :) == 1) = coeff * Beta';
 end
 if guiwaitbar, gui.gui_waitbar_adv(fw); end

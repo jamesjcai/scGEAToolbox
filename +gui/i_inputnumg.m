@@ -7,12 +7,12 @@ if nargin < 1
 end
 numfig = [];
 prompt = {sprintf('Enter %s (1-%d):', descstr, uplimnum)};
-%dlgtitle = 'Number of markers';
+% dlgtitle = 'Number of markers';
 dlgtitle = '';
 % answer = inputdlg(prompt,dlgtitle,[1 50],{'10'});
 
 [answer] = timeoutDlg(@inputdlg, 10, ...
-    prompt, dlgtitle, [1, 50], {'10'});
+prompt, dlgtitle, [1, 50], {'10'});
 if iscell(answer)
     answer = answer{1};
 end
@@ -61,8 +61,8 @@ if strcmp(t.Running, 'on')
     stop(t);
 end
 delete(t);
-    function closeit(~, ~, f1)
-        %disp('Time out!');
+function closeit(~, ~, f1)
+        % disp('Time out!');
         disp('Using defult value = 30');
         f2 = findall(0, 'Type', 'figure');
         fnew = setdiff(f2, f1);

@@ -12,10 +12,10 @@ has_dlt = license('test', 'Neural_Network_Toolbox') && ...
           (exist('dlarray', 'builtin') || exist('dlarray', 'file'));
 
 methodlist = {
-    'Neural Network       (MATLAB Path A — Deep Learning Toolbox)',
-    'Spectral + PCNet     (MATLAB Path B)',
-    'Spectral + Pearson   (MATLAB Path B Lite — no extra toolbox)',
-    'Python               (scTenifoldXct package, original)'
+'Neural Network       (MATLAB Path A — Deep Learning Toolbox)',
+'Spectral + PCNet     (MATLAB Path B)',
+'Spectral + Pearson   (MATLAB Path B Lite — no extra toolbox)',
+'Python               (scTenifoldXct package, original)'
 };
 MTHD_NN     = 1;
 MTHD_SPEC   = 2;
@@ -26,7 +26,7 @@ def_midx = MTHD_NN;
 if ~has_dlt, def_midx = MTHD_SPEC; end
 
 [midx, tf] = gui.myListdlg(FigureHandle, methodlist, ...
-    'Select scTenifoldXct implementation:', methodlist(def_midx));
+'Select scTenifoldXct implementation:', methodlist(def_midx));
 if ~tf || isempty(midx), return; end
 
 % Block Path A if Deep Learning Toolbox is absent
@@ -64,7 +64,7 @@ end
 
 % ── 3. Cell-type grouping selection ──────────────────────────────────────
 [thisc, clabel] = gui.i_select1class(sce, false, ...
-    'Select grouping variable (cell type):', 'Cell Type', FigureHandle);
+'Select grouping variable (cell type):', 'Cell Type', FigureHandle);
 if isempty(thisc), return; end
 
 if ~strcmp(clabel, 'Cell Type')
@@ -99,8 +99,8 @@ a2 = sprintf('%s -> %s', cL{i2}, cL{i1});
 % ── 4. Direction selection ────────────────────────────────────────────────
 twosided = false;
 answer = gui.myQuestdlg(FigureHandle, ['Select direction: ' ...
-    'Source (ligand) -> Target (receptor)'], '', ...
-    {'Both', a1, a2}, 'Both');
+'Source (ligand) -> Target (receptor)'], '', ...
+{'Both', a1, a2}, 'Both');
 if isempty(answer), return; end
 switch answer
     case 'Both'
@@ -173,19 +173,19 @@ if twosided && iscell(Tres)
     T1 = Tres{1};
     T2 = Tres{2};
     if istable(T1)
-        a = sprintf("%s -> %s", cL{x1}, cL{x2});
+        a = sprintf("% s -> %s", cL{x1}, cL{x2});
         T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
         T1.Properties.VariableNames{'Var1'} = 'direction';
     end
     if istable(T2)
-        a = sprintf("%s -> %s", cL{x2}, cL{x1});
+        a = sprintf("% s -> %s", cL{x2}, cL{x1});
         T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
         T2.Properties.VariableNames{'Var1'} = 'direction';
     end
     T = [T1; T2];
 elseif istable(Tres)
     T = Tres;
-    a = sprintf("%s -> %s", cL{x1}, cL{x2});
+    a = sprintf("% s -> %s", cL{x1}, cL{x2});
     T = addvars(T, repelem(a, height(T), 1), 'Before', 1);
     T.Properties.VariableNames{'Var1'} = 'direction';
 end

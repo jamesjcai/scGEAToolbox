@@ -5,7 +5,7 @@ function [thisc, clabel] = i_select1class(sce, allowsingle, ...
 if nargin < 5, parentfig = []; end
 if nargin < 4, prefersel = ''; end
 if nargin < 3 || isempty(promptstr)
-    promptstr = 'Select grouping variable:'; 
+    promptstr = 'Select grouping variable:';
 end
 if nargin < 2 || isempty(allowsingle), allowsingle = true; end
 thisc = [];
@@ -75,13 +75,13 @@ end
 if gui.i_isuifig(parentfig)
     [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
         promptstr, prefersel);
-else     
+else
     if y
         [indx2, tf2] = listdlg('PromptString', ...
             {promptstr}, ...
             'SelectionMode', 'single', 'ListString', listitems, ...
             'ListSize', [220 300], 'InitialValue', idx, 'Name', ' ');
-    else   
+    else
         [indx2, tf2] = listdlg('PromptString', ...
             {promptstr}, ...
             'SelectionMode', 'single', 'ListString', listitems, ...
@@ -111,7 +111,7 @@ else
 end
 
 
-    function [c] = i_pickvariable
+function [c] = i_pickvariable
         c = [];
         %     a=evalin('base','whos');
         %     b=struct2cell(a);
@@ -122,8 +122,8 @@ end
         %         end
         %     end
         %     if any(v)
-        %valididx=ismember(b(4,:),'double');
-        %a=a(valididx);
+        % valididx=ismember(b(4,:),'double');
+        % a=a(valididx);
         if gui.i_isuifig(parentfig)
             [indx, tf] = gui.myListdlg(parentfig, b(1, :), 'Select variable:');
         else

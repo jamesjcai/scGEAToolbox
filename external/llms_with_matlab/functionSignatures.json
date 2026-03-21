@@ -15,7 +15,9 @@
             {"name":"PresencePenalty","kind":"namevalue","type":["numeric","scalar","<=2",">=-2"]},
             {"name":"FrequencyPenalty","kind":"namevalue","type":["numeric","scalar","<=2",">=-2"]},
             {"name":"TimeOut","kind":"namevalue","type":["numeric","scalar","real","positive"]},
-            {"name":"StreamFun","kind":"namevalue","type":"function_handle"}
+            {"name":"StreamFun","kind":"namevalue","type":"function_handle"},
+            {"name":"Verbosity","kind":"namevalue","type":"choices=llms.openai.verbosityValues"},
+            {"name":"ReasoningEffort","kind":"namevalue","type":"choices=llms.openai.reasoningEffortValues"}
         ],
         "outputs":
         [
@@ -42,7 +44,9 @@
             {"name":"FrequencyPenalty","kind":"namevalue","type":["numeric","scalar","<=2",">=-2"]},
             {"name":"TimeOut","kind":"namevalue","type":["numeric","scalar","real","positive"]},
             {"name":"StreamFun","kind":"namevalue","type":"function_handle"},
-            {"name":"Tools","kind":"namevalue","type":"openAIFunction"}
+            {"name":"Tools","kind":"namevalue","type":"openAIFunction"},
+            {"name":"Verbosity","kind":"namevalue","type":"choices=llms.openai.verbosityValues"},
+            {"name":"ReasoningEffort","kind":"namevalue","type":"choices=llms.openai.reasoningEffortValues"}
         ],
         "outputs":
         [
@@ -68,7 +72,9 @@
             {"name":"PresencePenalty","kind":"namevalue","type":["numeric","scalar","<=2",">=-2"]},
             {"name":"FrequencyPenalty","kind":"namevalue","type":["numeric","scalar","<=2",">=-2"]},
             {"name":"TimeOut","kind":"namevalue","type":["numeric","scalar","real","positive"]},
-            {"name":"StreamFun","kind":"namevalue","type":"function_handle"}
+            {"name":"StreamFun","kind":"namevalue","type":"function_handle"},
+            {"name":"Verbosity","kind":"namevalue","type":"choices=llms.openai.verbosityValues"},
+            {"name":"ReasoningEffort","kind":"namevalue","type":"choices=llms.openai.reasoningEffortValues"}
         ],
         "outputs":
         [
@@ -94,7 +100,9 @@
             {"name":"FrequencyPenalty","kind":"namevalue","type":["numeric","scalar","<=2",">=-2"]},
             {"name":"TimeOut","kind":"namevalue","type":["numeric","scalar","real","positive"]},
             {"name":"StreamFun","kind":"namevalue","type":"function_handle"},
-            {"name":"Tools","kind":"namevalue","type":"openAIFunction"}
+            {"name":"Tools","kind":"namevalue","type":"openAIFunction"},
+            {"name":"Verbosity","kind":"namevalue","type":"choices=llms.openai.verbosityValues"},
+            {"name":"ReasoningEffort","kind":"namevalue","type":"choices=llms.openai.reasoningEffortValues"}
         ],
         "outputs":
         [

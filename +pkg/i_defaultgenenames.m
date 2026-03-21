@@ -1,5 +1,5 @@
 function g = i_defaultgenenames(n, prefix)
-%I_DEFAULTGENENAMES  Generate a default gene-name string column vector.
+% I_DEFAULTGENENAMES  Generate a default gene-name string column vector.
 %
 %   g = pkg.i_defaultgenenames(n)         returns ["Gene1"; "Gene2"; ...]
 %   g = pkg.i_defaultgenenames(n, prefix) uses the given prefix string

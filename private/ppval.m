@@ -1,5 +1,5 @@
 function v = ppval(pp, xx)
-%PPVAL  Evaluate piecewise polynomial.
+% PPVAL  Evaluate piecewise polynomial.
 %   V = PPVAL(PP,XX) returns the value, at the entries of XX, of the
 %   piecewise polynomial f contained in PP, as constructed by PCHIP,
 %   SPLINE, MAKIMA, INTERP1, or the spline utility MKPP.
@@ -74,14 +74,14 @@ if length(sizexx) == 2 && sizexx(1) == 1, sizexx(1) = []; end
 
 % for each evaluation site, compute its breakpoint interval
 % (mindful of the possibility that xx might be empty)
-%if lx, [~,index] = histc(xs,[-inf,b(2:l),inf]);
+% if lx, [~,index] = histc(xs,[-inf,b(2:l),inf]);
 if lx
     [~, ~, index] = histcounts(xs, [-inf, b(2:l), inf]);
 else
     index = ones(1, lx);
 end
 
-%index
+% index
 
 % adjust for troubles, like evaluation sites that are NaN or +-inf
 infxs = find(xs == inf);

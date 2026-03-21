@@ -1,7 +1,7 @@
 function [colors] = i_mycolormap(n)
 if nargin < 1, n = 41; end
 plotColor = [; ...
-    [.65, .65, .65]; ... % light gray         (0)
+[.65, .65, .65]; ... % light gray         (0)
 [0.1, 0.74, 0.95]; ... % deep sky-blue     (1)
 [0.95, 0.88, 0.05]; ... % gold/yellow       (2)
 [0.80, 0.05, 0.78]; ... % magenta           (3)

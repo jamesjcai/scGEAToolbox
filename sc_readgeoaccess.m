@@ -1,15 +1,15 @@
 function [sce] = sc_readgeoaccess(acc, readspatialdata, ...
                                        readatacseqdata)
-    % SC_READGEOACCESS  Download and parse GEO single-cell dataset by accession
-    %
-    %   sce = sc_readgeoaccess(acc)
-    %
-    %   Inputs:
-    %     acc – GEO accession string, e.g. 'GSEXXXXXX'
-    %
-    %   Outputs:
-    %     sce – SingleCellExperiment object with X, gene names, cell barcodes
-    
+% SC_READGEOACCESS  Download and parse GEO single-cell dataset by accession
+%
+%   sce = sc_readgeoaccess(acc)
+%
+%   Inputs:
+%     acc – GEO accession string, e.g. 'GSEXXXXXX'
+%
+%   Outputs:
+%     sce – SingleCellExperiment object with X, gene names, cell barcodes
+
 % if length(strsplit(acc,{',',';',' '}))>1
 % end
 
@@ -57,20 +57,19 @@ if length(c) >= 3
         any(contains(c, 'image','IgnoreCase',true))
         error('Imported data detected as Spatial Transcriptome Data. The read function expects scRNA-seq data.')
     end
-    %switch length(c)
-    %    case 3
+    % switch length(c)
+    %     case 3
     c1 = c(contains(c, 'mtx'));
     if isempty(c1), error('MTX file not found.'); end
     f1 = i_setupfile(c1);
     if isempty(f1), error('MTX file name not processed.'); end
 
-    
     c2 = c( contains(c, 'genes', 'IgnoreCase', true) );
     if isempty(c2), c2 = c( contains(c, 'features', 'IgnoreCase', true) ); end
     if isempty(c2), error('GENES/FEATURES file not found.'); end
     f2 = i_setupfile(c2);
     if isempty(f2), error('GENES/FEATURES file name not processed.'); end
-    
+
     c3 = c( contains(c, 'barcodes', 'IgnoreCase', true) );
     f3 = [];
     if isempty(c3)
@@ -112,7 +111,7 @@ elseif isscalar(c)
     if ~txtnotfound
         disp("Found TXT/CSV/TSV file.");
         f1 = i_setupfile(c1);
-        if isempty(f1), error('TXT/CSV/TSV file name not processed.'); end        
+        if isempty(f1), error('TXT/CSV/TSV file name not processed.'); end
             try
                 [X, g] = sc_readtsvfile(f1);
             catch
@@ -125,9 +124,9 @@ elseif isscalar(c)
             disp("Found H5AD file.");
 
             f1 = i_setupfile2(c1);
-            
+
             if isempty(f1), sce=[]; return; end
-    
+
             if strcmpi(f1(end-2:end), '.gz')
                 files=gunzip(f1,tempdir);
                 f1=files{1};
@@ -141,11 +140,11 @@ elseif isscalar(c)
                 error('File not found.');
             end
             disp("Found H5 file.");
-            
+
             f1 = i_setupfile2(c1);
-            
+
             if isempty(f1), sce=[]; return; end
-    
+
             if strcmpi(f1(end-2:end), '.gz')
                 files=gunzip(f1,tempdir);
                 f1=files{1};
@@ -192,7 +191,7 @@ fprintf(['The data was downloaded from the National Center', ...
     % end
     if ~isempty(barcodes)
         sce.c_cell_id = barcodes;
-    end    
+    end
 
     if exist(f1,"file")
         try
@@ -201,8 +200,6 @@ fprintf(['The data was downloaded from the National Center', ...
         end
     end
 end
-
-
 
 
 function f = i_setupfile(c)

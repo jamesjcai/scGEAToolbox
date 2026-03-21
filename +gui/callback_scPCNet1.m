@@ -26,10 +26,10 @@ end
 
     %     answer=gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?');
     %     if ~strcmpi(answer,'Yes'), return; end
-    %useparallel = false;
-    answer = gui.myQuestdlg(FigureHandle, 'Use parallel computing or not?', 'Parallel Computing', ...
+    % useparallel = false;
+answer = gui.myQuestdlg(FigureHandle, 'Use parallel computing or not?', 'Parallel Computing', ...
         {'Use parallel', 'Not use parallel'}, 'Use parallel');
-    switch answer
+switch answer
         case 'Use parallel'
             useparallel = true;
         case 'Not use parallel'
@@ -38,7 +38,7 @@ end
             return;
     end
 
-    try
+try
         disp('>> [A]=sc_pcnet(sce.X);');
         X = sc_norm(sce.X);
         X = log1p(X);
@@ -58,7 +58,7 @@ end
     end
 
 
-    try
+try
         cd(wkdir);
         [~, tmpmat] = fileparts(tempname);
         g = sce.g;
@@ -71,7 +71,7 @@ end
     % tstr=matlab.lang.makeValidName(string(datetime));
     % save(sprintf('A_%s',tstr),'A','g','-v7.3');
 
-    if ~(ismcc || isdeployed)
+if ~(ismcc || isdeployed)
         labels = {'Save network to variable named:', ...
             'Save sce.g to variable named:'};
         vars = {'A', 'g'};
@@ -79,8 +79,8 @@ end
         waitfor(export2wsdlg(labels, vars, values));
     end
 
-    answer = gui.myQuestdlg(FigureHandle, 'Save network A to MAT file?');
-    switch answer
+answer = gui.myQuestdlg(FigureHandle, 'Save network A to MAT file?');
+switch answer
         case 'Yes'
             if gui.i_isuifig(FigureHandle)
                 [file, path] = uiputfile(FigureHandle, {'*.mat'; '*.*'}, ...

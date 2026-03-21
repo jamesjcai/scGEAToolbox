@@ -72,29 +72,29 @@ end
     % fclose(fid);
     % val = jsondecode(str);
 
-    Col = webread(urllist{indx1});
-    ctag = listitems{indx1};
-    ctag = extractBefore(ctag, strfind(ctag,':'));
-    setnames = fields(Col);
+Col = webread(urllist{indx1});
+ctag = listitems{indx1};
+ctag = extractBefore(ctag, strfind(ctag,':'));
+setnames = fields(Col);
 
-    if colnoly
+if colnoly
         return;
     end
 
-    %idx=gui.i_selmultidialog(a);
-    %string(val.(a{idx}).geneSymbols);
+    % idx=gui.i_selmultidialog(a);
+    % string(val.(a{idx}).geneSymbols);
 
     %%
 if gui.i_isuifig(parentfig)
     [idx, tf] = gui.myListdlg(parentfig, listitems, 'Select gene set:');
-else    
+else
     [idx, tf] = listdlg('PromptString', ...
         {'Select gene set:'}, ...
         'SelectionMode', 'single', ...
         'ListString', setnames, ...
         'ListSize', [260, 300]);
 end
-    if tf == 1
+if tf == 1
         setname = setnames{idx};
         glist = string(Col.(setname).geneSymbols);
     end

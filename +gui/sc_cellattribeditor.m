@@ -2,7 +2,7 @@ function [sce, needupdate] = sc_cellattribeditor(sce, addnew, parentfig)
 if nargin<3, parentfig = []; end
 if nargin<2, addnew = false; end
 
-    needupdate = false;
+needupdate = false;
 
 
 if ~addnew    % edit
@@ -21,7 +21,7 @@ if ~addnew    % edit
                 'SelectionMode', 'single', 'ListString', listitems, ...
                 'ListSize', [220, 300]);
         end
-    
+
     if tf2 == 1
         clabel = listitems{indx2};
         switch clabel
@@ -44,18 +44,17 @@ if ~addnew    % edit
     else
         return;
     end
-    
-  
-    
+
+
 %    if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
 %            'It may take a while to load values. Continue?'))
-%        return; 
+%        return;
 %    end
     % tic;
     if gui.i_isuifig(parentfig)
         %        x = gui.myInputdlg({sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:')}, ...
         %                          'Attribute Editor', {char(string(thisc))}, parentfig);
-        
+
         % assignin("base","thisc",thisc);
         % assignin("base","clabel",clabel);
 
@@ -68,7 +67,7 @@ if ~addnew    % edit
     else
         x = inputdlg(sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:'), ...
                           'Attribute Editor', [15 80], {char(string(thisc))});
-        
+
     end
     % toc;
 
@@ -102,11 +101,11 @@ if isempty(x), return; end
 if addnew
     if isempty(x{1})
         gui.myWarndlg(parentfig, 'Attribute Name cannot be empty.');
-        return; 
+        return;
     end
     if isempty(x{2})
         gui.myWarndlg(parentfig, 'Attribute Values cannot be empty.');
-        return; 
+        return;
     end
 else
     if isempty(x{1})       % when add new - x{1} is the values
@@ -115,10 +114,10 @@ else
     end
 end
 
-    answer = gui.myQuestdlg(parentfig, 'What is the data type of attribute values?', ...
+answer = gui.myQuestdlg(parentfig, 'What is the data type of attribute values?', ...
 	    'Data Type', ...
 	    {'String','Numeric','Cancel'},'String');
-    switch answer
+switch answer
         case 'String'
             if addnew
                 clabel = strtrim(x{1});
@@ -138,7 +137,7 @@ end
     end
 
 
-    if addnew
+if addnew
         if size(newthisc,1) ~= sce.NumCells
            gui.myWarndlg(parentfig, ...
                'Attribute length is not equal to the number of cells.');
@@ -151,8 +150,8 @@ end
         end
     end
 
-    if addnew
-        clabel = matlab.lang.makeValidName(clabel);        
+if addnew
+        clabel = matlab.lang.makeValidName(clabel);
         existinglabels = sce.list_cell_attributes(1:2:end);
         if ismember(clabel, existinglabels)
             gui.myWarndlg(parentfig, 'Cell Attribute Name Existing.');
@@ -180,42 +179,38 @@ end
         end
         gui.myHelpdlg(parentfig, 'Cell Attribute Changed.');
         needupdate = true;
-    end    
+    end
 end
-
-
 
 
 function trimmed_text = trimBottomEmpty(input_text)
-    % TRIMBOTTOMEMPTY Trims whitespace from each line and removes empty lines from bottom
-    %
-    % SYNTAX:
-    %   trimmed_text = trimBottomEmpty(input_text)
-    %
-    % INPUT:
-    %   input_text - char array or string, can be multiline
-    %
-    % OUTPUT:
-    %   trimmed_text - char array with whitespace trimmed from each line
-    %                  and empty lines removed from bottom only
-    %
-    % EXAMPLE:
-    %   text = ['111'; '222'; '333'; '   '];
-    %   result = trimBottomEmpty(text);
-    
-    lines = cellstr(input_text);     % Convert to cell array
-    lines = strtrim(lines);          % Trim each line
-    
-    % Find the last non-empty line
-    last_non_empty = find(~cellfun('isempty', lines), 1, 'last');
-    
-    if ~isempty(last_non_empty)
-        lines = lines(1:last_non_empty);  % Keep only up to last non-empty line
-    else
-        lines = {};  % All lines were empty
-    end
-    
-    trimmed_text = char(lines);      % Convert back to char array
+% TRIMBOTTOMEMPTY Trims whitespace from each line and removes empty lines from bottom
+%
+% SYNTAX:
+%   trimmed_text = trimBottomEmpty(input_text)
+%
+% INPUT:
+%   input_text - char array or string, can be multiline
+%
+% OUTPUT:
+%   trimmed_text - char array with whitespace trimmed from each line
+%                  and empty lines removed from bottom only
+%
+% EXAMPLE:
+%   text = ['111'; '222'; '333'; '   '];
+%   result = trimBottomEmpty(text);
+
+lines = cellstr(input_text);     % Convert to cell array
+lines = strtrim(lines);          % Trim each line
+
+% Find the last non-empty line
+last_non_empty = find(~cellfun('isempty', lines), 1, 'last');
+
+if ~isempty(last_non_empty)
+    lines = lines(1:last_non_empty);  % Keep only up to last non-empty line
+else
+    lines = {};  % All lines were empty
 end
 
-
+trimmed_text = char(lines);      % Convert back to char array
+end

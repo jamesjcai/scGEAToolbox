@@ -1,5 +1,5 @@
 function [A, W] = sc_knngraph(s, k, plotit, methodid, parentfig)
-%Generate KNN group network from cell embeddings
+% Generate KNN group network from cell embeddings
 %
 % input: S - cell embedding coordinates
 % output: A - sparse adjacency matrix
@@ -10,10 +10,10 @@ if nargin < 3, plotit = false; end
 if nargin < 2 || isempty(k), k = 4; end
 
 if isempty(parentfig)
-   parentfig = figure;
-   ax = gca;
+    parentfig = figure;
+    ax = gca;
 else
-   ax = findall(parentfig, 'Type', 'axes');
+    ax = findall(parentfig, 'Type', 'axes');
 end
 
 switch methodid
@@ -43,7 +43,7 @@ if nargout > 0 || plotit
             A(i, Graph(j, i)) = 1;
             A(Graph(j, i), i) = 1;
             if nargout > 1
-                w = norm(s(i, :)-s(Graph(j, i), :));
+                w = norm(s(i, :) - s(Graph(j, i), :));
                 W(i, Graph(j, i)) = w;
                 W(Graph(j, i), i) = w;
             end
@@ -56,23 +56,23 @@ end
 
 if ~plotit, return; end
 
-    hold(ax, "on");
-    for i = 1:size(Graph, 2)
-        for j = 1:size(Graph, 1)
-            % if i~=Graph(j,i)
-            if A(i, Graph(j, i)) > 0
-                if size(s, 2) >= 3
-                    line(ax, s([i, Graph(j, i)], 1), ...
-                        s([i, Graph(j, i)], 2), ...
-                        s([i, Graph(j, i)], 3), 'Color', 'red');
-                else
-                    line(ax, s([i, Graph(j, i)], 1), ...
-                        s([i, Graph(j, i)], 2), 'Color', 'red');
-                end
+hold(ax, "on");
+for i = 1:size(Graph, 2)
+    for j = 1:size(Graph, 1)
+        % if i~=Graph(j,i)
+        if A(i, Graph(j, i)) > 0
+            if size(s, 2) >= 3
+                line(ax, s([i, Graph(j, i)], 1), ...
+                    s([i, Graph(j, i)], 2), ...
+                    s([i, Graph(j, i)], 3), 'Color', 'red');
+            else
+                line(ax, s([i, Graph(j, i)], 1), ...
+                    s([i, Graph(j, i)], 2), 'Color', 'red');
             end
         end
     end
-    hold(ax, "off");
+end
+hold(ax, "off");
 end
 
 % G=graph(W);

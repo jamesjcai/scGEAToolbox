@@ -1,13 +1,13 @@
 function [optimk] = ai_numclusters(X, varargin)
-%Estimate number of clusters
+% Estimate number of clusters
 p = inputParser;
 defaultType = 'simlr';
 validTypes = {'simlr', 'soptsc', 'sc3'};
 checkType = @(x) any(validatestring(x, validTypes));
 
 addRequired(p, 'X', @isnumeric);
-addOptional(p, 'type', defaultType, checkType)
-parse(p, X, varargin{:})
+addOptional(p, 'type', defaultType, checkType);
+parse(p, X, varargin{:});
 
 
 pw1 = fileparts(mfilename('fullpath'));
@@ -54,10 +54,10 @@ switch p.Results.type
 
         % Determinning the number of clusters
         eigenvalues = [];
-        %if isempty(optimk)
+        % if isempty(optimk)
         [~, No_cluster] = Num_cluster(W, No_cluster1);
         optimk = No_cluster;
-        %end
+        % end
     case 'sc3'
 
         %% estimate k

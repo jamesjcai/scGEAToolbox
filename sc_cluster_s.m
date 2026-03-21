@@ -1,7 +1,7 @@
 function [c_clustid] = sc_cluster_s(s, k, varargin)
-%sc_cluster_s - cluster cells using cell embeding s
+% sc_cluster_s - cluster cells using cell embeding s
 %
-%see also: sc_cluster_x
+% see also: sc_cluster_x
 
 %if min(size(s))>3, error('S is coordinates of dimensional
 %reduction.'); end
@@ -18,9 +18,9 @@ checkK = @(x) (x > 0) && isnumeric(x) && isscalar(x);
 
 addRequired(p, 's', @isnumeric);
 addRequired(p, 'k', checkK);
-addOptional(p, 'type', defaultType, checkType)
-addOptional(p, 'plotit', false, @islogical)
-parse(p, s, k, varargin{:})
+addOptional(p, 'type', defaultType, checkType);
+addOptional(p, 'plotit', false, @islogical);
+parse(p, s, k, varargin{:});
 plotit = p.Results.plotit;
 
 switch p.Results.type
@@ -54,4 +54,5 @@ if plotit
                 'w', 'EdgeColor', 'k');
         end
     end
+end
 end

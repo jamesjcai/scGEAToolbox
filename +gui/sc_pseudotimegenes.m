@@ -3,13 +3,13 @@ function sc_pseudotimegenes(sce, t, parentfig)
 if nargin<3, parentfig=[]; end
 t = t(:);
 
-    [K, usehvgs] = gui.i_gethvgnum(sce, parentfig);
-    
-    if usehvgs
+[K, usehvgs] = gui.i_gethvgnum(sce, parentfig);
+
+if usehvgs
         T = sc_splinefit(sce.X, sce.g);
         glist = T.genes(1:min([K, sce.NumGenes]));
         [y, idx] = ismember(glist, sce.g);
-        if ~all(y), error('Runtime error.'); end        
+        if ~all(y), error('Runtime error.'); end
         sceX = sce.X(idx, :);
         sceg = sce.g(idx);
     else
@@ -19,19 +19,18 @@ t = t(:);
 
     % [Xt] = gui.i_transformx(sce.X, [], [], parentfig);
     % if isempty(Xt), return; end
-    X = sceX;
-    try
+X = sceX;
+try
         if issparse(X), X = full(X); end
     catch ME
         disp(ME.message);
         disp('Keep using sparse X.');
     end
 
-    
 
-    answer = gui.myQuestdlg(parentfig, 'Select method:','',{'Spearman Correlation', ...
+answer = gui.myQuestdlg(parentfig, 'Select method:','',{'Spearman Correlation', ...
         'Distance Correlation','Cancel'},'Spearman Correlation');
-    switch answer
+switch answer
         case 'Spearman Correlation'
             fw = gui.myWaitbar(parentfig);
             r = corr(t, X.', 'type', 'spearman'); % Calculate linear correlation between gene expression profile and T
@@ -45,7 +44,7 @@ t = t(:);
                 gui.myWaitbar(parentfig, fw, false, '', '', fw,100/n);
                 for k=1:length(r)
                     if mod(k,100) == 0
-                        gui.myWaitbar(parentfig, fw, false, '', '', k/length(r)); 
+                        gui.myWaitbar(parentfig, fw, false, '', '', k/length(r));
                     end
                     r(k) = pkg.e_distcorr(Xn(k,:).', t(:)); % Calculate linear correlation between gene expression profile and T
                 end
@@ -58,21 +57,21 @@ t = t(:);
                 gui.myWaitbar(parentfig, fw);
             end
         case 'Cancel'
-            return; 
+            return;
         otherwise
             return;
     end
 
-    [~, idxp] = maxk(r, 10); 
-    selectedg = sceg(idxp);
-    try
+[~, idxp] = maxk(r, 10);
+selectedg = sceg(idxp);
+try
         hx=gui.myFigure(parentfig);
         hFig=hx.FigHandle;
         hFig.Position(3) = hFig.Position(3) * 1.8;
         hx.show(parentfig);
         figure(hFig);
         gui.i_plot_pseudotimeseries(log1p(X), ...
-            sceg, t, selectedg);        
+            sceg, t, selectedg);
     catch ME
         if exist('psf1', 'var') && ishandle(hFig)
             close(hFig);

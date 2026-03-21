@@ -9,11 +9,10 @@ cL1 = [];
 cL2 = [];
 
 
-
 if isa(sce, 'SingleCellExperiment')
     [thisc, ~] = gui.i_select1class(sce,[],[],[],parentfig);
     if isempty(thisc)
-        %gui.myErrordlg(parentfig, 'Undefined');
+        % gui.myErrordlg(parentfig, 'Undefined');
         return;
     end
 else % assume that sce input is thisc
@@ -38,7 +37,6 @@ if n < 2
     gui.myErrordlg(parentfig, 'Need at least two samples.');
     return;
 end
-
 
 
  if n == 2
@@ -116,7 +114,7 @@ end
             else
                 return;
             end
-         
+
          i1 = ci == 1;
          i2 = ci == 2;
          % cL1 = {'Group1'};

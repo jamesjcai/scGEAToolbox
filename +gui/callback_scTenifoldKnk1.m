@@ -30,7 +30,7 @@ switch answer
         b = struct2cell(a);
         % if isempty(b)
         %     gui.myHelpdlg(FigureHandle, 'No variable in the WorkSpace.', '');
-        % 
+        %
         %     return;
         % end
         valididx = false(length(a), 1);
@@ -48,9 +48,9 @@ switch answer
                 return;
             end
         else
-            %valididx=ismember(b(4,:),'double');
+            % valididx=ismember(b(4,:),'double');
             a = a(valididx);
-            b = b(:, valididx);            
+            b = b(:, valididx);
 
        if gui.i_isuifig(FigureHandle)
             [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), ...
@@ -58,7 +58,7 @@ switch answer
         else
             [indx, tf] = listdlg('PromptString', {'Select network variable:'}, ...
                 'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
-        end            
+        end
 
             if tf == 1
                 A0 = evalin('base', a(indx).name);
@@ -118,7 +118,7 @@ if isempty(A0)
         parfor k=1:32
         end
         if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
- 
+
         [T, A0] = ten.sctenifoldknk(sce.X, sce.g, idx, ...
             'sorttable', true, 'nsubsmpl', 10, ...
             'savegrn', isfolder(wkdir));
@@ -130,7 +130,7 @@ if isempty(A0)
     end
     isreconstructed = true;
 else
-    %doit = false;
+    % doit = false;
     if nnz(A0(idx, :) ~= 0) == 0
         s = sprintf('KO gene (%s) has no link or too few links (n<50) with other genes.', ...
             sce.g(idx));
@@ -166,10 +166,10 @@ else
             return;
         end
     end
-    %A1=A0;
-    %A1(idx,:)=0;
-    %[aln0,aln1]=i_ma(A0,A1);
-    %T=i_dr(aln0,aln1,sce.g,true);
+    % A1=A0;
+    % A1(idx,:)=0;
+    % [aln0,aln1]=i_ma(A0,A1);
+    % T=i_dr(aln0,aln1,sce.g,true);
     isreconstructed = false;
 end
 
@@ -228,4 +228,3 @@ disp('===============================');
     end
 
 end
-

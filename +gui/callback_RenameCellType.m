@@ -2,7 +2,7 @@ function [requirerefresh] = callback_RenameCellType(src)
 requirerefresh = false;
 
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 if isempty(sce.c_cell_type_tx)
     gui.myErrordlg(FigureHandle, 'sce.c_cell_type_tx undefined');
@@ -57,7 +57,7 @@ else
     end
     if tfx == 1
         i = ismember(ci, indxx);
-        
+
 if gui.i_isuifig(FigureHandle)
     newctype = gui.myInputdlg({'New cell type'}, 'Rename', ...
         cLi(ci(i)), FigureHandle);

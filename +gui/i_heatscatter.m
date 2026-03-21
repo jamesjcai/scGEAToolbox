@@ -26,7 +26,7 @@ if is2d
 else
     if isempty(ax)
         h1 = scatter3(x, y, z, sz, c, 'filled');
-    else        
+    else
         h1 = scatter3(ax, x, y, z, sz, c, 'filled');
     end
 end
@@ -35,4 +35,3 @@ if isempty(ax)
 else
     grid(ax, "on");
 end
-

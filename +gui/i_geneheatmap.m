@@ -2,7 +2,7 @@ function [h] = i_geneheatmap(sce, thisc, glist, parentfig)
 
 if nargin < 4, parentfig = []; end
 if nargin < 3
-    [glist] = gui.i_selectngenes(sce);
+    [glist] = gui.i_selectngenes(sce, [], parentfig);
     if isempty(glist)
         gui.myHelpdlg(parentfig, 'No gene selected.');
         return;
@@ -19,8 +19,8 @@ if noanswer, return; end
 gidx = gidx(y);
 glist = glist(y);
 
-%[Xt]=gui.i_transformx(sce.X, [], [], parentfig);
-%if isempty(Xt), return; end
+% [Xt]=gui.i_transformx(sce.X, [], [], parentfig);
+% if isempty(Xt), return; end
 Xt = sc_norm(sce.X);
 Xt = log1p(Xt);
 
@@ -52,7 +52,7 @@ h = imagesc(Y);
 % hFig.Colormap = repmat(linspace(0, 1, 25).', 1, 3);
 set(gca, 'XTick', a-b);
 set(gca, 'XTickLabel', cL);
-%set(gca,'XTickLabelRotation',0);
+% set(gca,'XTickLabelRotation',0);
 set(gca, 'YTick', 1:length(glist));
 set(gca, 'YTickLabel', glist);
 set(gca, 'TickLength', [0, 0]);
@@ -70,14 +70,14 @@ hx.show(parentfig);
 
 fliped = false;
 
-    function in_callback_flipxy(~, ~)
-        %delete(h);
+function in_callback_flipxy(~, ~)
+        % delete(h);
         fliped = ~fliped;
         if fliped
             h = imagesc(Y');
             set(gca, 'YTick', a-b);
             set(gca, 'YTickLabel', cL);
-            %set(gca,'YTickLabelRotation',90);
+            % set(gca,'YTickLabelRotation',90);
             set(gca, 'XTick', 1:length(glist));
             set(gca, 'XTickLabel', glist);
             set(gca, 'XTickLabelRotation', 90);
@@ -86,14 +86,14 @@ fliped = false;
             h = imagesc(Y);
             set(gca, 'XTick', a-b);
             set(gca, 'XTickLabel', cL);
-            %set(gca,'XTickLabelRotation',0);
+            % set(gca,'XTickLabelRotation',0);
             set(gca, 'YTick', 1:length(glist));
             set(gca, 'YTickLabel', glist);
             set(gca, 'TickLength', [0, 0]);
         end
     end
 
-    function in_callback_renamecat(~, ~)
+function in_callback_renamecat(~, ~)
         tg = gui.i_inputgenelist(string(cL), true);
         if isempty(tg), return; end
         if length(tg) == length(cL)
@@ -105,7 +105,7 @@ fliped = false;
         end
     end
 
-    function in_callback_resetcolor(~, ~)
+function in_callback_resetcolor(~, ~)
         set(gca, 'FontSize', 10);
         colormap default
     end

@@ -11,7 +11,7 @@ v = pyrun("import torch; v = torch.__version__.split('+')[0]", "v");
 v = string(v);
 tf = isVersionInRange(v,"1.10","1.13");
 if ~tf
-    % error('Unsupported PyTorch version: %s. Please use a version between 1.13 and 2.1.', v);    
+    % error('Unsupported PyTorch version: %s. Please use a version between 1.13 and 2.1.', v);
     gui.myWarndlg(FigureHandle, ...
         sprintf('Unsupported PyTorch version: %s. Please use a version between 1.13 and 2.1.', v),...
         'Runtime Error', true);
@@ -60,7 +60,7 @@ end
 
 if ~isempty(output_h5)
     gui.myWaitbar(FigureHandle, fw, [], sprintf('Processing complete. Output saved to: %s', output_h5));
-    
+
     answer=gui.myQuestdlg(FigureHandle, sprintf('Output saved to %s. Open the folder %s?', ...
         output_h5, wkdir), '');
 else
@@ -69,49 +69,43 @@ else
         'Runtime Error', true);
     answer=gui.myQuestdlg(FigureHandle, 'Open working folder to check the log output for additional details?');
 end
-    if strcmp(answer,'Yes'), winopen(wkdir); end    
+if strcmp(answer,'Yes'), winopen(wkdir); end
 
 end
-
 
 
 function tf = isVersionInRange(ver, low, high)
 % Returns true if low <= ver <= high
 
-    v  = parseVersion(ver);
-    v1 = parseVersion(low);
-    v2 = parseVersion(high);
+v  = parseVersion(ver);
+v1 = parseVersion(low);
+v2 = parseVersion(high);
 
-    tf = compareVersion(v, v1) >= 0 && compareVersion(v, v2) <= 0;
+tf = compareVersion(v, v1) >= 0 && compareVersion(v, v2) <= 0;
 end
 
 
 function v = parseVersion(s)
-    % Convert "2.8.0" → [2 8 0]
-    v = sscanf(char(s), '%d.%d.%d').';
-    v(end+1:3) = 0;   % pad missing parts
+% Convert "2.8.0" → [2 8 0]
+v = sscanf(char(s), '%d.%d.%d').';
+v(end+1:3) = 0;   % pad missing parts
 end
 
 
 function c = compareVersion(a,b)
-    % Returns:
-    %  1 if a>b
-    %  0 if a=b
-    % -1 if a<b
+% Returns:
+%  1 if a>b
+%  0 if a=b
+% -1 if a<b
 
-    for i = 1:3
-        if a(i) > b(i)
-            c = 1;
-            return
-        elseif a(i) < b(i)
-            c = -1;
-            return
-        end
+for i = 1:3
+    if a(i) > b(i)
+        c = 1;
+        return
+    elseif a(i) < b(i)
+        c = -1;
+        return
     end
-    c = 0;
 end
-
-
-
-
-
+c = 0;
+end

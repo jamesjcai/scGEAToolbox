@@ -3,18 +3,18 @@ function [done, res] = callOllama(prompt, model)
 done = false;
 res = [];
 
-    if isempty(which('ollamaChat'))
+if isempty(which('ollamaChat'))
         error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
     end
 
     % https://www.mathworks.com/matlabcentral/fileexchange/163796-large-language-models-llms-with-matlab/
     % Add-On "Large Language Models (LLMs) with MATLAB".
 
-    if nargin < 2, model = "llama3.2"; end
-    if nargin < 1, prompt = 'What model are you?'; end
+if nargin < 2, model = "llama3.2"; end
+if nargin < 1, prompt = 'What model are you?'; end
 
-    fprintf('Sending request to Ollama Chat API...\n');
-    try
+fprintf('Sending request to Ollama Chat API...\n');
+try
         chat = ollamaChat(model, TimeOut = 1200);
         res = chat.generate(prompt);
         done = true;
@@ -22,7 +22,7 @@ res = [];
         fprintf('Error in chat completion: %s\n', ME.message);
         return;
     end
-    if done
+if done
         fprintf('Response received successfully.\n');
     end
     % disp(res);

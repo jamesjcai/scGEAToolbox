@@ -1,9 +1,9 @@
 function [sout] = r_harmony(s, batchid, wkdir, isdebug)
 arguments
-    s(:, :) {mustBeNumeric}
-    batchid
-    wkdir = []
-    isdebug = false
+s(:, :) {mustBeNumeric}
+batchid
+wkdir = []
+isdebug = false
 end
 
 if isempty(wkdir), wkdir = tempdir; end
@@ -26,7 +26,7 @@ filename = "input.h5";
 
 h5create(filename, "/s", size(s));
 h5write(filename, "/s", s);
-batchid = string(batchid);    
+batchid = string(batchid);
 h5create(filename, '/batchid', size(batchid), 'Datatype', 'string');
 h5write(filename, '/batchid', batchid);
 

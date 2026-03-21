@@ -4,11 +4,11 @@ if nargin<2, parentfig = []; end
 
 k=[];
 usehvgs=false;
-    answer = gui.myQuestdlg(parentfig, ...
+answer = gui.myQuestdlg(parentfig, ...
         sprintf(['Use highly variable genes (HVGs, n=2000) ' ...
         'or use all genes (n=%d)?'], sce.NumGenes), ...
         '', {'2000 HVGs 🐇', 'All Genes 🐢', 'Other...'}, '2000 HVGs 🐇');
-    switch answer
+switch answer
         case 'All Genes 🐢'
             usehvgs = false;
             k = sce.NumGenes;
@@ -24,4 +24,3 @@ usehvgs=false;
             return;
     end
 end
-

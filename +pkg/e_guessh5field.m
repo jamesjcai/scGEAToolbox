@@ -20,8 +20,8 @@ for l = 1:length(prefx)
 end
 
 if isempty(y) && required
-    %errorStruct.message = 'Data file not found.';
-    %errorStruct.identifier = 'MyFunction:fileNotFound';
+    % errorStruct.message = 'Data file not found.';
+    % errorStruct.identifier = 'MyFunction:fileNotFound';
     error('Required field %s is missing.', fieldnm);
 end
 end

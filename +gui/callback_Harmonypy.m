@@ -16,7 +16,6 @@ if isempty(wkdir), return; end
 if ~gui.i_setpyenv([],[],FigureHandle), return; end
 
 
-
 %{
 usepylib=false;
 
@@ -36,16 +35,16 @@ answer = gui.myQuestdlg(FigureHandle, 'Using MATLAB engine for Python or Calling
                     end
                     %}
 
-        %fw=gui.myWaitbar(FigureHandle);
+        % fw=gui.myWaitbar(FigureHandle);
 
-        %try
-            
+        % try
+
             id = sce.c_batch_id;
             if ~isnumeric(id)
                 id = findgroups(sce.c_batch_id);
                 id = id(:);
             end
-            
+
             [s] = run.py_harmonypy(sce.s, id, wkdir);
             % [s] = run.r_harmony(sce.s, id, wkdir);
 
@@ -63,9 +62,7 @@ answer = gui.myQuestdlg(FigureHandle, 'Using MATLAB engine for Python or Calling
         %     %rethrow(ME);
         %     return;
         % end
-        %gui.myWaitbar(FigureHandle, fw);
+        % gui.myWaitbar(FigureHandle, fw);
         gui.myGuidata(FigureHandle, sce, src);
         done = true;
 end
-
-

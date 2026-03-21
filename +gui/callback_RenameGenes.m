@@ -12,7 +12,7 @@ if isempty(glist)
 end
 answer = gui.myQuestdlg(FigureHandle, 'Paste new gene names?');
 if ~strcmp(answer, 'Yes'), return; end
-renamedglist = gui.i_inputgenelist(glist);
+renamedglist = gui.i_inputgenelist(glist, [], FigureHandle);
 
 if length(glist) ~= length(renamedglist)
     % gui.myHelpdlg(FigureHandle, '____.','');

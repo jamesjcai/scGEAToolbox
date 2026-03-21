@@ -4,10 +4,10 @@ requirerefresh = false;
 renamedwhat = [];
 
 
-    [FigureHandle, sce] = gui.gui_getfigsce(src);
+[FigureHandle, sce] = gui.gui_getfigsce(src);
 
 listitems = {'Gene name','Cluster ID'};
-    
+
        if gui.i_isuifig(FigureHandle)
             [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
                 'Select varible to be renamed:');
@@ -19,9 +19,9 @@ listitems = {'Gene name','Cluster ID'};
                 'ListSize',[220 300]);
         end
 
-    if tf2 ~= 1, return; end    
+if tf2 ~= 1, return; end
 
-    switch listitems{indx2}
+switch listitems{indx2}
         case 'Gene name'
             [requirerefresh] = gui.callback_RenameGenes(src);
             if requirerefresh, renamedwhat = listitems{indx2}; end
@@ -34,7 +34,7 @@ listitems = {'Gene name','Cluster ID'};
                 sce.c_cluster_id = string(sce.c_cluster_id);
             end
             [ci, cLi] = pkg.i_grp2idxsorted(sce.c_cluster_id);
-            
+
            if gui.i_isuifig(FigureHandle)
                 [indxx, tfx] = gui.myListdlg(FigureHandle, string(cLi), ...
                     'Select cluster ID');
@@ -47,7 +47,7 @@ listitems = {'Gene name','Cluster ID'};
 
             if tfx == 1
                 i = ismember(ci, indxx);
-                
+
                 if gui.i_isuifig(FigureHandle)
                     newctype = gui.myInputdlg({'New cluster ID name'}, 'Rename', ...
                         cLi(ci(i)), FigureHandle);
@@ -59,11 +59,11 @@ listitems = {'Gene name','Cluster ID'};
                 if ~isempty(newctype)
                     cLi(ci(i)) = newctype;
                     sce.c_cluster_id = string(cLi(ci));
-                    requirerefresh = true;                    
+                    requirerefresh = true;
                     renamedwhat = listitems{indx2};
                     gui.myGuidata(FigureHandle, sce, src);
                 end
-            end        
+            end
     end
 
 end

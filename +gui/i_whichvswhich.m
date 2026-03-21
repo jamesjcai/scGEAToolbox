@@ -1,5 +1,5 @@
 function [i1, i2, cL1, cL2, cancelled] = i_whichvswhich(FigureHandle, i1, i2, cL1, cL2)
-%I_WHICHVSWHICH Present "Which vs. which?" dialog and swap group order if requested.
+% I_WHICHVSWHICH Present "Which vs. which?" dialog and swap group order if requested.
 %
 %   [i1, i2, cL1, cL2, cancelled] = gui.i_whichvswhich(FigureHandle, i1, i2, cL1, cL2)
 %

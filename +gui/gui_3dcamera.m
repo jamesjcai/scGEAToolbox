@@ -5,7 +5,7 @@ if nargin < 3, flatview = false; end
 if nargin < 2, prefix = ''; end
 if nargin < 1
     hFig = gcf;
-    %tb = findall(hFig, 'Type', 'uitoolbar');
+    % tb = findall(hFig, 'Type', 'uitoolbar');
     tb = uitoolbar('Parent', hFig);
     if isscalar(tb)
         tb = uitoolbar(hFig);
@@ -16,7 +16,7 @@ end
 pt = uipushtool(tb, 'Separator', 'on');
 
 try
-    mfolder = fileparts(mfilename('fullpath')); 
+    mfolder = fileparts(mfilename('fullpath'));
     [ptImage, map] = imread(fullfile(mfolder, '..', 'assets', 'Images', 'camera.jpg'));
     if ~isempty(map), ptImage = ind2rgb(ptImage, map); end
 catch
@@ -27,7 +27,7 @@ pt.Tooltip = 'Make video snapshot';
 pt.ClickedCallback = @camera3dmp4;
 
 
-    function camera3dmp4(~, ~)
+function camera3dmp4(~, ~)
         answer = gui.myQuestdlg(parentfig, 'Make video snapshot?');
         if ~strcmp(answer, 'Yes'), return; end
 
@@ -43,7 +43,7 @@ pt.ClickedCallback = @camera3dmp4;
             fname = fullfile(a1, b1);
         end
         warning off
-    
+
         if flatview
             ax = [-20, 50; -110, 65; -190, 80; -290, 60; -380, 40];
         else
@@ -52,7 +52,7 @@ pt.ClickedCallback = @camera3dmp4;
         try
             CaptureFigVid(ax, fname, OptionZ);
         catch
-           
+
         end
         view(caz,cel);
         warning on
@@ -68,7 +68,7 @@ pt.ClickedCallback = @camera3dmp4;
                 winopen(vfile);
             end
         end
-        
+
     end
 end
 
@@ -132,13 +132,13 @@ end
 if size(ViewZ, 2) > 2
     warning('AJennings:VidWrite', ...
         'Views should have n rows and only 2 columns. Deleting extraneous input.');
-    ViewZ = ViewZ(:, 1:2); %remove any extra columns
+    ViewZ = ViewZ(:, 1:2); % remove any extra columns
 end
 
 if ispc
-    daObj = VideoWriter(FileName, 'MPEG-4'); %my preferred format
+    daObj = VideoWriter(FileName, 'MPEG-4'); % my preferred format
 else
-    daObj=VideoWriter(FileName); %for default video format.
+    daObj=VideoWriter(FileName); % for default video format.
 end
 % MPEG-4 CANNOT BE USED ON UNIX MACHINES
 % set values:
@@ -146,7 +146,7 @@ end
 if isfield(OptionZ, 'FrameRate')
     daObj.FrameRate = OptionZ.FrameRate;
 end
-if isfield(OptionZ, 'Duration') %space out view angles
+if isfield(OptionZ, 'Duration') % space out view angles
     temp_n = round(OptionZ.Duration*daObj.FrameRate); % number frames
     temp_p = (temp_n - 1) / (size(ViewZ, 1) - 1); % length of each interval
     ViewZ_new = zeros(temp_n, 2);
@@ -164,13 +164,13 @@ if length(ViewZ) == 2 % only initial and final given
         linspace(ViewZ(1, 2), ViewZ(end, 2)).'];
 end
 if isfield(OptionZ, 'Periodic') && OptionZ.Periodic
-    ViewZ = ViewZ(1:(end -1), :); %remove last sample
+    ViewZ = ViewZ(1:(end -1), :); % remove last sample
 end
 open(daObj);
 for kathy = 1:size(ViewZ, 1)
     view(ViewZ(kathy, :));
     drawnow;
-    writeVideo(daObj, getframe(gcf)); %use figure, since axis changes size based on view
+    writeVideo(daObj, getframe(gcf)); % use figure, since axis changes size based on view
 end
 close(daObj);
 end

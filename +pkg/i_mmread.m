@@ -61,15 +61,15 @@ if (~strcmp(head1, 'matrix'))
 
     % Read through comments, ignoring them
 
-    commentline = fgets(mmfile);
-    while ~isempty(commentline) && commentline(1) == '%'
+commentline = fgets(mmfile);
+while ~isempty(commentline) && commentline(1) == '%'
         commentline = fgets(mmfile);
     end
 
     % Read size information, then branch according to
     % sparse or dense format
 
-    if (strcmp(rep, 'coordinate')) %  read matrix given in sparse
+if (strcmp(rep, 'coordinate')) %  read matrix given in sparse
         %  coordinate matrix format
 
         [sizeinfo, count] = sscanf(commentline, '%d%d%d');

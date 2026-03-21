@@ -1,17 +1,17 @@
 function [X, genelist, celllist, ftdone] = sc_readparsebio(selpath, ~)
-    % SC_READPARSEBIO  Read ParseBio matrix + feature + cell metadata
-    %
-    %   [X, genelist, celllist, ftdone] = sc_readparsebio(selpath)
-    %
-    %   Inputs:
-    %     selpath : directory containing DGE.mtx and optional metadata files
-    %     ~       : unused second argument
-    %
-    %   Outputs:
-    %     X        : cells × genes count matrix (uint16, sparse-friendly)
-    %     genelist : cell array of gene names (string)
-    %     celllist : cell array of cell barcodes (string)
-    %     ftdone   : true if feature file was processed
+% SC_READPARSEBIO  Read ParseBio matrix + feature + cell metadata
+%
+%   [X, genelist, celllist, ftdone] = sc_readparsebio(selpath)
+%
+%   Inputs:
+%     selpath : directory containing DGE.mtx and optional metadata files
+%     ~       : unused second argument
+%
+%   Outputs:
+%     X        : cells x genes count matrix (uint16, sparse-friendly)
+%     genelist : cell array of gene names (string)
+%     celllist : cell array of cell barcodes (string)
+%     ftdone   : true if feature file was processed
 
 if nargin < 2, coln = 2; end
 if nargin < 1, selpath = uigetdir; end
@@ -79,7 +79,6 @@ if ~exist(bcfname, 'file')
         gunzip(zbcfname);
     end
 end
-
 
 if ~exist(mmfname, 'file'), error('No matrix file'); end
 if ~exist(ftfname, 'file'), error('No feature file'); end

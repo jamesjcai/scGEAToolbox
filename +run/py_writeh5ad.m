@@ -46,7 +46,7 @@ tmpfilelist = {'X.mat', 'g.csv', 'c.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 if issparse(sce.X)
-    X = single(full(sce.X));         
+    X = single(full(sce.X));
 else
     X = single(sce.X);
 end

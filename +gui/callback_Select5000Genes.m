@@ -17,15 +17,15 @@ if isempty(spciestag), return; end
 
 
 prompt = {'Remove Mt-Genes (MT-ND1, MT-ND6, MT-CYB, MT-COI, MT-ATP6, etc.)?', ...
-    'Remove Hemoglobin Genes (HBA1, HBB, Hba-a1, etc.)?', ...
-    'Remove Genes With Name Contains ''orf'' or ''-AS'' (C22orf42, C21orf58, etc.)?', ...
-    'Remove Genes With Name Starts With ''LINC'' (LINC01426, LINC01694, etc.)?', ...
-    'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
-    'Remove Genes With Name Starts With ''Gm'' (Gm12768, Gm13305, etc.)?',...
-    'Remove Genes With Name Ends With ''Rik'' (0610005C13Rik, 0610007C21Ri, etc.)?',...
-    'Remove Genes Without Approved Symbols?', ...
-    'Remove Genes Expressed in Less Than m Cells (m = 0.075 or 0.050, 10 or 50)?', ...
-    'Keep Top n Highly Variable Genes (HVGs) (n = 5000 or 2000)?'};
+'Remove Hemoglobin Genes (HBA1, HBB, Hba-a1, etc.)?', ...
+'Remove Genes With Name Contains ''orf'' or ''-AS'' (C22orf42, C21orf58, etc.)?', ...
+'Remove Genes With Name Starts With ''LINC'' (LINC01426, LINC01694, etc.)?', ...
+'Remove Ribosomal Genes (RPSA, RPS2, RPS3, RPL3, RPL4, RPLP1, etc.)?', ...
+'Remove Genes With Name Starts With ''Gm'' (Gm12768, Gm13305, etc.)?',...
+'Remove Genes With Name Ends With ''Rik'' (0610005C13Rik, 0610007C21Ri, etc.)?',...
+'Remove Genes Without Approved Symbols?', ...
+'Remove Genes Expressed in Less Than m Cells (m = 0.075 or 0.050, 10 or 50)?', ...
+'Keep Top n Highly Variable Genes (HVGs) (n = 5000 or 2000)?'};
 dlgtitle = '';
 dims = [1, 80];
 
@@ -35,7 +35,7 @@ definput = {'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', '0.075', num
 if gui.i_isuifig(FigureHandle)
     answer = gui.myInputdlg(prompt, dlgtitle, definput, FigureHandle);
 else
-    answer = inputdlg(prompt, dlgtitle, dims, definput);    
+    answer = inputdlg(prompt, dlgtitle, dims, definput);
 end
 if isempty(answer)
     requirerefresh = false;
@@ -48,7 +48,7 @@ if sce.NumCells*sce.NumGenes < 4e8
     % disp('Ready for reversible.');
 else
     answer = gui.myQuestdlg(FigureHandle, 'You are about to change the SCE data. This cannot be undone.');
-    if ~strcmp(answer, 'Yes'), return; end        
+    if ~strcmp(answer, 'Yes'), return; end
     sceori = [];
 end
 
@@ -71,7 +71,7 @@ end
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
-    idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');    
+    idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');
     sce.X(idx, :) = [];
     sce.g(idx) = [];
     a2 = length(sce.g);
@@ -81,7 +81,7 @@ end
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
-    idx = startsWith(sce.g, 'LINC');    
+    idx = startsWith(sce.g, 'LINC');
     sce.X(idx, :) = [];
     sce.g(idx) = [];
     a2 = length(sce.g);
@@ -100,7 +100,7 @@ if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
     idx = find(~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]")));
     sce.X(idx, :) = [];
-    sce.g(idx) = [];    
+    sce.g(idx) = [];
     a2 = length(sce.g);
     fprintf('%d genes with name starts with ''Gm'' are found and removed.\n',a1-a2);
 end
@@ -109,7 +109,7 @@ end
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
-    idx = endsWith(sce.g, 'Rik');    
+    idx = endsWith(sce.g, 'Rik');
     sce.X(idx, :) = [];
     sce.g(idx) = [];
     a2 = length(sce.g);
@@ -131,7 +131,7 @@ if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     end
     ApprovedSymbol = string(T.GeneName);
     [idx] = ismember(upper(sce.g), upper(ApprovedSymbol));
-    a1 = length(sce.g);    
+    a1 = length(sce.g);
     sce.X(~idx, :) = [];
     sce.g(~idx) = [];
     a2 = length(sce.g);
@@ -161,7 +161,7 @@ try
     if ~all(y)
         gui.myErrordlg(FigureHandle, 'Runtime error.');
         return;
-    end    
+    end
     sce.X = sce.X(idx, :);
     sce.g = sce.g(idx);
  catch ME
@@ -171,11 +171,11 @@ try
  end
 
 try
-    %assignin("base", "c_before", sce.c);
-    %assignin("base", "numcells_before", sce.numcells);
+    % assignin("base", "c_before", sce.c);
+    % assignin("base", "numcells_before", sce.numcells);
     sce = sce.qcfilterwhitelist(1000, 0.15, 15, 500, []);
-    %assignin("base", "c_after", sce.c);
-    %assignin("base", "numcells_after", sce.numcells);
+    % assignin("base", "c_after", sce.c);
+    % assignin("base", "numcells_after", sce.numcells);
 catch ME
     gui.myWaitbar(FigureHandle, fw,true);
     gui.myWarndlg(FigureHandle, ME.message, ME.identifier);
@@ -187,8 +187,8 @@ gui.myWaitbar(FigureHandle, fw);
 newcn = sce.NumCells;
 newgn = sce.NumGenes;
 
-    if newgn==0
-        if ~isempty(sceori)            
+if newgn==0
+        if ~isempty(sceori)
             gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
             % requirerefresh = false;
             % sce = sceori;
@@ -198,8 +198,8 @@ newgn = sce.NumGenes;
         end
         return;
     end
-    if newcn==0
-        if ~isempty(sceori)            
+if newcn==0
+        if ~isempty(sceori)
             gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
             % requirerefresh = false;
             % sce = sceori;
@@ -209,12 +209,12 @@ newgn = sce.NumGenes;
         end
         return;
     end
-    if oldcn-newcn==0 && oldgn-newgn==0
+if oldcn-newcn==0 && oldgn-newgn==0
         gui.myHelpdlg(FigureHandle, "No cells and genes are removed.");
         % requirerefresh = false;
         return;
     end
-    if ~isempty(sceori)
+if ~isempty(sceori)
         answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
                 oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
                 {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
@@ -228,6 +228,6 @@ newgn = sce.NumGenes;
     else
         requirerefresh = true;
     end
-    gui.myGuidata(FigureHandle, sce, src);
+gui.myGuidata(FigureHandle, sce, src);
 
 end

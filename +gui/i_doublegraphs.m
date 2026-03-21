@@ -17,7 +17,7 @@ import ten.*
 %%
 mfolder = fileparts(mfilename('fullpath'));
 load(fullfile(mfolder, ...
-    '..', 'assets', 'TFome', 'tfome_tfgenes.mat'), 'tfgenes');
+'..', 'assets', 'TFome', 'tfome_tfgenes.mat'), 'tfgenes');
 
 w = 3;
 l = 1;
@@ -27,13 +27,13 @@ hFig = hx.FigHandle;
 set(0, 'CurrentFigure', hFig);
 
 tiledlayout(1, 2, 'TileSpacing', 'compact', ...
-    'Padding', 'compact')
+'Padding', 'compact')
 
-%h1=subplot(1,2,1);
+% h1=subplot(1,2,1);
 h1 = nexttile;
 [p1] = drawnetwork(G1, h1);
 
-%h2=subplot(1,2,2);
+% h2=subplot(1,2,2);
 h2 = nexttile;
 [p2] = drawnetwork(G2, h2);
 p2.XData = p1.XData;
@@ -49,16 +49,16 @@ hx.addCustomButton('off', @in_callback_ChangeCutoff, 'carpenter_16dp_000000_FILL
 hx.addCustomButton('off', @in_callback_SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & Save Data');
 hx.addCustomButton('on',  @in_callback_RefreshAll, "refresh.jpg", "Refresh View");
 
-%if exist('suptitle.m', 'file')
+% if exist('suptitle.m', 'file')
 %    hFig.Position(3) = hFig.Position(3) * 1.8;
 %    suptitle(figname);
-%else
-    hFig.Position(3) = hFig.Position(3) * 1.8;
-    if ~isempty(figname)
+% else
+hFig.Position(3) = hFig.Position(3) * 1.8;
+if ~isempty(figname)
         figname = strrep(figname, '_', '\_');
         sgtitle(figname);
     end
-%end
+% end
 
 hx.show(parentfig);
 
@@ -67,7 +67,7 @@ oldG2=[];
 axistrig = true;
 
 
-    function in_callback_RefreshAll(~, ~)
+function in_callback_RefreshAll(~, ~)
         if ~isempty(oldG1)
             G1 = oldG1;
         end
@@ -81,8 +81,7 @@ axistrig = true;
     end
 
 
-
-    function in_callback_SaveAdj(~, ~)
+function in_callback_SaveAdj(~, ~)
         if ~(ismcc || isdeployed)
             labels = {'Save adjacency matrix A1 to variable named:', ...
                 'Save adjacency matrix A2 to variable named:', ...
@@ -123,7 +122,7 @@ axistrig = true;
     %     end
     % end
 
-    function in_callback_ChangeFontSize(~, ~)
+function in_callback_ChangeFontSize(~, ~)
         i_changefontsize(p1);
         i_changefontsize(p2);
         function i_changefontsize(p)
@@ -135,26 +134,26 @@ axistrig = true;
         end
     end
 
-    function in_callback_ChangeWeight(~, ~)
-        %a=3:10;
-        %w=a(randi(length(a),1));
+function in_callback_ChangeWeight(~, ~)
+        % a=3:10;
+        % w=a(randi(length(a),1));
         w = w + 1;
         if w > 10, w = 2; end
         i_changeweight(p1, w);
         i_changeweight(p2, w);
         function i_changeweight(p, b)
-            %G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
-            %p.LineWidth = G.Edges.LWidths;
+            % G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
+            % p.LineWidth = G.Edges.LWidths;
             p.LineWidth = abs(b*p.LineWidth/max(abs(p.LineWidth)));
         end
     end
 
 
-    function in_callback_ChangeLayout(~, ~)
+function in_callback_ChangeLayout(~, ~)
         a = ["auto", "layered", "subspace", "force", "circle"];
         l = l + 1;
         if l > 5, l = 1; end
-        %disp(a(l))
+        % disp(a(l))
         switch a(l)
             case "force"
                 p1.layout(a(l), 'Iterations', 500, ...
@@ -163,25 +162,25 @@ axistrig = true;
                 %                p2.layout(a(l),'Iterations',500,...
                 %                 'WeightEffect','none',...
                 %                 'UseGravity',false);
-    
-                %p2.layout(a(l),'Iterations',2500,'UseGravity','direct');
+
+                % p2.layout(a(l),'Iterations',2500,'UseGravity','direct');
             otherwise
                 p1.layout(a(l));
                 % p2.layout(a(l));
         end
-    
+
         %        a=mean([p1.XData; p2.XData]);
         %        p1.XData=a; p2.XData=a;
         %        a=mean([p1.YData; p2.YData]);
         %        p1.YData=a; p2.YData=a;
-    
+
         p2.XData = p1.XData;
         p2.YData = p1.YData;
         p1.XData = p2.XData;
         p1.YData = p2.YData;
     end
 
-    function in_callback_ChangeDirected(~, ~)
+function in_callback_ChangeDirected(~, ~)
         a1 = h1.Title.String;
         a2 = h2.Title.String;
         [p1, G1] = i_changedirected(p1, G1, h1);
@@ -202,7 +201,7 @@ axistrig = true;
         end
     end
 
-    function in_callback_ChangeCutoff(~, ~)
+function in_callback_ChangeCutoff(~, ~)
         a1 = h1.Title.String;
         a2 = h2.Title.String;
         list = {'0.00 (show all edges)', ...
@@ -231,7 +230,7 @@ axistrig = true;
         h2.Title.String = a2;
     end
 
-    function [p] = drawnetwork(G, h)
+function [p] = drawnetwork(G, h)
         p = plot(h, G);
         % layout(p,'force');
         %         if isa(G,'digraph')
@@ -253,7 +252,7 @@ axistrig = true;
             % p.NodeLabelColor=cc;
         end
         p.NodeFontSize = 2 * p.NodeFontSize;
-        %title(h,'scGRN');
+        % title(h,'scGRN');
 
         %            if length(unique(p.LineWidth))==1
         %             p.LineWidth = p.LineWidth./p.LineWidth;
@@ -265,7 +264,7 @@ axistrig = true;
 
     end
 
-    function in_callback_AnimateCutoff(~, ~)
+function in_callback_AnimateCutoff(~, ~)
         listc = 0.05:0.05:0.95;
         % pkg.progressbar
         f = waitbar(0, 'Cutoff = 0.05', 'Name', 'Edge Pruning...', ...
@@ -279,17 +278,17 @@ axistrig = true;
             end
 
             cutoff = listc(k);
-            %pkg.progressbar(k/m) % Update progress bar
+            % pkg.progressbar(k/m) % Update progress bar
             waitbar(k/m, f, sprintf('Cutoff = %g', cutoff));
             p1 = i_replotg(p1, G1, h1, cutoff);
             p2 = i_replotg(p2, G2, h2, cutoff);
             pause(2);
         end
-        %close(f)
+        % close(f)
         delete(f)
     end
 
-    function [p, G] = i_replotg(p, G, h, cutoff)
+function [p, G] = i_replotg(p, G, h, cutoff)
         if ismember('Weight', G.Edges.Properties.VariableNames)
             if length(unique(G.Edges.Weight)) > 1
                 a = h.Title.String;
@@ -312,7 +311,6 @@ axistrig = true;
 
 
 end
-
 
 
         function h = WattsStrogatz(N, K, beta)
@@ -342,4 +340,3 @@ end
 
             h = graph(s, t);
         end
-

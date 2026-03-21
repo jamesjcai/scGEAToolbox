@@ -4,7 +4,7 @@ function callback_SelectCellsByMarker(src, ~)
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 answer1 = gui.myQuestdlg(FigureHandle, 'Use single or mulitple markers?', ...
-    'Single/Multiple Markers', {'Single', 'Multiple', 'Cancel'}, 'Single');
+'Single/Multiple Markers', {'Single', 'Multiple', 'Cancel'}, 'Single');
 switch answer1
     case 'Single'
         do_single;
@@ -14,7 +14,7 @@ switch answer1
         return;
 end
 
-    function do_multiple
+function do_multiple
         [glist] = gui.i_selectngenes(sce, [] , FigureHandle);
         if ~isempty(glist)
             [y, i] = ismember(upper(glist), upper(sce.g));
@@ -42,30 +42,30 @@ end
             fw = gui.myWaitbar(FigureHandle);
             scex = copy(sce).selectcells(idx);  % OK
 
-            %if isa(src, 'matlab.apps.AppBase')
+            % if isa(src, 'matlab.apps.AppBase')
                 a = scgeatoolApp(scex);
                 view(a.UIAxes, [ax, bx]);
-            %else
+            % else
             %    scgeatool(scex);
             %    view(ax, bx);
-            %end
+            % end
             gui.myWaitbar(FigureHandle, fw);
 
         end
     end
 
 
-    function do_single
+function do_single
         [gsorted] = gui.i_sortgenenames(sce, FigureHandle);
         if isempty(gsorted), return; end
 
-       if gui.i_isuifig(FigureHandle)            
+       if gui.i_isuifig(FigureHandle)
            [indx, tf] = gui.myListdlg(FigureHandle, gsorted, ...
                 'Select a gene');
         else
             [indx, tf] = listdlg('PromptString', {'Select a gene', '', ''}, ...
                 'SelectionMode', 'single', ...
-                'ListString', gsorted, 'ListSize', [220, 300]);            
+                'ListString', gsorted, 'ListSize', [220, 300]);
        end
         if tf == 1
             [ax, bx] = view(findall(FigureHandle,'type','axes'));
@@ -88,7 +88,7 @@ end
                 scex.c_batch_id(idx2) = sprintf('%s-', tg);
                 scex.c = scex.c_batch_id;
                 scgeatoolApp(scex);
-                return;                
+                return;
             elseif strcmp(answer, 'Cancel')
                 return;
             else

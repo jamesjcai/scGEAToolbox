@@ -2,7 +2,7 @@ function sc_uitabgrpfig_expplot(y, glist, s, parentfig, cazcel)
 
 if nargin < 5, cazcel = []; end
 if nargin < 4, parentfig = []; end
-% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure') 
+% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
 %     p = parentfig.Position;
 %     cx = [p(1)+p(3)/2 p(2)+p(4)/2];
 % end
@@ -15,7 +15,7 @@ import mlreportgen.ppt.*;
 % pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
 
-hx = gui.myFigure(parentfig);
+hx = gui.myFigure(parentfig, true);
 hFig = hx.FigHandle;
 hFig.Position(3) = hFig.Position(3) * 1.8;
 
@@ -39,7 +39,7 @@ for k = 1:n
     c = y{k};
     if issparse(c), c = full(c); end
     tab{k} = uitab(tabgp, 'Title', sprintf('%s', glist(k)));
-    
+
     %{
     t = tiledlayout(1,2,'Parent',tab{k});
     ax1 = nexttile;
@@ -47,7 +47,7 @@ for k = 1:n
     ax2 = nexttile;
     hpl{k,2} = scatter(s(:,1), s(:,2), 5, c, 'filled','Parent', ax2);
     %}
-    
+
     % ax0{k} = axes('parent',tab{k});
 
     ax{k, 1} = subplot(1, 2, 1,'Parent', tab{k});
@@ -70,13 +70,13 @@ for k = 1:n
 
     ax{k,2} = subplot(1, 2, 2,'Parent', tab{k});
     % ax{k,2}.Tag = sprintf('axes_tab%d_right', k);   % 👈 assign unique Tag
-    
+
 
         scatter(ax{k,2}, s(:,1), s(:,2), 5, c, 'filled');
         stem3(ax{k,2}, s(:,1), s(:,2), c, 'marker', 'none', 'color', 'm');
         hold(ax{k,2}, "on");
         scatter3(ax{k,2}, s(:,1), s(:,2), zeros(size(s(:,2))), 5, c, 'filled');
-        
+
         title(ax{k,2}, glist(k));
         subtitle(ax{k,2}, gui.i_getsubtitle(c));
 
@@ -89,7 +89,7 @@ for k = 1:n
         % disp('rotate3d enabled');
         % Register callbacks
         % hRotate.ActionPreCallback  = @(src,evnt) startDrag(hFig, evnt, ax{k,2});
-        
+
         %{
         ax = axes('Parent', tab{k});
         hold(ax, 'on');
@@ -100,7 +100,7 @@ for k = 1:n
         hold(ax2,'on')
         hpl{k,2} = scatter(s(:,1), s(:,2), 5, c, 'filled','Parent', ax2);
         %}
-    
+
         %{
         hax{k} = axes('Parent', tab{k});
         if size(s,2)>=3
@@ -111,14 +111,14 @@ for k = 1:n
         title(hax{k}, targetg(k));
         subtitle(hax{k}, gui.i_getsubtitle(c));
         %}
-    
+
 end
 dorotation = false;
 
 trackedAxes = [ax{:,1}, ax{:,2}];   % only the right ones, or ax(:) if you want all
 hRotate.ActionPostCallback = @(src,evnt) stopDrag(evnt, trackedAxes);
 % hRotate.ActionPostCallback = @(src,evnt) stopDrag(hFig, evnt);
-  
+
 tabgp.SelectionChangedFcn=@displaySelection;
 hx.addCustomButton('off', @in_genecards, 'www.jpg', 'GeneCards...');
 hx.addCustomButton('off', @in_savedata, "floppy-disk-arrow-in.jpg", 'Save Gene List...');
@@ -128,15 +128,15 @@ hx.addCustomButton('off', @in_colormap, 'www.jpg', 'Colormap...');
 hx.addCustomButton('off', @in_syncrotation, 'www.jpg', 'Synchronize rotation angle...');
 hx.show(parentfig)
 
-    function in_syncrotation(~, ~)
-        dorotation = ~dorotation;       
+function in_syncrotation(~, ~)
+        dorotation = ~dorotation;
     end
 
-    function in_colormap(~, ~)
+function in_colormap(~, ~)
         gui.callback_PickColorMap(hFig, length(unique(c)), true, true);
     end
 
-    function in_mergetabs(~, ~)
+function in_mergetabs(~, ~)
         figure;
         for kx = 1:n
             hAx2 = nexttile;
@@ -153,7 +153,7 @@ hx.show(parentfig)
 
     % function cloneAxes(hAx1, hAx2)
     %     copyobj(allchild(hAx1), hAx2);
-    % 
+    %
     %     props = {'XLim','YLim','ZLim','XScale','YScale','ZScale',...
     %              'XDir','YDir','ZDir','Colormap','CLim','View'};
     %     for kk = 1:numel(props)
@@ -162,27 +162,27 @@ hx.show(parentfig)
     %         catch
     %         end
     %     end
-    % 
+    %
     %     xlabel(hAx2, get(get(hAx1,'XLabel'),'String'));
     %     ylabel(hAx2, get(get(hAx1,'YLabel'),'String'));
     %     title(hAx2,  get(get(hAx1,'Title'),'String'));
     %     subtitle(hAx2,  get(get(hAx1,'Subtitle'),'String'));
-    % 
+    %
     %         gridProps = {'XGrid','YGrid','ZGrid', ...
     %          'XMinorGrid','YMinorGrid','ZMinorGrid', ...
     %          'Box'};
     %     for kk = 1:numel(gridProps)
     %         set(hAx2, gridProps{kk}, get(hAx1, gridProps{kk}));
     %     end
-    % 
+    %
     % end
-    
-    function in_savedata(~,~)
+
+function in_savedata(~,~)
         gui.i_exporttable(table(glist), true, ...
             'Tmarkerlist','MarkerListTable');
     end
 
-    function displaySelection(~,event)
+function displaySelection(~,event)
         t = event.NewValue;
         txt = t.Title;
         % disp("Viewing gene " + txt);
@@ -190,7 +190,7 @@ hx.show(parentfig)
         focalg = glist(idx);
     end
 
-    function in_genecards(~, ~)
+function in_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
     end
 
@@ -200,24 +200,24 @@ hx.show(parentfig)
     %         hFig.WindowButtonMotionFcn = @(src,~) duringDrag(targetAx);
     %     end
     % end
-    
+
 %  copyobj(allchild(axOld(j)), axNew);
 
 
-    function stopDrag(evnt, trackedAxes)
+function stopDrag(evnt, trackedAxes)
         if n < 2, return; end
         if ~dorotation, return; end
         thisAx = evnt.Axes;      % the axes that rotate3d thinks is active
-        idxa = find(cellfun(@(h) isequal(h,thisAx), num2cell(trackedAxes)));       
+        idxa = find(cellfun(@(h) isequal(h,thisAx), num2cell(trackedAxes)));
 
         if ~isempty(idxa)
             if idxa > n
                 tag = 'right';
                 idxa = idxa - n;
             else
-                tag = 'left';                
+                tag = 'left';
             end
-            
+
             % fprintf('Rotation stopped on subplot %s #%d\n', tag, idxa);
 
             % trackedAxes(idxa).Tag
@@ -228,7 +228,7 @@ hx.show(parentfig)
             assert(yy);
             [az, el] = view(ax{idxa, id});
             figure(hFig);
-            if ~strcmp('Yes', gui.myQuestdlg(hFig, sprintf("Apply the same rotation to all tabs (%s plot)?", ...
+            if ~strcmp('Yes', gui.myQuestdlg(hFig, sprintf("Apply the same rotation to all tabs (% s plot)?", ...
                     tag))), return; end
                for kx = 1:n
                    if kx == idxa, continue; end
@@ -238,7 +238,7 @@ hx.show(parentfig)
             disp('Rotation stopped on unknown axes (not in tracked list)');
         end
     end
-   
+
     % function duringDrag(ax)
     %     % Runs only while dragging on the chosen axes
     %     camPos = ax.CameraPosition;
@@ -246,6 +246,3 @@ hx.show(parentfig)
     % end
 
 end
-
-
-

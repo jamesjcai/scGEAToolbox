@@ -9,7 +9,6 @@ if ~isok, error(msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 
-
 if isa(X, 'SingleCellExperiment') && isnumeric(genelist)
     sce = X;
     ndim = genelist;
@@ -37,12 +36,12 @@ if exist('output.h5', 'file')
     s_tsne = h5read('output.h5', '/s_tsne');
     s_umap = h5read('output.h5', '/s_umap');
     c_ident = h5read('output.h5', '/c_ident');
-    %X = h5read('output.h5', '/X');
+    % X = h5read('output.h5', '/X');
     [c, ~] = findgroups(c_ident);
     sce.c_cluster_id = c;
     sce.struct_cell_clusterings.seurat = c_ident;
     sce.c = c;
-    %sce.X = X;
+    % sce.X = X;
 
     if ~isfield(sce.struct_cell_embeddings,'umap3d')
         sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings, 'umap3d', []);
@@ -56,7 +55,7 @@ if exist('output.h5', 'file')
     if ~isfield(sce.struct_cell_embeddings,'tsne2d')
         sce.struct_cell_embeddings = setfield(sce.struct_cell_embeddings, 'tsne2d', []);
     end
-    
+
 
     if size(s_umap,2) == 3
         sce.struct_cell_embeddings.umap3d = s_umap;
