@@ -11,26 +11,11 @@ if isempty(wrkdir)
     if isempty(wrkdir), return; end
 end
 
-% if ~gui.i_setwrkdir(preftagname), return; end
-% s = getpref('scgeatoolbox', preftagname);
-% s1 = sprintf('%s_workingfolder', extprogname);
-% wkdir = fullfile(s, s1);
-%
-% if ~exist(wkdir,"dir")
-%     mkdir(wkdir);
-% else
-%     answer = gui.myQuestdlg(FigureHandle, 'Directory existing. Overwrite?');
-%     if ~strcmp(answer,'Yes'), return; end
-% end
-%
-% fprintf('CURRENTWDIR = "%s"\n', wkdir);
-
 
 a = findall(FigureHandle, 'type', 'axes');
 h = findall(a, 'type', 'scatter');
 ptsSelected = logical(h.BrushData.');
 if ~any(ptsSelected)
-    % gui.myHelpdlg(FigureHandle, 'Please use the brush in the axes toolbar to select root cell(s).', '');
     answer = gui.myQuestdlg(FigureHandle, 'Use brush to select root cell(s). Ready?','');
     if ~strcmp(answer, 'Yes'), return; end
     b = brush(FigureHandle);
@@ -51,7 +36,6 @@ end
 idx = find(ptsSelected);
 if isempty(idx), gui.myWarndlg(FigureHandle, 'Root cell(s) is missing.'); return; end
 
-% [ndim] = gui.i_choose2d3d;
 ndim = 2;
 if isempty(ndim), return; end
 
@@ -66,10 +50,6 @@ switch answer
     otherwise
         return;
 end
-
-% [ok] = gui.i_confirmscript('Run Pseudotime Analysis (Monocle3)?', ...
-%    extprogname, 'r');
-% if ~ok, return; end
 
 fw = gui.myWaitbar(FigureHandle);
 try
@@ -101,6 +81,25 @@ gui.myGuidata(FigureHandle, sce, src);
 needupdatesce = true;
 
 gui.myHelpdlg(FigureHandle, 'Monocle3 pseudotime T and embedding S have been saved in SCE.');
+
+[y, idx] = ismember({'monocle3_pseudotime'}, sce.list_cell_attributes(1:2:end));
+if y
+    answer = gui.myQuestdlg(FigureHandle, ...
+        ['Color cells using pseudotime T and show' ...
+        ' Monocle3 embedding S?'], ...
+        '',{'Yes','Color cells only','Show embedding only'},'Yes');
+    switch answer
+        case 'Yes'
+            sce.c = sce.list_cell_attributes{idx*2};
+            sce.s = sce.struct_cell_embeddings.('monocle2d');
+        case 'Color cells only'
+            sce.c = sce.list_cell_attributes{idx*2};
+        case 'Show embedding only'
+            sce.s = sce.struct_cell_embeddings.('monocle2d');
+        otherwise
+    end
+    gui.myGuidata(FigureHandle, sce, src);
+end
 
 
 function in_checkselected(~, ~)

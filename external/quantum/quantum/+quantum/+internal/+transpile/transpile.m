@@ -15,7 +15,7 @@ function [qasms, finalMaps] = transpile(circuits, adj, basisMode)
 %   5 - {ecr, rz, sx, x}
 %   6 - {cz, rz, sx, x}
 %
-% Copyright 2025 The MathWorks, Inc.
+% Copyright 2024-2025 The MathWorks, Inc.
 
 % References:
 % [1] Fei Hua, Meng Wang, Gushu Li, Bo Peng, Chenxu Liu, Muqing Zheng,

@@ -37,16 +37,16 @@ function cg = mcxGate(controlQubits, targetQubit, ancillaQubits)
 %   See also quantumCircuit, quantum.gate.CompositeGate, compositeGate,
 %   qftGate
 
-%  Copyright 2022-2024 The MathWorks, Inc.
+%  Copyright 2022 The MathWorks, Inc.
 
 %  References:
 %  [1] Barenco et al., "Elementary gates for quantum computation."
 %  American Physical Society. Physical Review A, 52, 17-20, 1995.
 
 arguments
-    controlQubits {mustBeVector(controlQubits, 'allow-all-empties'), mustBeNumericOrLogical, mustBeInteger, mustBePositive}
-    targetQubit (1,1) {mustBeNumericOrLogical, mustBeInteger, mustBePositive}
-    ancillaQubits {mustBeVector(ancillaQubits, 'allow-all-empties'), mustBeNumericOrLogical, mustBeInteger, mustBePositive}
+    controlQubits {mustBeVector(controlQubits, 'allow-all-empties'), mustBeInteger, mustBePositive}
+    targetQubit (1,1) {mustBeInteger, mustBePositive}
+    ancillaQubits {mustBeVector(ancillaQubits, 'allow-all-empties'), mustBeInteger, mustBePositive}
 end
 
 qubits = [controlQubits(:); targetQubit(:); ancillaQubits(:)];

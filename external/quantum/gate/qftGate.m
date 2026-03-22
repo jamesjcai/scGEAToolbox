@@ -7,14 +7,14 @@ function cg = qftGate(targetQubits)
 %   See also quantumCircuit, quantum.gate.CompositeGate, compositeGate,
 %   mcxGate
 
-%  Copyright 2022-2024 The MathWorks, Inc.
+%  Copyright 2022 The MathWorks, Inc.
 
 %  References:
 %  [1] M. Nielsen and I. Chuang, "Quantum Computation and Quantum Information."
 %  Cambridge Series on Information and the Natural Sciences, 217-219, 2010.
 
 arguments
-    targetQubits {mustBeVector(targetQubits, 'allow-all-empties'), mustBeNumericOrLogical, mustBeInteger, mustBePositive}
+    targetQubits {mustBeVector(targetQubits, 'allow-all-empties'), mustBeInteger, mustBePositive}
 end
 
 if length(unique(targetQubits))~=length(targetQubits)

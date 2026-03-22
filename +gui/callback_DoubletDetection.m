@@ -1,16 +1,26 @@
-function [isDoublet, doubletscore, methodtag, done] = ...
-callback_DoubletDetection(src, ~)
+function [requirerefresh] = callback_DoubletDetection(src, ~)
 
-done = false;
-isDoublet = [];
-doubletscore = [];
-methodtag = [];
-
-% [ok] = gui.i_confirmscript('Run Detect Doublets (Scrublet)?', ...
-%    'py_scrublet', 'python');
-% if ~ok, return; end
+requirerefresh = false;
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
+
+if ~pkg.i_checkpython
+    gui.myWarndlg(FigureHandle, 'Python not installed.');
+    return;
+end
+if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]', FigureHandle)
+    return;
+end
+if numel(unique(sce.c_batch_id)) > 1
+    if ~strcmp(gui.myQuestdlg(FigureHandle, ...
+            ['"When working with data from multiple ' ...
+            'samples, run Scrublet on each sample ' ...
+            'separately." Your data contains multiple ' ...
+            'samples (cells with different c_batch_id). ' ...
+            'Continue?'],''), 'Yes')
+        return;
+    end
+end
 
 
 extprogname = 'py_scrublet';
@@ -20,34 +30,36 @@ if isempty(wkdir), return; end
 if ~gui.i_setpyenv([],[],FigureHandle), return; end
 
 
-% methodtag = 'scrublet';
-
-% methodtag=gui.myQuestdlg(FigureHandle, 'Which method?','',...
-%     'scrublet','doubletdetection','scrublet');
-
-% fw=gui.myWaitbar(FigureHandle);
-% try
-%     switch methodtag
-%         case 'scrublet'
+methodtag = 'scrublet';
 try
-
-[isDoublet, doubletscore] = run.py_scrublet_new(sce.X, wkdir);
-            %                 case 'doubletdetection'
-            %                     [isDoublet,doubletscore]=run.py_doubletdetection(sce.X);
-    %     otherwise
-    %         return;
-    % end
+    [isDoublet, doubletscore] = run.py_scrublet_new(sce.X, wkdir);
     if isempty(isDoublet) || isempty(doubletscore)
-        % gui.myWaitbar(FigureHandle, fw);
         gui.myErrordlg(FigureHandle, "Running Error.");
         return;
     end
 catch ME
-    % gui.myWaitbar(FigureHandle, fw);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-    rethrow(ME);
+    return;
 end
-% gui.myWaitbar(FigureHandle, fw);
-gui.myGuidata(FigureHandle, sce, src);
-done = true;
+
+if ~any(isDoublet)
+    gui.myHelpdlg(FigureHandle, 'No doublet detected.');
+    return;
+end
+
+if sce.NumCells == length(doubletscore)
+    tmpf_doubletdetection = figure('WindowStyle', 'modal');
+    gui.i_stemscatter(sce.s, doubletscore);
+    ax = gca;
+    zlabel(ax, 'Doublet Score');
+    title(ax, sprintf('Doublet Detection (%s)', methodtag))
+    if strcmp(gui.myQuestdlg(FigureHandle, ...
+            sprintf("Remove %d doublets?", sum(isDoublet))),'Yes')
+        close(tmpf_doubletdetection);
+        sce = sce.removecells(isDoublet);
+        gui.myGuidata(FigureHandle, sce, src);
+        gui.myHelpdlg(FigureHandle, 'Doublets deleted.');
+        requirerefresh = true;
+    end
+end
 end
