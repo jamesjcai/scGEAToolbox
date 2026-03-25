@@ -1,3 +1,5 @@
+%#exclude tensor
+%#exclude tucker_als
 function Xhat0 = do_td_tucker(XM0)
 T0 = tensor(XM0);
 M2 = tucker_als(T0, 5, 'printitn', 0);

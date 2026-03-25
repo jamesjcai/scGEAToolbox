@@ -5,9 +5,14 @@ import ten.*
 import pkg.*
 try
     ten.check_tensor_toolbox;
-catch ME
-    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-    return;
+catch
+    gui.i_installtensortoolbox(src);
+    try
+        ten.check_tensor_toolbox;
+    catch ME
+        gui.myErrordlg(FigureHandle, ME.message);
+        return;
+    end
 end
 
 if ~gui.gui_showrefinfo('scTenifoldNet [PMID:33336197]', FigureHandle), return; end

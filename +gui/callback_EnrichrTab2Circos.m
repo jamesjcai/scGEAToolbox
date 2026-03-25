@@ -161,7 +161,7 @@ df1 = table2array(df1);
 hx = gui.myFigure(FigureHandle);
 hx.addCustomButton('on', @in_callback_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
 
-CC = gui.chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
+CC = gui.i_chordChart(df1,'Arrow','off','rowName',terms,'colName',allg);
 CC = CC.draw();
 CC.setFont('FontName','Arial','FontSize',10)
 CC.labelRotate('on');

@@ -6,9 +6,14 @@ if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]', ...
 
 try
     ten.check_tensor_toolbox;
-catch ME
-    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-    return;
+catch
+    gui.i_installtensortoolbox(src);
+    try
+        ten.check_tensor_toolbox;
+    catch ME
+        gui.myErrordlg(FigureHandle, ME.message);
+        return;
+    end
 end
 
 extprogname = 'scTenifoldKnk';

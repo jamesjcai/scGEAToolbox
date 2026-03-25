@@ -134,7 +134,7 @@ switch answer
                     fx   = gui.myFigure(FigureHandle);
                     fig2 = fx.FigHandle;
                     ax2  = fx.AxHandle;
-                    gui.copyUIAxesToFigure(UIAxes, ax2);
+                    gui.i_copyUIAxesToFigure(UIAxes, ax2);
                     fx.show(FigureHandle);
                     fig2.WindowStyle = "modal";
                     hold(ax2, "on");

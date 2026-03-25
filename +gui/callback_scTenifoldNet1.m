@@ -4,9 +4,14 @@ function callback_scTenifoldNet1(src, events)
 import ten.*
 try
     ten.check_tensor_toolbox;
-catch ME
-    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-    return;
+catch
+    gui.i_installtensortoolbox(src);
+    try
+        ten.check_tensor_toolbox;
+    catch ME
+        gui.myErrordlg(FigureHandle, ME.message);
+        return;
+    end
 end
 
 extprogname = 'scTenifoldNet';

@@ -38,17 +38,17 @@ box(ax3, "on");
 % end
 
 subplot(1, 3, 1)
-gui.violinplot(nftr, [], 'showdata', false);
+gui.i_violinplot_base(nftr, [], 'showdata', false);
 title(sprintf('nFeature\\_RNA\n(# of genes)'));
 box on;
 
 subplot(1, 3, 2)
-gui.violinplot(lbsz, [], 'showdata', false);
+gui.i_violinplot_base(lbsz, [], 'showdata', false);
 title(sprintf('nCount\\_RNA\n(# of reads)'));
 box on;
 
 subplot(1, 3, 3)
-gui.violinplot(cj, [], 'showdata', false);
+gui.i_violinplot_base(cj, [], 'showdata', false);
 title(sprintf('percent.mt\n(mitochondrial content)'));
 box on;
 

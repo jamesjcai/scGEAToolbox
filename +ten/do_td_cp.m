@@ -1,3 +1,5 @@
+%#exclude tensor
+%#exclude cp_als
 function Xhat0 = do_td_cp(XM0)
 
 T0 = tensor(XM0);
