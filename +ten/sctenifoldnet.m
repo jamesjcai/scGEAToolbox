@@ -56,8 +56,8 @@ end
 if exist('tensor.m', 'file') ~= 2
     error('Need tensor_toolbox');
 end
-if exist('sc_pcnet.m', 'file') ~= 2
-    error('Need sc_pcnet.m in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
+if exist('net.pcrnet', 'file') ~= 2
+    error('Need net.pcrnet in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
 end
 
 validg = ~ismember(upper(genelist), upper(pkg.i_get_ribosomalgenes));

@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.2.4 25-Mar-2026
+% Version 26.2.5 27-Mar-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -14,6 +14,7 @@
 %   sc_filterg                - cutoff < 1:  interpreted as minimum non-zero fraction (dropout-rate mode)
 %   sc_genestat               - SC_GENESTAT  Compute per-gene statistics and optionally filter invalid values
 %   sc_genestats              - SC_GENESTATS  Compute per-gene statistics into a tidy table
+%   sc_grn                    - SC_GRN Construct single-cell gene regulatory network (scGRN)
 %   sc_grnview                - SC_GRNVIEW  Display a gene regulatory network as a graph GUI.
 %   sc_grnview2               - SC_GRNVIEW2  Display two gene regulatory networks side-by-side.
 %   sc_hvg                    - Identify HVGs

@@ -143,7 +143,7 @@ if ~useexist
     fw = gui.myWaitbar(parentfig);
     gui.myWaitbar(parentfig, fw, false, [], 'Step 1 of 3: Building pcnet_Source network...');
     disp('Building pcnet_Source network...');
-    A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
+    A1 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype1));
     A1 = A1 ./ max(abs(A1(:)));
     A = ten.e_filtadjc(A1, 0.75, false);
     save('pcnet_Source.mat', 'A', '-v7.3');
@@ -153,7 +153,7 @@ end
 if ~useexist
     gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet_Target network...');
     disp('Building pcnet_Target network...')
-    A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
+    A2 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype2));
     A2 = A2 ./ max(abs(A2(:)));
     A = ten.e_filtadjc(A2, 0.75, false);
     save('pcnet_Target.mat', 'A', '-v7.3');

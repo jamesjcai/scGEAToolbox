@@ -6,8 +6,8 @@ if ~isrow(y), y = y.'; end
 
 data = [X; y];
 if isempty(R0)
-    R0 = qtm.MI_construction(data);
-    % R0 = MI_block_construction(data);
+    R0 = net.minet(data);
+    % R0 = net.minet_block(data);
 end
 
 % fprintf("Looking for %d genes \n", k);

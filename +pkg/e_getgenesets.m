@@ -25,11 +25,11 @@ switch option
 
         if ~isloaded
             setnames = string(fields(Col));
-            glist=[];
+            gcell = cell(length(setnames), 1);
             for k=1:length(setnames)
-                glist=[glist;Col.(setnames{k}).geneSymbols];
+                gcell{k} = Col.(setnames{k}).geneSymbols;
             end
-            glist=unique(glist);
+            glist = unique(vertcat(gcell{:}));
             setgenes=glist(strlength(glist)>0);
             setmatrx=false(length(setnames),length(setgenes));
             for k=1:length(setnames)
@@ -54,12 +54,11 @@ switch option
         setgenes=string(gnlist);
     case {3,'Predefined'}
         [~, T] = pkg.e_cellscores([], [], 0);
-        glist=[];
+        gcell2 = cell(height(T), 1);
         for k=1:height(T)
-            tgsPos = unique(strsplit(string(T.PositiveMarkers(k)), ','));
-            glist=[glist;tgsPos'];
+            gcell2{k} = unique(strsplit(string(T.PositiveMarkers(k)), ','))';
         end
-        glist=unique(glist);
+        glist = unique(vertcat(gcell2{:}));
         setgenes=glist(strlength(glist)>0);
         setnames=string(T.ScoreType);
         setmatrx=false(length(setnames),length(setgenes));

@@ -13,48 +13,36 @@ if isempty(glist), return; end
 if ~all(y), error('Selected gene(s) not in the gene list of data.'); end
 fprintf("% s\n", glist)
 
-switch gui.myQuestdlg(FigureHandle, "Select algorithm:",'',...
-        {'PC Regression','Chaterjee Correlation'},'PC Regression')
-    case 'PC Regression'
-        [Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);
-        if isempty(Xt), return; end
+methods = {'PCR (PC Regression)', ...
+           'Chatterjee Xi Correlation', ...
+           'Pearson Correlation', ...
+           'Distance Correlation', ...
+           'Mutual Information', ...
+           'GENIE3 (Random Forest)'};
+methodkeys = {'pcrnet', 'xicor', 'pearson', 'distcorr', 'mi', 'genie3'};
 
-        x1 = Xt(i, i1);
-        x2 = Xt(i, i2);
+[sel, ok] = gui.myListdlg(FigureHandle, methods, ...
+    'Select GRN construction method', 1, false);
+if ~ok, return; end
+methodkey = methodkeys{sel};
 
-        fw = gui.myWaitbar(FigureHandle);
-        A1 = sc_pcnet(x1, 3, false, true, false);
-        A2 = sc_pcnet(x2, 3, false, true, false);
-        gui.myWaitbar(FigureHandle, fw);
-    case 'Chaterjee Correlation'
-        [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
-        if isempty(Xt), return; end
+[Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);
+if isempty(Xt), return; end
 
-        x1 = Xt(i, i1);
-        x2 = Xt(i, i2);
+x1 = Xt(i, i1);
+x2 = Xt(i, i2);
 
-        fw = gui.myWaitbar(FigureHandle);
-        n1 = size(x1,1);
-        A1 = zeros(n1);
-        n2 = size(x2,1);
-        A2 = zeros(n2);
-        for k=1:n1
-            gui.myWaitbar(FigureHandle, fw, false, '', '',k/n1);
-            for l=1:n1
-                if k~=l
-                    A1(k,l) = pkg.e_xicor(x1(k,:),x1(l,:));
-                end
-            end
-            for l=1:n2
-                if k~=l
-                    A2(k,l) = pkg.e_xicor(x2(k,:),x2(l,:));
-                end
-            end
-        end
-        gui.myWaitbar(FigureHandle, fw);
-    otherwise
-        return;
+fw = gui.myWaitbar(FigureHandle);
+try
+    A1 = sc_grn(x1, methodkey);
+    A2 = sc_grn(x2, methodkey);
+catch ME
+    gui.myWaitbar(FigureHandle, fw);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
 end
+gui.myWaitbar(FigureHandle, fw);
+
 drawnow;
 stitle = sprintf('%s vs. %s', cL1{1}, cL2{1});
 try

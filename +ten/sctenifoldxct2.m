@@ -117,7 +117,7 @@ end
 end
 
 function A = i_buildgrn(X)
-A = sc_pcnetpar(X);
+A = net.pcrnet(X);
 A = A ./ max(abs(A(:)));
 A = ten.e_filtadjc(A, 0.75, false);
 end

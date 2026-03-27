@@ -49,15 +49,7 @@ tgsPos = upper(tgsPos);
 idx1 = matches(genelist, tgsPos, 'IgnoreCase', true);
 n1 = sum(idx1);
 
-if issparse(X)
-    try
-        X = full(X);
-    catch
-        warning('Could not convert sparse matrix to full. Proceeding with sparse.');
-    end
-end
-
-R = tiedrank(-X);
+R = tiedrank(-full(X));
 R(R > 1500) = 1500 + 1;
 u = sum(R(idx1, :)) - (n1 * (n1 - 1)) / 2;
 score = 1 - u / (n1 * 1500);
@@ -115,12 +107,11 @@ end
 idx = matches(gsorted, tgs, 'IgnoreCase', true);
 selected_bins = unique(assigned_bin(idx));
 samebin_genes = gsorted(ismember(assigned_bin, selected_bins));
-ctrl_use = [];
+ctrl_cell = cell(length(tgs), 1);
 for i = 1:length(tgs)
-    ctrl_use = [ctrl_use; ...
-        randsample(samebin_genes, ctrl)];
+    ctrl_cell{i} = randsample(samebin_genes, ctrl);
 end
-ctrl_use = unique(ctrl_use);
+ctrl_use = unique(vertcat(ctrl_cell{:}));
 
 ctrl_score = mean(Xsorted(matches(gsorted, ctrl_use, 'IgnoreCase', true), :), 1);
 features_score = mean(Xsorted(idx, :), 1);
@@ -151,16 +142,12 @@ if isempty(geneIndices)
     return;
 end
 
-% Create rankings for each cell (rank by descending expression)
-rankings = zeros(nGenes, nCells);
-for i = 1:nCells
-    [~, rankings(:,i)] = sort(X(:,i), 'descend');
-end
-
-% Calculate AUC for each cell
+% Rank and score each cell without storing full rankings matrix
+if issparse(X), X = full(X); end
 score = zeros(nCells, 1);
 for cellIdx = 1:nCells
-    score(cellIdx) = i_aucell_auc(rankings(:, cellIdx), geneIndices, aucMaxRank);
+    [~, ranking] = sort(X(:, cellIdx), 'descend');
+    score(cellIdx) = i_aucell_auc(ranking, geneIndices, aucMaxRank);
 end
 end
 

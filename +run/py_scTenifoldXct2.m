@@ -234,7 +234,7 @@ function in_prepareX(sce, id)
 
 function in_prepareA(sce, id)
         disp('Building A1 network...')
-        A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
+        A1 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype1));
         disp('A1 network built.')
         A1 = A1 ./ max(abs(A1(:)));
         % A=0.5*(A1+A1.');
@@ -242,7 +242,7 @@ function in_prepareA(sce, id)
         save(sprintf('%d/pcnet_Source.mat', id), 'A', '-v7.3');
 
         disp('Building A2 network...');
-        A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
+        A2 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype2));
         disp('A2 network built.');
         A2 = A2 ./ max(abs(A2(:)));
         % A=0.5*(A2+A2.');
@@ -258,7 +258,7 @@ function in_prepareA(sce, id)
     %             A1 = A;
     %         else
     %             disp('Building A1 network...')
-    %             A1 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype1));
+    %             A1 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype1));
     %             disp('A1 network built.')
     %         end
     %     else
@@ -276,7 +276,7 @@ function in_prepareA(sce, id)
     %             A2 = A;
     %         else
     %             disp('Building A2 network...');
-    %             A2 = sc_pcnetpar(sce.X(:, sce.c_cell_type_tx == celltype2));
+    %             A2 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype2));
     %             disp('A2 network built.');
     %         end
     %     else

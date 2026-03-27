@@ -39,16 +39,12 @@ switch answer
     end
 
 try
-        disp('>> [A]=sc_pcnet(sce.X);');
+        disp('>> [A]=net.pcrnet(sce.X);');
         X = sc_norm(sce.X);
         X = log1p(X);
-        if useparallel
-            fw = gui.myWaitbar(FigureHandle);
-            [A] = sc_pcnetpar(X);
-            gui.myWaitbar(FigureHandle, fw);
-        else
-            [A] = sc_pcnet(X, 3, false, false, true);
-        end
+        fw = gui.myWaitbar(FigureHandle);
+        [A] = net.pcrnet(X, 3, true, true, useparallel, ~useparallel);
+        gui.myWaitbar(FigureHandle, fw);
     catch ME
         if useparallel
             gui.myWaitbar(FigureHandle, fw, true);

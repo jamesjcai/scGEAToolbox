@@ -94,12 +94,12 @@ end
 
 % ── 3. Build GRNs ────────────────────────────────────────────────────────
 if verbose, fprintf('[sctenifoldxct] Building GRN: %s ...\n', celltype1); end
-A_s = sc_pcnetpar(X_s);
+A_s = net.pcrnet(X_s);
 A_s = A_s ./ max(abs(A_s(:)));
 A_s = ten.e_filtadjc(A_s, 0.75, false);   % dense, thresholded
 
 if verbose, fprintf('[sctenifoldxct] Building GRN: %s ...\n', celltype2); end
-A_t = sc_pcnetpar(X_t);
+A_t = net.pcrnet(X_t);
 A_t = A_t ./ max(abs(A_t(:)));
 A_t = ten.e_filtadjc(A_t, 0.75, false);
 

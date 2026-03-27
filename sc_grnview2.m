@@ -9,8 +9,8 @@ function sc_grnview2(A1, A2, nodenames, figname, parentfig)
 if nargin < 5, parentfig = []; end
 if nargin < 4, figname = ''; end
 if nargin < 3, error('USAGE: sc_grnview2(A1,A2,g)'); end
-G1 = pkg.i_makegraph(A1, nodenames);
-G2 = pkg.i_makegraph(A2, nodenames);
+G1 = net.i_makegraph(A1, nodenames);
+G2 = net.i_makegraph(A2, nodenames);
 gui.i_doublegraphs(G1, G2, figname, parentfig);
 end
 
@@ -49,12 +49,12 @@ function sc_grnview2(A1, A2, nodenames, figname, parentfig)
     if isa(A1, 'digraph') || isa(A1, 'graph')
         G1 = A1;
     else
-        G1 = pkg.i_makegraph(A1, nodenames);
+        G1 = net.i_makegraph(A1, nodenames);
     end
     if isa(A2, 'digraph') || isa(A2, 'graph')
         G2 = A2;
     else
-        G2 = pkg.i_makegraph(A2, nodenames);
+        G2 = net.i_makegraph(A2, nodenames);
     end
 
     % Set default figure name if none given

@@ -34,24 +34,21 @@ end
 
 if nargout > 0 || plotit
     N = size(s, 1);
-    A = zeros(N, N);
+    nk = size(Graph, 1);  % k+1
+    % Build sparse adjacency directly from triplets
+    ri = repmat(1:N, nk, 1);
+    ri = ri(:);
+    ci = Graph(:);
+    A = sparse([ri; ci], [ci; ri], 1, N, N);
+    A = A > 0;  % deduplicate
+    A = A - diag(diag(A));  % remove self-loops
     if nargout > 1
-        W = zeros(N, N);
+        diffs = s(ri, :) - s(ci, :);
+        dists = sqrt(sum(diffs .* diffs, 2));
+        W = sparse([ri; ci], [ci; ri], [dists; dists], N, N);
+        W = max(W, W');
+        W = W - diag(diag(W));
     end
-    for i = 1:size(Graph, 2)
-        for j = 1:size(Graph, 1) % k+1
-            A(i, Graph(j, i)) = 1;
-            A(Graph(j, i), i) = 1;
-            if nargout > 1
-                w = norm(s(i, :) - s(Graph(j, i), :));
-                W(i, Graph(j, i)) = w;
-                W(Graph(j, i), i) = w;
-            end
-        end
-    end
-    % G=0.5*(G+G');
-    A = A - diag(diag(A));
-    A = sparse(A);
 end
 
 if ~plotit, return; end

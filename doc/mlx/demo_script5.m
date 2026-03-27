@@ -63,7 +63,7 @@ end
 
 X50=X(1:50,:);
 genelist50=genelist(1:50);
-A=sc_pcnet(X50);
+A=sc_grn(X50, 'pcnet');
 
 % Plot constructed network
 %

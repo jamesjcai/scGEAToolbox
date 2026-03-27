@@ -44,8 +44,8 @@ if ~strcmpi(answer, 'Yes'), return; end
 tmpmat = tempname;
 fw = gui.myWaitbar(FigureHandle);
 try
-        disp('>> [A]=ten.sc_pcnetdenoised(sce.X,''savegrn'',false);');
-        [A] = ten.sc_pcnetdenoised(sce.X, 'savegrn', false);
+        disp('>> [A]=net.pcrnet_denoised(sce.X,''savegrn'',false);');
+        [A] = net.pcrnet_denoised(sce.X, 'savegrn', false);
     catch ME
         gui.myWaitbar(FigureHandle, fw);
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);

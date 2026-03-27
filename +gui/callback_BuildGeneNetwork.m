@@ -8,39 +8,32 @@ if isempty(glist), return; end
 if ~all(y), error('Runtime error.'); end
 fprintf("% s\n", glist)
 
+methods = {'PCR (PC Regression)', ...
+           'Chatterjee Xi Correlation', ...
+           'Pearson Correlation', ...
+           'Distance Correlation', ...
+           'Mutual Information', ...
+           'GENIE3 (Random Forest)'};
+methodkeys = {'pcrnet', 'xicor', 'pearson', 'distcorr', 'mi', 'genie3'};
 
-switch gui.myQuestdlg(FigureHandle, 'Select algorithm:','',...
-        {'PC Regression','Chaterjee Correlation'},'PC Regression')
-    case 'PC Regression'
-        [Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);
-        if isempty(Xt), return; end
+[sel, ok] = gui.myListdlg(FigureHandle, methods, ...
+    'Select GRN construction method', 1, false);
+if ~ok, return; end
+methodkey = methodkeys{sel};
 
-        x = Xt(i, :);
+[Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);
+if isempty(Xt), return; end
+x = Xt(i, :);
 
-        fw = gui.myWaitbar(FigureHandle);
-        A = sc_pcnet(x);
-        gui.myWaitbar(FigureHandle, fw);
-    case 'Chaterjee Correlation'
-        [Xt] = gui.i_transformx(sce.X, true, 3, FigureHandle);
-        if isempty(Xt), return; end
-
-        x = Xt(i, :);
-
-        fw = gui.myWaitbar(FigureHandle);
-        n = size(x,1);
-        A = zeros(n);
-        for k=1:n
-            gui.myWaitbar(FigureHandle, fw, false, '', '', k/n);
-            for l=1:n
-                if k~=l
-                    A(k,l) = pkg.e_xicor(x(k,:),x(l,:));
-                end
-            end
-        end
-        gui.myWaitbar(FigureHandle, fw);
-    otherwise
-        return;
+fw = gui.myWaitbar(FigureHandle);
+try
+    A = sc_grn(x, methodkey);
+catch ME
+    gui.myWaitbar(FigureHandle, fw);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
 end
+gui.myWaitbar(FigureHandle, fw);
 
 cannotview = false;
 cannotsave = false;
@@ -52,7 +45,7 @@ catch ME
 end
 if cannotview
     try
-        G = pkg.i_makegraph(A, glist);
+        G = net.i_makegraph(A, glist);
         if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Save network?'))
             if gui.i_isuifig(FigureHandle)
                 [file, path] = uiputfile(FigureHandle, {'*.mat'; '*.*'}, ...

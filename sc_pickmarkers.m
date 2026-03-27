@@ -64,25 +64,23 @@ idx = idv == id;
 
 x1 = X(:, idx);
 x0 = X(:, ~idx);
-% A=[];
 T = i_sc_deg(x0, x1, genelist);
-A = T.z_val;
 totn = sum(~idx);
+A = zeros(size(X, 1), K);  % preallocate: col 1 = all-vs-rest, cols 2..K = per-group
+A(:, 1) = T.z_val;
+col = 1;
 for k = 1:K
     if k ~= id
         fprintf('Comparing group #%d with group #%d (out of %d)\n', ...
             id, k, K - 1);
         x0 = X(:, idv == k);
         T = i_sc_deg(x0, x1, genelist);
-        % a=-log(T.p_val).*sign(T.avg_logFC);
-
-        w = sum(idv == k) ./ totn; % weight by number of cells
-        a = w * T.z_val;
-        % a=T.z_val;
-
-        A = [A, a];
+        w = sum(idv == k) ./ totn;
+        col = col + 1;
+        A(:, col) = w * T.z_val;
     end
 end
+A = A(:, 1:col);
 % [~,idx]=sort(sum(A,2));
 % A(isnan(A))=0;
 % [~,idx]=sort(vecnorm(A,2,2),'descend');  % NaN messed up

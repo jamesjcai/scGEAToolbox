@@ -83,7 +83,7 @@ function in_RefreshAll(~, ~)
 
 function SendToGephiLite(~, ~)
         fw = gui.myWaitbar(hFig);
-        fname = pkg.e_m2gexf(G1);
+        fname = net.e_m2gexf(G1);
         gui.myWaitbar(hFig, fw);
         [status, cmdout] = system(sprintf('curl -s -F "reqtype=fileupload" -F "fileToUpload=@%s" https://catbox.moe/user/api.php', fname));
         if status ~= 0 || ~startsWith(strtrim(cmdout), 'http')
@@ -135,7 +135,7 @@ function SaveAdj(~, ~)
                     return;
                 else
                     filename = fullfile(path, file);
-                    pkg.e_m2cyto(G1, filename);
+                    net.e_m2cyto(G1, filename);
                 end
             otherwise
                 return;
