@@ -41,62 +41,14 @@ end
 
 fw = gui.myWaitbar(FigureHandle);
 
-[~, ix, iy]=intersect(upper(setgenes), ...
-                    upper(sce.g)); % ,'stable');
-setgenes=setgenes(ix);
-setmatrx=setmatrx(:,ix);      % s x g
-
 sceX = log1p(sc_norm(sce.X));
-X = sceX(iy,:);              % g x c
+T = sc_dpg(sceX(:,i1), sceX(:,i2), sce.g, setmatrx, setnames, setgenes);
 
+[~, ix, iy] = intersect(upper(setgenes), upper(sce.g));
+setgenes = setgenes(ix);
+setmatrx = setmatrx(:,ix);
 sce.X = sce.X(iy,:);
 sce.g = sce.g(iy);
-
-Z = setmatrx*X;               % s x c
-gsetsize = sum(setmatrx,2);   % gene number per set
-
-p_val = ones(size(Z,1),1);
-avg_log2FC = nan(size(Z,1),1);
-v1 = nan(size(Z,1),1);
-v2 = nan(size(Z,1),1);
-n1 = nan(size(Z,1),1);
-n2 = nan(size(Z,1),1);
-m1 = nan(size(Z,1),1);
-m2 = nan(size(Z,1),1);
-
-% warning off
-for k = 1:size(Z,1)
-    if any(setmatrx(k,:))
-        a = Z(k,i1);
-        b = Z(k,i2);
-        p_val(k) = ranksum(a,b);
-        if ~isnan(p_val(k)) && p_val(k)<1e-3
-            % [ax]=nbinfit(a);
-            % [bx]=nbinfit(b);
-            [ax] = mean(a);
-            [bx] = mean(b);
-            avg_log2FC(k) = log2(ax(1)./bx(1));
-            v1(k) = ax(1);
-            v2(k) = bx(1);
-            n1(k) = numel(a);
-            n2(k) = numel(b);
-            m1(k) = sum(a>0);
-            m2(k) = sum(b>0);
-        end
-    end
-end
-% warning on
-if exist('mafdr.m', 'file')
-    p_val_adj = mafdr(p_val, 'BHFDR', true);
-else
-    [~, ~, ~, p_val_adj] = pkg.e_fdr_bh(p_val);
-end
-
-T = table(setnames, gsetsize, v1, v2, avg_log2FC, m1, n1, ...
-m2, n2, p_val, p_val_adj);
-T(isnan(T.p_val)|isnan(T.avg_log2FC)|abs(T.avg_log2FC)<1,:)=[];
-T = sortrows(T, 'p_val_adj', 'ascend');
-T = T(T.p_val_adj<0.01 & T.gsetsize>=5,:);
 
 gui.myWaitbar(FigureHandle, fw);
 

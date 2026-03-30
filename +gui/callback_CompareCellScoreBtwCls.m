@@ -222,54 +222,9 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
                         ttxt{k} = T.ScoreType(indx2(k));
                     end
                     gui.myWaitbar(FigureHandle, fw);
-                case {'TF Activity Score [PMID:33135076] 🐢', ...
-                      'DoRothEA TF Targets'}
-                    [T] = pkg.e_gettflist(speciestag);
-                    listitems = unique(T.tf);
-                    if gui.i_isuifig(FigureHandle)
-                        [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
-                            'Select a transcription factor (TF):');
-                    else
-                        [indx2, tf2] = listdlg('PromptString', 'Select a transcription factor (TF)', ...
-                            'SelectionMode', 'single', 'ListString', ...
-                            listitems, 'ListSize', [220, 300]);
-                    end
-                    if tf2 ~= 1, return; end
-                    % species = gui.i_selectspecies(2);
-                    % if isempty(species), return; end
-
-                    methodid = 4;
-
-                    % if strcmp(selecteditem, 'DoRothEA TF Targets')
-                    %     methodid = 4;  % UCell method
-                    %     % disp('Using the UCell method...');
-                    % else
-                    %     methodid = 4;
-                    % end
-
-                    if methodid ~= 4, fw = gui.myWaitbar(FigureHandle); end
-                    try
-                        [cs, tflist] = sc_tfactivity(sce.X, sce.g, [], ...
-                            speciestag, methodid);
-                    catch ME
-                        if methodid ~= 4, gui.myWaitbar(FigureHandle, fw,true); end
-                        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-                        return;
-                    end
-                    idx = find(upper(tflist) == upper(string(listitems{indx2})));
-                    assert(isscalar(idx))
-
-                    [y] = cs(idx, :);
-                    ttxt = listitems{indx2};
-                    posg = [];
-                    if methodid ~= 4, gui.myWaitbar(FigureHandle, fw); end
-                    %         case 'TF Targets Expression Score 2'
-                    %                 species=gui.i_selectspecies(2, false, FigureHandle);
-                    %                 if isempty(species), return; end
-                    %                 [posg,ctselected]=gui.i_selectTFTargetSet(species);
-                    %                 [y]=gui.e_cellscore(sce,posg);
-                    %                 %ttxt=listitems{indx2};
-                    %                 ttxt = strcat(ctselected, ' activity');
+                % TF activity analysis has moved to Analyze > TF Activity Analysis
+                % (gui.callback_TFActivity), which provides a dedicated workflow
+                % with TF pre-selection and multi-TF display support.
 
                 otherwise
                     return;

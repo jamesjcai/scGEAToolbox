@@ -111,6 +111,21 @@ if any(contains(selected, 'Enrichr Analysis'))
 end
 
 if any(contains(selected, 'LLM Summarize'))
+    if ~ispref('scgeatoolbox', 'llapikeyenvfile') || ...
+            ~ispref('scgeatoolbox', 'llmodelprovider')
+        if strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
+                'LLM is not set up. Set it up now?'))
+            gui.i_setllmmodel(src);
+        end
+        if ~ispref('scgeatoolbox', 'llapikeyenvfile') || ...
+                ~ispref('scgeatoolbox', 'llmodelprovider')
+            gui.myWarndlg(FigureHandle, ...
+                'LLM Summarize skipped: LLM provider/model not configured.');
+            selected = selected(~contains(selected, 'LLM Summarize'));
+        end
+    end
+end
+if any(contains(selected, 'LLM Summarize'))
     gui.myWaitbar(FigureHandle, fw, false, '', 'LLM Summarize...', 2/3);
     try
         [TbpUpEnrichr, TmfUpEnrichr, ...

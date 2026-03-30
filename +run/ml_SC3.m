@@ -10,7 +10,7 @@ end
 if nargin < 2
     % [optimk]=fun_num_cluster(X,'type','simlr');
     % [optimk]=fun_num_cluster(X,'type','sc3');
-    [optimk] = pkg.ai_numclusters(X);
+    [optimk] = pkg.e_numclusters(X);
 else
     optimk = k;
 end

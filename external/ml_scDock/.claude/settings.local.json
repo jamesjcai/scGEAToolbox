@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api:*)",
+      "Bash(base64 -d gh api repos/Andrewneteye4343/scDock/contents/Essential_files/functions/receptor_reference.csv --jq .content)",
+      "Bash(base64 -d gh api repos/Andrewneteye4343/scDock/contents/FDA_parent_compounds_202509/fda.txt --jq .content)"
+    ]
+  }
+}

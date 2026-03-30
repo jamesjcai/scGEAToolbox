@@ -20,8 +20,8 @@ outfile = [];
 % https://www.mathworks.com/matlabcentral/fileexchange/163796-large-language-models-llms-with-matlab/
 % Add-On “Large Language Models (LLMs) with MATLAB”.
 
-if nargin<4, infotagstr = pkg.i_randinfostr; end
-if nargin<5, wrkdir = []; end
+if nargin<5, infotagstr = pkg.i_randinfostr; end
+if nargin<6, wrkdir = []; end
 
 if ~isfolder(wrkdir)
     wrkdir = getpref('scgeatoolbox', 'externalwrkpath');
@@ -78,7 +78,8 @@ if isempty(s_up) && isempty(s_dn), return; end
 prompt1 = "You are a researcher working on gene function enrichment analysis try to find biological processes and molecular functions of a given gene sets. You are using Enrichr to do this. " + ...
     "Enrichr is a gene function enrichment analysis tool. You will be given the output of Enrichr analysis below, which contains a list of gene ontology (GO) terms and associated genes. The GO terms are a mix of enriched terms of biological processes and molecular functions. Please summarize the results in text. " + ...
     "Please provide an analysis of the output, highlighting key biological processes and molecular functions, along with their associated genes. " + ...
-    "Please write an executive summary to report the results of your analysis. ";
+    "Please write an executive summary to report the results of your analysis. " + ...
+    "The comparison being analyzed is: " + infotagstr + ". ";
 
 feedbk_up = [];
 feedbk_dw = [];
@@ -149,7 +150,10 @@ switch providermodel{1}
 end
 
 
-if ~(done1 || done2), return; end
+if ~(done1 || done2)
+    fprintf('LLM call failed for "%s". Check provider settings and API key.\n', infotagstr);
+    return;
+end
 if isempty(feedbk_up) && isempty(feedbk_dn), return; end
 
 import mlreportgen.dom.*
@@ -170,21 +174,20 @@ done = true;
 
 
 function i_todoc(doc, titstr, text)
+    if isempty(text), return; end
+    import mlreportgen.dom.*
     p = Paragraph(titstr);
     p.Style = {Bold(true), FontSize('14pt'), Color('blue')};
     append(doc, p);
     try
-        text = regexprep(text, '<think>.*?</think>', '');
+        text = regexprep(text, '<think>[\s\S]*?</think>', '');
     catch ME
         disp(ME.message);
     end
     try
-        lines = splitlines(text);
-        for i = 1:length(lines)
-            if ~isempty(strtrim(lines{i}))
-                p = mlreportgen.dom.Paragraph(lines{i});
-                append(doc, p);
-            end
+        domBlocks = llm.i_parsemarkdowntodom(text);
+        for k = 1:numel(domBlocks)
+            append(doc, domBlocks{k});
         end
     catch ME
         disp(ME.message);

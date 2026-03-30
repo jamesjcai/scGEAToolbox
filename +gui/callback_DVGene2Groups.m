@@ -75,11 +75,11 @@ answerx = a;
                      fw = gui.myWaitbar(FigureHandle);
                      [T, X1, X2, g, xyz1, xyz2,...
                         px1, py1, pz1,...
-                        px2, py2, pz2] = gui.e_dvanalysis_splinefit(sce1, sce2, cL1, cL2);
+                        px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit');
                     methodtag='splinefit';
                 case b
                     fw = gui.myWaitbar(FigureHandle);
-                    T = gui.e_dvanalysis_brennecke(sce1, sce2, cL1, cL2);
+                    T = sc_dvg(sce1, sce2, cL1, cL2, 'brennecke');
                     methodtag='brennecke';
                 otherwise
                     return;

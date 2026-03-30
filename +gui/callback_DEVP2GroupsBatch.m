@@ -125,7 +125,7 @@ for k=1:length(CellTypeList)
     end
     if notok, continue; end
 
-    [T] = gui.e_dvanalysis_splinefit(sce1, sce2, cL1, cL2);
+    [T] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit');
 
     outfile = sprintf('%s_DV_%s_vs_%s_%s.xlsx', ...
         prefixtag,...

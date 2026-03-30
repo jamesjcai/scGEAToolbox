@@ -1,6 +1,9 @@
 function [indx, tf] = myListdlg(parentfig, options, Title, ...
-    prefersel, allowmulti, allowresize)
+    prefersel, allowmulti, allowresize, dlgSize)
 
+if nargin < 7
+    dlgSize = [300, 450]; % [Width, Height]
+end
 if nargin < 6, allowresize = true; end
 if nargin < 5, allowmulti = true; end
 if nargin < 4, prefersel = []; end
@@ -14,7 +17,6 @@ parentPos = parentfig.Position;
 parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];
 
 % Dialog size
-dlgSize = [300, 450]; % [Width, Height]
 
 % Compute center position
 dlgPos = [parentCenter(1) - dlgSize(1)/2, parentCenter(2) - dlgSize(2)/2, dlgSize];
@@ -36,12 +38,18 @@ else
     multitag = 'off';
 end
 
+% Normalize numeric prefersel to string
+if isnumeric(prefersel) && ~isempty(prefersel)
+    idx = prefersel(prefersel >= 1 & prefersel <= numel(options));
+    prefersel = options(idx);
+end
+
 % Create a listbox for selection
 if ~isempty(prefersel) && any(ismember(prefersel, options))
-    lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], ...
+    lb = uilistbox(d, 'Items', options, 'Position', [20 60 dlgSize(1)-40, 370], ...
         'MultiSelect', multitag, 'Value', prefersel);
 else
-    lb = uilistbox(d, 'Items', options, 'Position', [20 60 260 370], ...
+    lb = uilistbox(d, 'Items', options, 'Position', [20 60 dlgSize(1)-40, 370], ...
         'MultiSelect', multitag);
 end
 

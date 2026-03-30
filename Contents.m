@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.2.6 27-Mar-2026
+% Version 26.2.7 30-Mar-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -9,7 +9,8 @@
 %   sc_cluster_s              - sc_cluster_s - cluster cells using cell embeding s
 %   sc_cluster_x              - sc_cluster_x - cluster cells using UMI matrix X
 %   sc_deg                    - SC_DEG - DEG analysis using Mann–Whitney U test or t-test
-%   sc_dpg                    - X = log1p(sc_norm(X));
+%   sc_dpg                    - SC_DPG - Differential Program (DP) analysis between two groups of cells
+%   sc_dvg                    - SC_DVG - Differential variability (DV) analysis between two groups
 %   sc_filterc                - sc_filterc is a function.
 %   sc_filterg                - cutoff < 1:  interpreted as minimum non-zero fraction (dropout-rate mode)
 %   sc_genestat               - SC_GENESTAT  Compute per-gene statistics and optionally filter invalid values
@@ -53,7 +54,7 @@
 %   sc_splinefit              - SC_SPLINEFIT identify genes with a profile deviated from normal
 %   sc_splinefit2             - Compare genes' expression profiles with spline fit regression
 %   sc_stemness               - SC_STEMNESS   Compute stemness score for single-cell data
-%   sc_tfactivity             - The activity level of a transcription factor (TF) in a given cell is the
+%   sc_tfactivity             - SC_TFACTIVITY  Estimate transcription factor (TF) activity per cell.
 %   sc_trajectory             - SC_TRAJECTORY Estimate pseudotime trajectories from single-cell data
 %   sc_transform              - SC_TRANSFORM Transformations for single-cell data
 %   sc_tsne                   - tSNE embedding of cells

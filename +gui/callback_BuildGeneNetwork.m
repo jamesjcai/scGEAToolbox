@@ -17,7 +17,7 @@ methods = {'PCR (PC Regression)', ...
 methodkeys = {'pcrnet', 'xicor', 'pearson', 'distcorr', 'mi', 'genie3'};
 
 [sel, ok] = gui.myListdlg(FigureHandle, methods, ...
-    'Select GRN construction method', 1, false);
+    'Select GRN construction method', methods{1}, false);
 if ~ok, return; end
 methodkey = methodkeys{sel};
 
