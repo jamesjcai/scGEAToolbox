@@ -19,9 +19,7 @@ folder = fileparts(mfilename('fullpath'));
     % folder = extractBefore(folder, a(end)+1);
 wrkpth = fullfile(folder, '..', 'external', 'ml_cbrewer');
 
-if ~(ismcc || isdeployed)
-        addpath(wrkpth);
-    end
+if ~(ismcc || isdeployed), addpath(wrkpth); end
 CT = cbrewer('seq', 'Blues', max([n, 3]));
 
 cx = autumn(n);

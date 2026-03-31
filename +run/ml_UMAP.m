@@ -1,11 +1,6 @@
 function [s] = ml_UMAP(X, ndim, vnum)
 
-if nargin<3, vnum = 45; end
-%   addpath /Users/Stephen/umap
-%   addpath /Users/Stephen/util
-%   javaaddpath('/Users/Stephen/umap/umap.jar');
-% if nargin<4, verbose=false; end
-% if nargin<3, plotit=false; end
+if nargin < 3, vnum = 45; end
 if nargin < 2, ndim = 3; end
 
 % umapversion = 'ml_UMAP44';

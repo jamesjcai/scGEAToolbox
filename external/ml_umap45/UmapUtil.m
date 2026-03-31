@@ -1294,7 +1294,7 @@ classdef UmapUtil < handle
                 addpath(pth);
             end
             if ~ismember(utilPath, existingPaths)
-%                addpath(utilPath);
+                % addpath(utilPath);
             end
             pths=FileBasics.GetSiblingFolders(pth, ...
                 'util', 'epp', 'mlp', 'fcs', 'phate');
