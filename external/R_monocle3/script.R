@@ -30,7 +30,7 @@ cds <- order_cells(cds, root_cells = paste0("C", idx))
 ps_tim <- pseudotime(cds)
 # https://rdrr.io/github/cole-trapnell-lab/monocle3/man/pseudotime.html
 ss_mat <- SingleCellExperiment::reducedDims(cds)[["UMAP"]]
-dp_mst <- cds@principal_graph_aux[["UMAP"]]$dp_mst
+dp_mst <- principal_graph(cds)[["UMAP"]]
 
 # Check if the file exists and remove it if it does
 if (file.exists("output.h5")) {

@@ -29,52 +29,57 @@ olddir = pwd;
 if isfolder(wkdir), cd(wkdir); end
 
 if isempty(predefinedlist)
-        gsorted = natsort(sce.g);
-        rng("shuffle");
-        n = length(gsorted);
-        if isempty(gsorted)
-            ingenelist = gui.i_inputgenelist(sprintf("ERBB2\nERBB4\nFGFR2\nFGFR4\nHRAS\nKRAS"), [], FigureHandle);
-        else
-            ingenelist = gui.i_inputgenelist(gsorted(randperm(n, ...
-                min([7, length(gsorted)]))), [], FigureHandle);
-        end
+    gsorted = natsort(sce.g);
+    rng("shuffle");
+    n = length(gsorted);
+    if isempty(gsorted)
+        ingenelist = gui.i_inputgenelist(sprintf("ERBB2\nERBB4\nFGFR2\nFGFR4\nHRAS\nKRAS"), [], FigureHandle);
     else
-        ingenelist = predefinedlist;
+        ingenelist = gui.i_inputgenelist(gsorted(randperm(n, ...
+            min([7, length(gsorted)]))), [], FigureHandle);
     end
+else
+    ingenelist = predefinedlist;
+end
 
 if isempty(ingenelist) || all(strlength(ingenelist) < 1), return; end
 fw = gui.myWaitbar(FigureHandle);
 ingenelist = sprintf("% s,", ingenelist);
 ingenelist = extractBefore(ingenelist, strlength(ingenelist));
 
+
 try
-        [~, retrieveurl] = run.ml_geneagent(ingenelist);
-    catch ME
-        cd(olddir);
-        gui.myWaitbar(FigureHandle, fw, true);
-        gui.myErrordlg(FigureHandle, ME.message);
-        return;
-    end
+    [~, retrieveurl] = run.ml_geneagent(ingenelist);
+catch ME
+    cd(olddir);
+    gui.myWaitbar(FigureHandle, fw, true);
+    gui.myErrordlg(FigureHandle, ME.message);
+    return;
+end
+
 gui.myWaitbar(FigureHandle, fw);
 
-if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Wait until the analysis is complete, then generate the report."))
-
-           gui.myHelpdlg(FigureHandle, ...
-            'Wait until the web application is done, click OK to proceed.', ...
-            'Process Status');
-
-        % The code execution will pause here until user clicks Continue
-        % if strcmp(selection, 'Continue')
-            options = weboptions('Timeout', 30);
-            out = webread(retrieveurl, options);
-            % Process the output and generate the report
-            if isstruct(out)
-                in_generateAIReport(out);
-            else
-                warning('Output is not a struct. Report generation skipped.');
-            end
-        % end
+if ~license('test','MATLAB_Report_Gen')
+    if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Wait until the analysis is complete."))
     end
+else
+if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Wait until the analysis is complete, then generate the report."))
+    gui.myHelpdlg(FigureHandle, ...
+    'Wait until the web application is done, click OK to proceed.', ...
+    'Process Status');
+
+    % The code execution will pause here until user clicks Continue
+    % if strcmp(selection, 'Continue')
+    options = weboptions('Timeout', 30);
+    out = webread(retrieveurl, options);
+    % Process the output and generate the report
+    if isstruct(out)
+        in_generateAIReport(out);
+    else
+        warning('Output is not a struct. Report generation skipped.');
+    end
+end
+end
 cd(olddir);
 end
 
