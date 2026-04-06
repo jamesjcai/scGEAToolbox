@@ -92,8 +92,8 @@ switch Cko_approach
         targetg = sce.g(idx);
 
         targetpath = ...
-        string([sprintf("% s (%s) -> %s (%s)", celltype1, targetg(1), celltype2, targetg(2));...
-        sprintf("% s (%s) -> %s (%s)", celltype1, targetg(2), celltype2, targetg(1));...
+        string([sprintf("%s (%s) -> %s (%s)", celltype1, targetg(1), celltype2, targetg(2));...
+        sprintf("%s (%s) -> %s (%s)", celltype1, targetg(2), celltype2, targetg(1));...
         sprintf('%s (%s) <- %s (%s)', celltype1, targetg(2), celltype2, targetg(1));...
         sprintf('%s (%s) <- %s (%s)', celltype1, targetg(1), celltype2, targetg(2))]);
         [width] = min([max(strlength(targetpath))*6, 500]);
@@ -138,7 +138,7 @@ switch Cko_approach
         answer = gui.myQuestdlg(FigureHandle, sprintf('Knockout %s in which cell type?',targetg), '', 'Both', celltype1, celltype2, 'Both');
         switch answer
             case 'Both'
-                targettype=sprintf("% s+%s", celltype1, celltype2);
+                targettype=sprintf("%s+%s", celltype1, celltype2);
             case celltype1
                 targettype=celltype1;
             case celltype2
@@ -160,12 +160,12 @@ if ~isempty(Tcell)
         [T1] = Tcell{1};
         [T2] = Tcell{2};
         if istable(T1)
-            a = sprintf("% s -> %s", celltype1, celltype2);
+            a = sprintf("%s -> %s", celltype1, celltype2);
             T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
             T1.Properties.VariableNames{'Var1'} = 'direction';
         end
         if istable(T2)
-            a = sprintf("% s -> %s", celltype2, celltype1);
+            a = sprintf("%s -> %s", celltype2, celltype1);
             T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
             T2.Properties.VariableNames{'Var1'} = 'direction';
         end

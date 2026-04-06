@@ -13,9 +13,9 @@ pth = fullfile(pw1, '..', 'external', 'fun_locfit');
 
 % https://www.mathworks.com/matlabcentral/answers/3167-two-functions-with-the-same-name-how-to-directly-call-one-of-both
 oldpth = pwd();
+cleanupObj = onCleanup(@() cd(oldpth));
 cd(pth);
 predict = @predict;
-cd(oldpth);
 
 if ~(ismcc || isdeployed), addpath(pth); end
 % pth = fullfile(pw1, '..', 'external', 'locfit', 'source');

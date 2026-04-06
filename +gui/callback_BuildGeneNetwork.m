@@ -6,7 +6,7 @@ if isempty(glist), return; end
 
 [y, i] = ismember(upper(glist), upper(sce.g));
 if ~all(y), error('Runtime error.'); end
-fprintf("% s\n", glist)
+fprintf("%s\n", glist)
 
 methods = {'PCR (PC Regression)', ...
            'Chatterjee Xi Correlation', ...

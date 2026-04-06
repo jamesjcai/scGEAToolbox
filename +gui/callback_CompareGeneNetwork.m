@@ -11,7 +11,7 @@ if isempty(glist), return; end
 
 [y, i] = ismember(glist, sce.g);
 if ~all(y), error('Selected gene(s) not in the gene list of data.'); end
-fprintf("% s\n", glist)
+fprintf("%s\n", glist)
 
 methods = {'PCR (PC Regression)', ...
            'Chatterjee Xi Correlation', ...

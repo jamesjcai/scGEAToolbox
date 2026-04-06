@@ -60,7 +60,7 @@ if showdlg
         [indx, tf] = gui.myListdlg(FigureHandle, cn, 'Pick a colormap', ...
                     [], false);
         if ~tf
-            retrun;
+            return;
         end
     else
         indx = randi(length(co));

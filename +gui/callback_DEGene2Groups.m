@@ -15,33 +15,15 @@ if isscalar(i1) || isscalar(i2), return; end
 [i1, i2, cL1, cL2, cancelled] = gui.i_whichvswhich(FigureHandle, i1, i2, cL1, cL2);
 if cancelled, return; end
 
-methodtag = "ranksum";
 try
-    switch methodtag
-        case 'ranksum'
-            T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, ...
-                true, FigureHandle);
-        case 'deseq2'
-            [ok] = gui.i_confirmscript('DE analysis (DESeq2)', ...
-                'R_DESeq2', 'r');
-            if ~ok, return; end
-            fw = gui.myWaitbar(FigureHandle);
-            T = run.r_DESeq2(sce.X(:, i1), sce.X(:, i2), sce.g);
-            gui.myWaitbar(FigureHandle, fw);
-        case 'mast'
-            [ok] = gui.i_confirmscript('DE analysis (MAST)', 'R_MAST', 'r');
-            if ~ok, return; end
-            fw = gui.myWaitbar(FigureHandle);
-            T = run.r_MAST(sce.X(:, i1), sce.X(:, i2), sce.g);
-            gui.myWaitbar(FigureHandle, fw);
-    end
+    T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, true, FigureHandle);
 catch ME
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 
 
-outfile = sprintf("% s_vs_%s_DE_results.xlsx", ...
+outfile = sprintf("%s_vs_%s_DE_results.xlsx", ...
 matlab.lang.makeValidName(string(cL1)), ...
 matlab.lang.makeValidName(string(cL2)));
 
@@ -80,9 +62,8 @@ end
 if any(contains(selected, 'Set Filter Parameters'))
     [paramset] = gui.i_degparamset(false, FigureHandle);
 else
-    % paramset = [];
-    preftagname ='degtestparamset';
-    paramset = getpref('scgeatoolbox', preftagname, {0.05, 1.0, 0.01, 'Adjusted P-value'});
+    degparamtag = 'degtestparamset';
+    paramset = getpref('scgeatoolbox', degparamtag, {0.05, 1.0, 0.01, 'Adjusted P-value'});
 end
 
 fw = gui.myWaitbar(FigureHandle);
@@ -111,14 +92,16 @@ if any(contains(selected, 'Enrichr Analysis'))
 end
 
 if any(contains(selected, 'LLM Summarize'))
-    if ~ispref('scgeatoolbox', 'llapikeyenvfile') || ...
-            ~ispref('scgeatoolbox', 'llmodelprovider')
+    hasLLMConfig = ispref('scgeatoolbox', 'llapikeyenvfile') && ...
+        ispref('scgeatoolbox', 'llmodelprovider');
+    if ~hasLLMConfig
         if strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
                 'LLM is not set up. Set it up now?'))
             gui.i_setllmmodel(src);
         end
-        if ~ispref('scgeatoolbox', 'llapikeyenvfile') || ...
-                ~ispref('scgeatoolbox', 'llmodelprovider')
+        hasLLMConfig = ispref('scgeatoolbox', 'llapikeyenvfile') && ...
+            ispref('scgeatoolbox', 'llmodelprovider');
+        if ~hasLLMConfig
             gui.myWarndlg(FigureHandle, ...
                 'LLM Summarize skipped: LLM provider/model not configured.');
             selected = selected(~contains(selected, 'LLM Summarize'));

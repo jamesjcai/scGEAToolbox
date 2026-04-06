@@ -8,6 +8,10 @@ if isempty(parentfig) || ~gui.i_isuifig(parentfig)
     if modal
         waitfor(msgbox(message, title, tag, 'modal'));  % This will pause execution until the msgbox is closed
     else
+        % 'modal' here is the msgbox WindowStyle flag (blocks input to other
+        % MATLAB figures) and is intentionally separate from the `modal`
+        % parameter above (which controls execution blocking via waitfor).
+        % This branch is non-blocking (no waitfor) but still window-modal.
         msgbox(message, title, tag, 'modal');
     end
 else

@@ -73,23 +73,15 @@ if isempty(genelist), genelist = "G"+string(1:n); end
 if isempty(celltype), celltype = repmat("undetermined", m, 1); end
 if isempty(batchid), batchid = string(ones(m,1)); end
 
-if ~isempty(genelist)
-        h5create(filename, '/g', size(genelist), 'Datatype', 'string');
-        h5write(filename, '/g', genelist);
-    end
+h5create(filename, '/g', size(genelist), 'Datatype', 'string');
+h5write(filename, '/g', genelist);
 
-if ~isempty(celltype)
-        h5create(filename, '/celltype', size(celltype), 'Datatype', 'string');
-        h5write(filename, '/celltype', celltype);
-    end
+h5create(filename, '/celltype', size(celltype), 'Datatype', 'string');
+h5write(filename, '/celltype', celltype);
 
-if ~isempty(batchid)
-        if ~isstring(batchid)
-            batchid = string(batchid);
-        end
-        h5create(filename, '/batchid', size(batchid), 'Datatype', 'string');
-        h5write(filename, '/batchid', batchid);
-    end
+if ~isstring(batchid), batchid = string(batchid); end
+h5create(filename, '/batchid', size(batchid), 'Datatype', 'string');
+h5write(filename, '/batchid', batchid);
 
 
 end

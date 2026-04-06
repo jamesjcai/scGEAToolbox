@@ -74,7 +74,7 @@ end
 
 Col = webread(urllist{indx1});
 ctag = listitems{indx1};
-ctag = extractBefore(ctag, strfind(ctag,':'));
+ctag = extractBefore(ctag, ':');
 setnames = fields(Col);
 
 if colnoly

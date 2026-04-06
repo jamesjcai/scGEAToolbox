@@ -23,7 +23,7 @@ switch p.Results.type
     case 'soptsc'
         pth = fullfile(pw1, '..', 'external', 'ml_SoptSC');
         if ~(ismcc || isdeployed), addpath(pth); end
-        pth = fullfile(pw1, '..n', 'external', 'ml_SoptSC', 'NNDSVD');
+        pth = fullfile(pw1, '..', 'external', 'ml_SoptSC', 'NNDSVD');
         if ~(ismcc || isdeployed), addpath(pth); end
         pth = fullfile(pw1, '..', 'external', 'ml_SoptSC', 'symnmf2');
         if ~(ismcc || isdeployed), addpath(pth); end

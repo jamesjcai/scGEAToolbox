@@ -22,9 +22,9 @@ extprogname = 'scTenifoldNet';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
-if isfolder(wkdir)
-    cd(wkdir);
-end
+olddir = pwd;
+cleanupObj = onCleanup(@() cd(olddir));
+if isfolder(wkdir), cd(wkdir); end
 
 answer = gui.myQuestdlg(FigureHandle, 'Construct networks de novo or use existing networks in Workspace?', ...
 'Input Networks', {'Construct de novo', 'Use existing'}, 'Construct de novo');

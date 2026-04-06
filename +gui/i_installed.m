@@ -19,5 +19,5 @@ switch name
         y = true;
     end
     otherwise
-        error('Unknow tag.');
+        error('Unknown tag.');
 end

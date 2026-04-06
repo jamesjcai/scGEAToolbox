@@ -26,6 +26,7 @@ preftagname = 'externalwrkpath';
         preftagname, FigureHandle);
 if isempty(wkdir), return; end
 olddir = pwd;
+cleanupObj = onCleanup(@() cd(olddir));
 if isfolder(wkdir), cd(wkdir); end
 
 if isempty(predefinedlist)
@@ -44,14 +45,12 @@ end
 
 if isempty(ingenelist) || all(strlength(ingenelist) < 1), return; end
 fw = gui.myWaitbar(FigureHandle);
-ingenelist = sprintf("% s,", ingenelist);
-ingenelist = extractBefore(ingenelist, strlength(ingenelist));
+ingenelist = strjoin(ingenelist, ',');
 
 
 try
     [~, retrieveurl] = run.ml_geneagent(ingenelist);
 catch ME
-    cd(olddir);
     gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message);
     return;
@@ -80,7 +79,6 @@ if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Wait until the analysis is comple
     end
 end
 end
-cd(olddir);
 end
 
 

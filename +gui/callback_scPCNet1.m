@@ -6,7 +6,8 @@ extprogname = 'ml_scTenifoldNet';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
-
+olddir = pwd;
+cleanupObj = onCleanup(@() cd(olddir));
 
 if numel(unique(sce.c_cell_type_tx)) > 1
     answer = gui.myQuestdlg(FigureHandle, 'Construct gene regulatory network (GRN) for all cells or selected cells?', ...

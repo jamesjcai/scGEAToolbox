@@ -28,8 +28,7 @@ if tf ~= 1, return; end
 a = sce.metadata(contains(sce.metadata, "Source:"));
 if ~isempty(a), a = strtrim(strrep(a, "Source: ","")); end
 if ~isempty(a), a = strrep(a,sprintf("\nOrganism:"),""); end
-if ~isempty(a), a = sprintf("% s_", a(:)); end
-if ~isempty(a), a = extractBefore(a, strlength(a)); end
+if ~isempty(a), a = strjoin(a(:)', '_'); end
 if ~isempty(a), a = matlab.lang.makeValidName(a); end
 
 setpref('scgeatoolbox', preftagname, indx);
@@ -69,7 +68,7 @@ switch ButtonName
                 gui.myWaitbar(parentfig, fw);
                 fprintf("\nTo read file, in R:\n");
                 fprintf("library(Seurat)\n");
-                fprintf("A<-readRDS(""% s"")\n", file);
+                fprintf("A<-readRDS(""%s"")\n", file);
                 OKPressed = true;
             end
         case 'AnnData/H5ad File (*.h5ad)...'
@@ -87,7 +86,7 @@ switch ButtonName
                 filename = fullfile(path, file);
                 if sc_sce2h5ad(sce, filename)
                     fprintf("\nTo read file, in Python:\n");
-                    fprintf("adata = anndata.read(""% s"")\n", file);
+                    fprintf("adata = anndata.read(""%s"")\n", file);
                     OKPressed = true;
                 end
             end

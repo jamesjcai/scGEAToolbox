@@ -11,7 +11,7 @@ species=[];
 
 selitems={'MSigDB Molecular Signatures',...
           'DoRothEA TF Targets',...
-          'Custome Gene Sets'};
+          'Custom Gene Sets'};
 
 if gui.i_isuifig(parentfig)
     [indx1, tf1] = gui.myListdlg(parentfig, selitems, 'Select a gene set collection.');

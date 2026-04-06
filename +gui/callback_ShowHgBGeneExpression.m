@@ -20,7 +20,7 @@ end
 idx = idx1 | idx2 | idx3;
 
 if any(idx)
-    ttxt = sprintf("% s+", sce.g(idx));
+    ttxt = sprintf("%s+", sce.g(idx));
     ci = full(sum(sce.X(idx, :), 1));
 
     hx = gui.myFigure(FigureHandle);

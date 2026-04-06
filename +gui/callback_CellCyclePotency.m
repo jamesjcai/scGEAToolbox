@@ -124,7 +124,7 @@ if needestimt
     end
     if isempty(s)
         gui.myWaitbar(FigureHandle, fw, true);
-        gui.myErrordlg(FigureHandle, sprintf("% s runtime error.", attribtag),"")
+        gui.myErrordlg(FigureHandle, sprintf("%s runtime error.", attribtag),"")
         return;
     end
     sce.setCellAttribute(attribtag, s);

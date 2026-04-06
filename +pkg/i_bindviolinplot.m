@@ -1,4 +1,4 @@
-function i_bindi_violinplot_base(d, c, colorit, grouporder)
+function i_bindviolinplot(d, c, colorit, grouporder)
 import gui.Violin
 import gui.i_violinplot_base
 

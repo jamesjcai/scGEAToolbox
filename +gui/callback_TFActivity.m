@@ -72,15 +72,16 @@ if isempty(methodid), return; end
 % ---- Step 6: compute TF activity -------------------------------------------
 % sc_tfactivity always computes all TFs; selection filters the output.
 % Method 6 (NMF) has an internal waitbar; all others need one here.
-if methodid ~= 6, fw = gui.myWaitbar(FigureHandle); end
+showWaitbar = (methodid ~= 6);
+if showWaitbar, fw = gui.myWaitbar(FigureHandle); end
 try
     [cs, tflist] = sc_tfactivity(sce.X, sce.g, [], speciestag, methodid);
 catch ME
-    if methodid ~= 6, gui.myWaitbar(FigureHandle, fw, true); end
+    if showWaitbar, gui.myWaitbar(FigureHandle, fw, true); end
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
-if methodid ~= 6, gui.myWaitbar(FigureHandle, fw); end
+if showWaitbar, gui.myWaitbar(FigureHandle, fw); end
 
 if isempty(cs) || isempty(tflist)
     gui.myWarndlg(FigureHandle, 'No TF activity scores could be computed.');

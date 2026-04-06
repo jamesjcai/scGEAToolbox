@@ -173,19 +173,19 @@ if twosided && iscell(Tres)
     T1 = Tres{1};
     T2 = Tres{2};
     if istable(T1)
-        a = sprintf("% s -> %s", cL{x1}, cL{x2});
+        a = sprintf("%s -> %s", cL{x1}, cL{x2});
         T1 = addvars(T1, repelem(a, height(T1), 1), 'Before', 1);
         T1.Properties.VariableNames{'Var1'} = 'direction';
     end
     if istable(T2)
-        a = sprintf("% s -> %s", cL{x2}, cL{x1});
+        a = sprintf("%s -> %s", cL{x2}, cL{x1});
         T2 = addvars(T2, repelem(a, height(T2), 1), 'Before', 1);
         T2.Properties.VariableNames{'Var1'} = 'direction';
     end
     T = [T1; T2];
 elseif istable(Tres)
     T = Tres;
-    a = sprintf("% s -> %s", cL{x1}, cL{x2});
+    a = sprintf("%s -> %s", cL{x1}, cL{x2});
     T = addvars(T, repelem(a, height(T), 1), 'Before', 1);
     T.Properties.VariableNames{'Var1'} = 'direction';
 end

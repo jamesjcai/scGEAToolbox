@@ -76,8 +76,8 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
             drawnow;
             [selecteditem, speciestag] = gui.i_selgenesetcollection(FigureHandle);
             if isempty(selecteditem), return; end
-            % try
 
+            posg = []; ttxt = [];
             switch selecteditem
                     % case 'Global Coordination Level (GCL) [PMID:33139959]'
 
@@ -109,7 +109,7 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
                                 fprintf("Duplicate found: % s is renamed to ", ttxt);
                                 a = matlab.lang.makeUniqueStrings([string(sce.list_cell_attributes(1:2:end)) ttxt]);
                                 ttxt = a(end);
-                                fprintf("% s.\n", ttxt);
+                                fprintf("%s.\n", ttxt);
                             else
                                 sce.list_cell_attributes = [sce.list_cell_attributes, ...
                                     {ttxt, y(:)}];
@@ -149,10 +149,8 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
                     end
                     if isempty(speciestag), return; end
 
-                    oldpth = pwd;
                     pw1 = fileparts(mfilename('fullpath'));
                     pth = fullfile(pw1, '..', 'external', 'fun_alona_panglaodb');
-                    cd(pth);
                     switch lower(speciestag)
                         case {'human', 'hs'}
                             speciestag_short = 'hs';
@@ -162,17 +160,13 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
                             speciestag_short = 'hs';
                     end
 
-
-                    markerfile = sprintf('marker_%s.mat', speciestag_short);
+                    markerfile = fullfile(pth, sprintf('marker_%s.mat', speciestag_short));
                     if exist(markerfile, 'file')
                         load(markerfile, 'Tm');
                     else
-                        % Tw=readtable(sprintf('markerweight_%s.txt',stag));
-                        Tm = readtable(sprintf('markerlist_%s.txt', speciestag_short), ...
+                        Tm = readtable(fullfile(pth, sprintf('markerlist_%s.txt', speciestag_short)), ...
                             'ReadVariableNames', false, 'Delimiter', '\t');
-                        % save(markerfile,'Tw','Tm');
                     end
-                    cd(oldpth);
 
                     ctlist = string(Tm.Var1);
                     listitems = sort(ctlist);
@@ -238,9 +232,6 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
 
             % assignin('base','y',y);
             % assignin('base','thisc',thisc);
-
-            if ~exist("posg", "var"), posg = []; end
-            if ~exist("ttxt", "var"), ttxt = []; end
 
             if showcomparision
                 % if iscell(y)
