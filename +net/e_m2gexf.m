@@ -46,3 +46,10 @@ fprintf(fid, '  </graph>\n');
 fprintf(fid, '</gexf>\n');
 fclose(fid);
 end
+
+function s = i_xml_escape(s)
+s = strrep(s, '&', '&amp;');
+s = strrep(s, '<', '&lt;');
+s = strrep(s, '>', '&gt;');
+s = strrep(s, '"', '&quot;');
+end

@@ -12,6 +12,7 @@ oldpth = pwd();
 [pyok, wrkpth, x] = run.pycommon(prgfoldername);
 if ~pyok, return; end
 
+cd(wrkpth);
 tmpfilelist = {'input.mat', 'output.mat'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 if issparse(X), X = full(X); end

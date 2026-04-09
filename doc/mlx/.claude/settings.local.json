@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls D:/claude_dev/scGEAToolbox_dev/scgea.*)",
+      "Bash(python -c \"import textual\")"
+    ]
+  }
+}

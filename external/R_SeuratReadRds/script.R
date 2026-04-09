@@ -33,19 +33,15 @@ A<-readRDS(filename)
 
 tryCatch(
 {
-    #X=A@assays$RNA@counts
-    #X=A@assays$RNA$counts
-    #X<-GetAssayData(A, layer="counts")
-    X <- GetAssayData(JoinLayers(A), assay = DefaultAssay(A), layer = "counts")
+    # Try Seurat v5 API first; fall back to old v2/v3 slot accessor
+    X <- tryCatch(
+        GetAssayData(JoinLayers(A), assay = DefaultAssay(A), layer = "counts"),
+        error = function(e) A@assays$RNA@counts
+    )
 
-if (file.exists("output.h5")) {
-  file.remove("output.h5")
-}
-
-#    h5createDataset(file = ex_file, dataset = "counts_chunked", 
-#                    dims = dim(m1), storage.mode = "integer", 
-#                    chunk = c(100,100), level = 6)
-#    h5write(obj = m1, file = ex_file, name = "counts_chunked")
+    if (file.exists("output.h5")) {
+        file.remove("output.h5")
+    }
 
     h5createFile("output.h5")
     # X is a dgCMatrix
@@ -53,20 +49,15 @@ if (file.exists("output.h5")) {
     h5write(X@i, "output.h5", "indices")
     h5write(X@p, "output.h5", "indptr")
     h5write(X@Dim, "output.h5", "shape")
-
-    # Define chunk size
-    #chunk_size_x <- c(1000)  # Adjust the chunk size as needed
-    #h5write(X_matrix, "output.h5", "data", chunk = chunk_size_x)
-
     h5closeAll()
 
     gname <- rownames(X)
-    write.csv(gname,file='g.csv')
+    write.csv(gname, file='g.csv')
 
 },
 error = function(msg){
 
-	}
+}
 )
 
 

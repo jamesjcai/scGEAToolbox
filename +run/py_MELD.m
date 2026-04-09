@@ -17,6 +17,7 @@ prgfoldername = 'py_MELD';
 
 [pyok, wrkpth, x] = run.pycommon(prgfoldername);
 if ~pyok, return; end
+cd(wrkpth);
 tmpfilelist = {'batchid.txt', 'input.txt', 'output.txt', 'input.mat'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
