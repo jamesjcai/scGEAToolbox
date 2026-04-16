@@ -154,8 +154,8 @@ function b = i_remove_affix(a)
 b = a;
 for k = 1:length(a)
     idx = strfind(a(k), '_{');
-    if ~isempty(idx) && idx > 0
-        b(k) = extractBefore(a(k), idx);
+    if ~isempty(idx) && idx(1) > 0
+        b(k) = extractBefore(a(k), idx(1));
     end
 end
 end

@@ -28,6 +28,8 @@ switch p.Results.type
         [t] = pkg.i_pseudotime_by_splinefit(s, 1, plotit);
     case 'tscan'
         t = run.ml_TSCAN(X, 'plotit', true);
+    otherwise
+        error('sc_trajectory:InvalidType', 'Unknown trajectory type: %s', p.Results.type);
 end
 if size(t, 2) ~= 1, t = t'; end
 end

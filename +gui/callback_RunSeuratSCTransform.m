@@ -76,8 +76,8 @@ if ~isempty(X)
                         'Save Data to Workspace');
             case 'Save'
                 if gui.i_isuifig(FigureHandle)
-                    [file, path] = uiputfile(FigureHandle, '*.mat', 'Save as', ...
-                        'sctransformed_X.mat');
+                    [file, path] = uiputfile('*.mat', 'Save as', ...
+                        'sctransformed_X.mat', 'Parent', FigureHandle);
                 else
                     [file, path] = uiputfile('*.mat', 'Save as', ...
                         'sctransformed_X.mat');

@@ -40,6 +40,8 @@ idx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/X"));
 
 data = pkg.e_guessh5field(filenm, {'/X/'}, {'data'}, true);
 shapeGroupIdx = idx;  % default: read shape from /X
+rawIdx = [];
+rawXIdx = [];
 if isequal(data(1:5), round(data(1:5)))
     indices = pkg.e_guessh5field(filenm, {'/X/'}, {'indices'}, true);
     indptr = pkg.e_guessh5field(filenm, {'/X/'}, {'indptr'}, true);

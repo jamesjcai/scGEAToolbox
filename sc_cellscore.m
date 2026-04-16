@@ -67,11 +67,7 @@ if nargin < 6, ctrl = 5; end
 if nargin < 5, nbin = 25; end
 if nargin < 4, tgsNeg = []; end
 
-try
-    if issparse(X), X = full(X); end
-catch
-    warning('Keep using sparse X.');
-end
+if issparse(X), X = full(X); end
 
 X = sc_norm(X);
 X = log1p(X);
@@ -147,7 +143,8 @@ if issparse(X), X = full(X); end
 score = zeros(nCells, 1);
 for cellIdx = 1:nCells
     [~, ranking] = sort(X(:, cellIdx), 'descend');
-    score(cellIdx) = i_aucell_auc(ranking, geneIndices, aucMaxRank);
+    [~, ranks] = sort(ranking);
+    score(cellIdx) = i_aucell_auc(ranks, geneIndices, aucMaxRank);
 end
 end
 

@@ -206,11 +206,7 @@ if ~all(contains({'tf', 'target', 'mor'}, Ttfgn.Properties.VariableNames))
     error('Ttfgn must contain the fields: tf, target, and mor.');
 end
 
-try
-    if issparse(X), X = full(X); end
-catch
-    warning('Keep using sparse X.');
-end
+if issparse(X), X = full(X); end
 
 if ~ismember(methodid, [2, 3]) % UCell (2) and VIPER (3) are rank-based; no normalization needed
     [X] = sc_norm(X);

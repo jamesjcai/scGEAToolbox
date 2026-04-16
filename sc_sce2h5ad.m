@@ -7,7 +7,7 @@ succeeded = false;
 if nargin < 2
     [filename, pathname] = uiputfile({'*.h5ad'; '*.*'}, 'Save as');
     if ~(filename), return; end
-    filename = [pathname, filename];
+    filename = fullfile(pathname, filename);
 end
 
 wkdir = tempdir;

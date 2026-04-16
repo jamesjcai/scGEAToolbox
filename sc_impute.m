@@ -19,5 +19,7 @@ switch upper(p.Results.type)
         % [X] = run.ml_McImpute(X, true);
     case 'SAVER'
         % [X] = run.r_SAVER(X);
+    otherwise
+        error('sc_impute:InvalidType', 'Unknown imputation type: %s', p.Results.type);
 end
 end

@@ -25,6 +25,8 @@ switch lower(method)
         end
         X1a(i, :) = X1;
         X2a(j, :) = X2;
+    otherwise
+        error('sc_mergedata:InvalidMethod', 'Unknown merge method: %s. Use ''intersect'' or ''union''.', method);
 end
 X = [X1a, X2a];
 c = 1 + [zeros(size(X1, 2), 1); ones(size(X2, 2), 1)];

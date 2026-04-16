@@ -25,26 +25,28 @@ if numel(unique(sce.c_cell_type_tx)) > 1
     end
 end
 
-    %     answer=gui.myQuestdlg(FigureHandle, 'This analysis may take several hours. Continue?');
-    %     if ~strcmpi(answer,'Yes'), return; end
-    % useparallel = false;
-answer = gui.myQuestdlg(FigureHandle, 'Use parallel computing or not?', 'Parallel Computing', ...
-        {'Use parallel', 'Not use parallel'}, 'Use parallel');
-switch answer
-        case 'Use parallel'
-            useparallel = true;
-        case 'Not use parallel'
-            useparallel = false;
-        otherwise
-            return;
-    end
-
 try
         disp('>> [A]=net.pcrnet(sce.X);');
         X = sc_norm(sce.X);
         X = log1p(X);
+        useGPU = pkg.i_usegpu(X);
+        if useGPU
+            disp('GPU detected and data is large enough — using CUDA GPU acceleration.');
+            useparallel = false;
+        else
+            answer = gui.myQuestdlg(FigureHandle, 'Use parallel computing or not?', 'Parallel Computing', ...
+                {'Use parallel', 'Not use parallel'}, 'Use parallel');
+            switch answer
+                case 'Use parallel'
+                    useparallel = true;
+                case 'Not use parallel'
+                    useparallel = false;
+                otherwise
+                    return;
+            end
+        end
         fw = gui.myWaitbar(FigureHandle);
-        [A] = net.pcrnet(X, 3, true, true, useparallel, ~useparallel);
+        [A] = net.pcrnet(X, 3, true, true, useparallel, ~useparallel, useGPU);
         gui.myWaitbar(FigureHandle, fw);
     catch ME
         if useparallel
@@ -80,8 +82,8 @@ answer = gui.myQuestdlg(FigureHandle, 'Save network A to MAT file?');
 switch answer
         case 'Yes'
             if gui.i_isuifig(FigureHandle)
-                [file, path] = uiputfile(FigureHandle, {'*.mat'; '*.*'}, ...
-                    'Save as', 'GeneRegulatoryNetwork');
+                [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...
+                    'GeneRegulatoryNetwork', 'Parent', FigureHandle);
             else
                 [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...
                     'GeneRegulatoryNetwork');

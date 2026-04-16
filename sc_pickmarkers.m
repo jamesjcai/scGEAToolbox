@@ -25,6 +25,8 @@ switch methodid
             a = i_pickmarkers(X, genelist, c, k);
             markerlist{k} = a(1:topn);
         end
+    otherwise
+        error('sc_pickmarkers:InvalidMethod', 'Unknown methodid %d. Use 1, 2, 3, or 4.', methodid);
 end
 end
 

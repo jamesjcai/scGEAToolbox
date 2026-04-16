@@ -41,7 +41,7 @@ end
 
 switch type
     case "pcrnet"
-        A = net.pcrnet(X);
+        A = net.pcrnet(X, 3, false, true, false, false, pkg.i_usegpu(X));
     case "pcrnet_batch"
         A = net.pcrnet_batch(X);
     case "pcrnet_denoised"
@@ -65,5 +65,8 @@ switch type
         tf_idx = varargin{1};
         extra  = varargin(2:end);
         A = net.grnformer(X, tf_idx, extra{:});
+    otherwise
+        % Should not reach here — type is validated by ismember check above
+        error('sc_grn:InvalidType', 'Unknown GRN type: %s', type);
 end
 end

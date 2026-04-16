@@ -63,6 +63,8 @@ switch lower(p.Results.type)
         % https://www.nature.com/articles/nmeth.2930
         X = sc_norm(X, 'type', 'deseq');
         X = sqrt(X) + sqrt(X + 1);
+    otherwise
+        error('sc_transform:InvalidType', 'Unknown transformation type: %s', p.Results.type);
 end
 end
 

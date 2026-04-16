@@ -1,0 +1,33 @@
+AutoDock Vina v1.2.7
+#################################################################
+# If you used AutoDock Vina in your work, please cite:          #
+#                                                               #
+# J. Eberhardt, D. Santos-Martins, A. F. Tillack, and S. Forli  #
+# AutoDock Vina 1.2.0: New Docking Methods, Expanded Force      #
+# Field, and Python Bindings, J. Chem. Inf. Model. (2021)       #
+# DOI 10.1021/acs.jcim.1c00203                                  #
+#                                                               #
+# O. Trott, A. J. Olson,                                        #
+# AutoDock Vina: improving the speed and accuracy of docking    #
+# with a new scoring function, efficient optimization and       #
+# multithreading, J. Comp. Chem. (2010)                         #
+# DOI 10.1002/jcc.21334                                         #
+#                                                               #
+# Please see https://github.com/ccsb-scripps/AutoDock-Vina for  #
+# more information.                                             #
+#################################################################
+
+Scoring function : vina
+Rigid receptor: .\dock_output\2GS6.pdbqt
+Ligand: .\dock_output\10418-03-8.pdbqt
+Grid center: X 137.821 Y 25.817 Z 58.666
+Grid size  : X 88.1 Y 82 Z 65.3
+Grid space : 0.375
+Exhaustiveness: 8
+CPU: 0
+Verbosity: 1
+
+
+
+PDBQT parsing error: Atom type 9617911314710528.000150164241386981341212672605371997348066577051807089204565166392449907666071662310231604596877755114053087801348485412742564664702071683665016889913380819785357689944768097760168517352691417884164295214851138229962902572176476214775492105213445649518125121536.0001491352241857449133177673384474383633927599063060565146952902754745060813577042839831621435565392369006149236187791087649276699489780711595839511879819675671215041304980794804011008.000  0.00  0.00    -0.019 C is not a valid AutoDock type (atom types are case-sensitive).
+ > ATOM     16  C   UNL     1    847133634260145366318367394836732595572774367639617911314710528.000150164241386981341212672605371997348066577051807089204565166392449907666071662310231604596877755114053087801348485412742564664702071683665016889913380819785357689944768097760168517352691417884164295214851138229962902572176476214775492105213445649518125121536.0001491352241857449133177673384474383633927599063060565146952902754745060813577042839831621435565392369006149236187791087649276699489780711595839511879819675671215041304980794804011008.000  0.00  0.00    -0.019 C 

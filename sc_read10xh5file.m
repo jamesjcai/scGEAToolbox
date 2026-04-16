@@ -107,11 +107,7 @@ g = deblank(string(g));
 %gui.gui_waitbar_adv(fw);
 
 if all(contains(b,'-'))
-    try
-        % c = extractAfter(b, 25);
-        c = extractAfter(b, cell2mat(strfind(b,"-")));
-    catch
-    end
+    c = extractAfter(b, "-");
 end
 
 end

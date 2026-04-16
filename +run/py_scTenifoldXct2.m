@@ -234,7 +234,8 @@ function in_prepareX(sce, id)
 
 function in_prepareA(sce, id)
         disp('Building A1 network...')
-        A1 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype1));
+        X1 = sce.X(:, sce.c_cell_type_tx == celltype1);
+        A1 = net.pcrnet(X1, 3, false, true, false, false, pkg.i_usegpu(X1));
         disp('A1 network built.')
         A1 = A1 ./ max(abs(A1(:)));
         % A=0.5*(A1+A1.');
@@ -242,7 +243,8 @@ function in_prepareA(sce, id)
         save(sprintf('%d/pcnet_Source.mat', id), 'A', '-v7.3');
 
         disp('Building A2 network...');
-        A2 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype2));
+        X2 = sce.X(:, sce.c_cell_type_tx == celltype2);
+        A2 = net.pcrnet(X2, 3, false, true, false, false, pkg.i_usegpu(X2));
         disp('A2 network built.');
         A2 = A2 ./ max(abs(A2(:)));
         % A=0.5*(A2+A2.');

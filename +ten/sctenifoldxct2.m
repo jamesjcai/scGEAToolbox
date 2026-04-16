@@ -117,7 +117,7 @@ end
 end
 
 function A = i_buildgrn(X)
-A = net.pcrnet(X);
+A = net.pcrnet(X, 3, false, true, false, false, pkg.i_usegpu(X));
 A = A ./ max(abs(A(:)));
 A = ten.e_filtadjc(A, 0.75, false);
 end

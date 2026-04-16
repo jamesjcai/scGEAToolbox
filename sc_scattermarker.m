@@ -163,6 +163,8 @@ elseif isStringScalar(targetg)
                 else
                     view(h2, 3);
                 end
+        otherwise
+                warning('sc_scattermarker:InvalidMethod', 'Unknown methodid %d. Use 1–5.', methodid);
         end % end of switch of methodid
 
 

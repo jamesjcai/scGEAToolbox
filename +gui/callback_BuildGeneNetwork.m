@@ -48,8 +48,8 @@ if cannotview
         G = net.i_makegraph(A, glist);
         if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Save network?'))
             if gui.i_isuifig(FigureHandle)
-                [file, path] = uiputfile(FigureHandle, {'*.mat'; '*.*'}, ...
-                    'Save as', 'network_file');
+                [file, path] = uiputfile({'*.mat'; '*.*'}, ...
+                    'Save as', 'network_file', 'Parent', FigureHandle);
             else
                 [file, path] = uiputfile({'*.mat'; '*.*'}, ...
                     'Save as', 'network_file');

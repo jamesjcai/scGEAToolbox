@@ -36,6 +36,8 @@ switch p.Results.type
         c_clustid = sc_snndpc(s, k);
     case 'mbkmeans'
         [~, ~, c_clustid] = pkg.e_mbkmeans(s, k);
+    otherwise
+        error('sc_cluster_s:InvalidType', 'Unknown clustering type: %s', p.Results.type);
 end
 
 if plotit

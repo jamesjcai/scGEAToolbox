@@ -57,6 +57,8 @@ else
             end
             if issparse(X), X_new = sparse(X_new); end
             X = X_new;
+        otherwise
+            error('sc_rmdugenes:InvalidMethod', 'Unknown methodid %d. Use 1, 2, 3, 4, or 5.', methodid);
     end
     genelist = genelist_out;
 end

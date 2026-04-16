@@ -22,9 +22,9 @@ X = sc_norm(sce.X);
 X = log1p(X);
 X0 = X(:, i1);
 X1 = X(:, i2);
-A0 = net.pcrnet(X0);
+A0 = net.pcrnet(X0, 3, false, true, false, false, pkg.i_usegpu(X0));
 disp('Constructing networks (2/2) ...')
-A1 = net.pcrnet(X1);
+A1 = net.pcrnet(X1, 3, false, true, false, false, pkg.i_usegpu(X1));
 A0sym = 0.5 * (A0 + A0');
 A1sym = 0.5 * (A1 + A1');
 

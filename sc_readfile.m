@@ -22,7 +22,7 @@ if nargin < 1
         genelist = [];
         return;
     end
-    filename = [pathname, filename];
+    filename = fullfile(pathname, filename);
 end
 
 if exist(filename, 'file') ~= 2

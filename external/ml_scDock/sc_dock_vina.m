@@ -135,19 +135,25 @@ for pi = 1:n_p
             box_sz = opt.box_size;
         end
 
-        % Build Vina command
+        % Build Vina command (--log removed in Vina v1.2+; capture stdout instead)
         cmd = sprintf(['"%s" --receptor "%s" --ligand "%s" ' ...
             '--center_x %.3f --center_y %.3f --center_z %.3f ' ...
             '--size_x %.1f --size_y %.1f --size_z %.1f ' ...
             '--exhaustiveness %d --num_modes %d ' ...
-            '--out "%s" --log "%s"'], ...
+            '--out "%s"'], ...
             opt.vina_exe, prot.pdbqt, comp.pdbqt, ...
             center(1), center(2), center(3), ...
             box_sz(1), box_sz(2), box_sz(3), ...
             opt.exhaustiveness, opt.n_modes, ...
-            pose_file, log_file);
+            pose_file);
 
         [status, cmdout] = system(cmd);
+        % Write stdout to log file (replaces --log behaviour)
+        fid = fopen(log_file, 'w');
+        if fid ~= -1
+            fprintf(fid, '%s', cmdout);
+            fclose(fid);
+        end
         if status ~= 0
             warning('sc_dock_vina:VinaFailed', ...
                 'Vina failed for %s vs %s:\n%s', prot.id, comp.id, cmdout);
@@ -168,8 +174,13 @@ T_results = table(prot_ids, comp_ids, affinities, pose_files, log_files, ...
 T_results = T_results(~isnan(T_results.affinity_kcal_mol), :);
 T_results = sortrows(T_results, 'affinity_kcal_mol', 'ascend');
 
-fprintf('[sc_dock_vina] Done. %d/%d runs succeeded. Best affinity: %.2f kcal/mol.\n', ...
-    height(T_results), n_total, T_results.affinity_kcal_mol(1));
+if height(T_results) > 0
+    fprintf('[sc_dock_vina] Done. %d/%d runs succeeded. Best affinity: %.2f kcal/mol.\n', ...
+        height(T_results), n_total, T_results.affinity_kcal_mol(1));
+else
+    warning('sc_dock_vina:NoDockingResults', ...
+        'All %d docking runs failed. Check receptor PDBQT files and Vina installation.', n_total);
+end
 
 result.T_results  = T_results;
 result.outdir     = opt.outdir;
@@ -198,11 +209,23 @@ if isstring(proteins) || iscellstr(proteins)
     proteins = string(proteins);
     tmp = struct('id', cell(numel(proteins),1), 'pdbqt', cell(numel(proteins),1));
     for i = 1:numel(proteins)
-        tmp(i).id = char(proteins(i));
-        pdb_file  = fullfile(outdir, [char(proteins(i)) '.pdb']);
-        pdbqt_file = fullfile(outdir, [char(proteins(i)) '.pdbqt']);
+        id_str = char(proteins(i));
+        tmp(i).id = id_str;
+        % Parse optional chain suffix: "1A22.B" -> pdb_base="1A22", chain="B"
+        if contains(id_str, '.')
+            parts    = strsplit(id_str, '.');
+            pdb_base = upper(parts{1});
+            chain    = upper(parts{2});
+            safe_id  = [pdb_base '_' chain];
+        else
+            pdb_base = upper(id_str);
+            chain    = '';
+            safe_id  = pdb_base;
+        end
+        pdb_file   = fullfile(outdir, [safe_id '.pdb']);
+        pdbqt_file = fullfile(outdir, [safe_id '.pdbqt']);
         if ~isfile(pdb_file)
-            i_fetch_pdb(proteins(i), pdb_file);
+            i_fetch_pdb(pdb_base, pdb_file, chain);
         end
         if ~isfile(pdbqt_file)
             i_pdb2pdbqt(pdb_file, pdbqt_file, obabel_exe, ph);
@@ -260,15 +283,44 @@ else
 end
 end
 
-function i_fetch_pdb(pdb_id, out_file)
-url = sprintf('https://files.rcsb.org/download/%s.pdb', upper(char(pdb_id)));
-fprintf('    Downloading PDB %s...\n', pdb_id);
+function i_fetch_pdb(pdb_id, out_file, chain_id)
+% Download PDB from RCSB. If chain_id is non-empty, keep only that chain's
+% ATOM/TER records (replicates download_pdb_chains_from_csv.py chain extraction).
+if nargin < 3, chain_id = ''; end
+base_id = upper(char(pdb_id));
+url = sprintf('https://files.rcsb.org/download/%s.pdb', base_id);
+fprintf('    Downloading PDB %s...\n', base_id);
+tmp_file = [out_file '.download.tmp'];
 try
-    websave(out_file, url);
+    websave(tmp_file, url);
 catch ME
     error('sc_dock_vina:PDBFetch', ...
-        'Failed to download PDB %s: %s', pdb_id, ME.message);
+        'Failed to download PDB %s: %s', base_id, ME.message);
 end
+if isempty(chain_id)
+    movefile(tmp_file, out_file);
+    return
+end
+% Filter to requested chain (PDB format: chain ID is column 22)
+fid_in  = fopen(tmp_file,  'r');
+fid_out = fopen(out_file, 'w');
+n_kept = 0;
+while ~feof(fid_in)
+    line = fgetl(fid_in);
+    if ~ischar(line), break; end
+    rec = strtrim(line(1:min(6, end)));
+    if (strcmp(rec, 'ATOM') || strcmp(rec, 'HETATM')) && ...
+            numel(line) >= 22 && upper(line(22)) == upper(chain_id(1))
+        fprintf(fid_out, '%s\n', line);
+        n_kept = n_kept + 1;
+    elseif strcmp(rec, 'TER') || strcmp(rec, 'END')
+        fprintf(fid_out, '%s\n', line);
+    end
+end
+fclose(fid_in);
+fclose(fid_out);
+delete(tmp_file);
+fprintf('    Extracted chain %s: %d ATOM records -> %s\n', chain_id, n_kept, out_file);
 end
 
 function i_fetch_pubchem(compound_id, out_file)
@@ -292,8 +344,9 @@ end
 end
 
 function i_pdb2pdbqt(pdb_file, pdbqt_file, obabel_exe, ph)
-% Remove water/heteroatoms, add hydrogens at given pH, output PDBQT
-cmd = sprintf('"%s" "%s" -O "%s" --addpolarh -p %.1f --partialcharge gasteiger 2>&1', ...
+% Remove water/heteroatoms, add hydrogens at given pH, output rigid receptor PDBQT.
+% -xr suppresses ROOT/ENDROOT/BRANCH/TORSDOF tags that Vina rejects in receptors.
+cmd = sprintf('"%s" "%s" -O "%s" --addpolarh -p %.1f --partialcharge gasteiger -xr 2>&1', ...
     obabel_exe, pdb_file, pdbqt_file, ph);
 [status, out] = system(cmd);
 if status ~= 0
@@ -387,4 +440,53 @@ if isempty(f)
 end
 lines = strtrim(splitlines(fileread(f)));
 cas_list = string(lines(~cellfun(@isempty, lines)));
+end
+
+function i_annotate_drug_info(cas_csv, drug_tsv)
+% Annotate drug info table by joining CAS/CID CSV with a drug database TSV
+% on the shared 'PubChem CID' column. Overwrites cas_csv in place.
+%
+% Replicates annotate_drug_info.py using native MATLAB table operations.
+%
+% INPUTS:
+%   cas_csv  - path to CSV with at least columns 'CAS number' and 'PubChem CID'
+%              (produced by i_fetch_pubchem / download_cas_pubchem.py)
+%   drug_tsv - path to tab-delimited drug database with a 'PubChem CID' column
+%              (e.g. DrugBank, ChEMBL export)
+if ~isfile(cas_csv)
+    error('sc_dock_vina:AnnotateDrug', 'cas_csv not found: %s', cas_csv);
+end
+if ~isfile(drug_tsv)
+    error('sc_dock_vina:AnnotateDrug', 'drug_tsv not found: %s', drug_tsv);
+end
+fprintf('[sc_dock_vina] Loading %s\n', cas_csv);
+T_cas  = readtable(cas_csv,  'TextType', 'string');
+fprintf('[sc_dock_vina] Loading %s\n', drug_tsv);
+T_drug = readtable(drug_tsv, 'FileType', 'text', 'Delimiter', '\t', ...
+    'TextType', 'string');
+% Normalise PubChem CID: strip trailing ".0", take first token before ";"
+T_cas.("PubChem_CID")  = i_clean_cid(T_cas.("PubChem_CID"));
+T_drug.("PubChem_CID") = i_clean_cid(T_drug.("PubChem_CID"));
+% Left join on PubChem CID
+T_out = outerjoin(T_cas, T_drug, 'Keys', 'PubChem_CID', ...
+    'MergeKeys', true, 'Type', 'left');
+% Put CAS number and PubChem CID first
+vars     = T_out.Properties.VariableNames;
+priority = {'CAS_number', 'PubChem_CID'};
+other    = vars(~ismember(vars, priority));
+T_out    = T_out(:, [priority(ismember(priority, vars)), other]);
+n_matched = sum(ismember(T_out.("PubChem_CID"), T_drug.("PubChem_CID")));
+fprintf('[sc_dock_vina] Matched %d / %d rows. Writing %s\n', ...
+    n_matched, height(T_out), cas_csv);
+writetable(T_out, cas_csv);
+end
+
+function cid = i_clean_cid(cid)
+% Normalise PubChem CID strings: take first token before ";", strip ".0" suffix.
+for k = 1:numel(cid)
+    s = strtrim(char(cid(k)));
+    if contains(s, ';'), s = strtrim(extractBefore(s, ';')); end
+    if length(s) > 2 && strcmp(s(end-1:end), '.0'), s = s(1:end-2); end
+    cid(k) = string(s);
+end
 end

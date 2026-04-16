@@ -3,32 +3,27 @@ function sc_stem3(X, Y, genelist, numgene)
 if nargin < 4, numgene = 50; end
 if ~isempty(Y), assert(size(X, 1) == size(Y, 1)); end
 
-bigX = [];
-bigY = [];
-bigZ = [];
+nz = size(X, 2);
+bigX = zeros(numgene, nz);
+bigY = zeros(numgene, nz);
+bigZ = zeros(numgene, nz);
 for k = 1:numgene
-    z = X(k, :);
-    x = k * ones(size(z));
-    y = 1:length(z);
-    bigX = [bigX; x];
-    bigY = [bigY; y];
-    bigZ = [bigZ; z];
+    bigX(k, :) = k;
+    bigY(k, :) = 1:nz;
+    bigZ(k, :) = X(k, :);
 end
-nz = length(z);
 % figure;
 
 stem3(bigX, bigY, bigZ, 'marker', 'none');
 if ~isempty(Y)
-    bigX = [];
-    bigY = [];
-    bigZ = [];
+    ny = size(Y, 2);
+    bigX = zeros(numgene, ny);
+    bigY = zeros(numgene, ny);
+    bigZ = zeros(numgene, ny);
     for k = 1:numgene
-        z = Y(k, :);
-        x = k * ones(size(z));
-        y = nz + (1:length(z));
-        bigX = [bigX; x];
-        bigY = [bigY; y];
-        bigZ = [bigZ; z];
+        bigX(k, :) = k;
+        bigY(k, :) = nz + (1:ny);
+        bigZ(k, :) = Y(k, :);
     end
     hold on
     stem3(bigX, bigY, bigZ, 'marker', 'none');

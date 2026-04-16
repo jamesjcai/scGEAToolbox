@@ -30,6 +30,8 @@ switch methodid
         rrw = S(:);
         [~, Graph] = kNNgraphmex(rrw, N, dim, kneighbors, 1);
         Graph = reshape(Graph, kneighbors+1, N);
+    otherwise
+        error('sc_knngraph:InvalidMethod', 'Unknown methodid %d. Use 1 or 2.', methodid);
 end
 
 if nargout > 0 || plotit

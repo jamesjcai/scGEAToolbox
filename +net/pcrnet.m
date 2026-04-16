@@ -1,16 +1,17 @@
-function [A] = pcrnet(X, ncom, fastersvd, dozscore, UseParallel, guiwaitbar)
+function [A] = pcrnet(X, ncom, fastersvd, dozscore, UseParallel, guiwaitbar, UseGPU)
 % Construct GRN using principal component regression (PCR)
 %
 % A = net.pcrnet(X)
 % A = net.pcrnet(X, ncom)
-% A = net.pcrnet(X, ncom, fastersvd, dozscore, UseParallel, guiwaitbar)
+% A = net.pcrnet(X, ncom, fastersvd, dozscore, UseParallel, guiwaitbar, UseGPU)
 %
 % X           - genes x cells expression matrix (LogNormalized recommended)
 % ncom        - number of principal components (default: 3)
-% fastersvd   - use lmsvd instead of svds (default: true)
+% fastersvd   - use lmsvd instead of svds (default: false)
 % dozscore    - z-score genes before regression (default: true)
-% UseParallel - use parfor loop (default: true)
+% UseParallel - use parfor loop (default: false)
 % guiwaitbar  - show GUI progress bar, serial only (default: false)
+% UseGPU      - use CUDA GPU via gpuArray (default: false; overrides fastersvd)
 %
 % ref: https://rdrr.io/cran/dna/man/PCnet.html
 %      https://github.com/cran/dna/blob/master/src/rpcnet.c
@@ -22,9 +23,21 @@ arguments
     dozscore(1, 1) logical = true
     UseParallel(1, 1) logical = false
     guiwaitbar(1, 1) logical = false
+    UseGPU(1, 1) logical = false
 end
 
 opts.maxit = 150;
+
+% GPU: move data to device before any computation; forces serial path
+if UseGPU
+    if gpuDeviceCount < 1
+        warning('net:pcrnet:NoGPU', 'No CUDA GPU found; falling back to CPU.');
+        UseGPU = false;
+    else
+        UseParallel = false;   % parfor + gpuArray not supported
+        fastersvd   = false;   % lmsvd does not support gpuArray
+    end
+end
 
 % Ensure toolbox root is on worker path so +net package is visible
 if UseParallel
@@ -35,6 +48,9 @@ end
 X = X.';
 if dozscore
     X = zscore(X);
+end
+if UseGPU
+    X = gpuArray(X);
 end
 n = size(X, 2);
 A = 1 - eye(n);
@@ -85,5 +101,8 @@ else
         A(k, A(k, :) == 1) = coeff * Beta';
     end
     if guiwaitbar, gui.gui_waitbar_adv(fw); end
+end
+if UseGPU
+    A = gather(A);
 end
 end

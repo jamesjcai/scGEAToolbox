@@ -19,5 +19,7 @@ switch p.Results.type
         [X] = pkg.norm_libsize(X);
     case 'deseq'
         [X] = pkg.norm_deseq(X);
+    otherwise
+        error('sc_norm:InvalidType', 'Unknown normalization type: %s', p.Results.type);
 end
 end

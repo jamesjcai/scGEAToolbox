@@ -7,7 +7,7 @@ status = 0;
 if nargin < 2
     [filename, pathname] = uiputfile({'*.rds'; '*.*'}, 'Save as');
     if ~(filename), return; end
-    filename = [pathname, filename];
+    filename = fullfile(pathname, filename);
 end
 status = run.r_saveSeuratRds(sce, filename);
 end

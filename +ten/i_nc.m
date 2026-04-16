@@ -29,7 +29,7 @@ for k = 1:nsubsmpl
         Xrep = X(:, randperm(n0));
         Xrep = Xrep(:, 1:csubsmpl);
     end
-    A = net.pcrnet(Xrep, ncom, true);
+    A = net.pcrnet(Xrep, ncom, true, true, false, false, pkg.i_usegpu(Xrep));
 
     XM(:, :, k) = ten.e_filtadjc(A, 0.95, false);
     a = max(abs(A(:)));
