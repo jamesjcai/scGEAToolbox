@@ -118,6 +118,8 @@ if ~strcmpi(answer, 'Yes'), return; end
 
 
 if isempty(A0)
+    [nsubsmpl, csubsmpl, savegrn] = gui.i_tenifoldnetpara(FigureHandle);
+    if isempty(nsubsmpl) || isempty(csubsmpl) || isempty(savegrn), return; end
     try
         fw = gui.myWaitbar(FigureHandle);
         parfor k=1:32
@@ -125,8 +127,8 @@ if isempty(A0)
         if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
 
         [T, A0] = ten.sctenifoldknk(sce.X, sce.g, idx, ...
-            'sorttable', true, 'nsubsmpl', 10, ...
-            'savegrn', isfolder(wkdir));
+            'sorttable', true, 'nsubsmpl', nsubsmpl, 'csubsmpl', csubsmpl, ...
+            'savegrn', savegrn);
         gui.myWaitbar(FigureHandle, fw);
     catch ME
         gui.myWaitbar(FigureHandle, fw);
@@ -190,7 +192,7 @@ end
 
 [answer, filename] = gui.i_exporttable(T, true, ...
     sprintf('Ttenifldknk_%s', sce.g(idx)), ...
-    sprintf('TenifldKnkTable_%s', sce.g(idx)));
+    sprintf('TenifldKnkTable_%s', sce.g(idx)), [], [], FigureHandle);
 if isempty(filename)
     fprintf('\nResults have been saved in %s.\n\n', answer);
 else

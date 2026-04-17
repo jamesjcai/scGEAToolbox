@@ -2,6 +2,10 @@ function callback_ShowClustersPop(src, ~)
 
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
+if ~isempty(FigureHandle)
+    figure(FigureHandle);
+    cleanupObj = onCleanup(@() figure(FigureHandle));
+end
 
 answer = gui.myQuestdlg(FigureHandle, ['Select a grouping variable and ' ...
 'show cell groups in new figures individually?']);

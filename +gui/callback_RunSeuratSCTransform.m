@@ -75,13 +75,12 @@ if ~isempty(X)
                 export2wsdlg(labels,vars,values,...
                         'Save Data to Workspace');
             case 'Save'
-                if gui.i_isuifig(FigureHandle)
-                    [file, path] = uiputfile('*.mat', 'Save as', ...
-                        'sctransformed_X.mat', 'Parent', FigureHandle);
-                else
+                % if gui.i_isuifig(FigureHandle)
+                %     [file, path] = uiputfile(FigureHandle, '*.mat', 'Save as');
+                % else
                     [file, path] = uiputfile('*.mat', 'Save as', ...
                         'sctransformed_X.mat');
-                end
+                %end
                 if isequal(file, 0) || isequal(path, 0)
                     disp('User canceled the file selection.');
                     return;

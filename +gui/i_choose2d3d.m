@@ -1,6 +1,10 @@
 function [ndim] = i_choose2d3d(parentfig)
 
 if nargin<1, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 ndim = [];
 answer3 = gui.myQuestdlg(parentfig, '3D or 2D?', '', ...
 {'3D', '2D'}, '3D');

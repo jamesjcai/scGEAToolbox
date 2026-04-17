@@ -141,12 +141,12 @@ if ~isempty(answer223) && strcmp(answer223, 'Yes')
         end
     end
 end
-gui.i_exporttable(T, true, 'Ttenifldnet', 'TenifldNetTable');
+gui.i_exporttable(T, true, 'Ttenifldnet', 'TenifldNetTable', [], [], FigureHandle);
 
 % 'Ttenifldxct', 'TenifldXctTable'
 % 'Ttenifldnet', 'TenifldNetTable'
 % 'Tgseaoutput', 'GSEAResultTable'
 if gseaok
-    gui.i_exporttable(Tr, true, 'Tgseaoutput', 'GSEAResultTable');
+    gui.i_exporttable(Tr, true, 'Tgseaoutput', 'GSEAResultTable', [], [], FigureHandle);
 end
 end

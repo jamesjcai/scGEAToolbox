@@ -13,6 +13,12 @@ if length(options) > 1e4
     return;
 end
 
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+
+
 parentPos = parentfig.Position;
 parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];
 
@@ -95,10 +101,6 @@ end
 % Wait for user response
 % d.WindowStyle = "modal";
 uiwait(d);
-
-if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
-    figure(parentfig);
-end
 
 % Get selected items
 if isvalid(d) && d.UserData

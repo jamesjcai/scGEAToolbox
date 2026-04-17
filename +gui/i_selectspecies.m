@@ -2,6 +2,10 @@ function [speciestag] = i_selectspecies(n, shorttag, parentfig, preferredspecies
 if nargin < 3, parentfig = []; end
 if nargin < 2, shorttag = false; end
 if nargin < 1, n = 2; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 if ~ispref('scgeatoolbox', 'preferredspecies')
     setpref('scgeatoolbox', 'preferredspecies', 'human');

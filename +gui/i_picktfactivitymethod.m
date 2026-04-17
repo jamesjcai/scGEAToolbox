@@ -17,6 +17,10 @@ function [answer, id] = i_picktfactivitymethod(parentfig)
 %   6. NMF                   — iterative factorization  (slowest 🐢)
 
 if nargin < 1, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 items = { ...
     '① WMEAN                              — weighted mean of target genes (fastest)', ...

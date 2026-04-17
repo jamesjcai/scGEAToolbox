@@ -3,10 +3,13 @@ function [X] = i_transformx(X, donorm, methodid, parentfig)
 if nargin < 4, parentfig = []; end
 if nargin < 3 || isempty(methodid), methodid = 3; end
 if nargin < 2 || isempty(donorm), donorm = false; end
-
 if nargin < 1
     X = nbinrnd(20, 0.98, 1000, 200);
     disp('Using simulated X.');
+end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
 end
 if donorm
     defaultans = 'Yes';

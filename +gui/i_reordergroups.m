@@ -3,6 +3,10 @@ function [c, cL, noanswer, newidx] = i_reordergroups(thisc, preorderedcL, ...
 
 if nargin < 3, parentfig = []; end
 if nargin < 2, preorderedcL = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 noanswer = true;
 [c, cL] = findgroups(string(thisc));
 newidx = 1:numel(cL);

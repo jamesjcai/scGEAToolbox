@@ -2,6 +2,10 @@ function [ptsSelected, updated] = ...
 i_expandbrushed(ptsSelected, sce, parentfig)
 
 if nargin < 3, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 updated = false;
 
 [c, ~] = findgroups(sce.c);

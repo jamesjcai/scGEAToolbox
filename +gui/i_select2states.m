@@ -3,6 +3,10 @@ function [thisc1, clabel1, thisc2, clabel2] = i_select2states(sce, ...
 
 if nargin<3, parentfig=[]; end
 if nargin<2, allowsingle = false; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 thisc1 = [];
 clabel1 = '';

@@ -1,6 +1,10 @@
 function [sce, needupdate] = sc_cellattribeditor(sce, addnew, parentfig)
 if nargin<3, parentfig = []; end
 if nargin<2, addnew = false; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 needupdate = false;
 

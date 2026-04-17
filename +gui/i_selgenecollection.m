@@ -1,5 +1,9 @@
 function [indx1, species] = i_selgenecollection(parentfig)
 if nargin < 1, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 % see also: i_selectcellscore % OK
 
 % MSigDB Molecular Signatures

@@ -2,6 +2,12 @@ function [s] = i_pickembedvalues(sce, ndim, parentfig)
 if nargin<2, ndim=[]; end
 if nargin<3, parentfig=[]; end
 
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+
+
 s = [];
 % slist = fieldnames(sce.struct_cell_embeddings);
 %
@@ -31,5 +37,8 @@ else
         'SelectionMode', 'single', 'ListString', ...
         vslist, 'ListSize', [220, 300]);
 end
-if ~tf, return; end
+if ~tf
+    figure(parentfig);
+    return; 
+end
 s = sce.struct_cell_embeddings.(vslist{indx});

@@ -1,11 +1,15 @@
 function [t] = i_confirmscript(qtxt, stxt, langtag, parentfig)
 
 if nargin<4, parentfig = []; end
-
-t = false;
 if nargin < 1, qtxt = 'Run pseudotime analysis (Monocle)?'; end
 if nargin < 2, stxt = 'R_monocle'; end
 if nargin < 3, langtag = 'R'; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+
+t = false;
 
 switch lower(langtag)
     case 'r'

@@ -1,5 +1,9 @@
 function [sce, filename] = sc_openscedlg(~, ~, parentfig)
 if nargin<3, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 sce = [];
 filename = [];
@@ -29,7 +33,7 @@ list = {'SCE Data File(s) (*.mat)...', ...
 preftagname ='openscedlgindex';
 defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
-if gui.i_isuifig(parentfig)
+    if gui.i_isuifig(parentfig)
         figure(parentfig);
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx), false);

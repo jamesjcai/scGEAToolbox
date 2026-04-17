@@ -3,6 +3,10 @@ function [i1, i2, cL1, cL2] = i_select2smplgrps(sce, needreorder, parentfig)
 
 if nargin < 3, parentfig = []; end
 if nargin < 2, needreorder = true; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 i1 = 0;
 i2 = 0;
 cL1 = [];

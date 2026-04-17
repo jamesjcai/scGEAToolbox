@@ -2,6 +2,10 @@ function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
 % see also: gui.gui_uishowrefinfo
 
 if nargin<2, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 y=false;
 txt = [];

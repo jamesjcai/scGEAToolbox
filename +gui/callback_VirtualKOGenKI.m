@@ -42,7 +42,7 @@ catch ME
 end
 
 
-gui.i_exporttable(T, true, 'Tgenkiglist', 'GenKIResulTable');
+gui.i_exporttable(T, true, 'Tgenkiglist', 'GenKIResulTable', [], [], FigureHandle);
 % "Tcellattrib","CellAttribTable"
 % "Tviolindata","ViolinPlotTable"
 % "Tgenkiglist","GenKIResulTable"

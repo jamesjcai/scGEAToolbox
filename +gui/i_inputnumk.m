@@ -5,6 +5,10 @@ if nargin < 4 || isempty(descstr), descstr = 'Enter a number'; end
 if nargin < 3 || isempty(b), b = 100; end
 if nargin < 2 || isempty(a), a = 1; end
 if nargin < 1, defaultk = 10; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 k = [];
 prompt = {sprintf('%s (%d..%d):', ...
 descstr, a, b)};

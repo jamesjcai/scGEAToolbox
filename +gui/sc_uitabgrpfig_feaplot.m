@@ -84,7 +84,7 @@ hx.show(parentfig);
 
 function in_savedata(~,~)
         gui.i_exporttable(table(fealabels), true, ...
-            'Tmarkerlist','MarkerListTable');
+            'Tmarkerlist', 'MarkerListTable', [], [], hFig);
     end
 
 function displaySelection(~,event)

@@ -3,6 +3,10 @@ enrichrtype] = gui_prepenrichr(genelist, ...
 backgroundlist, questtxt, parentfig)
 
 if nargin<4, parentfig=[]; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 enrichrtype = [];
 outgenelist = [];
 outbackgroundlist = [];

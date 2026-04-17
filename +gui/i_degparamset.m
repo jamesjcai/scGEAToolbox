@@ -1,8 +1,12 @@
 function [paramset] = i_degparamset(nogui, parentfig)
 
 if nargin<2, parentfig = []; end
-
 if nargin<1, nogui=false; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+
 % preftagname ='scimilmodelpath'
 % preftagname ='openscedlgindex';
 preftagname ='degtestparamset';

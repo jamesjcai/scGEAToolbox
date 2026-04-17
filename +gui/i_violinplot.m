@@ -186,7 +186,7 @@ function i_savedata(~, ~)
         T.Properties.VariableNames = {'ScoreLevel', 'GroupID'};
         % T=sortrows(T,'ScoreLevel','descend');
         % T=sortrows(T,'GroupID');
-        gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
+        gui.i_exporttable(T, true, 'Tviolindata', 'ViolinPlotTable', [], [], hFig);
     end
 
 end

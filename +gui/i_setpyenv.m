@@ -7,6 +7,10 @@ narginchk(2,3);
 if nargin < 3
     [parentfig] = gui.gui_getfigsce(src);
 end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 x = pyenv;
 if x.Version == "" % strlength(x.Executable)==0

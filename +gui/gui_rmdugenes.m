@@ -1,6 +1,10 @@
 function [needupdate, sce] = gui_rmdugenes(sce, parentfig)
 
 if nargin<2, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 needupdate = false;
 hasDuplicates = numel(unique(sce.g)) < numel(sce.g);
 if ~hasDuplicates, return; end

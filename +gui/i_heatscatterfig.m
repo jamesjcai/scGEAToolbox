@@ -4,6 +4,10 @@ function [hFig] = i_heatscatterfig(sce, cs, posg, csname, parentfig)
 
 if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 hx=gui.myFigure(parentfig);
 hFig = hx.FigHandle;
@@ -45,7 +49,7 @@ function in_callback_viewgenenames(~, ~)
 
 function in_callback_saveScoreTable(~, ~)
         gui.i_exporttable(table(cs), false, ...
-            char(matlab.lang.makeValidName(string(csname))));
+            char(matlab.lang.makeValidName(string(csname))), [], [], [], hFig);
     end
 
 function in_callback_geneheatmapx(~, ~)

@@ -1,5 +1,9 @@
 function [answer] = i_selvariabletype(y, parentfig)
 if nargin<2, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 [c] = findgroups(y);
 n = max(c);

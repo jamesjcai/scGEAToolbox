@@ -14,6 +14,10 @@ if nargin < 1
         tb = tb(1);
     end
 end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 pt = uipushtool(tb, 'Separator', 'on');
 
 try

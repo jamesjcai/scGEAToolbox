@@ -1,9 +1,12 @@
 function [thisc, clabel] = i_selectnstates(sce, continuousonly, ...
     initialsel, parentfig)
 if nargin<4, parentfig=[]; end
-
 if nargin < 3, initialsel = []; end
 if nargin < 2, continuousonly = false; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 thisc = [];
 clabel = [];

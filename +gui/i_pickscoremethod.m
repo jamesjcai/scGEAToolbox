@@ -1,10 +1,14 @@
 function [answer, id] = i_pickscoremethod(methodid, parentfig)
 
 if nargin < 2, parentfig = []; end
-
 if nargin < 1 || isempty(methodid)
     methodid = 0;
 end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+
 
 if methodid == 1
     answer = 'UCell [PMID:34285779]';

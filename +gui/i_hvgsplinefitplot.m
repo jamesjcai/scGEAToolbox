@@ -156,7 +156,7 @@ function in_callback_HighlightTopHVGs(~, ~)
     end
 
 function in_callback_ExportTable(~, ~)
-        gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable');
+        gui.i_exporttable(T, true, 'Tsplinefitg', 'SplinefitGTable', [], [], hFig);
     end
 
 function in_HighlightSelectedGenes(~,~,typeid)

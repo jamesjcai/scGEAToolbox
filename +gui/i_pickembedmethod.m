@@ -3,6 +3,10 @@ function [methodtagsel] = i_pickembedmethod(parentfig, allowmulti, dim)
 if nargin<3, dim = 0; end
 if nargin<2, allowmulti = true; end
 if nargin<1, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 methodtagsel = [];
 

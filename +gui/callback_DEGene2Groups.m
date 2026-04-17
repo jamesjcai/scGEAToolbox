@@ -1,6 +1,10 @@
 function callback_DEGene2Groups(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
+if ~isempty(FigureHandle)
+    figure(FigureHandle);
+    cleanupObj = onCleanup(@() figure(FigureHandle));
+end
 % if ~gui.gui_showrefinfo('DE Analysis', FigureHandle), return; end
 
 extprogname = 'scgeatool_DEAnalysis';

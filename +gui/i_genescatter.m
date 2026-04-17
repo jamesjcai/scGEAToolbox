@@ -63,7 +63,7 @@ h.BrushData = idx;
 end
 
 function in_callback_ExportTable(~, ~)
-gui.i_exporttable(T, true, 'Tmementores', 'MementoRsTable');
+gui.i_exporttable(T, true, 'Tmementores', 'MementoRsTable', [], [], hFig);
 % Tdegenelist
 % 'Tviolindata','ViolinPlotTable'
 % 'Thvgreslist', 'HVGResultTable'

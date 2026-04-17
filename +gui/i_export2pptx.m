@@ -1,8 +1,12 @@
 function i_export2pptx(F, glist, parentfig)
 
 if nargin<3, parentfig = []; end
-
 if nargin < 2, glist = {[]}; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+
 
 if ~license('test','matlab_report_gen') && ~isempty(which('mlreportgen.report.Report'))
     gui.myWarndlg(parentfig, ['Unable to check out a Report ' ...

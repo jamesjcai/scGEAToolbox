@@ -10,11 +10,11 @@ if ~(ismcc || isdeployed)
     addpath(pth);
     pth1 = fullfile(pw1, '..', 'external', 'ml_cbrewer');
     addpath(pth1);
-    umapversion = 'ml_umap45';
-    pth1 = fullfile(pw1, '..', 'external', umapversion);
-    addpath(pth1);
-    % pth3 = fullfile(pw1, '..', 'external', 'ml_UMAP', 'umap.jar');
-    % javaaddpath(pth3);
+    if verLessThan('matlab', '26.1')
+        umapversion = 'ml_umap45';
+        pth1 = fullfile(pw1, '..', 'external', umapversion);
+        addpath(pth1);
+    end
 end
 
 nstep = 6 + 1;
@@ -76,16 +76,20 @@ if showwaitbar, gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 3/3.
 S{end+1} = tsne(data, Perplexity = 50, NumDimensions = ndim);
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 1/3...'); end
-S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
-'n_neighbors', 15, 'verbose', 'none');
-
 if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 2/3...'); end
-S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
-'n_neighbors', 30, 'verbose', 'none');
-
 if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 3/3...'); end
-S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
-'n_neighbors', 50, 'verbose', 'none');
+if ~verLessThan('matlab', '26.1')
+    S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=15);
+    S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=30);
+    S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=50);
+else
+    S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
+        'n_neighbors', 15, 'verbose', 'none');
+    S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
+        'n_neighbors', 30, 'verbose', 'none');
+    S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
+        'n_neighbors', 50, 'verbose', 'none');
+end
 
 if dophate
     if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 1/3...'); end

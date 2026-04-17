@@ -7,6 +7,10 @@ if nargin < 5 || isempty(outtype), outtype = []; end
 if nargin < 4 || isempty(deffilename), deffilename = []; end
 if nargin < 3 || isempty(TName), TName = 'T'; end
 if nargin < 2 || isempty(needwait), needwait = true; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 filename = [];
 
 if ~isempty(outtype)
@@ -52,7 +56,6 @@ switch answer
         else
             [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
         end
-        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if isequal(file, 0) || isequal(path, 0)
             return;
         else

@@ -1,6 +1,10 @@
 function [nsubsmpl, csubsmpl, savegrn] = i_tenifoldnetpara(parentfig)
 
 if nargin<1, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 %   addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
 %   addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
 %   addOptional(p,'savegrn',false,@islogical);

@@ -231,7 +231,7 @@ if ~isempty(T)
             winopen(a);
             pause(2)
             if strcmp(gui.myQuestdlg(FigureHandle, 'Export result to other format?'), 'Yes')
-                gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
+                gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable', [], [], FigureHandle);
             end
         case 'Export result...'
             gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');

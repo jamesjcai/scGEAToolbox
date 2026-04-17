@@ -36,6 +36,10 @@ items {mustBeValidItemList}
 preselected_items {mustBeValidItemList} = []
 parentfig = []   % allow [] or matlab.ui.Figure
 end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
     if length(items) > 1e4
         idx = gui.i_shuttleselect(items, preselected_items, parentfig);

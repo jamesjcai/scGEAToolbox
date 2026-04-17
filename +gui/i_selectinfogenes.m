@@ -1,8 +1,11 @@
 function [sce] = i_selectinfogenes(sce, spciestag, parentfig)
 if nargin<3, parentfig = []; end
-% ---------------------------------
 if nargin < 2 || isempty(spciestag)
     spciestag = gui.i_selectspecies(2, false, parentfig);
+end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
 end
 if isempty(spciestag), return; end
 

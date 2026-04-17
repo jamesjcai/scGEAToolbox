@@ -2,6 +2,10 @@ function [continue_to_try, prepare_input_only] = i_memorychecked(ram_needed, par
 
 if nargin < 2, parentfig = []; end
 if nargin < 1, ram_needed = 32; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 continue_to_try = false;
 prepare_input_only = false;

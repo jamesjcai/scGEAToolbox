@@ -14,6 +14,10 @@ if nargin < 2, parentfig = []; end
 if nargin < 1
     selpath = uigetdir;
 end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 if isempty(selpath) || selpath == 0, return; end
 if ~isfolder(selpath), return; end
 

@@ -7,6 +7,10 @@ if nargin < 1
         "Gene4"; "Gene5"; "Gene6"; ...
         "Gene7"; "Gene8"; "Gene9"; "Gene10"];
 end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 s = sprintf('%s\n', glist0);
 s = s(1:end-1);
 prompt = {'Paste List:'};

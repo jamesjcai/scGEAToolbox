@@ -1,6 +1,10 @@
 function [OKPressed] = sc_savescedlg(sce, parentfig)
 
 if nargin<2, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 OKPressed = false;
 

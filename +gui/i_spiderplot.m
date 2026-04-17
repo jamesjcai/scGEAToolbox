@@ -120,7 +120,7 @@ function i_savedata(~, ~)
         T.Properties.DimensionNames{1} = 'Cell_ID';
         needwait = false;
         gui.i_exporttable(T, needwait, ...
-            'Tspiderdata', 'SpiderOutTable');
+            'Tspiderdata', 'SpiderOutTable', [], [], hFig);
     end
 
 end

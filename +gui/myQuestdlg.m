@@ -33,6 +33,12 @@ end
 if nargin < 3, title = ''; end
 if nargin < 2, message = 'Selection'; end
 if nargin < 1, parentfig = []; end
+
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+
 if isempty(parentfig) || ~gui.i_isuifig(parentfig)
     % Traditional figure-based app
     answer = questdlg(message, title, options{:}, defaultOption);
@@ -41,7 +47,7 @@ else
     if ~strcmp(options{end}, 'Cancel')
         options{end+1} = 'Cancel';
     end
-    figure(parentfig);
+    
     answer = uiconfirm(parentfig, message, title, ...
         'Options', options, ...
         'DefaultOption', find(strcmp(options, defaultOption)), ...

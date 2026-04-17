@@ -3,11 +3,12 @@ function [done] = i_setwrkdir(preftagname, parentfig)
 % see also: I_SETPYENV, I_SETRENV
 
 if nargin<2, parentfig = []; end
-[done] = false;
-
-% preftagname = 'externalwrkpath';    i_setextwd
-% preftagname = 'netanalywrkpath';    i_setnetwd
 if nargin < 1, preftagname = 'externalwrkpath'; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+[done] = false;
 
 if ~ispref('scgeatoolbox', preftagname)
     answer = gui.myQuestdlg(parentfig, ['Working directory has ' ...

@@ -1,6 +1,10 @@
 function [newclabel] = i_renamec(clabel, sce, newpickclabel, parentfig)
 if nargin < 4, parentfig = []; end
 if nargin < 3, newpickclabel = ''; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 if ~isempty(newpickclabel)
     newclabel = newpickclabel;

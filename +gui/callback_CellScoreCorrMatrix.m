@@ -1,6 +1,10 @@
 function callback_CellScoreCorrMatrix(src, ~)
 
 [FigureHandle, sce_ori] = gui.gui_getfigsce(src);
+if ~isempty(FigureHandle)
+    figure(FigureHandle);
+    cleanupObj = onCleanup(@() figure(FigureHandle));
+end
 sce = copy(sce_ori);
 
 if ~gui.gui_showrefinfo('Gene Program Correlation Matrix', FigureHandle), return; end
@@ -123,13 +127,8 @@ else
             absolutePath = char(java.io.File(defaultscorefile).getCanonicalPath());
             % javaFile = java.io.File(defaultscorefile);
             % absolutePath = char(javaFile.getAbsolutePath());
-            if gui.i_isuifig(FigureHandle)
-                [file, path] = uigetfile(FigureHandle, defaultscorefilename, ...
-                    'Select File', absolutePath);
-            else
-                [file, path] = uigetfile(defaultscorefilename, ...
-                    'Select File', absolutePath);
-            end
+            [file, path] = uigetfile(defaultscorefilename, ...
+                'Select File', absolutePath);
             if isequal(file, 0), return; end
             scorefile = fullfile(path, file);
             if isfile(scorefile)

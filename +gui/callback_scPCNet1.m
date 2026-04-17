@@ -81,13 +81,12 @@ if ~(ismcc || isdeployed)
 answer = gui.myQuestdlg(FigureHandle, 'Save network A to MAT file?');
 switch answer
         case 'Yes'
-            if gui.i_isuifig(FigureHandle)
-                [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...
-                    'GeneRegulatoryNetwork', 'Parent', FigureHandle);
-            else
+            % if gui.i_isuifig(FigureHandle)
+            %     [file, path] = uiputfile(FigureHandle, {'*.mat'; '*.*'}, 'Save as');
+            % else
                 [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as', ...
                     'GeneRegulatoryNetwork');
-            end
+            %end
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else
@@ -97,6 +96,6 @@ switch answer
                 save(filename, 'A', 'g', '-v7.3');
                 gui.myWaitbar(FigureHandle, fw);
             end
-    end
+end
 
 end

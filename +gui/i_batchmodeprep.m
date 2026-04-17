@@ -3,8 +3,12 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
       wrkdir, parentfig)
 
 if nargin<4, parentfig = []; end
-
 if nargin<3, wrkdir = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+
 done = false;
 CellTypeList = []; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
 

@@ -4,7 +4,10 @@ function [glist] = i_selectngenes(sce, predefinedlist, parentfig)
 if nargin < 2, predefinedlist = []; end
 if nargin < 3, parentfig = []; end
 
-% isui = gui.i_isuifig(parentfig);
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 % internal function used by callback_BuildGeneNetwork
 glist = [];
@@ -16,7 +19,6 @@ elseif isstring(sce)
     genelist = sce;
     gsorted = natsort(genelist);
 end
-
 
 if ~isempty(predefinedlist)
     predefinedlist = gsorted(matches(gsorted, predefinedlist, ...

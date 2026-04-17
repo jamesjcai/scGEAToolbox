@@ -4,6 +4,10 @@ if nargin<3, parentfig = []; end
 if ~isempty(src)
     [parentfig] = gui.gui_getfigsce(src);
 end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 selectedDir = '';
 preftagname = 'scimilmodelpath';
 if ispref('scgeatoolbox', preftagname)

@@ -3,6 +3,10 @@ function [pt]=gui_3dcamera(tb, prefix, flatview, parentfig)
 if nargin < 4, parentfig = []; end
 if nargin < 3, flatview = false; end
 if nargin < 2, prefix = ''; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 if nargin < 1
     hFig = gcf;
     % tb = findall(hFig, 'Type', 'uitoolbar');

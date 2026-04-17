@@ -1,6 +1,10 @@
 function [ptsSelected] = i_select1classcells(sce, askunselect, parentfig)
 if nargin < 2, askunselect = true; end
 if nargin < 3, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 ptsSelected = [];
 
 

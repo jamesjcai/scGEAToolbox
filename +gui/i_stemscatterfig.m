@@ -44,7 +44,7 @@ function in_callback_viewgenenames(~, ~)
 
 function in_callback_saveCrossTable(~, ~)
         gui.i_exporttable(table(cs), true, ...
-            char(matlab.lang.makeValidName(string(csname))));
+            char(matlab.lang.makeValidName(string(csname))), [], [], [], hFig);
     end
 
 function in_callback_geneheatmapx(~, ~)

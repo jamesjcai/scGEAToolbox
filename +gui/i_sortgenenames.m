@@ -1,5 +1,9 @@
 function [gsorted] = i_sortgenenames(sce, parentfig)
 if nargin < 2, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 gsorted = [];
 answer2 = gui.myQuestdlg(parentfig, 'How to sort genes?', 'Sort Genes', ...
 {'Alphabetic', 'Average Expression'}, 'Alphabetic');

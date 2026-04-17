@@ -1,6 +1,10 @@
 function [manuallyselect, bestonly] = i_annotemanner(parentfig)
 
 if nargin<1, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 manuallyselect = false;
 bestonly = true;

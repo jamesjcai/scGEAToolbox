@@ -8,6 +8,10 @@ if nargin < 3 || isempty(promptstr)
     promptstr = 'Select grouping variable:';
 end
 if nargin < 2 || isempty(allowsingle), allowsingle = true; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 thisc = [];
 clabel = '';
 

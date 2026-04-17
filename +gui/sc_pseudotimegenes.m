@@ -1,6 +1,10 @@
 function sc_pseudotimegenes(sce, t, parentfig)
 
 if nargin<3, parentfig=[]; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 t = t(:);
 
 [K, usehvgs] = gui.i_gethvgnum(sce, parentfig);

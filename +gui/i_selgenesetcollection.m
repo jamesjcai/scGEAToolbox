@@ -1,5 +1,9 @@
 function [selecteditem, speciesid] = i_selgenesetcollection(parentfig)
 if nargin<1, parentfig=[]; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 speciesid = [];
 selecteditem = [];

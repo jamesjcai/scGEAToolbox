@@ -2,6 +2,10 @@ function sc_uitabgrpfig_vioplot(y, tabnamelist, thisc, parentfig)
 
 if ~iscell(y), y = {y}; end
 if nargin<4, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 tabnamelist = string(tabnamelist);
 
 [~, cLorder] = findgroups(string(thisc));
@@ -422,7 +426,7 @@ function in_callback_savedata_alltab(~, ~)
          T = [t, T];
          % T=sortrows(T,'ScoreLevel','descend');
          % T=sortrows(T,'GroupID');
-         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
+         gui.i_exporttable(T, true, 'Tviolindata', 'ViolinPlotTable', [], [], hFig);
      end
 
 

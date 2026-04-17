@@ -270,6 +270,6 @@ function in_savedata(~, ~)
             t.Properties.VariableNames = matlab.lang.makeValidName(tabnamelist(tabidx));
             T = [T, t];
         end
-        gui.i_exporttable(T, true, 'Tscatterdata','ScatterPlotTable');
+        gui.i_exporttable(T, true, 'Tscatterdata', 'ScatterPlotTable', [], [], hFig);
     end
 end

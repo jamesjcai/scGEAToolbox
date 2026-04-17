@@ -1,6 +1,10 @@
 function [whitelist] = i_selectwhitelist(sce, parentfig)
 
 if nargin<2, parentfig=[]; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
 
 answer = gui.myQuestdlg(parentfig, 'Genes in whitelist will not be removed. Select whitelist genes?', ...
 'Whitelist Genes', {'Yes', 'No', 'Cancel'}, 'Yes');
