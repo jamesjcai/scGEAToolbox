@@ -70,7 +70,7 @@ for k = 1:length(selectedfiles)
     end
 
     [done, outfile] = llm.e_DPTableSummary(Tup, Tdn, wordfilename, selpath);
-    if done, rptview(outfile, 'docx'); end
+    if done, pkg.i_openoutputfile(outfile); end
 end
 
 gui.myWaitbar(parentfig, fw);

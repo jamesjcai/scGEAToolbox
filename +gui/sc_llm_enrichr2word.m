@@ -48,8 +48,6 @@ else
     return;
 end
 
-import mlreportgen.dom.*
-
 fw = gui.myWaitbar(parentfig);
 
 for k = 1:length(selectedfiles)
@@ -86,7 +84,7 @@ for k = 1:length(selectedfiles)
     % para = Paragraph("AI generated text");
     % append(doc, para);
     % close(doc);
-    if done, rptview(outfile, 'docx'); end
+    if done, pkg.i_openoutputfile(outfile); end
 end
 gui.myWaitbar(parentfig, fw);
 

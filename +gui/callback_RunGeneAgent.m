@@ -12,12 +12,12 @@ end
 
 
 if ~pkg.i_license
-        gui.myErrordlg(FigureHandle, ...
-            "This function requires passkey validation. You can " + ...
-            "validate your passkey by selecting Help → Validate " + ...
-            " Passkey from the menu.");
-        return;
-    end
+    gui.myErrordlg(FigureHandle, ...
+        "This function requires passkey validation. You can " + ...
+        "validate your passkey by selecting Help → Validate " + ...
+        " Passkey from the menu.");
+    return;
+end
 
 
 extprogname = 'geneagentwork';
@@ -86,6 +86,13 @@ function in_generateAIReport(s)
 str = formattedDisplayText(s);
 writelines(str, 'GeneAgent_Report.txt');
 % type 'struct_report.txt';
+[hasReportGen, msg] = pkg.i_isreportgenavailable('dom');
+if ~hasReportGen
+    gui.myWarndlg(FigureHandle, sprintf('%s Saved plain-text report instead.', msg));
+    pkg.i_openoutputfile(fullfile(pwd, 'GeneAgent_Report.txt'));
+    return;
+end
+
 import mlreportgen.dom.*
 % Assume your struct with 10 text paragraphs:
 
@@ -116,5 +123,5 @@ for k = 1:numel(fields)
 end
 % Finalize and open the report
 close(doc);
-rptview(doc.OutputPath);
+pkg.i_openoutputfile(doc.OutputPath);
 end

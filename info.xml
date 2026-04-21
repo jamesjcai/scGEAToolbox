@@ -6,7 +6,7 @@
 
   <!-- Supply the following six elements in the order specified -->
   <!-- (Required) Release of MATLAB -->
-  <matlabrelease>2025b</matlabrelease>
+  <matlabrelease>2026a</matlabrelease>
 
   <!-- (Required) Title of toolbox -->
   <name>scGEAToolbox</name>

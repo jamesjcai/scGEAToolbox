@@ -39,9 +39,9 @@ tstr = matlab.lang.makeValidName(string(datetime));
 b = 'sctenifoldnet_outs';
 a = sprintf('output_%s', tstr);
 if ~exist(fullfile(wkdir, b), 'dir')
-        mkdir(fullfile(wkdir, b));
-        drawnow;
-    end
+    mkdir(fullfile(wkdir, b));
+    drawnow;
+end
 f1 = fullfile(wkdir, b, a);
 save(f1, 'T', 'A0', 'A1', 'glist');
 a = sprintf('output_%s.xlsx', tstr);
@@ -50,7 +50,7 @@ writetable(T, f1, 'FileType', 'spreadsheet');
 fprintf('The result has been saved in %s\n', f1);
 bx = sprintf('The result has been saved in %s. Open the folder to locate it?', f1);
 if strcmp('Yes', gui.myQuestdlg(FigureHandle, bx))
-            winopen(fullfile(wkdir, b));
-    end
+    winopen(fullfile(wkdir, b));
+end
 
 end

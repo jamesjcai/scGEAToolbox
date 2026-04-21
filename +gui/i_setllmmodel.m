@@ -68,7 +68,7 @@ if ispref('scgeatoolbox', preftagname)
 end
 
 listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'Anthropic', ...
-             'DeepSeek', 'xAI', 'Mistral', 'Cohere'};
+             'NVIDIA', 'DeepSeek', 'xAI', 'Mistral', 'Cohere'};
 
 if gui.i_isuifig(parentfig)
     [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
@@ -156,6 +156,64 @@ switch selectedProvider
                                   'SelectionMode', 'single', ...
                                   'ListString', model_names, ...
                                   'ListSize', [220 300]);
+                end
+            end
+            if ok2
+                selectedModel = model_names{idx};
+                setpref('scgeatoolbox', preftagname, ...
+                    selectedProvider+":"+selectedModel);
+                done = true;
+            else
+                return;
+            end
+        end
+    case 'NVIDIA'
+        if ~exist(apikeyfile,"file")
+            gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
+        end
+        loadenv(apikeyfile,"FileType","env");
+        if ~isempty(getenv("NVIDIA_API_KEY"))
+            OPEN_WEBUI_API_ENDPOINT = getenv("NVIDIA_API_BASE");
+            models_url = sprintf('%s/models', OPEN_WEBUI_API_ENDPOINT);
+
+            options = weboptions('HeaderFields', {'Authorization', ...
+                sprintf('Bearer %s', getenv("NVIDIA_API_KEY"))}, ...
+                'ContentType', 'json', 'Timeout', 50);
+
+            fw = gui.myWaitbar(parentfig);
+
+            try
+                models_response = webread(models_url, options);
+                model_names = string({models_response.data.id});
+                % model_names = string(cellfun(@(s) s.id, models_response.data, 'UniformOutput', false));
+            catch ME
+                gui.myWaitbar(parentfig, fw, true);
+                gui.myErrordlg(parentfig, ME.message, 'Error fetching models');
+                return;
+            end
+
+            gui.myWaitbar(parentfig, fw);
+
+            [y, idx]=ismember('minimaxai/minimax-m2.5', model_names);
+            if y
+                if gui.i_isuifig(parentfig)
+                    [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                        'Select a model:', model_names(idx));
+                else
+                    [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
+                        'SelectionMode', 'single', ...
+                        'ListString', model_names, ...
+                        'ListSize', [220 300], 'InitialValue', idx);
+                end
+            else
+                if gui.i_isuifig(parentfig)
+                    [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                        'Select a model:');
+                else
+                    [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
+                        'SelectionMode', 'single', ...
+                        'ListString', model_names, ...
+                        'ListSize', [220 300]);
                 end
             end
             if ok2

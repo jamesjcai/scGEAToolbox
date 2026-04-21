@@ -2,6 +2,12 @@ function i_save2pptx(images, rmthem)
 
 
 if nargin < 2, rmthem = false; end
+[hasReportGen, msg] = pkg.i_isreportgenavailable('ppt');
+if ~hasReportGen
+    errordlg(sprintf('%s This function requires MATLAB Report Generator.', msg));
+    return;
+end
+
 import mlreportgen.ppt.*;
 % try
 pw1 = fileparts(mfilename('fullpath'));
@@ -20,7 +26,7 @@ for k = 1:length(images)
     % pictureSlide = add(ppt,'Title and Picture',2);
 close(ppt);
 gui.gui_waitbar(fw);
-rptview(ppt);
+pkg.i_openoutputfile(OUTppt);
 % catch ME
 %     gui.gui_waitbar(fw, true);
 %     errordlg(ME.message);

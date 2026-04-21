@@ -64,7 +64,7 @@ try
         end
 
         if isfield(choice, 'message') && isfield(choice.message, 'content')
-            response = choice.message.content;
+            response = choice.message.content
             fprintf('Response received successfully.\n');
             done = true;
         else

@@ -1,8 +1,6 @@
 function callback_EnrichrTab2Circos(src, ~, tab)
 
 if nargin<3, tab = []; end
-
-import mlreportgen.ppt.*;
 % pw1 = fileparts(mfilename('fullpath'));
 % pth = fullfile(pw1, '..', 'assets', 'myTemplate.pptx');
 

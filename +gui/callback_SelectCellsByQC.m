@@ -62,7 +62,7 @@ if sce.NumCells*sce.NumGenes < 4e8
         sceori = [];
     end
 
-switch listitems{indx}
+    switch listitems{indx}
         case {'SC_QCFILTER (Basic QC for Cells/Genes)',...
                 'SC_QCFILTER (Enabling Whitelist Genes)'}
 

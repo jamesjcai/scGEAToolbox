@@ -1,8 +1,5 @@
 function callback_DrawNetwork(src, ~)
 
-
-import mlreportgen.ppt.*;
-
 [FigureHandle] = gui.gui_getfigsce(src);
 
 answer = gui.myQuestdlg(FigureHandle, "Input edge list from:","Select Source", ...

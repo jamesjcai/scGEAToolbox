@@ -7,8 +7,7 @@ if nargin < 4, parentfig = []; end
 
 if ~isstring(fealabels), fealabels = string(fealabels); end
 
-if ismcc || isdeployed, makePPTCompilable(); end
-import mlreportgen.ppt.*;
+if (ismcc || isdeployed) && pkg.i_isreportgenavailable('ppt'), makePPTCompilable(); end
 
 % pw1 = fileparts(mfilename('fullpath'));
 % pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');

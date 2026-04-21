@@ -17,7 +17,6 @@ isdescend = false;
 thisc = strrep(string(thisc), '_', '\_');
 colorit = true;
 
-import mlreportgen.ppt.*;
 % pw1 = fileparts(mfilename('fullpath'));
 % pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 

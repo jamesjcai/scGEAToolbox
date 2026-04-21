@@ -62,7 +62,7 @@ X = log1p(X);
 
 [XM] = i_nc(X, nsubsmpl, 3, csubsmpl, usebootstrp);
 [A0] = i_td1(XM, tdmethod);
-if savegrn
+    if savegrn
         tstr = matlab.lang.makeValidName(strrep(sprintf("GRN_created_on_% s", datetime)," ", "_at_"));
         save(tstr, 'A0', 'genelist', '-v7.3');
         fprintf('\nConstructed gene regulatory network (GRN) is saved in A0_%s.mat\n', tstr);

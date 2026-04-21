@@ -51,11 +51,12 @@ if isnumeric(prefersel) && ~isempty(prefersel)
 end
 
 % Create a listbox for selection
+lbHeight = dlgSize(2) - 60 - 20;   % dialog height minus button row and top padding
 if ~isempty(prefersel) && any(ismember(prefersel, options))
-    lb = uilistbox(d, 'Items', options, 'Position', [20 60 dlgSize(1)-40, 370], ...
+    lb = uilistbox(d, 'Items', options, 'Position', [20 60 dlgSize(1)-40 lbHeight], ...
         'MultiSelect', multitag, 'Value', prefersel);
 else
-    lb = uilistbox(d, 'Items', options, 'Position', [20 60 dlgSize(1)-40, 370], ...
+    lb = uilistbox(d, 'Items', options, 'Position', [20 60 dlgSize(1)-40 lbHeight], ...
         'MultiSelect', multitag);
 end
 

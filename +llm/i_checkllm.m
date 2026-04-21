@@ -32,7 +32,7 @@ if isempty(provider)
 
 fprintf('Using LLM provider: %s\n', provider);
 
-model = providermodel{2};
+model = strjoin(providermodel(2:end), ':');
 fprintf('Using LLM model: %s\n', model);
 
 prompt = "What model are you?";

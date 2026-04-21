@@ -92,9 +92,6 @@ d.Visible=true;
 focus(fields(1));
 uiwait(d);
 
-if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
-    figure(parentfig);
-end
 
 % Retrieve data
 if isvalid(d) && d.UserData
@@ -108,6 +105,12 @@ else
         delete(d);
     end
 end
+
+if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+    figure(parentfig);
+end
+
+
 end
 
 function onOKButton(d, ~)

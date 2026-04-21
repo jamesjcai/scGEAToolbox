@@ -7,11 +7,9 @@ if ~isempty(parentfig)
     cleanupObj = onCleanup(@() figure(parentfig));
 end
 
-
-if ~license('test','matlab_report_gen') && ~isempty(which('mlreportgen.report.Report'))
-    gui.myWarndlg(parentfig, ['Unable to check out a Report ' ...
-        'Generator license. This function requires MATLAB ' ...
-        'Report Generator.']);
+[hasReportGen, msg] = pkg.i_isreportgenavailable('ppt');
+if ~hasReportGen
+    gui.myWarndlg(parentfig, sprintf('%s This function requires MATLAB Report Generator.', msg));
     return;
 end
 
@@ -119,7 +117,7 @@ switch answer
             delete(images{i});
         end
         gui.myWaitbar(parentfig, fw);
-        rptview(ppt);
+pkg.i_openoutputfile(OUTppt);
     otherwise
 
 end

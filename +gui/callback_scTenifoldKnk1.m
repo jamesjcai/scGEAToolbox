@@ -116,7 +116,6 @@ end
 
 if ~strcmpi(answer, 'Yes'), return; end
 
-
 if isempty(A0)
     [nsubsmpl, csubsmpl, savegrn] = gui.i_tenifoldnetpara(FigureHandle);
     if isempty(nsubsmpl) || isempty(csubsmpl) || isempty(savegrn), return; end

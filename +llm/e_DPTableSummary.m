@@ -102,8 +102,28 @@ if ~(done1 || done2)
 end
 if isempty(feedbk_up) && isempty(feedbk_dn), return; end
 
+[hasReportGen, msg] = pkg.i_isreportgenavailable('dom');
+outfileBase = char(fullfile(wrkdir, "Res_" + matlab.lang.makeValidName(infotagstr)));
+if ~hasReportGen
+    outfile = [outfileBase '.txt'];
+    lines = string.empty(0, 1);
+    if ~isempty(feedbk_up)
+        lines(end+1) = sprintf('%s - Up-regulated programs', infotagstr); %#ok<AGROW>
+        lines(end+1) = string(feedbk_up); %#ok<AGROW>
+        lines(end+1) = ""; %#ok<AGROW>
+    end
+    if ~isempty(feedbk_dn)
+        lines(end+1) = sprintf('%s - Down-regulated programs', infotagstr); %#ok<AGROW>
+        lines(end+1) = string(feedbk_dn); %#ok<AGROW>
+    end
+    writelines(lines, outfile);
+    warning('%s Saved plain-text report instead: %s', msg, outfile);
+    done = true;
+    return;
+end
+
 import mlreportgen.dom.*
-outfile = fullfile(wrkdir, "Res_" + matlab.lang.makeValidName(infotagstr));
+outfile = [outfileBase '.docx'];
 doc = mlreportgen.dom.Document(outfile, 'docx');
 open(doc);
 i_todoc(doc, sprintf('%s — Up-regulated programs', infotagstr), feedbk_up);

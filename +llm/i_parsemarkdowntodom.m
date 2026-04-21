@@ -16,6 +16,11 @@ function domBlocks = i_parsemarkdowntodom(text)
 %       append(doc, domBlocks{k});
 %   end
 
+if ~pkg.i_isreportgenavailable('dom')
+    error('llm:i_parsemarkdowntodom:MissingReportGenerator', ...
+        'MATLAB Report Generator is required to create DOM blocks.');
+end
+
 import mlreportgen.dom.*
 
 domBlocks = {};
