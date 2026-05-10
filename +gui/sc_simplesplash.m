@@ -6,12 +6,13 @@ mfolder = fileparts(mfilename('fullpath'));
     % splashpng = 'splash.png';
 splashdir = fullfile(mfolder, '..','assets', 'Images', 'splash_folder');
 a = dir(splashdir);
+a = a(~[a.isdir]);  % keep files only
 
-if length(a)<=2, return; end
+if isempty(a), return; end
 d = datetime('today');
 seed = year(d) * 10000 + month(d) * 100 + day(d);
 rng(seed);
-idx = 2+randi(length(a)-2);
+idx = randi(length(a));
 pngfilename = a(idx).name;
 splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilename);
 

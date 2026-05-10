@@ -1,4 +1,4 @@
-function [succeeded] = py_writeh5ad(sce, fname, wkdir, isdebug)
+function [succeeded] = py_writeh5ad(sce, fname, wkdir, isdebug, testpy)
 
 succeeded = false;
 if nargin < 2, fname = tempname + ".h5ad"; end
@@ -9,6 +9,7 @@ if nargin<3 || isempty(wkdir)
     if isempty(wkdir), return; end
 end
 if nargin < 4, isdebug = true; end
+if nargin < 5, testpy = true; end
 
 oldpth = pwd();
 pw1 = fileparts(mfilename('fullpath'));
@@ -19,7 +20,10 @@ else
     disp('Using working directory provided.');
     cd(wkdir);
 end
-fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+
+if testpy
+    fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+end
 
 x = pyenv;
 try
@@ -29,18 +33,19 @@ catch
 end
 codepth = pkg.i_normalizepath(codepth);
 
-codefullpath = fullfile(codepth,'require.py');
-cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
-disp(cmdlinestr)
-[status, cmdout] = system(cmdlinestr, '-echo');
-if status ~= 0
-    cd(oldpth);
-    if isvalid(fw)
-        gui.gui_waitbar(fw, true);
+if testpy
+    codefullpath = fullfile(codepth,'require.py');
+    cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
+    disp(cmdlinestr)
+    [status, cmdout] = system(cmdlinestr, '-echo');
+    if status ~= 0
+        cd(oldpth);
+        if isvalid(fw)
+            gui.gui_waitbar(fw, true);
+        end
+        error(cmdout);
     end
-    error(cmdout);
 end
-
 
 tmpfilelist = {'X.mat', 'g.csv', 'c.csv'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
@@ -59,7 +64,7 @@ T = pkg.i_makeattributestable(sce);
 writetable(T,'c.csv');
 % disp('Files written.');
 
-if isvalid(fw)
+if testpy && isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
     gui.gui_waitbar(fw, [], [], 'Running py\_writeh5ad...');
@@ -72,11 +77,13 @@ disp(cmdlinestr)
 [status1] = system(cmdlinestr, '-echo');
 [status2] = movefile('output.h5ad',fname);
 
-if status1 == 0 && status2 == 1 && isvalid(fw)
+if status1 == 0 && status2 == 1 && testpy && isvalid(fw)
     gui.gui_waitbar(fw, false, 'File is written.');
     succeeded = true;
 else
-    gui.gui_waitbar(fw, true, 'File is failed to save.');
+    if testpy
+        gui.gui_waitbar(fw, true, 'File is failed to save.');
+    end
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

@@ -5,7 +5,6 @@ if ~isempty(FigureHandle)
     figure(FigureHandle);
     cleanupObj = onCleanup(@() figure(FigureHandle));
 end
-% if ~gui.gui_showrefinfo('DE Analysis', FigureHandle), return; end
 
 extprogname = 'scgeatool_DEAnalysis';
 preftagname = 'externalwrkpath';
@@ -19,6 +18,9 @@ if isscalar(i1) || isscalar(i2), return; end
 [i1, i2, cL1, cL2, cancelled] = gui.i_whichvswhich(FigureHandle, i1, i2, cL1, cL2);
 if cancelled, return; end
 
+fw = gui.myWaitbar(FigureHandle, [], false, 'Computing DE results...');
+cleanupFw = onCleanup(@() i_closewaitbar(fw));
+
 try
     T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, true, FigureHandle);
 catch ME
@@ -26,122 +28,59 @@ catch ME
     return;
 end
 
+outfile = sprintf('%s_vs_%s_DE_results', ...
+    matlab.lang.makeValidName(string(cL1)), ...
+    matlab.lang.makeValidName(string(cL2)));
+filesaved = fullfile(outdir, [outfile, '.xlsx']);
 
-outfile = sprintf("%s_vs_%s_DE_results.xlsx", ...
-matlab.lang.makeValidName(string(cL1)), ...
-matlab.lang.makeValidName(string(cL2)));
-
-filesaved = fullfile(outdir, outfile);
-try
-
-    % [~, filesaved] = gui.i_exporttable(T, true, ...
-    %    'Tdegenelist', outfile, 'Excel file', "All_raw", FigureHandle);
-    writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
-catch
-    return;
-end
-if ~isfile(filesaved), return; end
-% gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
-
-if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
-        sprintf('Result has been saved in %s. Additional Analysis?', filesaved)))
-    if strcmp('Yes', gui.myQuestdlg(FigureHandle,'Open Output Folder?'))
-        winopen(fileparts(filesaved));
-    end
-    return;
-end
-
-items = {'Set Filter Parameters', 'Enrichr Analysis', ...
-'LLM Summarize', 'Generate Volcano Plot', 'Open Output Folder'};
-selected = gui.myChecklistdlg(FigureHandle, items, ...
-'Title', 'Select Items','DefaultSelection', [2 4 5]);
-if isempty(selected)
-    % writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
-    % gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s', filesaved));
-    return;
-end
-
-
-% Process the selected analyses
-if any(contains(selected, 'Set Filter Parameters'))
-    [paramset] = gui.i_degparamset(false, FigureHandle);
-else
-    degparamtag = 'degtestparamset';
-    paramset = getpref('scgeatoolbox', degparamtag, {0.05, 1.0, 0.01, 'Adjusted P-value'});
-end
-
-fw = gui.myWaitbar(FigureHandle);
-
+degparamtag = 'degtestparamset';
+paramset = getpref('scgeatoolbox', degparamtag, {0.05, 1.0, 0.01, 'Adjusted P-value'});
 [Tup, Tdn, paramset] = pkg.e_processdetable(T, paramset, FigureHandle);
 [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1), sum(i2));
 
+gui.myWaitbar(FigureHandle, fw, false, '', 'Saving DE results...', 0.85);
 try
     writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_processed');
-    writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-    writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
-    writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
+    writetable(Tup, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Up-regulated');
+    writetable(Tdn, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Down-regulated');
+    writetable(Tnt, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Note');
 catch ME
     warning(ME.message);
 end
 
+i_closewaitbar(fw);
 
-% Perform additional analyses based on user selection
-if any(contains(selected, 'Enrichr Analysis'))
-    gui.myWaitbar(FigureHandle, fw, false, '', 'Enrichr Analysis...', 2/3);
+plotAction(1) = struct('Text', 'Generate Volcano Plot', ...
+    'Tooltip', 'Generate volcano plot for DE results', ...
+    'Callback', @in_callback_generatevolcano);
+plotAction(2) = struct('Text', 'Enrichr Analysis', ...
+    'Tooltip', 'Run Enrichr with up/down-regulated DE genes', ...
+    'Callback', @in_callback_enrichr_fromtable);
+gui.TableViewerApp(T, FigureHandle, outfile, plotAction);
+
+
+function in_callback_generatevolcano(~, figtab)
+    e_volcano(T, Tup, Tdn, figtab);
+end
+
+function in_callback_enrichr_fromtable(~, figtab)
+    fw2 = gui.myWaitbar(figtab, [], false, 'Running Enrichr analysis...');
     try
-        gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
+        gui.e_enrichrxlsx(Tup, Tdn, T, filesaved);
     catch ME
-        warning(ME.message);
+        gui.myWaitbar(figtab, fw2, true);
+        gui.myErrordlg(figtab, ME.message, ME.identifier);
+        return;
     end
+    gui.myWaitbar(figtab, fw2, true);
+    winopen(fileparts(filesaved));
 end
 
-if any(contains(selected, 'LLM Summarize'))
-    hasLLMConfig = ispref('scgeatoolbox', 'llapikeyenvfile') && ...
-        ispref('scgeatoolbox', 'llmodelprovider');
-    if ~hasLLMConfig
-        if strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
-                'LLM is not set up. Set it up now?'))
-            gui.i_setllmmodel(src);
-        end
-        hasLLMConfig = ispref('scgeatoolbox', 'llapikeyenvfile') && ...
-            ispref('scgeatoolbox', 'llmodelprovider');
-        if ~hasLLMConfig
-            gui.myWarndlg(FigureHandle, ...
-                'LLM Summarize skipped: LLM provider/model not configured.');
-            selected = selected(~contains(selected, 'LLM Summarize'));
-        end
-    end
-end
-if any(contains(selected, 'LLM Summarize'))
-    gui.myWaitbar(FigureHandle, fw, false, '', 'LLM Summarize...', 2/3);
+function i_closewaitbar(fwx)
+    if nargin < 1 || isempty(fwx), return; end
     try
-        [TbpUpEnrichr, TmfUpEnrichr, ...
-                TbpDnEnrichr, TmfDnEnrichr] = pkg.in_XLSX2DETable(filesaved);
-        [~, wordfilename] = fileparts(filesaved);
-
-        llm.e_DETableSummary(TbpUpEnrichr, ...
-            TmfUpEnrichr, TbpDnEnrichr, ...
-            TmfDnEnrichr, wordfilename, outdir);
-    catch ME
-        warning(ME.message);
-    end
-end
-
-f = [];
-if any(contains(selected, 'Generate Volcano Plot'))
-    gui.myWaitbar(FigureHandle, fw, false, '', 'Generate Volcano Plot...', 2/3);
-    try
-        f = e_volcano(T, Tup, Tdn, FigureHandle);
-    catch ME
-        warning(ME.message);
-    end
-end
-gui.myWaitbar(FigureHandle, fw);
-
-if any(contains(selected, 'Open Output Folder'))
-    if isempty(f), f = FigureHandle; end
-    if strcmp('Yes', gui.myQuestdlg(f,'Open Output Folder?'))
-        winopen(fileparts(filesaved));
+        if isvalid(fwx), close(fwx); end
+    catch
     end
 end
 
@@ -196,6 +135,9 @@ function hFig = e_volcano(T, Tup, Tdn, parentfig)
     h = e_v(T, ax);
     e_v(Tup, ax);
 
+    xl = max(abs(xlim(ax)));
+    xlim(ax, [-xl, xl]);
+
     h.MarkerFaceColor=[.5 .5 .5];
     h.MarkerEdgeColor=[.5 .5 .5];
     title(ax, sprintf('%s vs. %s', ...
@@ -218,7 +160,6 @@ function hFig = e_volcano(T, Tup, Tdn, parentfig)
             'HorizontalAlignment', 'center', ...
             'VerticalAlignment', 'top', ...
             'FontSize', 10);
-        % drawnow;
         updateTextbox;
         hFig.AutoResizeChildren = 'off';
         hFig.SizeChangedFcn = @updateTextbox;
@@ -258,13 +199,7 @@ function hFig = e_volcano(T, Tup, Tdn, parentfig)
         fc(fc>999) = 10;
         x = fc;
         y = -log10(pvals);
-        % [~, idx] = maxk(abs(y), 5);
         h = scatter(ax, x, y, 8, "filled");
-        % hold(ax,"on");
-        % scatter(x(idx),y(idx),'rx');
-        % for k = 1:length(idx)
-            % text(x(idx(k))+0.05, y(idx(k)), genelist(idx(k)));
-        % end
 
         if isempty(genelist)
             disp('Empty genelist.');
@@ -278,19 +213,5 @@ function hFig = e_volcano(T, Tup, Tdn, parentfig)
 end
 
 % ------- end of volcano_plot
-
-% function i_replaceinf(T)
-%     % Iterate over each variable in the table
-%     for varIdx = 1:width(T)
-%         % Check if the variable is numeric
-%         if isnumeric(T{:, varIdx})
-%             % Replace positive Inf with 1e99
-%             T{T{:, varIdx} == Inf, varIdx} = 1e99;
-%             % Replace negative Inf with -1e99
-%             T{T{:, varIdx} == -Inf, varIdx} = -1e99;
-%         end
-%     end
-%
-% end
 
 end

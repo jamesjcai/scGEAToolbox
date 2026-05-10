@@ -1,4 +1,4 @@
-function [T] = sc_dpg(X, Y, g, setmatrx, setnames, setgenes, ranknorm, bgsubtract)
+function [T, Zx, Zy] = sc_dpg(X, Y, g, setmatrx, setnames, setgenes, ranknorm, bgsubtract)
 % SC_DPG - Differential Program (DP) analysis between two groups of cells
 %
 % Instead of testing individual genes, this function projects cell expression
@@ -87,7 +87,15 @@ for k = 1:n
             % [bx]=nbinfit(b);
             [ax] = mean(a);
             [bx] = mean(b);
-            avg_log2FC(k) = log2(ax(1) ./ bx(1));
+            ratio = ax(1) ./ bx(1);
+            if ratio > 0
+                % sign(ax-bx) gives correct direction when both values are
+                % negative (bgsubtract case): ratio is positive but the larger
+                % absolute negative value is actually the lower score.
+                avg_log2FC(k) = sign(ax(1)) * log2(ratio);
+            end
+            % ratio <= 0 means means have opposite signs; avg_log2FC stays NaN
+            % and is filtered out downstream — log2 of negative is complex
             v1(k) = ax(1);
             v2(k) = bx(1);
             n1(k) = numel(a);

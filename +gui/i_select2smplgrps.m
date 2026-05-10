@@ -44,11 +44,15 @@ end
 
 
  if n == 2
-     answer = 'Two Samples';
- elseif n > 2
-     [answer] = gui.myQuestdlg(parentfig, 'Select two samples or two sample groups?', '', ...
-             {'Two Samples', 'Two Sample Groups', 'Cancel'}, 'Two Samples');
+     i1 = ci == 1;
+     i2 = ci == 2;
+     cL1 = cLi(1);
+     cL2 = cLi(2);
+     return;
  end
+
+ [answer] = gui.myQuestdlg(parentfig, 'Select two samples or two sample groups?', '', ...
+         {'Two Samples', 'Two Sample Groups', 'Cancel'}, 'Two Samples');
  if isempty(answer), return; end
  switch answer
      case 'Two Samples'

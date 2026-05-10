@@ -44,8 +44,11 @@ function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir)
 if nargin < 3 || isempty(data_dir), data_dir = 'data'; end
 if nargin < 4, out_dir = []; end
 
+max_cells = 2000;   % subsample per cell type for speed
+
 results = struct('cell_type', {}, 'n1', {}, 'n2', {}, ...
                  'T', {}, 'Tup', {}, 'Tdn', {});
+skipped = {};   % records of skipped cell types with reasons
 
 % ---- Load SCE objects -----------------------------------------------
 sce1 = i_load_sce(sample_id1, data_dir);
@@ -88,14 +91,29 @@ for k = 1:numel(shared_ct)
     if n1 < 500 || n2 < 500
         fprintf('Skipping "%s": fewer than 500 cells (%d in sample1, %d in sample2).\n', ...
             ct, n1, n2);
+        skipped{end+1} = struct('cell_type', char(ct), 'n1', n1, 'n2', n2, ...
+            'reason', sprintf('insufficient_cells (need ≥500 each; have %d vs %d)', n1, n2));
         continue;
     end
 
     fprintf('DV for "%s": %d vs %d cells ... ', ct, n1, n2);
 
+    idx1 = find(mask1);
+    idx2 = find(mask2);
+    if numel(idx1) > max_cells
+        idx1 = idx1(randperm(numel(idx1), max_cells));
+        fprintf('(subsampled→%d) ', max_cells);
+    end
+    if numel(idx2) > max_cells
+        idx2 = idx2(randperm(numel(idx2), max_cells));
+        fprintf('(subsampled→%d) ', max_cells);
+    end
+    n1 = numel(idx1);
+    n2 = numel(idx2);
+
     % Subset SCE objects by cell type
-    sce1_ct = sce1.selectcells(mask1);
-    sce2_ct = sce2.selectcells(mask2);
+    sce1_ct = sce1.selectcells(idx1);
+    sce2_ct = sce2.selectcells(idx2);
 
     % QC filter (remove low-quality cells/genes after subsetting)
     sce1_ct = sce1_ct.qcfilter;
@@ -104,6 +122,8 @@ for k = 1:numel(shared_ct)
     if sce1_ct.NumCells < 10 || sce2_ct.NumCells < 10 || ...
        sce1_ct.NumGenes < 10 || sce2_ct.NumGenes < 10
         fprintf('SKIPPED (too few cells/genes after QC filter).\n');
+        skipped{end+1} = struct('cell_type', char(ct), 'n1', n1, 'n2', n2, ...
+            'reason', 'insufficient_cells_after_qc_filter');
         continue;
     end
 
@@ -113,6 +133,8 @@ for k = 1:numel(shared_ct)
             {char(sample_id1)}, {char(sample_id2)}, 'splinefit');
     catch ME
         fprintf('FAILED: %s\n', ME.message);
+        skipped{end+1} = struct('cell_type', char(ct), 'n1', n1, 'n2', n2, ...
+            'reason', sprintf('analysis_error: %s', ME.message));
         continue;
     end
 
@@ -152,16 +174,17 @@ for k = 1:numel(shared_ct)
     end
 end
 
-fprintf('\nDV analysis complete: %d cell type(s) analysed.\n', numel(results));
+fprintf('\nDV analysis complete: %d cell type(s) analysed, %d skipped.\n', ...
+    numel(results), numel(skipped));
 
 % ---- Print JSON summary for agent consumption -----------------------
-i_print_json_summary(results, sample_id1, sample_id2);
+i_print_json_summary(results, skipped, sample_id1, sample_id2);
 end
 
 
 % ---- Helper: print JSON summary of top DV genes ---------------------
-function i_print_json_summary(results, sample_id1, sample_id2, top_n)
-if nargin < 4, top_n = 20; end
+function i_print_json_summary(results, skipped, sample_id1, sample_id2, top_n)
+if nargin < 5, top_n = 20; end
 
 cell_types = {};
 for k = 1:numel(results)
@@ -180,10 +203,22 @@ for k = 1:numel(results)
         'top_dn',    {top_dn}); %#ok<AGROW>
 end
 
+% Build no_results_reason when nothing passed
+no_results_reason = '';
+if isempty(cell_types) && ~isempty(skipped)
+    no_results_reason = sprintf(['All %d shared cell type(s) were skipped. ' ...
+        'DV requires ≥500 cells per cell type in each sample. See skipped[] ' ...
+        'for per-cell-type counts and reasons.'], numel(skipped));
+elseif isempty(cell_types)
+    no_results_reason = 'No shared annotated cell types found between the two samples.';
+end
+
 summary = struct( ...
-    'sample1',    char(sample_id1), ...
-    'sample2',    char(sample_id2), ...
-    'cell_types', {cell_types});
+    'sample1',           char(sample_id1), ...
+    'sample2',           char(sample_id2), ...
+    'cell_types',        {cell_types}, ...
+    'skipped',           {skipped}, ...
+    'no_results_reason', no_results_reason);
 
 fprintf('\n%%DV_JSON_SUMMARY_BEGIN%%\n%s\n%%DV_JSON_SUMMARY_END%%\n', ...
     jsonencode(summary, 'PrettyPrint', true));

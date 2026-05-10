@@ -1,4 +1,4 @@
-function [sce] = i_selectinfogenes(sce, spciestag, parentfig)
+function [sce, spciestag] = i_selectinfogenes(sce, spciestag, parentfig)
 if nargin<3, parentfig = []; end
 if nargin < 2 || isempty(spciestag)
     spciestag = gui.i_selectspecies(2, false, parentfig);

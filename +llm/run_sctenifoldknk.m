@@ -70,7 +70,7 @@ fprintf('Knockout gene: %s\n', kogene);
 max_genes = 3000;
 if sce.NumGenes > max_genes
     fprintf('Limiting to top %d HVGs (from %d genes)...\n', max_genes, sce.NumGenes);
-    sce = i_limit_genes(sce, max_genes, kogene);
+    sce = llm.i_limit_genes(sce, max_genes, kogene);
     fprintf('Genes after HVG selection: %d\n', sce.NumGenes);
 end
 
@@ -101,6 +101,8 @@ if ~isempty(out_dir) && ~isfolder(out_dir)
     mkdir(out_dir);
 end
 
+max_cells = 1000;   % subsample per cell type; GRN build time grows with cells
+
 i_log(out_dir, sprintf('START scTenifoldKnk (lite): %s | kogene=%s | %d cell types', ...
     sample_id, kogene, numel(cell_types)));
 
@@ -120,7 +122,13 @@ for k = 1:numel(cell_types)
     fprintf('\nscTenifoldKnk (lite) for "%s": %d cells, KO=%s ...\n', ct_k, n, kogene);
     i_log(out_dir, sprintf('BEGIN "%s": n=%d kogene=%s', ct_k, n, kogene));
 
-    X = full(sce.X(:, mask));
+    cell_idx = find(mask);
+    if numel(cell_idx) > max_cells
+        cell_idx = cell_idx(randperm(numel(cell_idx), max_cells));
+        fprintf('  Subsampled: %d → %d cells\n', n, max_cells);
+        n = max_cells;
+    end
+    X = full(sce.X(:, cell_idx));
     X = sc_norm(X);
     X = log1p(X);
 
@@ -274,15 +282,3 @@ end
 end
 
 
-% ---- Helper: keep top n HVGs; always include mustkeep gene ----------
-function sce = i_limit_genes(sce, n, mustkeep)
-T_hvg = sc_splinefit(sce.X, sce.g);
-glist = T_hvg.genes(1:min(n, sce.NumGenes));
-if nargin >= 3 && ~isempty(mustkeep) && ~ismember(mustkeep, glist)
-    glist(end) = mustkeep;
-end
-[~, hidx] = ismember(glist, sce.g);
-hidx = hidx(hidx > 0);
-sce.X = sce.X(hidx, :);
-sce.g = sce.g(hidx);
-end

@@ -18,14 +18,14 @@ if ~isempty(parentfig)
     figure(parentfig);
     cleanupObj = onCleanup(@() figure(parentfig));
 end
-if isempty(selpath) || selpath == 0, return; end
+if isempty(selpath) || isequal(selpath, 0), return; end
 if ~isfolder(selpath), return; end
 
-files = dir(fullfile(selpath, '*_DP_*.xlsx'));
+files = dir(fullfile(selpath, '*DP_*.xlsx'));
 listItems = string({files(~[files.isdir]).name});
 
 if isempty(listItems)
-    fprintf('No *_DP_*.xlsx files found in %s\n', selpath);
+    fprintf('No *DP_*.xlsx files found in %s\n', selpath);
     return;
 end
 

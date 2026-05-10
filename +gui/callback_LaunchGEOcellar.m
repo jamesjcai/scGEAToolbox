@@ -17,15 +17,19 @@ if ~pkg.i_license
     return;
 end
 
+preftagname ='geocellarmodeid';
+defaultindx = getpref('scgeatoolbox', preftagname, 1);
+
 % Choose execution mode
 modeOptions = [ ...
     "Remote  — server handles everything", ...
     "Hybrid  — local hypotheses, remote analysis", ...
     "Local   — full pipeline in MATLAB"];
 [sel, ok] = gui.myListdlg(FigureHandle, modeOptions, ...
-    "Select GEOcellar Execution Mode", 1, false, false, [420, 180]);
+    "Select Execution Mode", defaultindx, false, false, [300, 180]);
 if ~ok, return; end
 mode = sel;   % 1 = remote, 2 = hybrid, 3 = local
+setpref('scgeatoolbox', preftagname, sel);
 
 % For hybrid and local modes the MATLAB LLM Add-On and API key are required
 if mode > 1

@@ -48,6 +48,8 @@ function results = run_de_analysis(sample_id1, sample_id2, data_dir, out_dir)
 if nargin < 3 || isempty(data_dir), data_dir = 'data'; end
 if nargin < 4, out_dir = []; end
 
+max_cells = 2000;   % subsample per cell type; statistical power plateaus well below this
+
 % Default filter parameters matching gui.i_degparamset(true) defaults:
 %   mindiffpct=0.05, minabsolfc=1.0, apvaluecut=0.01, sort by adj p-value
 paramset = {0.05, 1.0, 0.01, 'Adjusted P-value'};
@@ -72,6 +74,14 @@ fprintf('Common genes: %d\n', numel(common_genes));
 
 X1_all = sce1.X(idx1, :);
 X2_all = sce2.X(idx2, :);
+
+% Pre-filter to genes expressed in ≥1% of cells (unexpressed genes can't be DEGs)
+min_cells = max(1, round(0.01 * min(size(X1_all, 2), size(X2_all, 2))));
+keep_g = full((sum(X1_all > 0, 2) >= min_cells) | (sum(X2_all > 0, 2) >= min_cells));
+X1_all = X1_all(keep_g, :);
+X2_all = X2_all(keep_g, :);
+common_genes = common_genes(keep_g);
+fprintf('Expressed genes (≥1%% cells): %d\n', sum(keep_g));
 
 % ---- Identify shared cell types -------------------------------------
 ct1 = sce1.c_cell_type_tx;
@@ -112,10 +122,23 @@ for k = 1:numel(shared_ct)
 
     fprintf('DE for "%s": %d vs %d cells ... ', ct, n1, n2);
 
+    idx1 = find(mask1);
+    idx2 = find(mask2);
+    if numel(idx1) > max_cells
+        idx1 = idx1(randperm(numel(idx1), max_cells));
+        fprintf('(subsampled→%d) ', max_cells);
+    end
+    if numel(idx2) > max_cells
+        idx2 = idx2(randperm(numel(idx2), max_cells));
+        fprintf('(subsampled→%d) ', max_cells);
+    end
+    n1 = numel(idx1);
+    n2 = numel(idx2);
+
     T = [];
     try
-        X = full(X1_all(:, mask1));
-        Y = full(X2_all(:, mask2));
+        X = full(X1_all(:, idx1));
+        Y = full(X2_all(:, idx2));
         T = sc_deg(X, Y, common_genes, 1, false);
     catch ME
         fprintf('FAILED: %s\n', ME.message);

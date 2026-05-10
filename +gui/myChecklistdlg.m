@@ -37,13 +37,9 @@ selectedItems = {};
 
 dialogWidth = 350;
 dialogHeight = 400;
-dialogX = 100;
-dialogY = 100;
-if ~isempty(parentfig)
-    parentPos = parentfig.Position;
-    dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
-    dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;
-end
+pos = gui.i_centerdlgpos(parentfig, [dialogWidth, dialogHeight]);
+dialogX = pos(1);
+dialogY = pos(2);
 
 % Create the dialog figure
 fig = uifigure('Name', p.Results.Title, ...

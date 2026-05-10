@@ -20,10 +20,9 @@ assert(numel(labels) == numel(vars) && numel(vars) == numel(vals), ...
  dialogWidth = 400;
  dialogHeight = 100 + 30 * numel(labels); % Adjust height based on the number of inputs
 
-% Compute center position relative to parentfig
-parentPos = parentfig.Position;
-dialogX = parentPos(1) + (parentPos(3) - dialogWidth) / 2;
-dialogY = parentPos(2) + (parentPos(4) - dialogHeight) / 2;
+pos = gui.i_centerdlgpos(parentfig, [dialogWidth, dialogHeight]);
+dialogX = pos(1);
+dialogY = pos(2);
 % d = uifigure('Position', [dialogX, dialogY, dialogWidth, dialogHeight], ...
 %              'Name', titleText, 'WindowStyle', 'modal');
 

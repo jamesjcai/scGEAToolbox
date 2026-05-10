@@ -14,18 +14,20 @@ if length(options) > 1e4
 end
 
 if ~isempty(parentfig)
-    figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    if isa(parentfig, 'matlab.ui.Figure')
+        try
+            focus(parentfig);
+            cleanupObj = onCleanup(@() focus(parentfig));
+        catch
+        end
+    else
+        figure(parentfig);
+        cleanupObj = onCleanup(@() figure(parentfig));
+    end
 end
 
 
-parentPos = parentfig.Position;
-parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];
-
-% Dialog size
-
-% Compute center position
-dlgPos = [parentCenter(1) - dlgSize(1)/2, parentCenter(2) - dlgSize(2)/2, dlgSize];
+dlgPos = round(gui.i_centerdlgpos(parentfig, dlgSize));
 
 % focus(parentfig);
 % Create a modal dialog
@@ -35,8 +37,16 @@ dlgPos = [parentCenter(1) - dlgSize(1)/2, parentCenter(2) - dlgSize(2)/2, dlgSiz
  % parentfig.WindowStyle = 'alwaysontop';
  % disp('alwaysontop')
 
+% WindowStyle='modal' is intentionally omitted: on multi-monitor setups
+% where the secondary monitor has a different DPI, MATLAB's modal centering
+% logic uses an internal coordinate space that differs from MonitorPositions,
+% causing the dialog to be re-centered onto the primary monitor regardless
+% of the Position we set.  uiwait(d) below still blocks the calling code,
+% so the dialog is functionally modal.
 d = uifigure('Name', Title, 'Position', dlgPos, ...
-'WindowStyle', 'modal', 'Visible','on', 'Resize', allowresize);
+    'Visible', 'off', 'Resize', allowresize);
+
+% pos1 = d.Position
 
 if allowmulti
     multitag = 'on';
@@ -86,14 +96,15 @@ if ~allowresize
     d.SizeChangedFcn = @(src,~) enforceNormalState(src);
 end
 
- % parentfig.WindowStyle = 'normal';
-
+% parentfig.WindowStyle = 'normal';
 
 % drawnow;
-
 % pause(0.7);
 
-% d.Visible = 'on';
+% pos2 = d.Position
+% assert(equal(pos1, pos2))
+
+d.Visible = 'on';
 
 % Set focus on the listbox for user interaction
 %
@@ -129,9 +140,9 @@ disp(selectedItems);
 end
 
 function enforceNormalState(fig)
-disp('If user tries to minimize, restore immediately');
+% disp('If user tries to minimize, restore immediately');
 
-if fig.WindowState == "minimized"
+    if fig.WindowState == "minimized"
         drawnow limitrate
         fig.WindowState = "normal";
     end

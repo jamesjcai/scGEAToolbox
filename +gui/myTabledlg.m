@@ -3,10 +3,8 @@ function [indx, tf] = myTabledlg(parentfig, options, Title, ...
 if nargin < 5, allowmulti = true; end
 if nargin < 4, prefersel = []; end
 
-parentPos = parentfig.Position;
-parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];
 dlgSize = [300, 450];
-dlgPos = [parentCenter(1) - dlgSize(1)/2, parentCenter(2) - dlgSize(2)/2, dlgSize];
+dlgPos = gui.i_centerdlgpos(parentfig, dlgSize);
 
 d = uifigure('Name', Title, 'Position', dlgPos, ...
 'WindowStyle', 'normal', 'Visible','off');

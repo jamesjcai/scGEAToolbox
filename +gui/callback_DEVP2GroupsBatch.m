@@ -180,13 +180,15 @@ ccat = {"H: Hallmark gene sets (broadly defined, high-quality gene signatures re
 
 pw1 = fileparts(mfilename('fullpath'));
 
+ranknorm   = true;
+bgsubtract = true;
+sceX = log1p(sc_norm(sce.X));
 for c = 1:length(ctag)
     dbfile = fullfile(pw1, '..', 'assets', 'MSigDB', ...
                     sprintf('msigdb_%s.mat', ctag{c}));
     load(dbfile,'setmatrx','setnames','setgenes');
 
 %       fw = gui.myWaitbar(FigureHandle);
-    sceX = log1p(sc_norm(sce.X));
     for k=1:length(CellTypeList)
         gui.myWaitbar(FigureHandle, fw, false, '', ...
             sprintf('DP - Processing %s ...', CellTypeList{k}), ...
@@ -202,7 +204,7 @@ for c = 1:length(ctag)
         idx = sce.c_cell_type_tx == CellTypeList{k};
         try
             T = sc_dpg(sceX(:, i1&idx), sceX(:, i2&idx), sce.g, ...
-                setmatrx, setnames, setgenes);
+                setmatrx, setnames, setgenes, ranknorm, bgsubtract);
             if ~isempty(T)
                 writetable(T, filesaved, 'FileType', 'spreadsheet', ...
                     'Sheet', sprintf('All_%s', ctag{c}));

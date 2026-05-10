@@ -1,7 +1,7 @@
 function [glist, setname, Col, ctag] = i_selectMSigDBGeneSet (species, ...
     colnoly, parentfig)
 
-if nargin < 1, species = 'human'; end
+if nargin < 1, species = []; end
 if nargin < 2, colnoly = false; end
 if nargin < 3, parentfig = []; end
 
@@ -9,6 +9,11 @@ glist = [];
 setname = [];
 Col = [];
 ctag = [];
+
+if isempty(species)
+    species = gui.i_selectspecies(2, false, parentfig);
+    if isempty(species), return; end
+end
 
 switch lower(species)
     case {'human', 'hs'}

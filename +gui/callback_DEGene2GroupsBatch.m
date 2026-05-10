@@ -75,9 +75,11 @@ answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder
 if strcmp(answer,'Yes'), winopen(outdir); end
 
 
-answer = gui.myQuestdlg(FigureHandle, 'Use LLM to generate enrichment analysis report?', '');
-if strcmp(answer,'Yes')
-    gui.sc_llm_enrichr2word(outdir);
+if ~isempty(runenrichr) && strcmp(runenrichr, 'Yes')
+    answer = gui.myQuestdlg(FigureHandle, 'Use LLM to generate enrichment analysis report?', '');
+    if strcmp(answer,'Yes')
+        gui.sc_llm_enrichr2word(outdir);
+    end
 end
 
 % function in_writetable(Tmf1, filesaved, shtname)

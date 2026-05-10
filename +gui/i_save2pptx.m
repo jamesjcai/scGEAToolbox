@@ -1,7 +1,9 @@
-function i_save2pptx(images, rmthem)
+function i_save2pptx(images, rmthem, fw, parentfig)
 
 
 if nargin < 2, rmthem = false; end
+if nargin < 3, fw = []; end
+if nargin < 4, parentfig = []; end
 [hasReportGen, msg] = pkg.i_isreportgenavailable('ppt');
 if ~hasReportGen
     errordlg(sprintf('%s This function requires MATLAB Report Generator.', msg));
@@ -13,7 +15,12 @@ import mlreportgen.ppt.*;
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
-fw = gui.gui_waitbar;
+ownsWaitbar = nargin < 3 || isempty(fw);
+if ownsWaitbar
+    fw = gui.gui_waitbar;
+else
+    gui.myWaitbar(parentfig, fw, false, '', 'Exporting PowerPoint...', 0.995);
+end
 OUTppt = [tempname, '.pptx'];
 ppt = Presentation(OUTppt, pth);
 open(ppt);
@@ -25,7 +32,9 @@ for k = 1:length(images)
     end
     % pictureSlide = add(ppt,'Title and Picture',2);
 close(ppt);
-gui.gui_waitbar(fw);
+if ownsWaitbar
+    gui.gui_waitbar(fw);
+end
 pkg.i_openoutputfile(OUTppt);
 % catch ME
 %     gui.gui_waitbar(fw, true);

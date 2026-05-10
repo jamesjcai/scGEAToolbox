@@ -101,10 +101,12 @@ switch selectedProvider
 
 
            if size(a.models, 1) > 0
-               model_names = string(cellfun(@(m) m.name, a.models, 'UniformOutput', false));
+               model_names = string(cellfun(@(m) m.name, a.models, ...
+                   'UniformOutput', false));
 
            if gui.i_isuifig(parentfig)
-                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a model:');
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                    'Select a model:');
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                               'SelectionMode', 'single', ...
@@ -242,7 +244,8 @@ switch selectedProvider
 
             try
                 models_response = webread(models_url, options);
-                model_names = string(cellfun(@(s) s.id, models_response.data, 'UniformOutput', false));
+                model_names = string(cellfun(@(s) s.id, ...
+                    models_response.data, 'UniformOutput', false));
             catch ME
                 gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, 'Error fetching models');
@@ -251,7 +254,7 @@ switch selectedProvider
 
             gui.myWaitbar(parentfig, fw);
 
-            [y, idx]=ismember('protected.gpt-4.1', model_names);
+            [y, idx]=ismember('protected.gpt-4.1', model_names);  % xxx
             if y
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...

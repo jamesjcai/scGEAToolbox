@@ -23,17 +23,7 @@ if ~ispref('scgeatoolbox', preftagname)
     end
     [done] = ix_setwdpath(pathdefult, parentfig);
 else
-    s = getpref('scgeatoolbox', preftagname);
-    answer1 = gui.myQuestdlg(parentfig, sprintf('%s', s), ...
-        'Working Root', ...
-        {'Use this', 'Use another', 'Cancel'}, 'Use this');
-    if isempty(answer1), return; end
-    switch answer1
-        case 'Use this'
-            [done] = true;
-        case 'Use another'
-            [done] = ix_setwdpath(s, parentfig);
-    end
+    done = true;
 end
 
 

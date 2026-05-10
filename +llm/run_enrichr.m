@@ -26,13 +26,13 @@ function run_enrichr(results, out_dir, sample_id1, sample_id2, top_n)
 %     out_dir    - folder for Excel output (pass [] to skip file writing)
 %     sample_id1 - GSM accession of sample 1 (needed for Excel filename)
 %     sample_id2 - GSM accession of sample 2 (needed for Excel filename)
-%     top_n      - max genes submitted to Enrichr per direction (default 250)
+%     top_n      - max genes submitted to Enrichr per direction (default 100)
 %
 %   Example (agent calls after run_de_analysis):
 %     results = llm.run_de_analysis('GSM001', 'GSM002', data_dir, out_dir);
 %     llm.run_enrichr(results, out_dir, 'GSM001', 'GSM002');
 
-if nargin < 5 || isempty(top_n),      top_n      = 250; end
+if nargin < 5 || isempty(top_n),      top_n      = 100; end
 if nargin < 4 || isempty(sample_id2), sample_id2 = '';  end
 if nargin < 3 || isempty(sample_id1), sample_id1 = '';  end
 if nargin < 2,                         out_dir    = [];  end

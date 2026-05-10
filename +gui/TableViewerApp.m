@@ -1,6 +1,7 @@
-function [fig] = TableViewerApp(T, parentfig, defname)
+function [fig] = TableViewerApp(T, parentfig, defname, customActions)
 
 
+if nargin < 4 || isempty(customActions), customActions = struct([]); end
 if nargin<3, defname = []; end
 if nargin<2, parentfig = []; end
 if nargin<1, T = []; end
@@ -78,11 +79,15 @@ btnPanel = uipanel(mainLayout);
 btnPanel.Layout.Row = 3;
 btnPanel.Layout.Column = 1;
 
+secondRowCount = 1 + numel(customActions);
+nBtnCols = max(3, secondRowCount);
+
     % Create button layout within panel
-btnLayout = uigridlayout(btnPanel, [2, 3]);
+btnLayout = uigridlayout(btnPanel, [2, nBtnCols]);
 btnLayout.Padding = [10 10 10 10];
 btnLayout.ColumnSpacing = 20;
 btnLayout.RowSpacing = 10;
+btnLayout.ColumnWidth = repmat({'1x'}, 1, nBtnCols);
 
     % --- First Row of Buttons ---
     % Create export buttons
@@ -106,6 +111,17 @@ exportWorkspaceBtn = uibutton(btnLayout, 'Text', 'Export to Workspace', ...
                               'ButtonPushedFcn', @(btn,event) exportToWorkspace(uitTable, fig));
 exportWorkspaceBtn.Layout.Row = 2;
 exportWorkspaceBtn.Layout.Column = 1;
+
+for actionIdx = 1:numel(customActions)
+    action = customActions(actionIdx);
+    actionBtn = uibutton(btnLayout, 'Text', action.Text, ...
+        'ButtonPushedFcn', @(btn, event) executeCustomAction(action, uitTable, fig));
+    actionBtn.Layout.Row = 2;
+    actionBtn.Layout.Column = actionIdx + 1;
+    if isfield(action, 'Tooltip') && ~isempty(action.Tooltip)
+        actionBtn.Tooltip = action.Tooltip;
+    end
+end
 
     %{
     printBtn = uibutton(btnLayout, 'Text', 'Print Table', ...
@@ -224,49 +240,31 @@ uialert(tableObj.Parent.Parent, ['Table data saved to: ' fullFilePath], 'Export 
 end
 
 function exportToWorkspace(tableObj, fig)
-columnNames = tableObj.ColumnName;
-data = tableObj.Data;
-T = cell2table(data, 'VariableNames', strrep(columnNames, ' ', '_'));
+T = i_tableFromUITable(tableObj);
 labels = {'Save to variable named:'};
 vars = {'T'};
 values = {T};
 gui.i_bringtofront(fig);
 gui.myExport2wsdlg(labels, vars, values, ...
 'Save Data to Workspace', [], fig);
-
-%{
-
-% Function to export table data to the workspace
-
-% Create input dialog to get variable name
-prompt = {'Enter variable name:'};
-dlgtitle = 'Export to Workspace';
-dims = [1 40];
-definput = {'tableData'};
-
-answer = inputdlg(prompt, dlgtitle, dims, definput);
-
-if isempty(answer)
-    % User canceled the dialog
-    return;
 end
 
-% Get variable name
-varName = answer{1};
+function executeCustomAction(action, tableObj, fig)
+try
+    if nargin(action.Callback) >= 2
+        action.Callback(tableObj, fig);
+    else
+        action.Callback();
+    end
+catch ME
+    gui.myErrordlg(fig, ME.message, ME.identifier);
+end
+end
 
-% Get the column names and data
+function T = i_tableFromUITable(tableObj)
 columnNames = tableObj.ColumnName;
 data = tableObj.Data;
-
-% Convert to MATLAB table
-tableData = cell2table(data, 'VariableNames', strrep(columnNames, ' ', '_'));
-
-% Assign to workspace variable
-assignin('base', varName, tableData);
-
-% Display confirmation message
-uialert(tableObj.Parent.Parent, ['Table data exported to workspace variable: ' varName], 'Export Successful', 'Icon', 'success');
-%}
+T = cell2table(data, 'VariableNames', strrep(columnNames, ' ', '_'));
 end
 
 function refreshData(tableObj, rowCountLabel, sortByDropdown, T)

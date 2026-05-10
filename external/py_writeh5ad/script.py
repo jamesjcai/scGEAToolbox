@@ -25,7 +25,7 @@ metadata = pd.read_csv("c.csv")
 with open("g.csv",'r') as f:
           gene_names = f.read().splitlines()
 
+metadata.index = metadata['CellID'].astype(str).tolist()
 adata.obs = metadata
-adata.obs.index = adata.obs['CellID'].tolist()
 adata.var.index = gene_names
 adata.write("output.h5ad")

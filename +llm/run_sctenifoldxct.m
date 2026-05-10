@@ -76,7 +76,7 @@ fprintf('Sample (%s): %d genes x %d cells\n', sample_id, sce.NumGenes, sce.NumCe
 max_genes = 3000;
 if sce.NumGenes > max_genes
     fprintf('Limiting to top %d HVGs (from %d genes)...\n', max_genes, sce.NumGenes);
-    sce = i_limit_genes(sce, max_genes);
+    sce = llm.i_limit_genes(sce, max_genes);
     fprintf('Genes after HVG selection: %d\n', sce.NumGenes);
 end
 
@@ -103,12 +103,17 @@ if ~any(available_ct == celltype2)
         celltype2, sample_id, strjoin(available_ct, ', '));
 end
 
+max_cells = 1000;   % subsample each cell type; GRN build time grows with cells
+
 n1 = sum(ct == celltype1);
 n2 = sum(ct == celltype2);
 results.n1 = n1;
 results.n2 = n2;
 fprintf('%s: %d cells\n', celltype1, n1);
 fprintf('%s: %d cells\n', celltype2, n2);
+
+% Subsample cell types that exceed the cap
+sce = i_subsample_celltypes(sce, ct, celltype1, celltype2, max_cells);
 
 if n1 < 50
     warning('llm:run_sctenifoldxct:fewCells', ...
@@ -298,12 +303,20 @@ end
 end
 
 
-% ---- Helper: keep top n HVGs (ranked by sc_splinefit) ---------------
-function sce = i_limit_genes(sce, n)
-T_hvg = sc_splinefit(sce.X, sce.g);
-glist = T_hvg.genes(1:min(n, sce.NumGenes));
-[~, hidx] = ismember(glist, sce.g);
-hidx = hidx(hidx > 0);
-sce.X = sce.X(hidx, :);
-sce.g = sce.g(hidx);
+% ---- Helper: subsample two named cell types to at most max_cells each
+function sce = i_subsample_celltypes(sce, ct, ct1, ct2, max_cells)
+for ctname = [ct1, ct2]
+    mask = ct == ctname;
+    idx  = find(mask);
+    if numel(idx) > max_cells
+        keep = idx(randperm(numel(idx), max_cells));
+        drop = setdiff(idx, keep);
+        keep_all = setdiff(1:sce.NumCells, drop);
+        sce = sce.selectcells(keep_all);
+        ct  = sce.c_cell_type_tx;
+        fprintf('  Subsampled "%s": %d → %d cells\n', ctname, numel(idx), max_cells);
+    end
 end
+end
+
+

@@ -4,14 +4,8 @@ function [x] = myTextareadlg(parentfig, prompts, title, defaultvals, editable)
 %    x = inputdlg({'Attribute Name','Attribute Values'},...
 %                  'Attribute Editor', [1 80; 15 80]);
 
-parentPos = parentfig.Position;
-parentCenter = [parentPos(1) + parentPos(3)/2, parentPos(2) + parentPos(4)/2];
-
-% Dialog size
 dlgSize = [450, 300]; % [Width, Height]
-
-% Compute center position
-dlgPos = [parentCenter(1) - dlgSize(1)/2, parentCenter(2) - dlgSize(2)/2, dlgSize];
+dlgPos = gui.i_centerdlgpos(parentfig, dlgSize);
 
 
 % MYUIINPUTDIALOG Create an input dialog using uifigure and uitextarea

@@ -29,12 +29,12 @@ c(i1)=1; c(i2)=2;
 
 cL1 = matlab.lang.makeValidName(cL1);
 cL2 = matlab.lang.makeValidName(cL2);
-if isequal(cL1, cL2)
+    if isequal(cL1, cL2)
         tmptxtc = matlab.lang.makeUniqueStrings([cL1 cL2]);
         cL1 = tmptxtc(1);
         cL2 = tmptxtc(2);
     end
-if ~all(c>0)
+    if ~all(c>0)
         sce = sce.selectcells(c>0); % OK
         c=c(c>0);
     end
@@ -51,7 +51,7 @@ sce2 = sce2.selectcells(i2); % OK
 sce2 = sce2.qcfilter; % OK
 
 
-if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
+    if sce1.NumCells < 10 || sce2.NumCells < 10 || sce1.NumGenes < 10 || sce2.NumGenes < 10
         gui.myErrordlg(FigureHandle, ['Filtered SCE contains too' ...
             ' few cells (n < 10) or genes (n < 10).'],'','modal');
         return;
@@ -70,59 +70,86 @@ b = 'Brennecke et al. (2013) [PMID:24056876]';
             %     {a, b}, a);
 answerx = a;
 
-            switch answerx
-                case a
-                     fw = gui.myWaitbar(FigureHandle);
-                     [T, X1, X2, g, xyz1, xyz2,...
-                        px1, py1, pz1,...
-                        px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit');
-                    methodtag='splinefit';
-                case b
-                    fw = gui.myWaitbar(FigureHandle);
-                    T = sc_dvg(sce1, sce2, cL1, cL2, 'brennecke');
-                    methodtag='brennecke';
-                otherwise
-                    return;
-            end
-                    gui.myWaitbar(FigureHandle, fw);
+fw = gui.myWaitbar(FigureHandle, [], false, 'Computing DV results...');
+cleanupObj = onCleanup(@() i_closewaitbar(fw)); 
+
+try
+    switch answerx
+        case a
+            [T, X1, X2, g, xyz1, xyz2, ...
+                px1, py1, pz1, ...
+                px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit');
+            methodtag = 'splinefit';
+        case b
+            T = sc_dvg(sce1, sce2, cL1, cL2, 'brennecke');
+            methodtag = 'brennecke';
+        otherwise
+            return;
+    end
+catch ME
+    gui.myWaitbar(FigureHandle, fw, true);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
+end
 
 outfile = sprintf('%s_vs_%s_DV_%s_results', ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
         methodtag);
+filesaved = fullfile(wrkdir, [outfile, '.xlsx']);
 
 drawnow;
-% in_callback_ExportTable;
-figtab = gui.TableViewerApp(T, FigureHandle);
+gui.myWaitbar(FigureHandle, fw, false, '', 'Saving DV results...', 0.85);
+try
+    writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'DV_results');
+catch ME
+    warning(ME.message);
+end
+i_closewaitbar(fw);
 
+hFig = []; hx = []; h1 = []; h2 = [];
+hAx0 = []; hAx1 = []; hAx2 = [];
+sh1 = []; sh2 = []; idx = 1;
+h3 = []; h3a = []; h3b = []; h4 = []; h5 = [];
 
+enrichrAction = struct('Text', 'Enrichr Analysis', ...
+    'Tooltip', 'Run Enrichr with DV genes', ...
+    'Callback', @in_callback_enrichr_fromtable);
 if strcmp(answerx, a)
-    if strcmp(gui.myQuestdlg(figtab, 'Explore DV expression profile of genes?'), 'Yes')
+    plotAction(1) = struct('Text', 'Open Plot', ...
+        'Tooltip', 'Open the interactive DV scatter plot', ...
+        'Callback', @in_callback_openDVplot);
+    plotAction(2) = enrichrAction;
+    figtab = gui.TableViewerApp(T, FigureHandle, outfile, plotAction);
+else
+    figtab = gui.TableViewerApp(T, FigureHandle, outfile, enrichrAction);
+end
+
+
+function in_callback_openDVplot(~, ~)
         hx = gui.myFigure(figtab, true);
         hFig = hx.FigHandle;
         hFig.Position(3) = hFig.Position(3)*1.8;
 
-        hx.addCustomButton( 'off', {@in_callback_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
-        hx.addCustomButton( 'off', {@in_callback_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
-        hx.addCustomButton( 'off', @in_callback_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
-        hx.addCustomButton( 'on', @in_callback_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
-        hx.addCustomButton( 'off', @in_callback_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
-        hx.addCustomButton( 'off', @in_callback_genecards, 'www.jpg', 'GeneCards...');
-        hx.addCustomButton( 'off', @in_callback_ExportTable, 'floppy-disk-arrow-in.jpg', 'Export HVG Table...');
-        hx.addCustomButton( 'on', @in_callback_ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
-        hx.addCustomButton( 'off', @in_callback_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
+        hx.addCustomButton('off', {@in_callback_HighlightSelectedGenes, 1}, 'list.gif', 'Selet a gene to show expression profile');
+        hx.addCustomButton('off', {@in_callback_HighlightSelectedGenes, 2}, 'list2.gif', 'Selet a gene from sorted list');
+        hx.addCustomButton('off', @in_callback_viewTable, 'icon-fa-stack-exchange-10.gif', 'View DV gene table...');
+        hx.addCustomButton('on', @in_callback_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
+        hx.addCustomButton('off', @in_callback_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
+        hx.addCustomButton('off', @in_callback_genecards, 'www.jpg', 'GeneCards...');
+        hx.addCustomButton('on', @in_callback_ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
+        hx.addCustomButton('off', @in_callback_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
 
         hAx0 = subplot(2,2,[1 3]);
         h1 = scatter3(hAx0, px1, py1, pz1, 'filled', 'MarkerFaceAlpha', .1);
         hold on
         h2 = scatter3(hAx0, px2, py2, pz2, 'filled', 'MarkerFaceAlpha', .1);
-        plot3(hAx0, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4, 'Color',lcolor1);
-        plot3(hAx0, xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-', 'linewidth', 4, 'Color',lcolor2);
+        plot3(hAx0, xyz1(:, 1), xyz1(:, 2), xyz1(:, 3), '-', 'linewidth', 4, 'Color', lcolor1);
+        plot3(hAx0, xyz2(:, 1), xyz2(:, 2), xyz2(:, 3), '-', 'linewidth', 4, 'Color', lcolor2);
 
-        xlabel(hAx0,'Mean, log1p');
-        ylabel(hAx0,'CV, log1p');
-        zlabel(hAx0,'Dropout rate (% of zeros)');
-
+        xlabel(hAx0, 'Mean, log1p');
+        ylabel(hAx0, 'CV, log1p');
+        zlabel(hAx0, 'Dropout rate (% of zeros)');
 
         if ~isempty(g)
             dt = datacursormode(hFig);
@@ -130,31 +157,29 @@ if strcmp(answerx, a)
             dt.UpdateFcn = {@in_myupdatefcn3, g};
         end
 
-
-        idx = find(g==table2array(T(1,1)));
-
+        idx = find(g == table2array(T(1, 1)));
 
         hAx1 = subplot(2,2,2);
         x1 = X1(idx,:);
-        sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
-        xlim(hAx1,[1 size(X1,2)]);
+        sh1 = plot(hAx1, 1:length(x1), x1, 'Color', lcolor1);
+        xlim(hAx1, [1 size(X1,2)]);
 
-        title(hAx1, strrep(sprintf('%s',g(idx)),'_','\_') );
+        title(hAx1, strrep(sprintf('%s', g(idx)), '_', '\_'));
         [titxt] = gui.i_getsubtitle(x1, cL1{1});
         subtitle(hAx1, titxt);
-        xlabel(hAx1,'Cell Index');
-        ylabel(hAx1,'Expression Level');
+        xlabel(hAx1, 'Cell Index');
+        ylabel(hAx1, 'Expression Level');
 
         hAx2 = subplot(2,2,4);
         x2 = X2(idx,:);
-        sh2 = plot(hAx2, 1:length(x2), x2, 'Color',lcolor2);
-        xlim(hAx2,[1 size(X2,2)]);
+        sh2 = plot(hAx2, 1:length(x2), x2, 'Color', lcolor2);
+        xlim(hAx2, [1 size(X2,2)]);
 
-        title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
+        title(hAx2, strrep(sprintf('%s', g(idx)), '_', '\_'));
         [titxt] = gui.i_getsubtitle(x2, cL2{1});
         subtitle(hAx2, titxt);
-        xlabel(hAx2,'Cell Index');
-        ylabel(hAx2,'Expression Level');
+        xlabel(hAx2, 'Cell Index');
+        ylabel(hAx2, 'Expression Level');
         h3 = []; h4 = []; h5 = [];
         h3a = []; h3b = [];
         yl = cell2mat(get([hAx1, hAx2], 'Ylim'));
@@ -163,8 +188,6 @@ if strcmp(answerx, a)
         subplot(hAx0);
         hx.show(figtab);
     end
-end
-
 
 function in_callback_Enrichr(~, ~)
         answer = gui.myQuestdlg(hFig, 'Enrichr test with top DV genes. Continue?','');
@@ -191,18 +214,10 @@ function in_callback_Enrichr(~, ~)
     end
 
 function in_callback_viewTable(~, ~)
-        fw = gui.myWaitbar(FigureHandle);
-        gui.i_viewtable(T, hx.FigHandle);
-        % gui.TableViewerApp(T, hx.FigHandle);
-        gui.myWaitbar(FigureHandle, fw);
-    end
-
-function in_callback_ExportTable(~, ~)
-        [~, filesaved] = gui.i_exporttable(T, true, 'Tdvgenelist', ...
-                outfile, [], "All_genes", FigureHandle);
-        if ~isempty(filesaved)
-            % gui.myHelpdlg(FigureHandle, sprintf('Result has been saved in %s',filesaved));
-            fprintf('Result has been saved in %s\n', filesaved);
+        if ~isempty(figtab) && isvalid(figtab)
+            gui.i_bringtofront(figtab);
+        else
+            figtab = gui.TableViewerApp(T, hx.FigHandle, outfile);
         end
     end
 
@@ -323,8 +338,8 @@ function in_callback_HighlightSelectedGenes(~, ~, typeid)
         end
         h1.BrushData = idx;
         h2.BrushData = idx;
-        dt1 = datatip(h1, 'DataIndex', idx);
-        dt2 = datatip(h2, 'DataIndex', idx);
+        datatip(h1, 'DataIndex', idx);
+        datatip(h2, 'DataIndex', idx);
 
         x_cleanfigspace(false);
         % if ~isempty(h3), delete(h3); end
@@ -389,4 +404,51 @@ function in_callback_ChangeAlphaValue(~, ~)
         end
     end
 
+function in_callback_enrichr_fromtable(~, figtab)
+    libs = ["GO_Biological_Process_2025", "GO_Molecular_Function_2025", ...
+            "KEGG_2021_Human", "Reactome_Pathways_2024"];
+    suffixes = ["GO_BP", "GO_MF", "KEGG", "Reactome"];
+    groups = { ...
+        T,                      "Mix"; ...
+        T(T.DiffSign > 0, :),   "VInc"; ...
+        T(T.DiffSign < 0, :),   "VDec"};
+
+    fw2 = gui.myWaitbar(figtab, [], false, 'Running Enrichr analysis...');
+    try
+        for kg = 1:size(groups, 1)
+            Tg = groups{kg, 1};
+            prefix = groups{kg, 2};
+            if height(Tg) == 0, continue; end
+            n = min(250, height(Tg));
+            Tlist = run.ml_Enrichr(Tg.gene(1:n), T.gene, libs);
+            for kl = 1:numel(Tlist)
+                if ~isempty(Tlist{kl}) && istable(Tlist{kl}) && height(Tlist{kl}) > 0
+                    writetable(Tlist{kl}, filesaved, ...
+                        'FileType', 'spreadsheet', ...
+                        'Sheet', sprintf('%s_%s', prefix, suffixes(kl)));
+                end
+            end
+        end
+    catch ME
+        gui.myWaitbar(figtab, fw2, true);
+        gui.myErrordlg(figtab, ME.message, ME.identifier);
+        return;
+    end
+    gui.myWaitbar(figtab, fw2, true);
+    winopen(fileparts(filesaved));
+end
+
+end
+
+function i_closewaitbar(fw)
+if nargin < 1 || isempty(fw)
+    return;
+end
+
+try
+    if isvalid(fw)
+        close(fw);
+    end
+catch
+end
 end

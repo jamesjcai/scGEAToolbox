@@ -1,5 +1,13 @@
-function [setmatrx, setnames, setgenes] = e_getgenesets(option,species)
-if nargin<2 || isempty(species), species='human'; end
+function [setmatrx, setnames, setgenes] = e_getgenesets(option,species,parentfig)
+if nargin < 3, parentfig = []; end
+if ~isempty(parentfig)
+    figure(parentfig);
+    cleanupObj = onCleanup(@() figure(parentfig));
+end
+if nargin<2, species=[]; end
+if isempty(species) && ~isequal(option, 1) && ~isequal(option, 'MSIGDB') && ~isequal(option, 'MSigDB Molecular Signatures')
+    species = 'human';
+end
 if nargin<1 || isempty(option), option = 1; end
 
 setmatrx=[];
@@ -8,7 +16,7 @@ setgenes=[];
 switch option
     case {1,'MSIGDB','MSigDB Molecular Signatures'}
         % [Col]=pkg.e_getmsigdbset;
-        [~, ~, Col, ctag] = gui.i_selectMSigDBGeneSet(species,true);
+        [~, ~, Col, ctag] = gui.i_selectMSigDBGeneSet(species,true,parentfig);
         if isempty(Col) || isempty(ctag)
             return;
         end

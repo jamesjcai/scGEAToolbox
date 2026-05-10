@@ -68,23 +68,15 @@ that the analysis plan is biologically motivated, not just technically driven.
   Keep analysis_plan concise — it must not exceed the tool-call budget.
 
 OUTPUT FORMAT — CRITICAL:
-Respond with ONLY a valid JSON array. No markdown, no explanation, no code fences.
+Your response must contain a valid JSON array of hypothesis objects. You may include
+brief reasoning before or after the array, but the array itself must be syntactically
+valid JSON with no markdown fences (no ``` wrappers). Each string value must be on a
+SINGLE LINE — do not wrap long strings across multiple lines, as line breaks inside
+JSON strings are invalid.
+
 Each element must have exactly these fields:
-{
-  "id": <integer>,
-  "statement": "<hypothesis statement>",
-  "gse": "<GSExxxxxx>",
-  "sample1": "<GSMxxxxxx>",
-  "sample2": "<GSMxxxxxx or empty string>",
-  "sample1_description": "<brief description of sample1>",
-  "sample2_description": "<brief description of sample2>",
-  "kogene": "<gene symbol or empty string>",
-  "celltype1": "<source cell type label or empty string — required for scTenifoldXct>",
-  "celltype2": "<target cell type label or empty string — required for scTenifoldXct>",
-  "analysis": "<one of: DEG | DV | scTenifoldNet | scTenifoldKnk | scTenifoldXct>",
-  "implications": "<biological/clinical implications>",
-  "analysis_plan": ["<step 1>", "<step 2>", ...]
-}
-For non-scTenifoldXct analyses, set celltype1 and celltype2 to "".
-For scTenifoldXct, set sample2 to "", kogene to "", and fill celltype1 and celltype2.
-Start your response with [ and end with ]. Do not include any text outside the JSON array.
+{"id":<int>,"statement":"<one-line string>","gse":"<GSExxxxxx>","sample1":"<GSMxxxxxx>","sample2":"<GSMxxxxxx or empty>","sample1_description":"<one-line>","sample2_description":"<one-line>","kogene":"<gene or empty>","celltype1":"<cell type or empty>","celltype2":"<cell type or empty>","analysis":"<DEG|DV|scTenifoldNet|scTenifoldKnk|scTenifoldXct>","implications":"<one-line>","analysis_plan":["<step 1>","<step 2>"]}
+
+Rules:
+- For non-scTenifoldXct: set celltype1="" and celltype2="".
+- For scTenifoldXct: set sample2="", kogene="", fill celltype1 and celltype2.

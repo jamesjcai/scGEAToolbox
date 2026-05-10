@@ -8,8 +8,7 @@ if ~isempty(parentfig)
     figure(parentfig);
     cleanupObj = onCleanup(@() figure(parentfig));
 end
-if isempty(selpath), return; end
-if selpath==0, return; end
+if isempty(selpath) || isequal(selpath, 0), return; end
 if ~isfolder(selpath), return; end
 
 
@@ -24,12 +23,18 @@ if ~isfolder(selpath), return; end
 % end
 
 
-files = dir(fullfile(selpath, '*_DE_*.xlsx'));
+files = dir(fullfile(selpath, '*DE_*.xlsx'));
 fileNames1 = string({files(~[files.isdir]).name});
-files = dir(fullfile(selpath, '*_DV_*.xlsx'));
+files = dir(fullfile(selpath, '*DV_*.xlsx'));
 fileNames2 = string({files(~[files.isdir]).name});
 
 listItems = [fileNames1'; fileNames2'];
+
+if isempty(listItems)
+    gui.myHelpdlg(parentfig, ...
+        'No DE/DV Excel files with Enrichr results were found in the selected folder.');
+    return;
+end
 
 if gui.i_isuifig(parentfig)
     [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...

@@ -210,18 +210,27 @@ end
             return;
         end
 
-    if gui.i_isuifig(parentfig)
-        [indxx, tfx] = gui.myListdlg(parentfig, listitems, ...
-            'Select two groups', ...
-            listitems([n-1, n]));
-    else
-        [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
-            'SelectionMode', 'multiple', ...
-            'ListString', listitems, ...
-            'InitialValue', [n - 1, n], ...
-            'ListSize', [220, 300]);
-    end
-        if tfx == 1
+        if n == 2
+            i1 = ci == 1;
+            i2 = ci == 2;
+            cL1 = cLi(1);
+            cL2 = cLi(2);
+        else
+            if gui.i_isuifig(parentfig)
+                [indxx, tfx] = gui.myListdlg(parentfig, listitems, ...
+                    'Select two groups', ...
+                    listitems([n-1, n]));
+            else
+                [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
+                    'SelectionMode', 'multiple', ...
+                    'ListString', listitems, ...
+                    'InitialValue', [n - 1, n], ...
+                    'ListSize', [220, 300]);
+            end
+            if tfx ~= 1
+                i1=[]; i2=[]; cL1=[]; cL2=[];
+                return;
+            end
             if numel(indxx) ~= 2
                 gui.myErrordlg(parentfig, 'Please select 2 groups');
                 return;
@@ -233,12 +242,10 @@ end
             i2 = ci == idx2;
             cL1 = cLi(idx1);
             cL2 = cLi(idx2);
-            if isscalar(i1) || isscalar(i2), return; end
-
-            [i1, i2, cL1, cL2, cancelled] = gui.i_whichvswhich(parentfig, i1, i2, cL1, cL2);
-            if cancelled, return; end
-            done = true;
-        else
-            i1=[]; i2=[]; cL1=[]; cL2=[];
         end
+        if isscalar(i1) || isscalar(i2), return; end
+
+        [i1, i2, cL1, cL2, cancelled] = gui.i_whichvswhich(parentfig, i1, i2, cL1, cL2);
+        if cancelled, return; end
+        done = true;
     end

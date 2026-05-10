@@ -71,7 +71,12 @@ X2_all = sce2.X(idx2, :);
 max_genes = 3000;
 if numel(common_genes) > max_genes
     fprintf('Limiting to top %d HVGs (from %d common genes)...\n', max_genes, numel(common_genes));
-    [common_genes, X1_all, X2_all] = i_limit_genes(common_genes, X1_all, X2_all, max_genes);
+    sce_tmp = SingleCellExperiment(X1_all, common_genes);
+    sce_tmp = llm.i_limit_genes(sce_tmp, max_genes);
+    [~, hidx] = ismember(sce_tmp.g, common_genes);
+    common_genes = sce_tmp.g;
+    X1_all = X1_all(hidx, :);
+    X2_all = X2_all(hidx, :);
     fprintf('Genes after HVG selection: %d\n', numel(common_genes));
 end
 
@@ -108,6 +113,8 @@ if ~isempty(out_dir) && ~isfolder(out_dir)
     mkdir(out_dir);
 end
 
+max_cells = 1000;   % subsample per cell type; GRN build time grows with cells
+
 i_log(out_dir, sprintf('START scTenifoldNet (lite): %s vs %s | %d cell types', ...
     sample_id1, sample_id2, numel(shared_ct)));
 
@@ -130,8 +137,21 @@ for k = 1:numel(shared_ct)
     fprintf('\nscTenifoldNet (lite) for "%s": %d vs %d cells ...\n', ct, n1, n2);
     i_log(out_dir, sprintf('BEGIN "%s": n1=%d n2=%d', ct, n1, n2));
 
-    X0 = full(X1_all(:, mask1));
-    X1 = full(X2_all(:, mask2));
+    idx1 = find(mask1);
+    idx2 = find(mask2);
+    if numel(idx1) > max_cells
+        idx1 = idx1(randperm(numel(idx1), max_cells));
+        fprintf('  Subsampled sample1: %d → %d cells\n', n1, max_cells);
+        n1 = max_cells;
+    end
+    if numel(idx2) > max_cells
+        idx2 = idx2(randperm(numel(idx2), max_cells));
+        fprintf('  Subsampled sample2: %d → %d cells\n', n2, max_cells);
+        n2 = max_cells;
+    end
+
+    X0 = full(X1_all(:, idx1));
+    X1 = full(X2_all(:, idx2));
 
     X0 = log1p(sc_norm(X0));
     X1 = log1p(sc_norm(X1));
@@ -275,13 +295,3 @@ end
 end
 
 
-% ---- Helper: keep top n HVGs (ranked by sc_splinefit on X1) ---------
-function [genes, X1, X2] = i_limit_genes(genes, X1, X2, n)
-T_hvg = sc_splinefit(X1, genes);
-glist = T_hvg.genes(1:min(n, numel(genes)));
-[~, hidx] = ismember(glist, genes);
-hidx = hidx(hidx > 0);
-genes = genes(hidx);
-X1 = X1(hidx, :);
-X2 = X2(hidx, :);
-end

@@ -36,7 +36,7 @@ defaultindx = getpref('scgeatoolbox', preftagname, length(list));
     if gui.i_isuifig(parentfig)
         figure(parentfig);
         [indx, tf] = gui.myListdlg(parentfig, list, ...
-            'Select a source', list(defaultindx), false);
+            'Select a source', list(defaultindx), false, true, [300, 450]);
 
         % parentfig.WindowStyle = 'normal';
     else
@@ -62,7 +62,7 @@ setpref('scgeatoolbox', preftagname, indx);
     %                               '10x Genomics .mtx', ...
     %                               'TSV/CSV .txt', 'SCE Data .mat');
 
-switch ButtonName
+    switch ButtonName
         case 'SCE Data File(s) (*.mat)...'
             [filenm, pathname] = uigetfile( ...
                 {'*.mat', 'SCE Data Files (*.mat)'; ...
