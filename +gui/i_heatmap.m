@@ -131,7 +131,7 @@ function in_callback_flipxy(~, ~)
     end
 
 function in_callback_renamecat(~, ~)
-        tg = gui.i_inputgenelist(string(cL), true);
+        tg = gui.i_inputgenelist(string(cL), true, parentfig);
         if isempty(tg), return; end
         if length(tg) == length(cL)
             set(gca, 'XTick', a-b);
@@ -166,7 +166,7 @@ function in_callback_exporttable(~, ~, T, needwait, defname)
         else
             [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
         end
-        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+        if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if isequal(file, 0) || isequal(path, 0)
             return;
         else

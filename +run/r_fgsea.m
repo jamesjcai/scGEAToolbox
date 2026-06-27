@@ -1,6 +1,6 @@
 function [s] = r_fgsea(genelist, rmribo, drdistin, wkdir)
 
-if nargin < 4, wkdir = tempdir; end
+if nargin < 4, wkdir = pkg.i_tempdirfile(); end
 if nargin < 3, drdistin = []; end
 if nargin < 2, rmribo = true; end
 s=[];
@@ -8,6 +8,7 @@ s=[];
 isdebug = false;
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_fgsea');
 if ~isok
     error(msg);
@@ -65,5 +66,4 @@ if exist('output.txt', 'file')
     s = readtable('output.txt', "Delimiter", ',');
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

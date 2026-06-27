@@ -11,6 +11,7 @@ end
 % prgfoldername = 'py_harmonypy';
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', 'py_harmonypy');
 codepth = pkg.i_normalizepath(codepth);
@@ -28,7 +29,7 @@ x = pyenv;
 try
     pkg.i_add_conda_python_path;
 catch
-
+    % best-effort: fall back to default pyenv if conda path not found
 end
 
 codefullpath = fullfile(codepth, 'require.py');
@@ -39,8 +40,7 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
-    cd(oldpth);
-    if isvalid(fw)
+    if pkg.i_isvalid(fw)
         gui.gui_waitbar(fw, true);
     end
     error(cmdout);
@@ -70,7 +70,7 @@ save('input.mat', '-v7.3', 's', 'batchid');
 disp('Input file written.');
 
 
-if isvalid(fw)
+if pkg.i_isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
     % pause(0.5);
     gui.gui_waitbar(fw, [], [], 'Running Harmonypy...');
@@ -83,7 +83,7 @@ pkg.i_addwd2script(codefullpath, wkdir, 'python');
 %         x.Executable,wrkpth,filesep);
 %     disp(cmdlinestr)
 %     [status]=system(cmdlinestr,'-echo');
-%     if isvalid(fw)
+%     if pkg.i_isvalid(fw)
 %         gui.gui_waitbar(fw,[],'Running harmonypy is complete');
 %     end
 
@@ -96,12 +96,11 @@ if status == 0 && exist('output.mat', 'file')
     load("output.mat", "sout")
 end
 
-if status == 0 && isvalid(fw)
+if status == 0 && pkg.i_isvalid(fw)
     gui.gui_waitbar(fw, [], 'Harmonypy is complete');
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 
 % if exist('./output.csv','file'), delete('./output.csv'); end
 % writematrix(s,'input1.csv');

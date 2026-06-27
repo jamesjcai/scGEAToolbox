@@ -1,4 +1,6 @@
-function [succeeded] = py_writeh5ad(sce, fname, wkdir, isdebug, testpy)
+function [succeeded] = py_writeh5ad(sce, fname, wkdir, isdebug, verbose, pe)
+
+if nargin < 6, pe = []; end
 
 succeeded = false;
 if nargin < 2, fname = tempname + ".h5ad"; end
@@ -9,38 +11,47 @@ if nargin<3 || isempty(wkdir)
     if isempty(wkdir), return; end
 end
 if nargin < 4, isdebug = true; end
-if nargin < 5, testpy = true; end
+if nargin < 5, verbose = true; end
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..',  'external', extprogname);
 if isempty(wkdir) || ~isfolder(wkdir)
     cd(codepth);
 else
-    disp('Using working directory provided.');
+    if verbose
+        disp('Using working directory provided.');
+    end
     cd(wkdir);
 end
 
-if testpy
+if verbose
     fw = gui.gui_waitbar([], [], 'Checking Python environment...');
 end
 
-x = pyenv;
-try
-    pkg.i_add_conda_python_path;
-catch
-
+if isempty(pe)
+    pe = pyenv;
 end
+
+% pyenv( ...
+%     "Version","D:\claude_dev\GEOcellar_autogen\.venv\Scripts\python.exe", ...
+%     "ExecutionMode","InProcess")
+
+% try
+%     pkg.i_add_conda_python_path;
+% catch
+% 
+% end
 codepth = pkg.i_normalizepath(codepth);
 
-if testpy
+if verbose
     codefullpath = fullfile(codepth,'require.py');
-    cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
+    cmdlinestr = sprintf('"%s" "%s"', pe.Executable, codefullpath);
     disp(cmdlinestr)
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
-        cd(oldpth);
-        if isvalid(fw)
+        if pkg.i_isvalid(fw)
             gui.gui_waitbar(fw, true);
         end
         error(cmdout);
@@ -64,7 +75,7 @@ T = pkg.i_makeattributestable(sce);
 writetable(T,'c.csv');
 % disp('Files written.');
 
-if testpy && isvalid(fw)
+if verbose && pkg.i_isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
     gui.gui_waitbar(fw, [], [], 'Running py\_writeh5ad...');
@@ -72,20 +83,21 @@ end
 
 codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
-cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
+cmdlinestr = sprintf('"%s" "%s"', pe.Executable, codefullpath);
 disp(cmdlinestr)
 [status1] = system(cmdlinestr, '-echo');
 [status2] = movefile('output.h5ad',fname);
 
-if status1 == 0 && status2 == 1 && testpy && isvalid(fw)
-    gui.gui_waitbar(fw, false, 'File is written.');
+if status1 == 0 && status2 == 1
     succeeded = true;
+    if verbose && pkg.i_isvalid(fw)
+        gui.gui_waitbar(fw, false, 'File is written.');
+    end
 else
-    if testpy
+    if verbose && pkg.i_isvalid(fw)
         gui.gui_waitbar(fw, true, 'File is failed to save.');
     end
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

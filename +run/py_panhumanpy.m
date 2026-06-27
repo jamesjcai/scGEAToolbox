@@ -6,9 +6,10 @@ function [celltypes, T] = py_panhumanpy(sce, wkdir, ...
 celltypes = [];
 if nargin < 4, prepare_input_only = false; end
 if nargin < 3, isdebug = true; end
-if nargin < 2, wkdir = tempdir; end
+if nargin < 2, wkdir = pkg.i_tempdirfile(); end
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', 'py_panhumanpy');
 
@@ -26,7 +27,7 @@ x = pyenv;
 try
     pkg.i_add_conda_python_path;
 catch
-
+    % best-effort: fall back to default pyenv if conda path not found
 end
 
 codepth = pkg.i_normalizepath(codepth);
@@ -39,7 +40,6 @@ if ~prepare_input_only
         disp(cmdlinestr)
         [status, cmdout] = system(cmdlinestr, '-echo');
         if status ~= 0
-            cd(oldpth);
             error(cmdout);
         else
             disp('Code requirement check is done.')
@@ -76,5 +76,4 @@ else
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

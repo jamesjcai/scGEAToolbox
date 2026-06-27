@@ -166,7 +166,7 @@ function in_HighlightSelectedGenes(~,~,typeid)
                case 1
                     % Myc, Oct3/4, Sox2, Klf4
                     [glist] = gui.i_selectngenes(SingleCellExperiment(Xsorted,gsorted),...
-                        intersect(upper(gsorted),["MYC", "POU5F1", "SOX2", "KLF4"]));
+                        intersect(upper(gsorted),["MYC", "POU5F1", "SOX2", "KLF4"]), parentfig);
                case 2
                     gsorted = T.(T.Properties.VariableNames{1});
 
@@ -249,7 +249,7 @@ function txt = in_myupdatefcn3(src, event_obj, g)
 
             % figure; stem(1:length(x1), x1, 'marker', 'none');
 
-            if ~isempty(sh) && isvalid(sh)
+            if ~isempty(sh) && pkg.i_isvalid(sh)
                 delete(sh);
             end
             sh = plot(hAx2, 1:length(x1), x1, 'marker', 'none');

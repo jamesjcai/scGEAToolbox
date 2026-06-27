@@ -52,7 +52,7 @@ try
     % D=squareform(pdist(data));
     S{end+1} = pkg.e_embedbyd(sqrt(DS), ndim, 2);
 catch
-
+    % MDS is optional; the other embeddings (KPCA, t-SNE, ...) still run
 end
 
 % [y]=pkg.e_isomap(log(sc_norm(X)+1)');

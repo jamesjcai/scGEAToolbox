@@ -136,7 +136,7 @@ end
 
     % Close the figure (defensive cleanup in case it wasn't deleted by a callback)
     % delete(hFig);
-    if isvalid(hFig), uiresume(hFig); delete(hFig); end
+    if pkg.i_isvalid(hFig), uiresume(hFig); delete(hFig); end
 end
 
 % --- Helper functions ---

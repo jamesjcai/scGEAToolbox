@@ -5,13 +5,14 @@ if nargin < 3
     speciesid = 'human';   % mouse
 end
 if nargin < 2
-   wkdir = tempdir;
+   wkdir = pkg.i_tempdirfile();
 end
 % PMID: 33462507
 
 
 isdebug = true;
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_copykat');
 if ~isok, error(msg);
     return;
@@ -52,5 +53,4 @@ if exist(outfile,'file')
     % y = y(sortid);
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

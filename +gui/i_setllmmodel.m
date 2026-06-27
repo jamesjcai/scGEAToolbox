@@ -91,6 +91,7 @@ switch selectedProvider
         try
             a = webread("http://localhost:11434");
         catch
+            % ollama may not be running; a stays empty and the check below fails over
         end
         if strcmp(a, 'Ollama is running')
             a = webread('http://localhost:11434/api/tags');

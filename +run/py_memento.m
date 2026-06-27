@@ -9,6 +9,7 @@ end
 if nargin < 2, isdebug = true; end
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', extprogname);
 if isempty(wkdir) || ~isfolder(wkdir)
@@ -22,7 +23,7 @@ x = pyenv;
 try
     pkg.i_add_conda_python_path;
 catch
-
+    % best-effort: fall back to default pyenv if conda path not found
 end
 codepth = pkg.i_normalizepath(codepth);
 
@@ -31,7 +32,6 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
-    cd(oldpth);
     error(cmdout);
 end
 
@@ -47,5 +47,4 @@ disp(cmdlinestr)
 [~] = system(cmdlinestr, '-echo');
 
 T = readtable(fullfile(wkdir, 'output.csv'),"FileType","text");
-cd(oldpth);
 end

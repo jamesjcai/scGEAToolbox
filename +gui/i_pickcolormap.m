@@ -32,7 +32,7 @@ if tf == 1
         a = 'autumn';
     end
     if setzerocolor
-        gui.i_setautumncolor(1:5, a);
+        gui.i_setautumncolor(1:5, a, [], [], [], parentfig);
     else
         colormap(a);
     end

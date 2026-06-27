@@ -77,7 +77,7 @@ btnCancel.Layout.Column = 3;
 % d.WindowStyle="modal";
 uiwait(d);
 
-if ~isempty(parentfig) && isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
     figure(parentfig);
 end
 

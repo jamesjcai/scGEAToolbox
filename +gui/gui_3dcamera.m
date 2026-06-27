@@ -56,7 +56,7 @@ function camera3dmp4(~, ~)
         try
             CaptureFigVid(ax, fname, OptionZ);
         catch
-
+            % video export is optional; restore view and continue if codec missing
         end
         view(caz,cel);
         warning on

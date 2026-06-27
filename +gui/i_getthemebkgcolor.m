@@ -17,5 +17,6 @@ end
             bgColor = [0 0 0]; % Set to white for light theme
         end
     catch
+        % theme() unavailable on older MATLAB; return the default white background
     end
 end

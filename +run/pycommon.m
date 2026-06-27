@@ -19,7 +19,7 @@ fw = gui.gui_waitbar([], [], 'Checking Python environment...');
 try
     pkg.i_add_conda_python_path;
 catch
-
+    % best-effort: fall back to default pyenv if conda path not found
 end
 
 cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
@@ -27,7 +27,7 @@ cmdlinestr = sprintf('"%s" "%s%srequire.py"', ...
 disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
-    if isvalid(fw)
+    if pkg.i_isvalid(fw)
         gui.gui_waitbar(fw, [], 'Checking Python...error.');
     end
     % waitfor(errordlg(sprintf('%s',cmdout)));
@@ -35,7 +35,7 @@ if status ~= 0
     error('%s has not been installed properly.', ...
         upper(prgwkdir));
 end
-if isvalid(fw)
+if pkg.i_isvalid(fw)
     gui.gui_waitbar(fw, [], 'Checking Python environment is complete.');
 end
 ok = true;

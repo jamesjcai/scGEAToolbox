@@ -1,9 +1,10 @@
 function [X,scale_X] = r_SeuratSctransform(X, genelist, wkdir)
 
-if nargin < 3, wkdir = tempdir; end
+if nargin < 3, wkdir = pkg.i_tempdirfile(); end
 if nargin < 2, genelist = string(1:size(X, 1)); end
 isdebug = false;
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_SeuratSctransform');
 if ~isok, error(msg);
     return;
@@ -47,5 +48,4 @@ if nargout>1
     end
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

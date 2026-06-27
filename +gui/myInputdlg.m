@@ -93,19 +93,19 @@ uiwait(d);
 
 
 % Retrieve data
-if isvalid(d) && d.UserData
+if pkg.i_isvalid(d) && d.UserData
     answer = arrayfun(@(f) f.Value, fields, 'UniformOutput', false);
     uiresume(d);
     delete(d);
 else
     answer = {};
-    if isvalid(d)
+    if pkg.i_isvalid(d)
         uiresume(d);
         delete(d);
     end
 end
 
-if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
     figure(parentfig);
 end
 

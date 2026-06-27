@@ -56,12 +56,12 @@ focus(ut);
 
 uiwait(d);
 
-if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
     figure(parentfig);
 end
 
 % --- Process Results ---
-if isvalid(d) && d.UserData
+if pkg.i_isvalid(d) && d.UserData
     % Selection property returns N-by-2 matrix [row, col]
     rows = ut.Selection(:, 1);
     if isempty(rows)
@@ -76,7 +76,7 @@ if isvalid(d) && d.UserData
 else
     indx = [];
     tf = 0;
-    if isvalid(d)
+    if pkg.i_isvalid(d)
         uiresume(d);
         delete(d);
     end

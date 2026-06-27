@@ -3,7 +3,9 @@ MS <- read.csv('input.txt', row.names = 1)
 #Z <- MS$drdist^abs(BC$x[which.max(BC$y)])
 
 Z <- MS$drdist
-names(Z) <- rownames(MS)
+# Name the ranking vector by gene symbols (the 'genelist' column), not by the
+# sortid row names, so fgsea can match pathway genes against the input genes.
+names(Z) <- MS$genelist
 
 library(fgsea)
 KEGG <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=KEGG_2019_Human')

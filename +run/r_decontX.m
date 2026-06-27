@@ -4,7 +4,7 @@ function [X, contamination] = r_decontX(X, wkdir, isdebug)
 % see also: run.r_SoupX
 % https://cran.r-project.org/web/packages/SoupX/vignettes/pbmcTutorial.html
 
-if nargin < 2, wkdir = tempdir; end
+if nargin < 2, wkdir = pkg.i_tempdirfile(); end
 if nargin < 3, isdebug = true; end
 
 oldpth = pwd();

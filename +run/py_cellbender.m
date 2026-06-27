@@ -13,6 +13,7 @@ if nargin < 3, isdebug = true; end
 
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..',  'external', prgfoldername);
 
@@ -29,7 +30,7 @@ x = pyenv;
 try
     pkg.i_add_conda_python_path;
 catch
-
+    % best-effort: fall back to default pyenv if conda path not found
 end
 
 codepth = pkg.i_normalizepath(codepth);
@@ -40,8 +41,7 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
-    cd(oldpth);
-    % if isvalid(fw)
+    % if pkg.i_isvalid(fw)
     %    gui.gui_waitbar(fw, true);
     % end
     error(cmdout);
@@ -64,7 +64,7 @@ writelines(input_h5,"input.txt");
 % save('input.mat', '-v7.3', 'input_h5');
 disp('Input file written.');
 
-% if isvalid(fw)
+% if pkg.i_isvalid(fw)
 %    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
 %    pause(0.5);
 %    gui.gui_waitbar(fw, [], [], 'Running CellBender...');
@@ -91,11 +91,10 @@ if status == 0 && exist('output_filtered.h5', 'file')
     output_h5 = fullfile(pwd, 'output_filtered.h5');
 end
 
-% if status == 0 && isvalid(fw)
+% if status == 0 && pkg.i_isvalid(fw)
 %    gui.gui_waitbar(fw, [], 'CellBender is complete');
 % end
 
 % if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 
 end

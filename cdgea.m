@@ -84,7 +84,7 @@ end
 %         waitbar(1, f, 'Finishing');
 %         pause(1);
 % 
-%         if isvalid(f)
+%         if pkg.i_isvalid(f)
 %             close(f); % Close waitbar when finished
 %         end
 %     end

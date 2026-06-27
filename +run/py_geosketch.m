@@ -9,6 +9,7 @@ idx = [];
 prgfoldername = 'py_geosketch';
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 [pyok, wrkpth, x] = run.pycommon(prgfoldername);
 if ~pyok, return; end
 
@@ -25,7 +26,7 @@ disp('Input file written.');
 %         x.Executable,wrkpth,filesep);
 %     disp(cmdlinestr)
 %     [status]=system(cmdlinestr,'-echo');
-%     if isvalid(fw)
+%     if pkg.i_isvalid(fw)
 %         gui.gui_waitbar(fw,[],'Running geosketch is complete');
 %     end
 
@@ -38,5 +39,4 @@ if status == 0 && exist(outputfile, 'file')
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

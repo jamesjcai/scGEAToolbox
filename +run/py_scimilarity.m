@@ -7,13 +7,14 @@ celltypes = [];
 if nargin < 6, prepare_input_only = false; end
 if nargin < 5, isdebug = true; end
 if nargin < 4, target_celltypes = ''; end
-if nargin < 3, wkdir = tempdir; end
+if nargin < 3, wkdir = pkg.i_tempdirfile(); end
 if nargin < 2, modeldir = selectFolder; end
 if isempty(modeldir) || ~exist(modeldir, 'dir')
     error('Model folder does not exist or is invalid.');
 end
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', 'py_scimilarity');
 
@@ -31,7 +32,7 @@ x = pyenv;
 try
     pkg.i_add_conda_python_path;
 catch
-
+    % best-effort: fall back to default pyenv if conda path not found
 end
 codepth = pkg.i_normalizepath(codepth);
 
@@ -43,7 +44,6 @@ if ~prepare_input_only
         disp(cmdlinestr)
         [status, cmdout] = system(cmdlinestr, '-echo');
         if status ~= 0
-            cd(oldpth);
             error(cmdout);
         else
             disp('Code requirement check is done.')
@@ -78,13 +78,13 @@ if ~isempty(target_celltypes)
         save('X.mat','-v7.3',"Xnorm","modeldir","g");
     end
 % catch ME
-%     if isvalid(fw)
+%     if pkg.i_isvalid(fw)
 %          gui.gui_waitbar(fw, true);
 %     end
 %     errordlg(ME.message,'');
 %     return;
 % end
-% if isvalid(fw)
+% if pkg.i_isvalid(fw)
 %     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
 %     pause(0.5);
 %     gui.gui_waitbar(fw, [], [], sprintf('Running %s...', 'py\_scimilarity'));
@@ -97,7 +97,7 @@ disp(cmdlinestr)
 if ~prepare_input_only
     [status] = system(cmdlinestr, '-echo');
     % [status2] = movefile('output.h5ad',fname);
-    % if status == 0 && isvalid(fw)
+    % if status == 0 && pkg.i_isvalid(fw)
     %     gui.gui_waitbar(fw, [], 'output.csv is written.');
     % end
     if status == 0 && exist('output.csv', 'file')
@@ -116,7 +116,6 @@ else
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 
 end
 

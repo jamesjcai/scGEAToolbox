@@ -1,9 +1,10 @@
-function [succeeded] = sc_sce2h5ad(sce, filename, testpy)
+function [succeeded] = sc_sce2h5ad(sce, filename, verbose, pe)
 % Write SCE to H5AD file
 %
 % see also: sc_readh5adfile
 
-if nargin < 3, testpy = true; end
+if nargin < 4, pe = []; end
+if nargin < 3, verbose = true; end
 
 succeeded = false;
 if nargin < 2
@@ -12,9 +13,9 @@ if nargin < 2
     filename = fullfile(pathname, filename);
 end
 
-wkdir = tempdir;
+wkdir = pkg.i_tempdirfile();
 try
-    [succeeded] = run.py_writeh5ad(sce, filename, wkdir, false, testpy);
+    [succeeded] = run.py_writeh5ad(sce, filename, wkdir, false, verbose, pe);
 catch ME
     errordlg(ME.message);
 end

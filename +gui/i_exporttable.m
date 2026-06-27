@@ -81,7 +81,7 @@ switch answer
             [file, path] = uiputfile({'*.xlsx'; '*.xls'; '*.*'}, ...
                 'Save as');
         end
-        % if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+        % if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if isequal(file, 0) || isequal(path, 0), return; end
 
         filename = fullfile(path, file);

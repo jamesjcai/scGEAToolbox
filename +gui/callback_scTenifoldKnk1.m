@@ -123,7 +123,7 @@ if isempty(A0)
         fw = gui.myWaitbar(FigureHandle);
         parfor k=1:32
         end
-        if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
+        if pkg.i_isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure'), figure(FigureHandle); end
 
         [T, A0] = ten.sctenifoldknk(sce.X, sce.g, idx, ...
             'sorttable', true, 'nsubsmpl', nsubsmpl, 'csubsmpl', csubsmpl, ...

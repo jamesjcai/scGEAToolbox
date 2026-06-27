@@ -23,6 +23,7 @@ species = p.Results.species;
 organ = p.Results.organ;
 
 oldpth = pwd;
+cleanupCwd = onCleanup(@() cd(oldpth));
 % pw1=fileparts(which(mfilename));
 pw1 = fileparts(mfilename('fullpath'));
 if strcmpi(organ, "all")
@@ -115,6 +116,5 @@ end
 if size(T, 1) > 10
     T = T(1:10, :);
 end
-cd(oldpth);
 
 end

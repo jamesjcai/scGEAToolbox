@@ -172,7 +172,7 @@ end
     function in_HighlightSelectedGenes(~, ~)
         % Myc, Oct3/4, Sox2, Klf4
         [glist] = gui.i_selectngenes(SingleCellExperiment(X, g), ...
-            intersect(upper(g), ["MYC", "POU5F1", "SOX2", "KLF4"]));
+            intersect(upper(g), ["MYC", "POU5F1", "SOX2", "KLF4"]), hFig);
         if ~isempty(glist)
             [y, idx] = ismember(glist, g);
             idx = idx(y);
@@ -188,7 +188,7 @@ end
     function in_callback_HighlightGenes(~, ~)
         idx = zeros(1, length(hvgidx));
         h.BrushData = idx;
-        k = gui.i_inputnumk(200, 1, 2000);
+        k = gui.i_inputnumk(200, 1, 2000, [], hFig);
         if isempty(k), return; end
         idx(hvgidx(1:k)) = 1;
         h.BrushData = idx;
@@ -248,7 +248,7 @@ end
             idx = event_obj.DataIndex;
             txt = {g(idx)};
             x1 = X(idx, :);
-            if ~isempty(sh) && isvalid(sh)
+            if ~isempty(sh) && pkg.i_isvalid(sh)
                 delete(sh);
             end
             sh = plot(hAx2, 1:length(x1), x1);

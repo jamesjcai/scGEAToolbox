@@ -47,7 +47,7 @@ function in_showcellstate(~, ~)
                h = gui.i_gscatter3(s, c, 1, 1, axesv{kx});
                title(axesv{kx}, string(embeddingtags{kx})+" - "+string(clabel));
                h.DataTipTemplate.DataTipRows = row;
-               gui.i_setautumncolor(c, a, true, false, axesv{kx});
+               gui.i_setautumncolor(c, a, true, false, axesv{kx}, hFig);
            end
         end
     end
@@ -71,7 +71,7 @@ function in_showgeneexp(~, ~)
                s = sce.struct_cell_embeddings.(embeddingtags{kx});
                gui.i_gscatter3(s, c, 1, 1, axesv{kx});
                title(axesv{kx}, string(embeddingtags{kx})+" - "+string(gsorted(indx)));
-               gui.i_setautumncolor(c, a, true, any(c==0), axesv{kx});
+               gui.i_setautumncolor(c, a, true, any(c==0), axesv{kx}, hFig);
             end
         end
     end

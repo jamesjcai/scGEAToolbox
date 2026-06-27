@@ -101,7 +101,7 @@ fig.WindowStyle = 'modal';
 % Wait for user response
 uiwait(fig);
 
-if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
     figure(parentfig);
 end
 

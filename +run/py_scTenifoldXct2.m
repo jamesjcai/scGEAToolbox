@@ -24,6 +24,7 @@ if isempty(wkdir) && ~prepare_input_only
     % ── Python fallback (original implementation) ─────────────────────────
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldXct2');
 
@@ -44,7 +45,7 @@ if ~prepare_input_only
     try
         pkg.i_add_conda_python_path;
     catch
-
+        % best-effort: fall back to default pyenv if conda path not found
     end
     codepth = pkg.i_normalizepath(codepth);
 
@@ -57,7 +58,7 @@ if ~prepare_input_only
     disp(cmdlinestr)
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
-        if isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
+        if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
         % waitfor(errordlg(sprintf('%s',cmdout)));
         % error(cmdout);
         % error('Python scTenifoldXct has not been installed properly.');
@@ -65,12 +66,11 @@ if ~prepare_input_only
         if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
             prepare_input_only = true;
         else
-            cd(oldpth);
             return;
         end
 
     end
-    if isvalid(fw)
+    if pkg.i_isvalid(fw)
         gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete');
         pause(1);
         gui.myWaitbar(parentfig, fw);
@@ -106,7 +106,7 @@ gui.myWaitbar(parentfig, fw, false, [], ...
 try
         in_prepareA(sce1, 1);
     catch ME
-        if isvalid(fw)
+        if pkg.i_isvalid(fw)
             % gui.gui_waitbar(fw, [], 'Building S1 networks is incomplete');
             gui.myWaitbar(parentfig, fw, true, [], 'Building S1 networks is incomplete');
         end
@@ -121,7 +121,7 @@ gui.myWaitbar(parentfig, fw, false, [], ...
 try
         in_prepareA(sce2, 2);
     catch ME
-        if isvalid(fw)
+        if pkg.i_isvalid(fw)
             gui.myWaitbar(parentfig, fw, true, [], 'Building S2 networks is incomplete');
         end
         gui.myErrordlg(parentfig, ME.message);
@@ -149,7 +149,7 @@ if ~prepare_input_only
         [status] = system(cmdlinestr, '-echo');
         % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
     catch ME
-        if isvalid(fw)
+        if pkg.i_isvalid(fw)
             gui.myWaitbar(parentfig, fw, true, [], 'Running scTenifoldXct.py is incomplete');
             % gui.gui_waitbar(fw, [], 'Running scTenifoldXct.py is incomplete.');
         end
@@ -161,7 +161,7 @@ end
     % pr = rt.exec(cmdlinestr);
     % [status]=pr.waitFor();
 
-if isvalid(fw)
+if pkg.i_isvalid(fw)
         if prepare_input_only
             % gui.gui_waitbar(fw, [], 'Input preparation is complete.');
             gui.myWaitbar(parentfig, fw, false, [], 'Input preparation is complete.');
@@ -171,7 +171,7 @@ if isvalid(fw)
         end
     end
 
-if isvalid(fw)
+if pkg.i_isvalid(fw)
         gui.myWaitbar(parentfig, fw);
     end
 
@@ -186,7 +186,6 @@ if ~prepare_input_only
         iscomplete = true;
     else
         if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-        cd(oldpth);
         error('scTenifoldXct2 runtime error.');
         % gui.myErrordlg(parentfig, 'scTenifoldXct2 runtime error.');
     end
@@ -197,7 +196,6 @@ if ~prepare_input_only
     %     iscomplete = true;
     % end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 
 
 % --------------------------------------------------

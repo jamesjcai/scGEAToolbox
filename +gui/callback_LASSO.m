@@ -18,7 +18,7 @@ if isempty(Xt), return; end
 
 gui.i_resetrngseed(src, [], false);
 
-gui.LassoAnalysisApp(Xt', thisx, sce.g);
+gui.LassoAnalysisApp(Xt', thisx, sce.g, FigureHandle);
 
 end
 %{

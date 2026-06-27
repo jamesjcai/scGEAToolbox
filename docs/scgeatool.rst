@@ -21,7 +21,7 @@ For a quick exploratry data analysis using `scgeatool` function
   cdgea;
   load example_data\testXgs.mat
   sce=SingleCellExperiment(X,g,s);
-  scgeatool(X,g,s)
+  scgeatool(sce);
   
 where X is the expression matrix, g is the list of genes, and s is the coordinates of embedding.
 
@@ -31,7 +31,7 @@ You can also load an example SCE (`SingleCellExperiment` object) variable using 
 
   cdgea;
   load example_data\testSce.mat
-  scgeatool(sce)
+  scgeatool(sce);
 
 If everything goes right, you will see the main inferface of SCGEATOOL like this:
 

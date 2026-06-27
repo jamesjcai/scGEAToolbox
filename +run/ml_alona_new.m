@@ -32,6 +32,7 @@ if isdeployed
 else
     oldpth = pwd;
 end
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 % pth = fullfile(pw1, '..', 'assets', 'celltypes.xlsx');
 pth = fullfile(cdgea, 'assets', 'PanglaoDB', 'celltypes.xlsx');
@@ -126,5 +127,4 @@ end
 if bestonly && size(T, 1) > 1
     T = T(1, :);
 end
-cd(oldpth);
 end

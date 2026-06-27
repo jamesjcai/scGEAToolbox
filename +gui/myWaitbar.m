@@ -20,6 +20,7 @@ if ~gui.i_isuifig(parentfig)
                     fw.Position = newpos;
                 end
             catch
+                % keep default screen position if parent figure layout is unavailable
             end
 
             fw.Visible = "on";
@@ -29,15 +30,15 @@ if ~gui.i_isuifig(parentfig)
             fprintf('... ');
             tic;
             return;
-        elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && ~isempty(newmesg) && isempty(f)
+        elseif pkg.i_isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && ~isempty(newmesg) && isempty(f)
             newmesg = strrep(newmesg,'_','\_');
             fw = waitbar(.618, fw, newmesg);
-        elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && isempty(newmesg) && ~isempty(f)
+        elseif pkg.i_isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && isempty(newmesg) && ~isempty(f)
             fw = waitbar(f, fw);
-        elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && ~isempty(newmesg) && ~isempty(f)
+        elseif pkg.i_isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar') && ~isempty(newmesg) && ~isempty(f)
             newmesg = strrep(newmesg,'_','\_');
             fw = waitbar(f, fw, newmesg);
-        elseif isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar')
+        elseif pkg.i_isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar')
             if ~witherror
                 if nargin < 3 || isempty(mesg), mesg = 'Finishing'; end
                 toc;
@@ -45,7 +46,7 @@ if ~gui.i_isuifig(parentfig)
                 pause(1);
                 % fprintf('.......................done.\n');
             end
-            if isvalid(fw), close(fw); end
+            if pkg.i_isvalid(fw), close(fw); end
         end
 
     else
@@ -62,18 +63,18 @@ if ~gui.i_isuifig(parentfig)
             fprintf('... ');
             tic;
             return;
-        elseif isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog') && ...
+        elseif pkg.i_isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog') && ...
                 ~isempty(newmesg) && isempty(f)
             fw.Value = 0.618;
             fw.Message = newmesg;
-        elseif isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog') && ...
+        elseif pkg.i_isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog') && ...
                 isempty(newmesg) && ~isempty(f)
             fw.Value = f;
-        elseif isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog') && ...
+        elseif pkg.i_isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog') && ...
                 ~isempty(newmesg) && ~isempty(f)
             fw.Message = newmesg;
             fw.Value = f;
-        elseif isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog')
+        elseif pkg.i_isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog')
             if ~witherror
                 if nargin < 3 || isempty(mesg), mesg = 'Finishing'; end
                 toc;
@@ -82,7 +83,7 @@ if ~gui.i_isuifig(parentfig)
                 pause(1);
                 % fprintf('.......................done.\n');
             end
-            if isvalid(fw), close(fw); end
+            if pkg.i_isvalid(fw), close(fw); end
         end
     end
 end

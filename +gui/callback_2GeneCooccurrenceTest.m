@@ -50,6 +50,7 @@ b=0+sce.X(sce.g==g2,:)>0;
 try
     pkg.e_chi2binarytest
 catch
+    % no-arg call is a self-test/help print; failure does not affect output below
 end
 
 capturedText = evalc('pkg.e_chi2binarytest(a,b);');

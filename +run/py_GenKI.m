@@ -4,6 +4,7 @@ if nargin < 5, isdebug = true; end
 if nargin < 4, wkdir = []; end
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', 'py_GenKI');
 
@@ -21,7 +22,7 @@ x = pyenv;
 try
     pkg.i_add_conda_python_path;
 catch
-
+    % best-effort: fall back to default pyenv if conda path not found
 end
 
 % prgfoldername = 'py_GenKI';
@@ -43,8 +44,7 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
-    cd(oldpth);
-    if isvalid(fw)
+    if pkg.i_isvalid(fw)
          gui.gui_waitbar(fw, true);
     end
     error(cmdout);
@@ -73,7 +73,7 @@ end
 %         error('Python GenKI has not been installed properly.');
 %     end
 %
-%     if isvalid(fw)
+%     if pkg.i_isvalid(fw)
 %         gui.gui_waitbar(fw,[],'Checking Python environment is complete');
 %     end
 
@@ -92,27 +92,27 @@ try
     writematrix(ones(size(X, 2), 1), 'c.txt');
     % disp('Input X g c written.');
 catch ME
-    if isvalid(fw)
+    if pkg.i_isvalid(fw)
          gui.gui_waitbar(fw, true);
     end
     errordlg(ME.message,'');
     return;
 end
-if isvalid(fw)
+if pkg.i_isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
     gui.gui_waitbar(fw, [], [], 'Running GenKI...');
 end
 
 
-if isvalid(fw)
+if pkg.i_isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'Building pcnet\_Source network...');
 end
 A1 = net.pcrnet(X, 3, false, true, false, false, pkg.i_usegpu(X));
 A1 = A1 ./ max(abs(A1(:)));
 A = ten.e_filtadjc(A1, 0.75, false);
 save('pcnet_Source.mat', 'A', '-v7.3');
-if isvalid(fw)
+if pkg.i_isvalid(fw)
     gui.gui_waitbar(fw, [], [], 'pcnet\_Source.mat saved.');
 end
 
@@ -122,7 +122,7 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
 
-if status == 0 && isvalid(fw)
+if status == 0 && pkg.i_isvalid(fw)
     gui.gui_waitbar(fw, [], 'py_GenKI is complete');
 end
 
@@ -136,7 +136,7 @@ end
 
 % [status] = run.pycommon2(x, wrkpth, prgfoldername);
 
-% if isvalid(fw)
+% if pkg.i_isvalid(fw)
 %     gui.gui_waitbar(fw,[],'Running GenKI is complete');
 % end
 
@@ -146,5 +146,4 @@ if status == 0 && exist('output.csv', 'file')
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

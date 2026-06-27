@@ -1,4 +1,4 @@
-function run_enrichr(results, out_dir, sample_id1, sample_id2, top_n)
+function run_enrichr(results, out_dir, sample_id1, sample_id2, top_n, prefix)
 % LLM.RUN_ENRICHR  Pathway enrichment (Enrichr) on DE results per cell type.
 %
 %   llm.run_enrichr(results, out_dir, sample_id1, sample_id2)
@@ -32,6 +32,7 @@ function run_enrichr(results, out_dir, sample_id1, sample_id2, top_n)
 %     results = llm.run_de_analysis('GSM001', 'GSM002', data_dir, out_dir);
 %     llm.run_enrichr(results, out_dir, 'GSM001', 'GSM002');
 
+if nargin < 6 || isempty(prefix),     prefix     = "DE"; end
 if nargin < 5 || isempty(top_n),      top_n      = 100; end
 if nargin < 4 || isempty(sample_id2), sample_id2 = '';  end
 if nargin < 3 || isempty(sample_id1), sample_id1 = '';  end
@@ -72,7 +73,8 @@ for k = 1:numel(results)
 
     % ---- Save to Excel ----------------------------------------------
     if ~isempty(out_dir) && ~isempty(sample_id1) && ~isempty(sample_id2)
-        xlsfile = fullfile(out_dir, sprintf('DE_%s_vs_%s_%s.xlsx', ...
+        xlsfile = fullfile(out_dir, sprintf('%s_%s_vs_%s_%s.xlsx', ...
+            prefix, ...
             matlab.lang.makeValidName(string(sample_id1)), ...
             matlab.lang.makeValidName(string(sample_id2)), ...
             matlab.lang.makeValidName(string(ct))));
@@ -95,8 +97,21 @@ end
 
 % ---- Print JSON summary for agent -----------------------------------
 summary = struct('cell_types', {summary_ct});
-fprintf('\n%%ENRICHR_SUMMARY_BEGIN%%\n%s\n%%ENRICHR_SUMMARY_END%%\n', ...
-jsonencode(summary, 'PrettyPrint', true));
+summaryJson = jsonencode(summary, 'PrettyPrint', true);
+fprintf('\n%%ENRICHR_SUMMARY_BEGIN%%\n%s\n%%ENRICHR_SUMMARY_END%%\n', summaryJson);
+
+% ---- Save JSON file so data_analysis_agent can read it back ---------
+if ~isempty(out_dir) && ~isempty(sample_id1) && ~isempty(sample_id2)
+    jsonFile = fullfile(out_dir, sprintf('%s_%s_vs_%s_enrichr.json', ...
+        prefix, ...
+        matlab.lang.makeValidName(string(sample_id1)), ...
+        matlab.lang.makeValidName(string(sample_id2))));
+    fid = fopen(jsonFile, 'w');
+    if fid ~= -1
+        fprintf(fid, '%s\n', summaryJson);
+        fclose(fid);
+    end
+end
 
 end
 

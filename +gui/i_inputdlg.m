@@ -45,6 +45,7 @@ if ~isMATLABReleaseOlderThan('R2025a')
     try
         theme(fig, parentfig.Theme.BaseColorStyle);
     catch
+        % theme() may not exist or parent has no Theme property; skip styling
     end
 end
 
@@ -54,7 +55,7 @@ fig.Visible = 'on';
 focus(edit);
 uiwait(fig);
 
-if isvalid(fig) % If the dialog was not closed by user
+if pkg.i_isvalid(fig) % If the dialog was not closed by user
     answer = {edit.Value};
     uiresume(fig);
     delete(fig);

@@ -78,7 +78,7 @@ function [done] = ix_setpyenv(deflt)
         else
             [file, path] = uigetfile('python', 'Select Python Interpreter', deflt);
         end
-        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+        if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if isequal(file, 0)
             return;
         else

@@ -31,6 +31,7 @@ speciestag = '';
 try
 speciestag = pkg.i_extractHTMLText(b(1+find(contains(b, 'Organism'),1)));
 catch
+    % speciestag stays empty if Organism row not present; downstream tolerates this
 end
 
 c = string(b(contains(b, acc)))';
@@ -86,12 +87,14 @@ if length(c) >= 3
         try
             delete(f2);
         catch
+            % temp file may be locked by AV scan; leave it for OS temp cleanup
         end
     end
     if exist(f3,"file")
         try
             delete(f3);
         catch
+            % temp file may be locked by AV scan; leave it for OS temp cleanup
         end
     end
 
@@ -197,6 +200,7 @@ fprintf(['The data was downloaded from the National Center', ...
         try
             delete(f1);
         catch
+            % temp file may be locked by AV scan; leave it for OS temp cleanup
         end
     end
 end

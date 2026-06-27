@@ -123,6 +123,6 @@ if n == 1
         ylabel('Cellular score');
 
     elseif n >= 3
-        gui.i_spiderplot(Y, thisc, labelx, sce);
+        gui.i_spiderplot(Y, thisc, labelx, sce, FigureHandle);
     end
 end

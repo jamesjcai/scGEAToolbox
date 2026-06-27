@@ -8,14 +8,14 @@ idx = event_obj.DataIndex;
 % i_plotsiglegene(idx,g);
 txt = {g(idx)};
 persistent myupdatefcn3fig
-if isempty(myupdatefcn3fig) || ~isvalid(myupdatefcn3fig)
+if isempty(myupdatefcn3fig) || ~pkg.i_isvalid(myupdatefcn3fig)
     myupdatefcn3fig = figure;
     p = myupdatefcn3fig.Position;
     myupdatefcn3fig.Position = [p(1:3), 320];
     % myupdatefcn3fig.ToolBar='none';
     % myupdatefcn3fig.MenuBar='none';
 end
-if isvalid(myupdatefcn3fig) && isa(myupdatefcn3fig, 'matlab.ui.Figure')
+if pkg.i_isvalid(myupdatefcn3fig) && isa(myupdatefcn3fig, 'matlab.ui.Figure')
     figure(myupdatefcn3fig);
 end
 stem(1:length(X(idx, :)), X(idx, :), 'marker', 'none');

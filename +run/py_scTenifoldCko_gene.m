@@ -33,12 +33,13 @@ end
 % -----------------
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldCko');
 
 if isempty(wkdir) || ~isfolder(wkdir)
     % cd(codepth);
-    wkdir=tempdir;
+    wkdir = pkg.i_tempdirfile();
     cd(wkdir);
 else
     disp('Using working directory provided.');
@@ -54,7 +55,7 @@ if ~prepare_input_only
     try
         pkg.i_add_conda_python_path;
     catch
-
+        % best-effort: fall back to default pyenv if conda path not found
     end
     codepth = pkg.i_normalizepath(codepth);
 
@@ -67,7 +68,7 @@ if ~prepare_input_only
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
         cd(oldpth);
-        if isvalid(fw)
+        if pkg.i_isvalid(fw)
             gui.gui_waitbar(fw, true);
         end
         % waitfor(errordlg(sprintf('%s',cmdout)));
@@ -75,7 +76,7 @@ if ~prepare_input_only
         % error('Python scTenifoldXct has not been installed properly.');
     end
 
-    if isvalid(fw)
+    if pkg.i_isvalid(fw)
         gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
     end
     %}
@@ -106,7 +107,7 @@ fw = gui.gui_waitbar([], [], 'Step 2 of 4: Building S1 networks...');
     % try
         in_prepareA12(sce1, targetg);
     % catch ME
-    %     if isvalid(fw)
+    %     if pkg.i_isvalid(fw)
     %         gui.gui_waitbar(fw, [], 'Building S1 networks is incomplete');
     %     end
     %     errordlg(ME.message);
@@ -118,7 +119,7 @@ fw = gui.gui_waitbar([], [], 'Step 3 of 4: Building S2 networks...');
     % try
     %     in_prepareA(sce2, 2);
     % catch ME
-    %     if isvalid(fw)
+    %     if pkg.i_isvalid(fw)
     %         gui.gui_waitbar(fw, [], 'Building S2 network is incomplete');
     %     end
     %     errordlg(ME.message);
@@ -142,14 +143,14 @@ if ~prepare_input_only
         [status] = system(cmdlinestr);
         % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
     catch ME
-        if isvalid(fw)
+        if pkg.i_isvalid(fw)
             gui.gui_waitbar(fw, [], 'Running scTenifoldCko.py is incomplete.');
         end
         errordlg(ME.message);
         return;
     end
 end
-if isvalid(fw)
+if pkg.i_isvalid(fw)
         if prepare_input_only
             gui.gui_waitbar(fw, [], 'Input preparation is complete.');
         else
@@ -167,7 +168,6 @@ if ~prepare_input_only
         end
     else
         if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-        cd(oldpth);
         error('scTenifoldCko runtime error.');
     end
     end
@@ -177,7 +177,6 @@ if ~prepare_input_only
     %     iscomplete = true;
     % end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 
 
 % --------------------------------------------------

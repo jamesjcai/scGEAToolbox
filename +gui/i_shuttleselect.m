@@ -64,7 +64,7 @@ uibutton(hFig,'Text','Done', 'Position', [250 35 100 35], 'FontWeight', 'bold', 
 hFig.Visible = "on";
 uiwait(hFig);
 
-if isvalid(hFig)
+if pkg.i_isvalid(hFig)
     [~, idx] = ismember(selItems, items);
     idx = idx(:);
     uiresume(hFig);

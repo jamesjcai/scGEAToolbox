@@ -33,6 +33,7 @@ Dis = 1 - corr(X, 'type', 'p');
 [cls3] = get_clusterarray(Dis, optimk, drange);
 
 oldpath = pwd;
+cleanupCwd = onCleanup(@() cd(oldpath));
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'ml_SC3', 'ClusterPack');
 if ~(ismcc || isdeployed), addpath(pth); end
@@ -40,7 +41,6 @@ cd(pth);
 cls = [cls1; cls2; cls3];
 c = clusterensemble(cls, optimk);
 c = c(:);
-cd(oldpath);
 
 if plotit
     clusion(Dis, c);

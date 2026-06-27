@@ -13,6 +13,7 @@ T = [];
 isdebug = false;
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 prgfoldername = 'py_MELD';
 
 [pyok, wrkpth, x] = run.pycommon(prgfoldername);
@@ -36,5 +37,4 @@ if status == 0 && exist('output.txt', 'file')
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

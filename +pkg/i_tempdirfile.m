@@ -6,13 +6,16 @@ if nargin < 1
     subdirname = [];
 end
 
-if ~isempty(subdirname)
-    a = fullfile(tempdir, subdirname);
-    if ~exist(a, "dir")
-        mkdir(a);
+if isempty(subdirname)
+    if ~isMATLABReleaseOlderThan('R2025a')
+        subdirname = ['pid_' num2str(matlabProcessID())];
+    else
+        subdirname = ['pid_' num2str(feature('getpid'))];
     end
-else
-    a = tempdir;
+end
+a = fullfile(tempdir, subdirname);
+if ~exist(a, "dir")
+    mkdir(a);
 end
 
 if nargout > 1

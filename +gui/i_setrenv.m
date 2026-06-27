@@ -96,7 +96,7 @@ function [done] = ix_setrenv(deflt)
         else
             [file, path] = uigetfile('Rscript', 'Select R Interpreter', deflt);
         end
-        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+        if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
         if isequal(file, 0)
             return;
         else

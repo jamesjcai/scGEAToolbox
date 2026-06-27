@@ -299,6 +299,7 @@ try
         fclose(fid);
     end
 catch
+    % progress log is best-effort; never fail the main task
 end
 end
 

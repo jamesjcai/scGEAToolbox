@@ -94,7 +94,7 @@ function in_callback_flipxy(~, ~)
     end
 
 function in_callback_renamecat(~, ~)
-        tg = gui.i_inputgenelist(string(cL), true);
+        tg = gui.i_inputgenelist(string(cL), true, parentfig);
         if isempty(tg), return; end
         if length(tg) == length(cL)
             set(gca, 'XTick', a-b);

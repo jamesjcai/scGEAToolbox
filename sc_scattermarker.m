@@ -169,7 +169,7 @@ elseif isStringScalar(targetg)
 
 
         a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
-        gui.i_setautumncolor(c, a, true, any(c == 0));
+        gui.i_setautumncolor(c, a, true, any(c == 0), [], hFig);
 
         ori_c = c;
 
@@ -256,7 +256,7 @@ end
             if strcmp(a, 'autumn (default)')
                 a = 'autumn';
             end
-            gui.i_setautumncolor(c, a);
+            gui.i_setautumncolor(c, a, [], [], [], hFig);
             setpref('scgeatoolbox', 'prefcolormapname', a);
         end
     end

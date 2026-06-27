@@ -44,7 +44,7 @@ switch ButtonName
             else
                 [file, path] = uiputfile({'*.mat'; '*.*'}, 'Save as');
             end
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else
@@ -62,7 +62,7 @@ switch ButtonName
             else
                 [file, path] = uiputfile({'*.rds'; '*.*'}, 'Save as');
             end
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else
@@ -83,7 +83,7 @@ switch ButtonName
             else
                 [file, path] = uiputfile({'*.h5ad'; '*.*'}, 'Save as');
             end
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(file, 0) || isequal(path, 0)
                 return;
             else

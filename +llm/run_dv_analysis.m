@@ -138,14 +138,14 @@ for k = 1:numel(shared_ct)
         continue;
     end
 
-    % Split into up (higher variability in sample 1) and down
-    Tup = T(T.DiffSign > 0, :);
-    Tdn = T(T.DiffSign < 0, :);
-
-    % Build note table describing columns
+    % Label columns (adds sample-specific headers and note fields)
     [T, Tnt] = pkg.in_DVTableProcess(T, {char(sample_id1)}, {char(sample_id2)});
 
-    fprintf('done. Up: %d  Down: %d\n', height(Tup), height(Tdn));
+    % Split into significant up (higher variability in sample 1) and down (pval < 0.05)
+    Tup = T(T.DiffSign > 0 & T.pval < 0.05, :);
+    Tdn = T(T.DiffSign < 0 & T.pval < 0.05, :);
+
+    fprintf('done. Up: %d  Down: %d  (pval<0.05)\n', height(Tup), height(Tdn));
 
     ri = ri + 1;
     results(ri).cell_type = ct;
@@ -164,8 +164,8 @@ for k = 1:numel(shared_ct)
         filesaved = fullfile(out_dir, outfile);
         try
             writetable(T,   filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
-            writetable(Tup, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Up-regulated');
-            writetable(Tdn, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Down-regulated');
+            writetable(Tup, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Up-regulated (p<0.05)');
+            writetable(Tdn, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Down-regulated (p<0.05)');
             writetable(Tnt, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Note');
             fprintf('  Saved: %s\n', filesaved);
         catch ME
@@ -241,20 +241,5 @@ end
 
 % ---- Helper: locate and load cleandata.mat --------------------------
 function sce = i_load_sce(sample_id, data_dir)
-hits = dir(fullfile(data_dir, '*', sample_id, 'cleandata.mat'));
-if isempty(hits)
-    flat = fullfile(data_dir, sample_id, 'cleandata.mat');
-    if isfile(flat)
-        mat_path = flat;
-    else
-        error('llm:run_dv_analysis:fileNotFound', ...
-            'Cannot find cleandata.mat for sample "%s" under "%s".', ...
-            sample_id, data_dir);
-    end
-else
-    mat_path = fullfile(hits(1).folder, hits(1).name);
-end
-fprintf('Loading %s\n', mat_path);
-s = load(mat_path, 'sce');
-sce = s.sce;
+sce = llm.i_load_sce(sample_id, data_dir);
 end

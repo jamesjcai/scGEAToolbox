@@ -8,7 +8,7 @@ if nargin < 2, bkglist = []; end
 if nargin < 3, genenum = 200; end
 if nargin < 4, wkdir = ''; end
 
-if isempty(wkdir), wkdir = tempdir; end
+if isempty(wkdir), wkdir = pkg.i_tempdirfile(); end
 
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'web_Enrichr');

@@ -44,7 +44,7 @@ if isempty(backgroundlist)
         gene_set_library = genesets(id); % "KEGG_2015";
         % output{id, 2} = gene_set_library;
         ENRICHR_URL = "https://maayanlab.cloud/Enrichr/enrich";
-        query_string = sprintf("?userListId=% d&backgroundType=%s", ...
+        query_string = sprintf("?userListId=%d&backgroundType=%s", ...
                        user_list_id, gene_set_library);
         url = ENRICHR_URL + query_string;
         response = jsondecode(convertCharsToStrings(char(webread(url))));

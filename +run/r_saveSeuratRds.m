@@ -1,11 +1,12 @@
 function [status] = r_saveSeuratRds(sce, filename, wkdir)
 
-if nargin < 3, wkdir = tempdir; end
+if nargin < 3, wkdir = pkg.i_tempdirfile(); end
 [status] = 0;
 isdebug = false;
 
 if nargin < 2, error('run.saveSeuratRds(sce,filename)'); end
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_SeuratSaveRds');
 if ~isok, error(msg);
     return;
@@ -32,7 +33,6 @@ pkg.i_runrcode(codefullpath, Rpath);
 
 [status] = copyfile('output.Rds', filename, 'f');
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end
 
 

@@ -14,6 +14,7 @@ if nargin < 1 || isempty(f)
             f.Position = newpos;
         end
     catch
+        % keep default screen position if parent figure layout is unavailable
     end
 
     f.Visible = "on";
@@ -23,9 +24,9 @@ if nargin < 1 || isempty(f)
     fprintf('... ');
     tic;
     return;
-elseif isvalid(f) && strcmp(f.Tag, 'TMWWaitbar') && ~isempty(newmesg)
+elseif pkg.i_isvalid(f) && strcmp(f.Tag, 'TMWWaitbar') && ~isempty(newmesg)
     waitbar(.618, f, newmesg);
-elseif isvalid(f) && strcmp(f.Tag, 'TMWWaitbar')
+elseif pkg.i_isvalid(f) && strcmp(f.Tag, 'TMWWaitbar')
     if ~witherror
         if nargin < 3 || isempty(mesg), mesg = 'Finishing'; end
         toc;
@@ -33,5 +34,5 @@ elseif isvalid(f) && strcmp(f.Tag, 'TMWWaitbar')
         pause(1);
         % fprintf('.......................done.\n');
     end
-    if isvalid(f), close(f); end
+    if pkg.i_isvalid(f), close(f); end
 end

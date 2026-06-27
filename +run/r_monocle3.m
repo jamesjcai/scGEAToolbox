@@ -3,11 +3,12 @@ function [t, s, m, q] = r_monocle3(X, idx, ndim, wkdir, isdebug)
 % [t]=run.r_monocle3(X,idx);
 if nargin < 2, idx = [1, 2]; end
 if nargin < 3 || isempty(ndim), ndim = 2; end
-if nargin < 4, wkdir = tempdir; end
+if nargin < 4, wkdir = pkg.i_tempdirfile(); end
 if nargin < 5, isdebug = false; end
 
 t = []; s = []; m = [];
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_monocle3');
 if ~isok, error(msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
@@ -33,5 +34,4 @@ if exist('output.h5', 'file')
     q = h5read('output.h5', '/q');
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

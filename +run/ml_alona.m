@@ -33,6 +33,7 @@ bestonly = p.Results.bestonly;
 
 
 oldpth = pwd;
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 
 if strcmpi(subtype, "all")
@@ -180,5 +181,4 @@ end
 if bestonly && size(T, 1) > 1
     T = T(1, :);
 end
-cd(oldpth);
 end

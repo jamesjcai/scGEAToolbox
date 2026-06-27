@@ -147,5 +147,6 @@ try
     h5info(filename, path);
     tf = true;
 catch
+    % h5info throws when path does not exist — that's the answer we return
 end
 end

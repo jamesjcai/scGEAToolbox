@@ -62,7 +62,7 @@ switch answer
 
         warning off
         for k = 1:N
-            if isvalid(F{k})
+            if pkg.i_isvalid(F{k})
                 images{k} = [tempname, '.png'];
 
                 % option 1

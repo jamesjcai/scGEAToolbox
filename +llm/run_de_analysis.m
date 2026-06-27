@@ -107,6 +107,7 @@ end
 
 % ---- DE per cell type -----------------------------------------------
 ri = 0;
+skip_reasons = {};
 for k = 1:numel(shared_ct)
     ct = shared_ct(k);
     mask1 = ct1 == ct;
@@ -117,6 +118,7 @@ for k = 1:numel(shared_ct)
     if n1 < 500 || n2 < 500
         fprintf('Skipping "%s": fewer than 500 cells (%d in sample1, %d in sample2).\n', ...
             ct, n1, n2);
+        skip_reasons{end+1} = sprintf('"%s" (%d/%d cells)', char(ct), n1, n2); %#ok<AGROW>
         continue;
     end
 
@@ -183,17 +185,30 @@ end
 
 fprintf('\nDE analysis complete: %d cell type(s) analysed.\n', numel(results));
 
+% Build human-readable reason when no results were produced
+if isempty(results)
+    if ~isempty(skip_reasons)
+        no_results_reason = ['All shared cell types were skipped — minimum 500 cells not met. ' ...
+            'Skipped: ' strjoin(skip_reasons, '; ')];
+    else
+        no_results_reason = 'No shared cell types found between the two samples.';
+    end
+else
+    no_results_reason = '';
+end
+
 % ---- Print JSON summary for agent consumption -----------------------
 % Everything printed here is captured by the MATLAB MCP tool and returned
 % to the Python agent as text. The JSON block lets the Result Interpreting
 % Agent reason about top DEGs without needing to re-enter MATLAB.
-i_print_json_summary(results, sample_id1, sample_id2);
+i_print_json_summary(results, sample_id1, sample_id2, 20, no_results_reason);
 end
 
 
 % ---- Helper: print JSON summary of top DEGs -------------------------
-function i_print_json_summary(results, sample_id1, sample_id2, top_n)
+function i_print_json_summary(results, sample_id1, sample_id2, top_n, no_results_reason)
 if nargin < 4, top_n = 20; end
+if nargin < 5, no_results_reason = ''; end
 
 cell_types = {};
 for k = 1:numel(results)
@@ -212,10 +227,24 @@ for k = 1:numel(results)
         'top_dn',    {top_dn}); %#ok<AGROW>
 end
 
-summary = struct( ...
-    'sample1',     char(sample_id1), ...
-    'sample2',     char(sample_id2), ...
-    'cell_types',  {cell_types});
+if isempty(cell_types)
+    reason = no_results_reason;
+    if isempty(reason)
+        reason = 'DE analysis produced no results.';
+    end
+    summary = struct( ...
+        'sample1',    char(sample_id1), ...
+        'sample2',    char(sample_id2), ...
+        'status',     'no_results', ...
+        'reason',     reason, ...
+        'cell_types', {cell_types});
+else
+    summary = struct( ...
+        'sample1',    char(sample_id1), ...
+        'sample2',    char(sample_id2), ...
+        'status',     'completed', ...
+        'cell_types', {cell_types});
+end
 
 fprintf('\n%%JSON_SUMMARY_BEGIN%%\n%s\n%%JSON_SUMMARY_END%%\n', ...
     jsonencode(summary, 'PrettyPrint', true));
@@ -235,22 +264,5 @@ end
 
 % ---- Helper: locate and load cleandata.mat --------------------------
 function sce = i_load_sce(sample_id, data_dir)
-% Search data_dir/<any_study_id>/<sample_id>/cleandata.mat
-hits = dir(fullfile(data_dir, '*', sample_id, 'cleandata.mat'));
-if isempty(hits)
-    % Flat fallback: data_dir/<sample_id>/cleandata.mat
-    flat = fullfile(data_dir, sample_id, 'cleandata.mat');
-    if isfile(flat)
-        mat_path = flat;
-    else
-        error('llm:run_de_analysis:fileNotFound', ...
-            'Cannot find cleandata.mat for sample "%s" under "%s".', ...
-            sample_id, data_dir);
-    end
-else
-    mat_path = fullfile(hits(1).folder, hits(1).name);
-end
-fprintf('Loading %s\n', mat_path);
-s = load(mat_path, 'sce');
-sce = s.sce;
+sce = llm.i_load_sce(sample_id, data_dir);
 end

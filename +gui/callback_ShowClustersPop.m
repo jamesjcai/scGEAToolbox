@@ -134,7 +134,7 @@ function in_callback_scgeatoolsce(src, ~)
                     s=s+1;
                     pause(0.5);
                 end
-                if isvalid(hx)
+                if pkg.i_isvalid(hx)
                     hx.closeFigure;
                 end
            case 'Save SCEs'

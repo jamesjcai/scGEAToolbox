@@ -158,7 +158,7 @@ function in_callback_savetable(~, ~)
                         'Save Data to Workspace');
                 case 'TXT/CSV file'
                     [file, path] = uiputfile({'*.csv'; '*.*'}, 'Save as');
-                    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+                    if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
                     if isequal(file, 0) || isequal(path, 0)
                         return;
                     else
@@ -171,7 +171,7 @@ function in_callback_savetable(~, ~)
                 case 'Excel file'
 
                     [file, path] = uiputfile({'*.xlsx'; '*.*'}, 'Save as');
-                    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+                    if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
                     if isequal(file, 0) || isequal(path, 0)
                         return;
                     else

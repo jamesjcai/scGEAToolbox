@@ -203,29 +203,58 @@ fprintf('\nscTenifoldKnk complete: %d cell type(s) analysed.\n', numel(results))
 i_log(out_dir, sprintf('COMPLETE scTenifoldKnk: %d cell type(s) analysed; emitting JSON summary', numel(results)));
 
 % ---- Print JSON summary for agent consumption -----------------------
-i_print_json_summary(results, sample_id, kogene);
+if isempty(results)
+    no_results_reason = 'All cell types skipped — minimum 100 cells not met, or KO gene has no links in network.';
+else
+    no_results_reason = '';
+end
+i_print_json_summary(results, sample_id, kogene, no_results_reason);
 end
 
 
 % ---- Helper: print JSON summary of top DR genes ---------------------
-function i_print_json_summary(results, sample_id, kogene, top_n)
-if nargin < 4, top_n = 20; end
+% top_dr is drawn from the FULL ranked T table (by drdist desc) with the
+% kogene itself excluded — it appears at rank 1 as a method artifact (its
+% row is zeroed during the virtual KO, so its manifold displacement is
+% always maximal). n_dr_significant counts genes passing pAdj < 0.05.
+function i_print_json_summary(results, sample_id, kogene, no_results_reason, top_n)
+if nargin < 5, top_n = 20; end
+if nargin < 4, no_results_reason = ''; end
 
 cell_types = {};
 for k = 1:numel(results)
     r = results(k);
-    top_dr = i_table_to_structs(r.Tdr, top_n);
+    % Exclude kogene from the full ranked table before extracting top_dr
+    T_excl = r.T(r.T.genelist ~= kogene, :);
+    top_dr = i_table_to_structs(T_excl, top_n);
     cell_types{end+1} = struct( ...
-        'cell_type',  char(r.cell_type), ...
-        'n',          r.n, ...
-        'n_dr_genes', height(r.Tdr), ...
-        'top_dr',     {top_dr}); %#ok<AGROW>
+        'cell_type',        char(r.cell_type), ...
+        'n',                r.n, ...
+        'n_dr_significant', height(r.Tdr(r.Tdr.genelist ~= kogene, :)), ...
+        'n_dr_total',       height(T_excl), ...
+        'top_dr',           {top_dr}); %#ok<AGROW>
 end
 
-summary = struct( ...
-    'sample',     char(sample_id), ...
-    'kogene',     char(kogene), ...
-    'cell_types', {cell_types});
+if isempty(cell_types)
+    reason = no_results_reason;
+    if isempty(reason)
+        reason = 'scTenifoldKnk produced no results.';
+    end
+    summary = struct( ...
+        'sample',     char(sample_id), ...
+        'kogene',     char(kogene), ...
+        'status',     'no_results', ...
+        'reason',     reason, ...
+        'cell_types', {cell_types});
+else
+    summary = struct( ...
+        'sample',           char(sample_id), ...
+        'kogene',           char(kogene), ...
+        'status',           'completed', ...
+        'ko_gene_excluded', true, ...
+        'method',           'scTenifoldKnk-lite (PCR network, virtual KO via row-zeroing, manifold alignment; tensor decomposition omitted for speed)', ...
+        'cell_types',       {cell_types});
+end
 
 fprintf('\n%%SCTENIFOLDKNK_JSON_SUMMARY_BEGIN%%\n%s\n%%SCTENIFOLDKNK_JSON_SUMMARY_END%%\n', ...
     jsonencode(summary, 'PrettyPrint', true));
@@ -233,6 +262,9 @@ end
 
 
 % ---- Helper: extract top rows as struct list for JSON ---------------
+% NOTE: FC is network fold change (regulatory weight ratio in the aligned
+% manifold), NOT expression fold change. drdist is the Euclidean distance
+% between a gene's manifold positions in the WT vs pseudo-KO network.
 function rows = i_table_to_structs(T, n)
 rows = {};
 if isempty(T), return; end
@@ -249,22 +281,7 @@ end
 
 % ---- Helper: locate and load cleandata.mat --------------------------
 function sce = i_load_sce(sample_id, data_dir)
-hits = dir(fullfile(data_dir, '*', sample_id, 'cleandata.mat'));
-if isempty(hits)
-    flat = fullfile(data_dir, sample_id, 'cleandata.mat');
-    if isfile(flat)
-        mat_path = flat;
-    else
-        error('llm:run_sctenifoldknk:fileNotFound', ...
-            'Cannot find cleandata.mat for sample "%s" under "%s".', ...
-            sample_id, data_dir);
-    end
-else
-    mat_path = fullfile(hits(1).folder, hits(1).name);
-end
-fprintf('Loading %s\n', mat_path);
-s = load(mat_path, 'sce');
-sce = s.sce;
+sce = llm.i_load_sce(sample_id, data_dir);
 end
 
 
@@ -278,6 +295,7 @@ try
         fclose(fid);
     end
 catch
+    % progress log is best-effort; never fail the main task
 end
 end
 

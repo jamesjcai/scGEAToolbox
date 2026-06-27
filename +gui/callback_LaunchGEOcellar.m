@@ -2,10 +2,11 @@ function callback_LaunchGEOcellar(src, ~)
 % CALLBACK_LAUNCHGEOCELLAR  Launch the GEOcellar multi-agent pipeline UI.
 %
 %   Called from the scGEAToolbox main menu (Tools → GEOcellar Agent).
-%   Offers three execution modes:
-%     1. Completely remote  — all computation runs on the remote server
-%     2. Hybrid             — Phase 1 local, Phase 2 on remote server
-%     3. Completely local   — all computation runs in MATLAB
+%   Offers four execution modes:
+%     1. Local        — full pipeline in MATLAB
+%     2. Hybrid (P1)  — local hypotheses, remote analysis
+%     3. Hybrid (P2)  — remote hypotheses, local analysis
+%     4. Remote       — server handles everything
 
 [FigureHandle, ~] = gui.gui_getfigsce(src);
 
@@ -22,17 +23,18 @@ defaultindx = getpref('scgeatoolbox', preftagname, 1);
 
 % Choose execution mode
 modeOptions = [ ...
-    "Remote  — server handles everything", ...
-    "Hybrid  — local hypotheses, remote analysis", ...
-    "Local   — full pipeline in MATLAB"];
+    "Local          — full pipeline in MATLAB", ...
+    "Hybrid (P1)    — local hypotheses, remote analysis", ...
+    "Hybrid (P2)    — remote hypotheses, local analysis", ...
+    "Remote         — server handles everything"];
 [sel, ok] = gui.myListdlg(FigureHandle, modeOptions, ...
-    "Select Execution Mode", defaultindx, false, false, [300, 180]);
+    "Select Execution Mode", defaultindx, false, false, [340, 210]);
 if ~ok, return; end
-mode = sel;   % 1 = remote, 2 = hybrid, 3 = local
+mode = sel;   % 1 = local, 2 = P1 local/P2 remote, 3 = P1 remote/P2 local, 4 = remote
 setpref('scgeatoolbox', preftagname, sel);
 
-% For hybrid and local modes the MATLAB LLM Add-On and API key are required
-if mode > 1
+% Modes 1 and 2 run Phase 1 locally — require the MATLAB LLM Add-On and API key
+if mode <= 2
     if ~exist("openAIChat", "file")
         gui.myHelpdlg(FigureHandle, ...
             ["The 'Large Language Models (LLMs) with MATLAB' Add-On is required." ...
@@ -59,10 +61,12 @@ if isempty(wrkdir), return; end
 
 switch mode
     case 1
-        llm.geocellar.geocellar_remote(wrkdir, FigureHandle);
+        llm.geocellar.geocellar_app(wrkdir, FigureHandle);
     case 2
         llm.geocellar.geocellar_app(wrkdir, FigureHandle, UseRemote=true);
     case 3
-        llm.geocellar.geocellar_app(wrkdir, FigureHandle, UseRemote=false);
+        llm.geocellar.geocellar_app(wrkdir, FigureHandle, UseRemote1=true);
+    case 4
+        llm.geocellar.geocellar_remote(wrkdir, FigureHandle);
 end
 end

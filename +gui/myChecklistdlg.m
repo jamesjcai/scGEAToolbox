@@ -126,7 +126,7 @@ okBtn = uibutton(buttonGrid, 'Text', 'OK', ...
 % Wait for user interaction
 uiwait(fig);
 
-if ~isempty(parentfig) && isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
     figure(parentfig);
 end
 
@@ -156,7 +156,7 @@ selectedIndices = cellfun(@(x) x.Value, checkboxes);
 selectedItems = items(selectedIndices);
 
 % Close dialog
-if isvalid(fig)
+if pkg.i_isvalid(fig)
     uiresume(fig);
     delete(fig);
 end
@@ -167,7 +167,7 @@ function cancelCallback(~, ~)
 selectedItems = {};
 
 % Close dialog
-if isvalid(fig)
+if pkg.i_isvalid(fig)
     uiresume(fig);
     delete(fig);
 end

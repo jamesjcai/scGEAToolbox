@@ -7,16 +7,19 @@ if iscell(varm) || ~isstring(varm), varm = string(varm); end
 if iscell(prefx) || ~isstring(prefx), prefx = string(prefx); end
 fieldnm = '';
 
+found = false;
 for l = 1:length(prefx)
     for k = 1:length(varm)
         try
             fieldnm = sprintf('%s%s', prefx(l), varm(k));
             y = h5read(filenm, fieldnm);
+            found = true;
         catch
             continue;
         end
         break;
     end
+    if found, break; end
 end
 
 if isempty(y) && required

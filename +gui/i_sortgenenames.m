@@ -35,6 +35,7 @@ if isa(sce, 'SingleCellExperiment')
                try
                    X=full(X);
                catch
+                   % keep X sparse if it's too large to densify
                end
             end
             % tic;
@@ -66,6 +67,7 @@ elseif isa(sce, 'SingleCellExperiment2')
                try
                    X=full(X);
                catch
+                   % keep X sparse if it's too large to densify
                end
             end
             % tic;

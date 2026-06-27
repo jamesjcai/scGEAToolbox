@@ -8,7 +8,7 @@ if nargin < 2, genenum = 100; end
 if nargin < 3, bkglist = []; end
 if nargin < 4, wkdir = ''; end
 
-if isempty(wkdir), wkdir = tempdir; end
+if isempty(wkdir), wkdir = pkg.i_tempdirfile(); end
 
 
 pw1 = fileparts(mfilename('fullpath'));

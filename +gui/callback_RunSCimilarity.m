@@ -1,7 +1,7 @@
 function [needupdatesce] = callback_RunSCimilarity(src, ~)
 
 needupdatesce = false;
-[y, prepare_input_only] = gui.i_memorychecked;
+[y, prepare_input_only] = gui.i_memorychecked([], []);
 if ~y, return; end
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
@@ -10,7 +10,7 @@ if ~y, return; end
 % SCimilarity trained model. Download SCimilarity models.
 % Note, this is a large tarball - downloading and uncompressing can take a several minutes.
 
-[modeldir] = gui.i_setscimilaritymodelpath(src);
+[modeldir] = gui.i_setscimilaritymodelpath(src, [], FigureHandle);
 if isempty(modeldir), return; end
 
 label_ints_file = fullfile(modeldir, 'label_ints.csv');

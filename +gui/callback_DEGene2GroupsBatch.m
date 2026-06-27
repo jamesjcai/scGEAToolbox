@@ -78,7 +78,7 @@ if strcmp(answer,'Yes'), winopen(outdir); end
 if ~isempty(runenrichr) && strcmp(runenrichr, 'Yes')
     answer = gui.myQuestdlg(FigureHandle, 'Use LLM to generate enrichment analysis report?', '');
     if strcmp(answer,'Yes')
-        gui.sc_llm_enrichr2word(outdir);
+        gui.sc_llm_enrichr2word(outdir, FigureHandle);
     end
 end
 

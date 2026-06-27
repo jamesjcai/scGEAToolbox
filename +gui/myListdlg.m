@@ -19,6 +19,7 @@ if ~isempty(parentfig)
             focus(parentfig);
             cleanupObj = onCleanup(@() focus(parentfig));
         catch
+            % focus() may not exist on older MATLAB; parent is brought up implicitly
         end
     else
         figure(parentfig);
@@ -87,6 +88,7 @@ if ~isMATLABReleaseOlderThan('R2025a')
     try
         theme(d, parentfig.Theme.BaseColorStyle);
     catch
+        % theme() may not exist or parent has no Theme property; skip styling
     end
 end
 
@@ -115,7 +117,7 @@ d.Visible = 'on';
 uiwait(d);
 
 % Get selected items
-if isvalid(d) && d.UserData
+if pkg.i_isvalid(d) && d.UserData
     selection = lb.Value;
     tf = 1;
     [~, indx] = ismember(selection, options);
@@ -124,7 +126,7 @@ if isvalid(d) && d.UserData
 else
     tf = 0;
     indx = [];
-    if isvalid(d)
+    if pkg.i_isvalid(d)
         uiresume(d);
         delete(d);
     end

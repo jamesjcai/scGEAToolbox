@@ -85,10 +85,11 @@ function callback_DPGene2Groups(src, ~)
         end
         
         try
-            if isvalid(fw)
+            if pkg.i_isvalid(fw)
                 close(fw);
             end
         catch
+            % waitbar may already be closed; safe to ignore
         end
     end
     

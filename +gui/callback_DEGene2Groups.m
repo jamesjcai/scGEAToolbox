@@ -79,8 +79,9 @@ end
 function i_closewaitbar(fwx)
     if nargin < 1 || isempty(fwx), return; end
     try
-        if isvalid(fwx), close(fwx); end
+        if pkg.i_isvalid(fwx), close(fwx); end
     catch
+        % waitbar may already be closed; safe to ignore
     end
 end
 

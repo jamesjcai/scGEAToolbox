@@ -2,7 +2,7 @@ function [X] = sc_norm(X, varargin)
 
 p = inputParser;
 defaultType = 'libsize';
-validTypes = {'libsize', 'deseq'};
+validTypes = {'libsize', 'deseq', 'shiftedclr'};
 checkType = @(x) any(validatestring(x, validTypes));
 
 addRequired(p, 'X', @isnumeric);
@@ -19,6 +19,8 @@ switch p.Results.type
         [X] = pkg.norm_libsize(X);
     case 'deseq'
         [X] = pkg.norm_deseq(X);
+    case 'shiftedclr'
+        [X] = pkg.norm_shiftedclr(X);
     otherwise
         error('sc_norm:InvalidType', 'Unknown normalization type: %s', p.Results.type);
 end

@@ -53,7 +53,7 @@ function in_callback_geneheatmapx(~, ~)
 
         [thisc] = gui.i_select1class(sce,[],[],[],hFig);
         if ~isempty(thisc)
-            gui.i_geneheatmap(sce, thisc, posg);
+            gui.i_geneheatmap(sce, thisc, posg, hFig);
         end
     end
 

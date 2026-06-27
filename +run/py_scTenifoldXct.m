@@ -28,6 +28,7 @@ end
 sce = copy(sce_ori);
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldXct');
 
@@ -63,18 +64,17 @@ if ~prepare_input_only
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
 
-        if isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
+        if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
         % gui.myErrordlg(parentfig, sprintf('%s', cmdout));
         a = sprintf("% s.", cmdout);
         if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
             prepare_input_only = true;
         else
-            cd(oldpth);
             return;
         end
         % error('Python scTenifoldXct has not been installed properly.');
     end
-    if isvalid(fw)
+    if pkg.i_isvalid(fw)
         gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete');
         pause(1);
         close(fw);
@@ -149,7 +149,7 @@ if ~useexist
     A = ten.e_filtadjc(A1, 0.75, false);
     save('pcnet_Source.mat', 'A', '-v7.3');
     disp('pcnet_Source.mat saved.');
-    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Source is complete'); end
+    if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Source is complete'); end
 end
 if ~useexist
     gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet_Target network...');
@@ -160,7 +160,7 @@ if ~useexist
     A = ten.e_filtadjc(A2, 0.75, false);
     save('pcnet_Target.mat', 'A', '-v7.3');
     disp('pcnet_Target network saved.')
-    if isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Target is complete'); end
+    if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Target is complete'); end
 end
 
 if twosided
@@ -184,7 +184,7 @@ if ~prepare_input_only
     [status] = system(cmdlinestr, '-echo');
 end
 % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
-if isvalid(fw)
+if pkg.i_isvalid(fw)
     if prepare_input_only
         gui.myWaitbar(parentfig, fw, false, [], 'Input preparation is complete.');
     else
@@ -212,16 +212,14 @@ if ~prepare_input_only
         end
     else
         if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-        cd(oldpth);
         error('scTenifoldXct runtime error.');
     end
 end
 % end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 
-if isvalid(fw)
+if pkg.i_isvalid(fw)
     gui.myWaitbar(parentfig, fw);
 end
 

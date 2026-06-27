@@ -161,6 +161,7 @@ function in_plot1
             b(kx).CData = kx;
         end
         catch
+            % bar series may not expose CData on every backend; colormap still applies
         end
         xticks(1:length(labelsx));
         labelsx1 = strrep(labelsx, '_', '\_');
@@ -196,6 +197,7 @@ function in_plot2
             b(kx).CData = kx;
         end
         catch
+            % bar series may not expose CData on every backend; colormap still applies
         end
         xlabel(strrep(clabel, '_', '\_'))
         ylabel('% of cells')
@@ -217,6 +219,7 @@ function in_callback_saveCrossTable(~, ~)
             t.Properties.VariableNames = labelsy;
             t.Properties.RowNames = labelsx;
         catch
+            % keep default headers if labels don't match table dimensions
         end
         gui.i_exporttable(t, true, 'Tcrosstabul', ...
             'CrosstabulTable',[],[], hx.FigHandle);

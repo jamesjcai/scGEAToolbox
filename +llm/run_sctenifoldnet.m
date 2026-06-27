@@ -150,21 +150,21 @@ for k = 1:numel(shared_ct)
         n2 = max_cells;
     end
 
-    X0 = full(X1_all(:, idx1));
-    X1 = full(X2_all(:, idx2));
+    Xs1 = full(X1_all(:, idx1));
+    Xs2 = full(X2_all(:, idx2));
 
-    X0 = log1p(sc_norm(X0));
-    X1 = log1p(sc_norm(X1));
+    Xs1 = log1p(sc_norm(Xs1));
+    Xs2 = log1p(sc_norm(Xs2));
 
-    useGPU0 = pkg.i_usegpu(X0);
-    useGPU1 = pkg.i_usegpu(X1);
+    useGPU0 = pkg.i_usegpu(Xs1);
+    useGPU1 = pkg.i_usegpu(Xs2);
 
     T = [];
     try
         disp('Constructing network (1/2)...')
-        A0 = net.pcrnet(X0, 3, false, true, false, false, useGPU0);
+        A0 = net.pcrnet(Xs1, 3, false, true, false, false, useGPU0);
         disp('Constructing network (2/2)...')
-        A1 = net.pcrnet(X1, 3, false, true, false, false, useGPU1);
+        A1 = net.pcrnet(Xs2, 3, false, true, false, false, useGPU1);
         A0 = 0.5 * (A0 + A0');
         A1 = 0.5 * (A1 + A1');
         disp('Manifold alignment...')
@@ -215,30 +215,55 @@ fprintf('\nscTenifoldNet complete: %d cell type(s) analysed.\n', numel(results))
 i_log(out_dir, sprintf('COMPLETE scTenifoldNet: %d cell type(s) analysed; emitting JSON summary', numel(results)));
 
 % ---- Print JSON summary for agent consumption -----------------------
-i_print_json_summary(results, sample_id1, sample_id2);
+if isempty(results)
+    no_results_reason = 'All cell types skipped — minimum 100 cells not met in at least one sample.';
+else
+    no_results_reason = '';
+end
+i_print_json_summary(results, sample_id1, sample_id2, no_results_reason);
 end
 
 
 % ---- Helper: print JSON summary of top DR genes ---------------------
-function i_print_json_summary(results, sample_id1, sample_id2, top_n)
-if nargin < 4, top_n = 20; end
+function i_print_json_summary(results, sample_id1, sample_id2, no_results_reason, top_n)
+if nargin < 5, top_n = 20; end
+if nargin < 4, no_results_reason = ''; end
 
+% top_dr is taken from the FULL ranked T table (sorted by drdist desc),
+% NOT from Tdr (pAdj<0.05 subset), so it matches the gene list used for
+% Enrichr pathway enrichment. n_dr_significant reports the significance count.
 cell_types = {};
 for k = 1:numel(results)
     r = results(k);
-    top_dr = i_table_to_structs(r.Tdr, top_n);
+    top_dr = i_table_to_structs(r.T, top_n);
     cell_types{end+1} = struct( ...
-        'cell_type',  char(r.cell_type), ...
-        'n1',         r.n1, ...
-        'n2',         r.n2, ...
-        'n_dr_genes', height(r.Tdr), ...
-        'top_dr',     {top_dr}); %#ok<AGROW>
+        'cell_type',        char(r.cell_type), ...
+        'n1',               r.n1, ...
+        'n2',               r.n2, ...
+        'n_dr_significant', height(r.Tdr), ...
+        'n_dr_total',       height(r.T), ...
+        'top_dr',           {top_dr}); %#ok<AGROW>
 end
 
-summary = struct( ...
-    'sample1',    char(sample_id1), ...
-    'sample2',    char(sample_id2), ...
-    'cell_types', {cell_types});
+if isempty(cell_types)
+    reason = no_results_reason;
+    if isempty(reason)
+        reason = 'scTenifoldNet produced no results.';
+    end
+    summary = struct( ...
+        'sample1',    char(sample_id1), ...
+        'sample2',    char(sample_id2), ...
+        'status',     'no_results', ...
+        'reason',     reason, ...
+        'cell_types', {cell_types});
+else
+    summary = struct( ...
+        'sample1',    char(sample_id1), ...
+        'sample2',    char(sample_id2), ...
+        'status',     'completed', ...
+        'method',     'scTenifoldNet-lite (PCR networks, manifold alignment; tensor decomposition omitted for speed)', ...
+        'cell_types', {cell_types});
+end
 
 fprintf('\n%%SCTENIFOLDNET_JSON_SUMMARY_BEGIN%%\n%s\n%%SCTENIFOLDNET_JSON_SUMMARY_END%%\n', ...
     jsonencode(summary, 'PrettyPrint', true));
@@ -246,6 +271,9 @@ end
 
 
 % ---- Helper: extract top rows as struct list for JSON ---------------
+% NOTE: FC here is network fold change (ratio of regulatory weights in the
+% aligned manifold), NOT expression fold change. drdist is the Euclidean
+% distance between a gene's positions in the two aligned manifolds.
 function rows = i_table_to_structs(T, n)
 rows = {};
 if isempty(T), return; end
@@ -262,22 +290,7 @@ end
 
 % ---- Helper: locate and load cleandata.mat --------------------------
 function sce = i_load_sce(sample_id, data_dir)
-hits = dir(fullfile(data_dir, '*', sample_id, 'cleandata.mat'));
-if isempty(hits)
-    flat = fullfile(data_dir, sample_id, 'cleandata.mat');
-    if isfile(flat)
-        mat_path = flat;
-    else
-        error('llm:run_sctenifoldnet:fileNotFound', ...
-            'Cannot find cleandata.mat for sample "%s" under "%s".', ...
-            sample_id, data_dir);
-    end
-else
-    mat_path = fullfile(hits(1).folder, hits(1).name);
-end
-fprintf('Loading %s\n', mat_path);
-s = load(mat_path, 'sce');
-sce = s.sce;
+sce = llm.i_load_sce(sample_id, data_dir);
 end
 
 
@@ -291,6 +304,7 @@ try
         fclose(fid);
     end
 catch
+    % progress log is best-effort; never fail the main task
 end
 end
 

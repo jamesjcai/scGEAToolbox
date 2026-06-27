@@ -52,8 +52,8 @@ switch provider
             apikey = getenv("OPENAI_API_KEY");
             if isempty(apikey), return; end
             try
-                chat = openAIChat("APIKey",apikey, ...
-                    "ModelName", model, TimeOut = 1200);
+                chat = openAIChat("", APIKey=apikey, ...
+                    ModelName=model, TimeOut=1200);
                 feedbk = chat.generate(prompt);
             catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);

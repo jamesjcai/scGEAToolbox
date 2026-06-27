@@ -12,7 +12,7 @@ w = dlgSize(1);
 h = dlgSize(2);
 monitors = get(groot, 'MonitorPositions');
 
-if isempty(parentfig) || ~isvalid(parentfig)
+if isempty(parentfig) || ~pkg.i_isvalid(parentfig)
     ss = get(groot, 'ScreenSize');
     pos = [ss(1)+(ss(3)-w)/2, ss(2)+(ss(4)-h)/2, w, h];
     return;
@@ -34,6 +34,7 @@ if ~useMouseFallback
     try
         useMouseFallback = strcmp(parentfig.WindowState, 'maximized');
     catch
+        % older releases or non-figure parents have no WindowState; leave default
     end
 end
 if useMouseFallback

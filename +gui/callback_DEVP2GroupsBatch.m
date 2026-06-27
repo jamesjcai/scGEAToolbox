@@ -246,7 +246,7 @@ if isempty(selected), return; end
 
 if any(contains(selected, 'LLM Summarize'))
     % fw = gui.myWaitbar(FigureHandle, [], false, 'Use LLM to generate enrichment analysis report');
-    gui.sc_llm_enrichr2word(outdir);
+    gui.sc_llm_enrichr2word(outdir, FigureHandle);
     % gui.myWaitbar(FigureHandle, fw);
 end
 

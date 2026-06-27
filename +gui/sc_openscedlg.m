@@ -68,7 +68,7 @@ setpref('scgeatoolbox', preftagname, indx);
                 {'*.mat', 'SCE Data Files (*.mat)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick SCE Data File(s)','MultiSelect','on');
-            if isvalid(parentfig) && isa(parentfig, ...
+            if pkg.i_isvalid(parentfig) && isa(parentfig, ...
                     'matlab.ui.Figure'), figure(parentfig); end
             if isequal(filenm, 0), return; end
             if ~iscell(filenm)
@@ -116,7 +116,7 @@ setpref('scgeatoolbox', preftagname, indx);
             end
         case '10x Genomics MTX File (*.mtx)...'
             try
-                [sce] = gui.i_readmtx;
+                [sce] = gui.i_readmtx(parentfig);
             catch ME
                 gui.myErrordlg(parentfig, ME.message, ME.identifier);
                 return;
@@ -127,7 +127,7 @@ setpref('scgeatoolbox', preftagname, indx);
                 'TSV/CSV Format Files (*.tsc, *.csv, *.txt)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a tsv/csv/txt format file');
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
             fw = gui.myWaitbar(parentfig);
@@ -153,7 +153,7 @@ setpref('scgeatoolbox', preftagname, indx);
                 {'*.rds', 'Seurat/Rds Format Files (*.rds)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a rds format file');
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
             fw = gui.myWaitbar(parentfig);
@@ -182,7 +182,7 @@ setpref('scgeatoolbox', preftagname, indx);
                 {'*.h5ad', 'H5AD Files (*.h5ad)'; ...
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick a H5AD file');
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(filenm, 0), return; end
             filename = fullfile(pathname, filenm);
             fw = gui.myWaitbar(parentfig);
@@ -213,7 +213,7 @@ setpref('scgeatoolbox', preftagname, indx);
                 '*.*', 'All Files (*.*)'}, ...
                 'Pick 10x Genomics H5 file(s)','MultiSelect','on');
             if isequal(filenm, 0), return; end
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if iscell(filenm)
                 if ~in_multifilesgo(parentfig), return; end
                 answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge data?', ...
@@ -291,7 +291,7 @@ setpref('scgeatoolbox', preftagname, indx);
         case '10x Genomics ''outs'' Folder...'
             disp('Open 10x Genomics outs folder...');
             selpath = uigetdir;
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
                 figure(parentfig);
             end
             if selpath == 0, return; end
@@ -323,7 +323,7 @@ setpref('scgeatoolbox', preftagname, indx);
             end
         case 'Parse Biosciences ''outs'' Folder...'
             selpath = uigetdir;
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
                 figure(parentfig);
             end
             if selpath == 0, return; end

@@ -6,7 +6,7 @@ wkdir = []
 isdebug = false
 end
 
-if isempty(wkdir), wkdir = tempdir; end
+if isempty(wkdir), wkdir = pkg.i_tempdirfile(); end
 
 oldpth = pwd();
 cleanupObj = onCleanup(@() cd(oldpth));

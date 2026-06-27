@@ -47,7 +47,7 @@ else
     answer=gui.myQuestdlg(parentfig, 'Select a folder to save the outupt Excel files. Continue?','');
     if ~strcmp(answer,'Yes'), return; end
     outdir = uigetdir;
-    if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+    if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
         figure(parentfig);
     end
     if ~isfolder(outdir), return; end

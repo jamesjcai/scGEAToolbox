@@ -27,7 +27,7 @@ hx.addCustomButton('on', @in_callback_stemplot,'icon-mat-blur-on-10.gif','Show s
 hx.show(parentfig);
 
 function in_callback_stemplot(~,~)
-        gui.i_stemscatterfig(sce, cs, posg, csname);
+        gui.i_stemscatterfig(sce, cs, posg, csname, parentfig);
         % delete(h1);
         % h1 = gui.i_stemscatter(sce.s, cs);
     end
@@ -58,7 +58,7 @@ function in_callback_geneheatmapx(~, ~)
 
         [thisc] = gui.i_select1class(sce,[],[],[],parentfig);
         if ~isempty(thisc)
-            gui.i_geneheatmap(sce, thisc, posg);
+            gui.i_geneheatmap(sce, thisc, posg, parentfig);
         end
     end
 

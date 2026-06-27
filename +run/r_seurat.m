@@ -1,9 +1,10 @@
 function [sce] = r_seurat(X, genelist, wkdir, isdebug)
 
-if nargin < 3, wkdir = tempdir; end
+if nargin < 3, wkdir = pkg.i_tempdirfile(); end
 if nargin < 4, isdebug = false; end
 
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_Seurat');
 if ~isok, error(msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
@@ -72,5 +73,4 @@ if exist('output.h5', 'file')
     sce.s = s_tsne;
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

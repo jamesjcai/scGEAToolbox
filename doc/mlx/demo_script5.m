@@ -24,6 +24,7 @@ try
     figure;
     gui.i_plot_pseudotimeseries(log1p(X),genelist,t,selectedg)
 catch
+    % plotting is illustrative for the demo; do not stop the script if it fails
 end
 % % Nonlinear correlation  
 %

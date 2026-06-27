@@ -99,7 +99,7 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
                         gui.myHelpdlg(FigureHandle, 'No feature genes selected.', '')
                         return;
                     end
-                    [y] = gui.e_cellscore(sce, posg);
+                    [y] = gui.e_cellscore(sce, posg, [], [], FigureHandle);
                     answer = gui.myQuestdlg(FigureHandle, 'Save score to cell attribute list?', ...
                         '',{'Yes, save','No, skip','Cancel'},'Yes, save');
                     switch answer
@@ -138,7 +138,7 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
                     fw = gui.myWaitbar(FigureHandle);
                     for k = 1:n
                         y{k} = gui.e_cellscore(sce, posg{k}, ...
-                            methodid, false);
+                            methodid, false, FigureHandle);
                     end
                     gui.myWaitbar(FigureHandle, fw);
 
@@ -189,7 +189,7 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
                     ttxt = ctselected;
                     if isempty(posg) || isempty(ctselected), return; end
 
-                    [y] = gui.e_cellscore(sce, posg);
+                    [y] = gui.e_cellscore(sce, posg, [], [], FigureHandle);
 
                 case 'Predefined Custom Gene Sets'
                     % if ~gui.gui_showrefinfo('Predefined Cell Score', FigureHandle), return; end

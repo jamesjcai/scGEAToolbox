@@ -249,7 +249,7 @@ function restoreState(state)
 % Restore all saved properties in reverse order
 for k = numel(state):-1:1
     s = state(k);
-    if isvalid(s.h)
+    if pkg.i_isvalid(s.h)
         try
             set(s.h, s.prop, s.val);
         catch

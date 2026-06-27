@@ -14,7 +14,7 @@ In the 10x Genomics folder, there are three files, namely, matrix.mtx, features.
   bcdf = 'GSM3535276_AXLN1_barcodes.tsv';
   [X, genelist, barcodelist] = sc_readmtxfile(mtxf, genf, bcdf, 2);
 
-If the barcodees.tsv is not available, then use the following
+If the barcodes.tsv is not available, then use the following
 
 .. code-block:: matlab
 
@@ -31,19 +31,19 @@ Here is an example of raw data processing.
   
   [X, g, b] = sc_readmtxfile('matrix.mtx', 'features.tsv', 'barcodes.tsv', 2);
   [X, g] = sc_qcfilter(X, g);
-  [X, g] = sc_selectg(X, g, 1, 0.05);
+  [X, g] = sc_selectg(X, g, 0.05);
   [s] = sc_tsne(X);
   sce=SingleCellExperiment(X,g,s);
   scgeatool(sce)
 
-t-SNE embedding of cells using highly varible genes (HVGs)
+t-SNE embedding of cells using highly variable genes (HVGs)
 ----------------------------------------------------------
 
 .. code-block:: matlab
   
-  [~, Xhvg] = sc_hvg(X, g);
-  [s] = sc_tsne(Xhvg(1:2000, :));
-  sce=SingleCellExperiment(X,g,s)
+  [~, Xsorted, gsorted] = sc_hvg(X, g);
+  [s] = sc_tsne(Xsorted(1:2000, :));
+  sce = SingleCellExperiment(X, g, s);
   scgeatool(sce)
   
 An example pipeline for raw data processing
@@ -53,9 +53,9 @@ An example pipeline for raw data processing
 
   [X,g] = sc_readmtxfile('matrix.mtx', 'features.tsv');
   [X,g] = sc_qcfilter(X, g);                % basic QC
-  [X,g] = sc_selectg(X, g, 1, 0.05);        % select genes expressed in at least 5% of cells
-  [~,Xhvg] = sc_hvg(X, g);                  % identify highly variable genes (HVGs) 
-  [s] = sc_tsne(Xhvg(1:2000, :));           % using expression of top 2000 HVGs for tSNE
+  [X,g] = sc_selectg(X, g, 0.05);            % select genes expressed in at least 5% of cells
+  [~,Xsorted] = sc_hvg(X, g);               % identify highly variable genes (HVGs)
+  [s] = sc_tsne(Xsorted(1:2000, :));        % using expression of top 2000 HVGs for tSNE
   sce = SingleCellExperiment(X, g, s);      % make SCE class
   sce = sce.estimatepotency(2);             % estimate differentiation potency (1-human; 2-mouse)
   sce = sce.estimatecellcycle;              % estimate cell cycle phase

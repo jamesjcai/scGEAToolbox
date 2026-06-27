@@ -41,7 +41,7 @@ if ~strcmpi('Yes', gui.myQuestdlg(FigureHandle, ['This function is ' ...
 end
 
 % --- Remove existing trajectory if present ---
-if ~isempty(cur_f_traj) && isvalid(cur_f_traj) && isgraphics(cur_f_traj, 'line')
+if ~isempty(cur_f_traj) && pkg.i_isvalid(cur_f_traj) && isgraphics(cur_f_traj, 'line')
     if strcmp({cur_f_traj.Visible}, 'on')
         switch gui.myQuestdlg(FigureHandle, 'Remove existing trajectory curve?', '')
             case 'Yes'
@@ -84,7 +84,7 @@ switch answer
     case 'manual'
         if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
             % If current embedding is 3D, offer to switch to 2D first
-            if ~isempty(scatter_h) && isvalid(scatter_h) && ~isempty(scatter_h.ZData)
+            if ~isempty(scatter_h) && pkg.i_isvalid(scatter_h) && ~isempty(scatter_h.ZData)
                 switch gui.myQuestdlg(FigureHandle, ...
                         ['This function does not work for 3D ' ...
                         'embedding. Continue to switch to 2D?'])
@@ -97,7 +97,7 @@ switch answer
                 end
             end
             % Re-check: if still 3D after switch attempt, bail
-            if ~isempty(scatter_h) && isvalid(scatter_h) && ~isempty(scatter_h.ZData), return; end
+            if ~isempty(scatter_h) && pkg.i_isvalid(scatter_h) && ~isempty(scatter_h.ZData), return; end
 
             answer2 = gui.myQuestdlg(FigureHandle, ...
                 'Draw trajectory curve or load saved curve and pseudotime?', ...
@@ -106,7 +106,7 @@ switch answer
             switch answer2
                 case 'Load Saved'
                     [file, path] = uigetfile('*.mat', 'Select a MAT-file to Load');
-                    if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure')
+                    if pkg.i_isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure')
                         figure(FigureHandle);
                     end
                     if isequal(file, 0)
@@ -254,7 +254,7 @@ if strcmp(answer, 'manual') && ~justload
             'Save manual trajectory curve and pseudotime to an .mat file?', '')
         case 'Yes'
             [file, path] = uiputfile('*.mat', 'Save as', 'pseudotime_manual_trajectory.mat');
-            if isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure')
+            if pkg.i_isvalid(FigureHandle) && isa(FigureHandle, 'matlab.ui.Figure')
                 figure(FigureHandle);
             end
             if isequal(file, 0) || isequal(path, 0)

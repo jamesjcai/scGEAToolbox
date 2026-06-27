@@ -214,7 +214,7 @@ function in_callback_Enrichr(~, ~)
     end
 
 function in_callback_viewTable(~, ~)
-        if ~isempty(figtab) && isvalid(figtab)
+        if ~isempty(figtab) && pkg.i_isvalid(figtab)
             gui.i_bringtofront(figtab);
         else
             figtab = gui.TableViewerApp(T, hx.FigHandle, outfile);
@@ -257,7 +257,7 @@ function txt = in_myupdatefcn3(src, event_obj, g)
                 % h3b = quiver3(hAx0, px1(idx), py1(idx), pz1(idx), px2(idx), py2(idx), pz2(idx));
             txt = {g(idx)};
             x1 = X1(idx, :);
-            if ~isempty(sh1) && isvalid(sh1), delete(sh1); end
+            if ~isempty(sh1) && pkg.i_isvalid(sh1), delete(sh1); end
             sh1 = plot(hAx1, 1:length(x1), x1, 'Color',lcolor1);
             xlim(hAx1,[1 size(X1,2)]);
             title(hAx1, strrep(sprintf('%s',g(idx)),'_','\_') );
@@ -267,7 +267,7 @@ function txt = in_myupdatefcn3(src, event_obj, g)
             ylabel(hAx1,'Expression Level');
 
             x2 = X2(idx, :);
-            if ~isempty(sh2) && isvalid(sh2), delete(sh2); end
+            if ~isempty(sh2) && pkg.i_isvalid(sh2), delete(sh2); end
             sh1 = plot(hAx2, 1:length(x2), x2, 'Color', lcolor2);
             xlim(hAx2,[1 size(X2,2)]);
             title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
@@ -370,7 +370,7 @@ function in_callback_HighlightSelectedGenes(~, ~, typeid)
     end
 
 function in_callback_EnrichrHVGs(~, ~)
-        k = gui.i_inputnumk(200, 1, 2000, 'Select top n genes');
+        k = gui.i_inputnumk(200, 1, 2000, 'Select top n genes', FigureHandle);
         if ~isempty(k)
             gsorted = T.(T.Properties.VariableNames{1});
             gselected = gsorted(1:k);
@@ -446,9 +446,10 @@ if nargin < 1 || isempty(fw)
 end
 
 try
-    if isvalid(fw)
+    if pkg.i_isvalid(fw)
         close(fw);
     end
 catch
+    % waitbar may already be closed; safe to ignore
 end
 end

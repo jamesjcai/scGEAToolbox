@@ -226,7 +226,7 @@
 	"inputs":
 	[
 		{"name":"X", "kind":"required", "type":["numeric"]},
-		{"name":"type", "kind":"optional", "type":["char","choices={'libsize','deseq'}"]}
+		{"name":"type", "kind":"optional", "type":["char","choices={'libsize','deseq','shiftedclr'}"]}
 	]
 },
 "sc_transform":

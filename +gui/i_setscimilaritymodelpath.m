@@ -63,7 +63,7 @@ function [y] = ix_setpath
         y = false;
         promptTitle = 'Select a folder that contains the model';
         selectedDir = uigetdir(pwd, promptTitle);
-        if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
+        if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure')
             figure(parentfig);
         end
 

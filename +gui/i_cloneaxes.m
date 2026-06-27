@@ -8,6 +8,7 @@
             try
                 set(hAx2, props{kk}, get(hAx1, props{kk}));
             catch
+                % skip properties not supported by the destination axes type
             end
         end
 

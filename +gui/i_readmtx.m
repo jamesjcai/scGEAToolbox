@@ -8,14 +8,22 @@ end
 
 sce = [];
 
+% preftagname ='openscedlgindex';
+preftagname ='oldmtxfilefoldr';
+oldfolder = getpref('scgeatoolbox', preftagname, pwd);
+if ~isfolder(oldfolder), oldfolder = pwd; end
+
+
 [fname, pathname] = uigetfile( ...
 {'*.mtx', 'MTX Format Files (*.mtx)'; ...
 '*.*', 'All Files (*.*)'}, ...
-'Pick a mtx format file');
-if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+'Pick a mtx format file', oldfolder);
+if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
 if isequal(fname, 0), return; end
 prefixstr = extractBefore(fname, max([strfind(fname, 'matrix'), 1]));
 matrixmtxfile = fullfile(pathname, fname);
+
+setpref('scgeatoolbox', preftagname, pathname);
 
 
 featurestxtfile = fullfile(pathname, sprintf('%sfeatures.tsv', prefixstr));
@@ -29,15 +37,16 @@ if ~exist(featurestxtfile, 'file')
     featurestxtfile = fullfile(pathname, sprintf('%sgenes.txt', prefixstr));
 end
 if ~exist(featurestxtfile, 'file')
-    answer = gui.myQuestdlg(parentfig, 'Pick features.tsv file?');
+    answer = gui.myQuestdlg(parentfig, 'Pick features.tsv (gene list) file?');
     % error('Cannot find features.tsv')
     switch answer
         case 'Yes'
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             [fname2, pathname2] = uigetfile( ...
                 {'*.tsv', 'TSV Format Files (*.tsv)'; ...
                 '*.*', 'All Files (*.*)'}, ...
-                'Pick features.tsv file');
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+                'Pick features.tsv file', pathname);
+            
             if ~(fname2)
                 gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
                 return;
@@ -74,8 +83,8 @@ if ~exist(barcodestxtfile, 'file')
             [fname2, pathname2] = uigetfile( ...
                 {'*.tsv', 'TSV Format Files (*.tsv)'; ...
                 '*.*', 'All Files (*.*)'}, ...
-                'Pick barcodes.tsv file');
-            if isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+                'Pick barcodes.tsv file', pathname);
+            if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if ~(fname2)
                 barcodestxtfile = [];
             else

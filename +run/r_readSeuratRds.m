@@ -1,11 +1,12 @@
 function [sce, metadata] = r_readSeuratRds(filename, wkdir)
 
-if nargin < 2, wkdir = tempdir; end
+if nargin < 2, wkdir = pkg.i_tempdirfile(); end
 sce = [];
 metadata = [];
 
 if nargin < 1, error('run.r_readSeuratRds(filename)'); end
 oldpth = pwd();
+cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_SeuratReadRds');
 if ~isok, error(msg), return; end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
@@ -125,9 +126,9 @@ if exist(metadatafile, 'file')
             metadata = t;
         end
     catch
+        % metadata is optional; sce is still valid without it
     end
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-cd(oldpth);
 end

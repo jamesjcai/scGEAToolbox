@@ -18,8 +18,8 @@ apikey = getenv("OPENAI_API_KEY");
 
 fprintf('Sending request to OpenAI Chat API...\n');
 try
-    chat = openAIChat("APIKey", apikey, ...
-        "ModelName", model,TimeOut = 1200);
+    chat = openAIChat("", APIKey=apikey, ...
+        ModelName=model, TimeOut=1200);
     res = chat.generate(prompt);
     done = true;
 catch ME

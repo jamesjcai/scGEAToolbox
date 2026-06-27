@@ -56,7 +56,7 @@ Tx = T(T.dv_coef > 0 & T.de_coef > 0,:);
 
 idx = zeros(1, length(hvgidx));
 h.BrushData = idx;
-k = gui.i_inputnumk(200, 1, 2000);
+k = gui.i_inputnumk(200, 1, 2000, [], parentfig);
 if isempty(k), return; end
 idx(hvgidx(1:k)) = 1;
 h.BrushData = idx;

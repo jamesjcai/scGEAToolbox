@@ -36,6 +36,7 @@ if ~isMATLABReleaseOlderThan('R2025a')
                 % disp('fliplightness applied.');
         end
     catch
+        % parent has no Theme; keep default ColorOrder
     end
 end
 [p1] = drawnetwork(G1, h1);
@@ -130,7 +131,7 @@ function SaveAdj(~, ~)
                 uiwait(msgfig);
             case 'File'
                 [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
-                % if isvalid(hFig) && isa(hFig, 'matlab.ui.Figure'), figure(hFig); end
+                % if pkg.i_isvalid(hFig) && isa(hFig, 'matlab.ui.Figure'), figure(hFig); end
                 if isequal(file, 0) || isequal(path, 0)
                     return;
                 else

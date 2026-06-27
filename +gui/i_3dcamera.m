@@ -57,7 +57,7 @@ function camera3dmp4(~, ~)
             try
                 xui_CaptureFigVid(ax, fname, OptionZ, parentfig, parentax);
             catch
-
+                % video export is optional; restore view and continue if codec missing
             end
             view(parentax,caz,cel);
             warning on

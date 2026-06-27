@@ -73,7 +73,7 @@ for kx = 1:length(tgene)
             else
                 scatter(s(cellidx, 1), s(cellidx, 2), 5, ydata, 'filled');
             end
-            gui.i_setautumncolor(ydata, a, true, any(ydata==0));
+            gui.i_setautumncolor(ydata, a, true, any(ydata==0), [], parentfig);
             clim([min(z) max(z)]);  % Adjust color axis to data range
             title(cL{ky});
         end

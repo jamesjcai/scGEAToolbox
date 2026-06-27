@@ -37,7 +37,7 @@ if isempty(manuallyselect), return; end
 % Set up live datatip handle if requested and available
 h = [];
 cLdisp = cL;
-if livedatatips && isa(src, 'matlab.apps.AppBase') && ~isempty(src.h) && isvalid(src.h)
+if livedatatips && isa(src, 'matlab.apps.AppBase') && ~isempty(src.h) && pkg.i_isvalid(src.h)
     h = src.h;
     dtp = findobj(h, 'Type', 'datatip');
     delete(dtp);

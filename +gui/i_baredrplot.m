@@ -15,6 +15,7 @@ if ~isMATLABReleaseOlderThan('R2025a') && ~isempty(parentfig)
             colortag = [.5 .5 .5];
         end
     catch
+        % keep default colortag if Theme.BaseColorStyle is unavailable
     end
 end
 
