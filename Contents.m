@@ -25,8 +25,6 @@
 %   sc_mergedata              - sc_mergedata is a function.
 %   sc_mergesces              - Merges two SCE objects
 %   sc_norm                   - sc_norm is a function.
-%   sc_pcnet                  - Construct GRN network A using PC regression (pcnet)
-%   sc_pcnetpar               - [A]=sc_pcnetpar(X,ncom)
 %   sc_phate                  - PHATE embedding of cells
 %   sc_pickmarkers            - sc_pickmarkers is a function.
 %   sc_potency                - Estimate differentiation potency of cells
