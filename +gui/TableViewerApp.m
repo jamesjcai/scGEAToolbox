@@ -1,25 +1,31 @@
 function [fig] = TableViewerApp(T, parentfig, defname, customActions)
-
+% TABLEVIEWERAPP Display one or more tables in an interactive viewer.
+%
+% fig = TABLEVIEWERAPP(T, parentfig, defname, customActions) shows table T.
+%
+% T may also be a struct array with fields Name and Table, in which case a
+% "View" dropdown lets the user switch between the named tables. For
+% example, DE results can be shown as:
+%   views(1) = struct('Name', 'All genes', 'Table', T);
+%   views(2) = struct('Name', 'Up-regulated', 'Table', Tup);
+%   views(3) = struct('Name', 'Down-regulated', 'Table', Tdn);
+% Search, sorting, and the export buttons act on the displayed view.
 
 if nargin < 4 || isempty(customActions), customActions = struct([]); end
 if nargin<3, defname = []; end
 if nargin<2, parentfig = []; end
 if nargin<1, T = []; end
+
+views = i_normalizeviews(T);
+
     % Create a new figure window
 fig = uifigure('Name', 'Table Viewer', ...
                    'Position', [0, 0, 900, 480],'Visible','off');
 
 gui.i_movegui2parent(fig, parentfig);
 
-if isempty(T)
-        % Create a table with sample data
-        data = generateSampleData();
-        headers = {'Name', 'Age', 'Height (cm)', 'Weight (kg)', 'BMI'};
-    else
-        T = convertvars(T, @isstring, 'cellstr');
-        headers = T.Properties.VariableNames;
-        data = table2cell(T);
-    end
+fig.UserData = struct('Views', views, 'CurrentIndex', 1);
+[data, headers] = i_viewcontent(views(1));
 
     % Create a grid layout for better GUI organization
 mainLayout = uigridlayout(fig, [3, 1]);
@@ -32,9 +38,12 @@ topPanel = uipanel(mainLayout);
 topPanel.Layout.Row = 1;
 topPanel.Layout.Column = 1;
 
-    % Create top control layout
-topLayout = uigridlayout(topPanel, [1, 5]);
-topLayout.ColumnWidth = {'1x', '1x', '1x', '1x', '1x'};
+    % Create top control layout; a "View" selector is added only when the
+    % caller supplied more than one named table.
+hasViewSelector = numel(views) > 1;
+nTopCols = 5 + 2*hasViewSelector;
+topLayout = uigridlayout(topPanel, [1, nTopCols]);
+topLayout.ColumnWidth = repmat({'1x'}, 1, nTopCols);
 topLayout.Padding = [5 5 5 5];
 
     % Create the table in the middle panel
@@ -49,9 +58,16 @@ uitTable.FontSize = 12;
     % Enable sorting
 uitTable.ColumnSortable = true;
 
+    % Add view selector. Its callback needs controls created below, so it is
+    % attached once they exist.
+if hasViewSelector
+    uilabel(topLayout, 'Text', 'View:');
+    viewDropdown = uidropdown(topLayout, 'Items', {views.Name});
+end
+
     % Add search functionality
 uilabel(topLayout, 'Text', 'Search:');
-searchField = uieditfield(topLayout, 'ValueChangedFcn', @(src, event) searchTable(src, uitTable, T));
+searchField = uieditfield(topLayout, 'ValueChangedFcn', @(src, event) searchTable(src, uitTable, fig));
 
     % Add row count label
 rowCountLabel = uilabel(topLayout, 'Text', sprintf('Rows: %d', size(data, 1)));
@@ -62,7 +78,12 @@ sortByDropdown = uidropdown(topLayout, 'Items', {'Select Column'}, ...
 
     % Add refresh button in top panel
 uibutton(topLayout, 'Text', 'Refresh Data', ...
-             'ButtonPushedFcn', @(btn, event) refreshData(uitTable, rowCountLabel, sortByDropdown, T));
+             'ButtonPushedFcn', @(btn, event) refreshData(uitTable, rowCountLabel, sortByDropdown, fig));
+
+if hasViewSelector
+    viewDropdown.ValueChangedFcn = @(src, event) switchView(src, fig, ...
+        uitTable, searchField, rowCountLabel, sortByDropdown);
+end
 
 
     % Create context menu for the table
@@ -92,17 +113,17 @@ btnLayout.ColumnWidth = repmat({'1x'}, 1, nBtnCols);
     % --- First Row of Buttons ---
     % Create export buttons
 exportCSVBtn = uibutton(btnLayout, 'Text', 'Export to CSV', ...
-                        'ButtonPushedFcn', @(btn,event) exportToCSV(uitTable, defname));
+                        'ButtonPushedFcn', @(btn,event) exportToCSV(uitTable, i_defname(fig, defname)));
 exportCSVBtn.Layout.Row = 1;
 exportCSVBtn.Layout.Column = 1;
 
 exportExcelBtn = uibutton(btnLayout, 'Text', 'Export to Excel', ...
-                         'ButtonPushedFcn', @(btn,event) exportToExcel(uitTable, defname));
+                         'ButtonPushedFcn', @(btn,event) exportToExcel(uitTable, i_defname(fig, defname)));
 exportExcelBtn.Layout.Row = 1;
 exportExcelBtn.Layout.Column = 2;
 
 exportMATBtn = uibutton(btnLayout, 'Text', 'Export to MAT File', ...
-                         'ButtonPushedFcn', @(btn,event) exportToMAT(uitTable, defname));
+                         'ButtonPushedFcn', @(btn,event) exportToMAT(uitTable, i_defname(fig, defname)));
 exportMATBtn.Layout.Row = 1;
 exportMATBtn.Layout.Column = 3;
 
@@ -142,6 +163,56 @@ updateSortDropdown(sortByDropdown, uitTable);
 addlistener(uitTable, 'Data', 'PostSet', @(src, event) updateRowCount(rowCountLabel, uitTable));
 drawnow;
 fig.Visible = 'on';
+end
+
+function views = i_normalizeviews(T)
+% Accept a single table (or empty) as well as a struct array of named views.
+if isstruct(T) && isfield(T, 'Name') && isfield(T, 'Table') && ~isempty(T)
+    views = T(:)';
+else
+    views = struct('Name', 'Table', 'Table', {T});
+end
+end
+
+function view = i_currentview(fig)
+view = fig.UserData.Views(fig.UserData.CurrentIndex);
+end
+
+function [data, headers] = i_viewcontent(view)
+T = view.Table;
+if isempty(T) && ~istable(T)
+    % No table supplied at all; fall back to sample data. An empty table is
+    % still shown as its own headers with zero rows.
+    data = generateSampleData();
+    headers = {'Name', 'Age', 'Height (cm)', 'Weight (kg)', 'BMI'};
+else
+    T = convertvars(T, @isstring, 'cellstr');
+    headers = T.Properties.VariableNames;
+    data = table2cell(T);
+end
+end
+
+function name = i_defname(fig, defname)
+% Qualify the default export filename with the view being displayed so that
+% exporting several views does not keep proposing the same file.
+name = defname;
+if isempty(name) || numel(fig.UserData.Views) < 2, return; end
+% Drop any trailing row count, e.g. "Up-regulated (10)" -> "Up_regulated"
+suffix = regexprep(char(string(i_currentview(fig).Name)), '\s*\(\d+\)\s*$', '');
+name = sprintf('%s_%s', char(string(name)), matlab.lang.makeValidName(suffix));
+end
+
+function switchView(dropdown, fig, tableObj, searchField, rowCountLabel, sortByDropdown)
+% Show the table selected in the View dropdown.
+idx = find(strcmp({fig.UserData.Views.Name}, dropdown.Value), 1);
+if isempty(idx), return; end
+fig.UserData.CurrentIndex = idx;
+searchField.Value = '';
+[data, headers] = i_viewcontent(i_currentview(fig));
+tableObj.Data = data;
+tableObj.ColumnName = headers;
+updateRowCount(rowCountLabel, tableObj);
+updateSortDropdown(sortByDropdown, tableObj);
 end
 
 function data = generateSampleData()
@@ -267,10 +338,11 @@ data = tableObj.Data;
 T = cell2table(data, 'VariableNames', strrep(columnNames, ' ', '_'));
 end
 
-function refreshData(tableObj, rowCountLabel, sortByDropdown, T)
-% Function to refresh data with new random values
-T = convertvars(T, @isstring, 'cellstr');
-tableObj.Data = table2cell(T);
+function refreshData(tableObj, rowCountLabel, sortByDropdown, fig)
+% Function to reload the displayed view from its source table
+[data, headers] = i_viewcontent(i_currentview(fig));
+tableObj.Data = data;
+tableObj.ColumnName = headers;
 
 % Update row count
 updateRowCount(rowCountLabel, tableObj);
@@ -366,21 +438,19 @@ statsTable.ColumnWidth = {100};
 end
 %}
 
-function searchTable(searchField, tableObj, T)
-% Function to search the table
+function searchTable(searchField, tableObj, fig)
+% Function to search the displayed view
 searchText = lower(searchField.Value);
+
+% Always search the full view, not the currently filtered rows
+data = i_viewcontent(i_currentview(fig));
 
 % If search text is empty, show all rows
 if isempty(searchText)
-
-    T = convertvars(T, @isstring, 'cellstr');
-    tableObj.Data = table2cell(T);
-    % tableObj.Data = generateSampleData();
+    tableObj.Data = data;
     return;
 end
 
-% Get data and search
-data = tableObj.Data;
 matchRows = false(size(data, 1), 1);
 
 % Search each cell

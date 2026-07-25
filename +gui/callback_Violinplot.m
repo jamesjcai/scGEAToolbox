@@ -27,7 +27,7 @@ switch answer
             return;
         end
 
-        [Xt] = gui.i_transformx(sce.X, true, 8, FigureHandle);
+        [Xt] = gui.i_transformx(sce.X, true, 9, FigureHandle);
         if isempty(Xt), return; end
 
         % if isscalar(glist)

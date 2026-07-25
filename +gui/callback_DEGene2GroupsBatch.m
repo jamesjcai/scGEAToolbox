@@ -20,6 +20,7 @@ if ~done, return; end
 if strcmp(runenrichr,'Cancel'), return; end
 
 [paramset] = gui.i_degparamset(false, FigureHandle);
+if isempty(paramset), return; end
 
 fw = gui.myWaitbar(FigureHandle);
 for k=1:length(CellTypeList)

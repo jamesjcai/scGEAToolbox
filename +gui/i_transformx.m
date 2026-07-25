@@ -32,40 +32,44 @@ end
 listitems = {'(a): Library Size Normalization', ...
 '(b): Log(x+1) Transformation', ...
 '(c): (a) and (b)', ...
-'(d): DeSeq Normalization', ...
-'(e): Pearson Residuals Transformation', ...
-'(f): kNN Smoothing Transformation', ...
-'(g): Freeman-Tukey Transformation', ...
-'(h): MAGIC Imputation'};
+'(d): Shifted CLR PFlog1pPF Normalization', ...
+'(e): DeSeq Normalization', ...
+'(f): Pearson Residuals Transformation', ...
+'(g): kNN Smoothing Transformation', ...
+'(h): Freeman-Tukey Transformation', ...
+'(i): MAGIC Imputation'};
 if gui.i_isuifig(parentfig)
-        [indx, tf] = gui.myListdlg(parentfig, listitems, ...
-            'Select Method', listitems(methodid));
-    else
-        [indx, tf] = listdlg('PromptString', {'Select Method'}, ...
-            'SelectionMode', 'single', ...
-            'ListString', listitems, 'ListSize', [220, 300], ...
-            'InitialValue', methodid);
-    end
+    [indx, tf] = gui.myListdlg(parentfig, listitems, ...
+        'Select Method', listitems(methodid));
+else
+    [indx, tf] = listdlg('PromptString', {'Select Method'}, ...
+        'SelectionMode', 'single', ...
+        'ListString', listitems, 'ListSize', [220, 300], ...
+        'InitialValue', methodid);
+end
+
 if tf == 1
     fw = gui.myWaitbar(parentfig);
     try
         switch indx
             case 1
-                X = sc_norm(X);
+                X = sc_norm(X, 'type', 'libsize');
             case 2
                 X = log1p(X);
             case 3
-                X = sc_norm(X);
+                X = sc_norm(X, 'type', 'libsize');
                 X = log1p(X);
             case 4
-                X = sc_norm(X, 'type', 'deseq');
+                X = sc_norm(X, 'type', 'shiftedclr');
             case 5
-                X = sc_transform(X, 'type', 'PearsonResiduals');
+                X = sc_norm(X, 'type', 'deseq');
             case 6
-                X = sc_transform(X, 'type', 'kNNSmoothing');
+                X = sc_transform(X, 'type', 'PearsonResiduals');
             case 7
-                X = sc_transform(X, 'type', 'FreemanTukey');
+                X = sc_transform(X, 'type', 'kNNSmoothing');
             case 8
+                X = sc_transform(X, 'type', 'FreemanTukey');
+            case 9
                 X = run.ml_MAGIC(X, true);
         end
     catch ME
@@ -75,4 +79,5 @@ if tf == 1
     end
     gui.myWaitbar(parentfig, fw);
 end
+
 end

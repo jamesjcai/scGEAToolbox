@@ -12,6 +12,7 @@ function A = sc_grn(X, type, varargin)
 %       'distcorr'        - distance correlation (nonlinear, symmetric)
 %       'mi'              - mutual information (parallel)
 %       'grnformer'       - GRNFormer graph transformer (Hegde & Cheng 2026)
+%       'tn'              - tensor-network MPS Born machine (panel-scale)
 %
 %   For 'grnformer', additional arguments are required / supported:
 %       A = sc_grn(X, 'grnformer', tf_idx)
@@ -19,8 +20,13 @@ function A = sc_grn(X, type, varargin)
 %   where tf_idx is a logical or integer index vector of TF genes, and
 %   remaining name-value pairs are forwarded to net.grnformer.
 %
-%   All methods are implemented in the +net/ package.
-%   See also: net.pcrnet, net.genie3, net.xicornet, net.grnformer
+%   For 'tn', an optional gene-name list may be supplied:
+%       A = sc_grn(X, 'tn', genelist)
+%   'tn' is panel-scale (restrict X to a curated module, <= ~20 genes).
+%   See ten.tngrn for the full edge table and virtual-knockout options.
+%
+%   All methods except 'tn' are implemented in the +net/ package.
+%   See also: net.pcrnet, net.genie3, net.xicornet, net.grnformer, ten.tngrn
 
 arguments
     X {mustBeNumeric}
@@ -33,7 +39,7 @@ end
 type = lower(string(type));
 
 validTypes = ["pcrnet" "pcrnet_batch" "pcrnet_denoised" ...
-              "genie3" "pearson" "xicor" "distcorr" "mi" "grnformer"];
+              "genie3" "pearson" "xicor" "distcorr" "mi" "grnformer" "tn"];
 if ~ismember(type, validTypes)
     error("sc_grn:InvalidType", ...
           "Type must be one of: %s", strjoin(validTypes, ", "));
@@ -65,6 +71,12 @@ switch type
         tf_idx = varargin{1};
         extra  = varargin(2:end);
         A = net.grnformer(X, tf_idx, extra{:});
+    case "tn"
+        % Tensor-network MPS Born machine (panel-scale; restrict X to a module).
+        % Optional 3rd arg: sc_grn(X, 'tn', genelist)
+        genelist = string.empty;
+        if ~isempty(varargin), genelist = varargin{1}; end
+        A = ten.tngrn(X, genelist, 'EdgesOnly', true);
     otherwise
         % Should not reach here — type is validated by ismember check above
         error('sc_grn:InvalidType', 'Unknown GRN type: %s', type);

@@ -21,7 +21,7 @@ methodkeys = {'pcrnet', 'xicor', 'pearson', 'distcorr', 'mi', 'genie3'};
 if ~ok, return; end
 methodkey = methodkeys{sel};
 
-[Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);
+[Xt] = gui.i_transformx(sce.X, true, 6, FigureHandle);
 if isempty(Xt), return; end
 x = Xt(i, :);
 

@@ -1,9 +1,10 @@
 function callback_RunCoGAPS(src, ~)
 % NMF pattern discovery: R Bayesian CoGAPS [PMID:37828301] or MATLAB NMF.
 % Falls back to run.ml_cogaps (pure MATLAB) when R is not configured.
-
 [FigureHandle, sce] = gui.gui_getfigsce(src);
+FigureHandle
 if ~gui.gui_showrefinfo('CoGAPS [PMID:37828301]', FigureHandle), return; end
+disp('aaa')
 
 % Choose backend: R (true Bayesian CoGAPS) or MATLAB (fast NMF fallback).
 hasR = ispref('scgeatoolbox', 'rexecutablepath') && ...

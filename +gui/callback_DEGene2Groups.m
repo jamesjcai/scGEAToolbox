@@ -18,6 +18,9 @@ if isscalar(i1) || isscalar(i2), return; end
 [i1, i2, cL1, cL2, cancelled] = gui.i_whichvswhich(FigureHandle, i1, i2, cL1, cL2);
 if cancelled, return; end
 
+[paramset] = gui.i_degparamset(false, FigureHandle);
+if isempty(paramset), return; end
+
 fw = gui.myWaitbar(FigureHandle, [], false, 'Computing DE results...');
 cleanupFw = onCleanup(@() i_closewaitbar(fw));
 
@@ -33,10 +36,8 @@ outfile = sprintf('%s_vs_%s_DE_results', ...
     matlab.lang.makeValidName(string(cL2)));
 filesaved = fullfile(outdir, [outfile, '.xlsx']);
 
-degparamtag = 'degtestparamset';
-paramset = getpref('scgeatoolbox', degparamtag, {0.05, 1.0, 0.01, 'Adjusted P-value'});
-[Tup, Tdn, paramset] = pkg.e_processdetable(T, paramset, FigureHandle);
 [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1), sum(i2));
+[Tup, Tdn] = pkg.e_processdetable(T, paramset, FigureHandle);
 
 gui.myWaitbar(FigureHandle, fw, false, '', 'Saving DE results...', 0.85);
 try
@@ -56,7 +57,13 @@ plotAction(1) = struct('Text', 'Generate Volcano Plot', ...
 plotAction(2) = struct('Text', 'Enrichr Analysis', ...
     'Tooltip', 'Run Enrichr with up/down-regulated DE genes', ...
     'Callback', @in_callback_enrichr_fromtable);
-gui.TableViewerApp(T, FigureHandle, outfile, plotAction);
+
+% Show all genes plus the filtered up- and down-regulated genes as separate
+% views, matching the sheets written to the Excel file.
+views(1) = struct('Name', 'All genes', 'Table', T);
+views(2) = struct('Name', sprintf('Up-regulated (%d)', height(Tup)), 'Table', Tup);
+views(3) = struct('Name', sprintf('Down-regulated (%d)', height(Tdn)), 'Table', Tdn);
+gui.TableViewerApp(views, FigureHandle, outfile, plotAction);
 
 
 function in_callback_generatevolcano(~, figtab)

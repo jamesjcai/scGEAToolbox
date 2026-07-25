@@ -22,6 +22,7 @@ if strcmp(answer, 'Yes')
 else
     [paramset] = gui.i_degparamset(true, FigureHandle);
 end
+if isempty(paramset), return; end
 
 % ------------------------------------------ DE
 fw = gui.myWaitbar(FigureHandle);

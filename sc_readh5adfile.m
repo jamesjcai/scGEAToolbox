@@ -4,9 +4,12 @@ function [X, g, b, batchid, celltype, filenm] = sc_readh5adfile(filenm)
 % https://www.mathworks.com/help/matlab/hdf5-files.html
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
 % https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/h5_matrices
-
-% https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3489183
-% h5file='GSM3489183_IPF_01_filtered_gene_bc_matrices_h5.h5';
+%
+% Handles /X stored either as a sparse CSR group (data/indices/indptr, the
+% common layout) OR as a dense 2-D dataset (as written by AnnData when X is a
+% plain ndarray). Gene/barcode names are read from whatever dataset the AnnData
+% "_index" attribute points to, so non-standard index names (e.g. /var/gene,
+% /obs/cell instead of /var/_index) are handled as well.
 
 X = [];
 g = [];
@@ -22,67 +25,91 @@ if nargin < 1 || isempty(filenm)
 end
 if exist(filenm, 'file') ~= 2, error('File Not Found.'); end
 
-% fw = gui.gui_waitbar_adv;
-
 hinfo = h5info(filenm);
+groupNames = strtrim(string(char(hinfo.Groups.Name)));
+XisSparse = any(groupNames == "/X");
 
-idx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/X"));
+if XisSparse
+    % ---- /X is a sparse CSR group: data / indices / indptr ----------------
+    idx = find(groupNames == "/X");
 
-
-% names = string(pkg.i_extractfield(hinfo.Groups, 'Name'));
-% idx = find(names == "/X");
-
-% idx = find(string({hinfo.Groups.Name})=="/X")
-
-% data=h5read(filenm,[hinfo.Groups(idx).Name,'/data']);
-% indices=h5read(filenm,[hinfo.Groups(idx).Name,'/indices']);
-% indptr=h5read(filenm,[hinfo.Groups(idx).Name,'/indptr']);
-
-data = pkg.e_guessh5field(filenm, {'/X/'}, {'data'}, true);
-shapeGroupIdx = idx;  % default: read shape from /X
-rawIdx = [];
-rawXIdx = [];
-if isequal(data(1:5), round(data(1:5)))
-    indices = pkg.e_guessh5field(filenm, {'/X/'}, {'indices'}, true);
-    indptr = pkg.e_guessh5field(filenm, {'/X/'}, {'indptr'}, true);
-else
-    warning('sc_readh5adfile:NormalizedX', ...
-        '/X appears transformed/normalized. Attempting to read /raw/X instead.');
-    try
-        data = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'data'}, true);
-        indices = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indices'}, true);
-        indptr = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indptr'}, true);
-        % Update shape group to /raw/X if it exists
-        rawIdx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/raw"));
-        if ~isempty(rawIdx)
-            rawSubNames = strtrim(string(char(hinfo.Groups(rawIdx).Groups.Name)));
-            rawXIdx = find(strcmp(rawSubNames, "/raw/X"));
-            if ~isempty(rawXIdx) && ~isempty(hinfo.Groups(rawIdx).Groups(rawXIdx).Attributes)
-                shapeGroupIdx = [];  % signal to use raw group below
-            end
-        end
-    catch ME
-        warning('sc_readh5adfile:RawXFailed', ...
-            '/raw/X could not be read (%s). Using normalized /X instead.', ME.message);
+    data = pkg.e_guessh5field(filenm, {'/X/'}, {'data'}, true);
+    shapeGroupIdx = idx;  % default: read shape from /X
+    rawIdx = [];
+    rawXIdx = [];
+    if isequal(data(1:5), round(data(1:5)))
         indices = pkg.e_guessh5field(filenm, {'/X/'}, {'indices'}, true);
         indptr = pkg.e_guessh5field(filenm, {'/X/'}, {'indptr'}, true);
+    else
+        warning('sc_readh5adfile:NormalizedX', ...
+            '/X appears transformed/normalized. Attempting to read /raw/X instead.');
+        try
+            data = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'data'}, true);
+            indices = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indices'}, true);
+            indptr = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indptr'}, true);
+            % Update shape group to /raw/X if it exists
+            rawIdx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/raw"));
+            if ~isempty(rawIdx)
+                rawSubNames = strtrim(string(char(hinfo.Groups(rawIdx).Groups.Name)));
+                rawXIdx = find(strcmp(rawSubNames, "/raw/X"));
+                if ~isempty(rawXIdx) && ~isempty(hinfo.Groups(rawIdx).Groups(rawXIdx).Attributes)
+                    shapeGroupIdx = [];  % signal to use raw group below
+                end
+            end
+        catch ME
+            warning('sc_readh5adfile:RawXFailed', ...
+                '/raw/X could not be read (%s). Using normalized /X instead.', ME.message);
+            indices = pkg.e_guessh5field(filenm, {'/X/'}, {'indices'}, true);
+            indptr = pkg.e_guessh5field(filenm, {'/X/'}, {'indptr'}, true);
+        end
     end
-end
 
-if ~isempty(shapeGroupIdx)
-    grpAttrs = hinfo.Groups(shapeGroupIdx).Attributes;
+    if ~isempty(shapeGroupIdx)
+        grpAttrs = hinfo.Groups(shapeGroupIdx).Attributes;
+    else
+        grpAttrs = hinfo.Groups(rawIdx).Groups(rawXIdx).Attributes;
+    end
+    idx2 = find(strcmp(strtrim(string(char(grpAttrs.Name))), "shape"));
+    if isempty(idx2)
+        idx2 = find(strcmp(strtrim(string(char(grpAttrs.Name))), "h5sparse_shape"));
+    end
+    shape = double(grpAttrs(idx2).Value);
+
+    % reconstruct genes-by-cells sparse matrix from CSR (rows = cells)
+    if ~isMATLABReleaseOlderThan('R2025a')
+        X = spalloc(shape(2), shape(1), length(data), 'single');
+    else
+        X = spalloc(shape(2), shape(1), length(data));
+    end
+    for k = 1:length(indptr) - 1
+        ix = indptr(k) + 1:indptr(k+1);
+        y = indices(ix) + 1;
+        X(y, k) = data(ix);
+    end
 else
-    grpAttrs = hinfo.Groups(rawIdx).Groups(rawXIdx).Attributes;
+    % ---- /X is a dense 2-D dataset ---------------------------------------
+    % MATLAB reverses HDF5 dimension order, so h5read of an (n_obs x n_vars)
+    % AnnData array returns it as (n_vars x n_obs) = genes-by-cells directly.
+    Xd = h5read(filenm, '/X');
+    probe = Xd(1:min(5, numel(Xd)));
+    if ~isempty(probe) && ~isequal(probe(:), round(probe(:))) && any(groupNames == "/raw")
+        warning('sc_readh5adfile:NormalizedX', ...
+            '/X appears transformed/normalized. Attempting to read /raw/X instead.');
+        try
+            Xd = h5read(filenm, '/raw/X');   % dense raw counts, if present
+        catch
+            % /raw/X absent or sparse; keep the (normalized) dense /X as-is
+        end
+    end
+    X = sparse(double(Xd));
 end
-idx2 = find(strcmp(strtrim(string(char(grpAttrs.Name))), "shape"));
-if isempty(idx2)
-    idx2 = find(strcmp(strtrim(string(char(grpAttrs.Name))), "h5sparse_shape"));
+
+% ---- gene names: prefer the dataset named by the var "_index" attribute ---
+g = readDataFrameIndex(filenm, '/var');
+if isempty(g)
+    g = pkg.e_guessh5field(filenm, {'/var/'}, {'_index', 'gene_ids', ...
+        'gene_name', 'symbol'}, false);
 end
-shape = double(grpAttrs(idx2).Value);
-
-g = pkg.e_guessh5field(filenm, {'/var/'}, {'_index', 'gene_ids', ...
-    'gene_name','symbol'}, false);
-
 if isempty(g) || isscalar(unique(strlength(g))) % suggesting ENSEMBLE ID
     % Gene IDs look uniform-length (e.g. ENSEMBL); try feature_name for symbols
     gx = pkg.e_guessh5field(filenm, {'/raw/var/feature_name/', ...
@@ -93,7 +120,12 @@ if isempty(g) || isscalar(unique(strlength(g))) % suggesting ENSEMBLE ID
 end
 if isempty(g), warning('sc_readh5adfile:NoGenenames', 'Genename is not assigned.'); end
 
-b = pkg.e_guessh5field(filenm, {'/obs/'}, {'_index', 'barcodes','cell_id','CellID'});
+% ---- barcodes: prefer the dataset named by the obs "_index" attribute -----
+b = readDataFrameIndex(filenm, '/obs');
+if isempty(b)
+    b = pkg.e_guessh5field(filenm, {'/obs/'}, {'_index', 'barcodes', ...
+        'cell_id', 'CellID'});
+end
 if isempty(b), warning('Barcode is not assigned.'); end
 
 try
@@ -108,21 +140,34 @@ catch
     % CellType is optional metadata; absence is not an error
 end
 
-
-if ~isMATLABReleaseOlderThan('R2025a')
-    X = spalloc(shape(2), shape(1), length(data), 'single');
-else
-    X = spalloc(shape(2), shape(1), length(data));
-end
-
-for k = 1:length(indptr) - 1
-    ix = indptr(k) + 1:indptr(k+1);
-    y = indices(ix) + 1;
-    X(y, k) = data(ix);
-end
-
 g = deblank(string(g));
 
+end
+
+
+function names = readDataFrameIndex(h5file, groupPath)
+% READDATAFRAMEINDEX Read an AnnData obs/var index regardless of its name.
+%   AnnData stores the DataFrame index in a dataset whose name is given by the
+%   group's "_index" attribute (commonly "_index", but may be e.g. "gene" or
+%   "cell"). This resolves that attribute and reads the corresponding dataset.
+
+    names = string.empty;
+    try
+        idxName = h5readatt(h5file, groupPath, '_index');
+    catch
+        idxName = '_index';
+    end
+    idxName = char(string(idxName));
+    try
+        raw = h5read(h5file, [groupPath '/' idxName]);
+        if ischar(raw) || iscellstr(raw)
+            raw = string(raw);
+        end
+        names = deblank(string(raw));
+        names = names(:);
+    catch
+        names = string.empty;
+    end
 end
 
 

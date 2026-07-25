@@ -88,12 +88,6 @@ Z = zeros(length(glist), length(cL));
 function in_callback_changenorm(~, ~)
         [methodid, dim] = gui.i_selnormmethod(parentfig);
 
-        % [Xt] = gui.i_transformx(sce.X, true, 8, parentfig);
-        % if isempty(Xt), return; end
-        %  Yt = Xt(gidx, :);
-        %  [~, cidx] = sort(c);
-        %  Yori = Yt(:, cidx);
-
         [Y] = gui.i_norm4heatmap(Yori, dim, methodid);
         % Y = log1p(Y);
         delete(h);

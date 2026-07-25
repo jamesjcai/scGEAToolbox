@@ -53,7 +53,9 @@ else
             sortbywhat = 'Fold Change';
             % disp('DE genes are sorted by absolute fold change (FC).');
         otherwise
-            sortbywhat = [];
+            % User cancelled; return empty so callers abort.
+            paramset = [];
+            return;
     end
     paramset = {mindiffpct, minabsolfc, apvaluecut, sortbywhat};
     setpref('scgeatoolbox', preftagname, paramset);

@@ -44,11 +44,13 @@ switch answer
         rng("shuffle");
         n = length(gsorted);
         if isempty(predefinedlist)
-            tg = gui.i_inputgenelist(gsorted(randperm(n, ...
-                min([20, length(gsorted)]))), false, parentfig);
-        else
-            tg = gui.i_inputgenelist(predefinedlist, false, parentfig);
+            predefinedlist = gsorted(randperm(n, ...
+                min([15, n])));
         end
+        tg = gui.i_inputgenelist(predefinedlist, false, parentfig);
+        % if isequal(tg, predefinedlist)
+        %    
+        % end
 
         if length(tg) >= 1
             [y, ix] = ismember(upper(tg), upper(gsorted));
