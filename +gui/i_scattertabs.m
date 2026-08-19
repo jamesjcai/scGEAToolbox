@@ -7,7 +7,7 @@ function i_scattertabs(y, tabnamelist, thisx, xlabelv, parentfig)
 if nargin<4, parentfig = []; end
 tabnamelist = string(tabnamelist);
 
-xlabelv = strrep(xlabelv, '_', '\_');
+xlabelv = gui.i_escapeunderscore(xlabelv);
 
 fw = gui.myWaitbar(parentfig);
 % isdescend = false;
@@ -55,7 +55,7 @@ tabgp.SelectionChangedFcn=@displaySelection;
 
 hx.addCustomButton('off', @in_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.addCustomButton('off', @in_addregress, 'plotpicker-renko.gif', 'Add Regression Line...');
-hx.addCustomButton('off', @in_addlocfitx, 'plotpicker-renkox.gif', 'Add Locfit Local Regression...');
+hx.addCustomButton('off', @in_addlocfitx, 'plotpicker-renko.gif', 'Add Locfit Local Regression...');
 hx.addCustomButton('off', @in_addlocfit, 'plotpicker-renko.gif', 'Add Locfit Local Regression...');
 hx.addCustomButton('on', @in_PickPlotMarker, 'plotpicker-rose.gif', 'Switch scatter plot marker type');
 hx.addCustomButton('off', @in_BoxOnOff, 'RectGate.gif', 'Switch box on/off');

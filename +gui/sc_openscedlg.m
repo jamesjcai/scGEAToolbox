@@ -172,7 +172,25 @@ setpref('scgeatoolbox', preftagname, indx);
                 gui.myWaitbar(parentfig, fw);
                 if ~isempty(metadata)
                     pkg.i_assignin(metadata, 'metadata');
-                    if strcmp('Yes', gui.myQuestdlg(parentfig, 'View metadata?'))
+                    hasctype = ~isempty(sce.c_cell_type_tx) && ...
+                        ~all(sce.c_cell_type_tx == "undetermined");
+                    if ~hasctype
+                        if strcmp('Yes', gui.myQuestdlg(parentfig, ...
+                                'Cell type is undefined. Assign it from a cell attribute column?'))
+                            [ctype, colname] = gui.i_pickcelltypecolumn(metadata, sce, parentfig);
+                            if ~isempty(ctype)
+                                sce.c_cell_type_tx = ctype;
+                                hasctype = true;
+                                gui.myHelpdlg(parentfig, sprintf( ...
+                                    'Cell type assigned from column "%s".', colname));
+                            end
+                        end
+                    end
+                    % Only worth offering the table when the cell type could not
+                    % be mapped; the column picker has already shown what is in
+                    % it, and the table stays in the workspace either way.
+                    if ~hasctype && strcmp('Yes', ...
+                            gui.myQuestdlg(parentfig, 'View metadata?'))
                         gui.TableViewerApp(metadata, parentfig);
                     end
                 end

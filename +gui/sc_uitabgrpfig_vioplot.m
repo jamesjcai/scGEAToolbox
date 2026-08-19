@@ -9,7 +9,7 @@ end
 tabnamelist = string(tabnamelist);
 
 [~, cLorder] = findgroups(string(thisc));
-cLorder = strrep(cLorder, '_', '\_');
+cLorder = gui.i_escapeunderscore(cLorder);
 
 fw = gui.myWaitbar(parentfig);
 isdescend = false;

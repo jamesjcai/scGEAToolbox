@@ -8,7 +8,7 @@ if nargin < 1, error('run.r_readSeuratRds(filename)'); end
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_SeuratReadRds');
-if ~isok, error(msg), return; end
+if ~isok, error('%s', msg), return; end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 isdebug = false;
@@ -123,12 +123,76 @@ if exist(metadatafile, 'file')
         t = readtable('metadata.csv', 'Delimiter', ',', ...
             'VariableNamingRule', 'modify');
         if sce.NumCells == height(t)
-            metadata = t;
+            metadata = in_alignbybarcode(t, sce.c_cell_id);
         end
     catch
         % metadata is optional; sce is still valid without it
     end
 end
 
+% Keep the per-cell metadata with the SCE, not just in the caller's workspace,
+% so it stays viewable and usable as grouping variables after import.
+if ~isempty(metadata)
+    sce = in_addmetadataattributes(sce, metadata);
+end
+
+% The R side only writes celltype.csv for a column literally named CellType or
+% celltype. When that misses, infer the annotation column from the metadata
+% table and take it only when the evidence is strong; callers with a UI can
+% offer gui.i_pickcelltypecolumn for the ambiguous cases.
+if isempty(sce.c_cell_type_tx) && ~isempty(metadata)
+    [colname, colscore] = pkg.i_guesscelltypecol(metadata, sce.NumCells);
+    if colscore >= 70
+        ctype = strtrim(string(metadata.(colname)));
+        ctype(ismissing(ctype) | strlength(ctype) == 0) = "undetermined";
+        sce.c_cell_type_tx = ctype;
+        fprintf('Cell type read from metadata column ''%s'' (score %.0f).\n', ...
+            colname, colscore);
+    end
+end
+
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+end
+
+function sce = in_addmetadataattributes(sce, t)
+% Store each per-cell metadata column in list_cell_attributes, which makes them
+% appear in the cell attribute table and in the grouping-variable selectors.
+% The row name column is skipped because it is already c_cell_id, and constant
+% columns are skipped because they carry no information.
+
+varnames = string(t.Properties.VariableNames);
+existing = string(sce.list_cell_attributes(1:2:end));
+keep = cell(1, 2*numel(varnames));
+nkeep = 0;
+
+for k = 1:numel(varnames)
+    v = t.(varnames(k));
+    if size(v, 2) ~= 1, continue; end
+    if any(existing == varnames(k)), continue; end
+    if numel(unique(string(v))) < 2, continue; end
+    if k == 1 && numel(sce.c_cell_id) == height(t) && ...
+            isequal(string(v), string(sce.c_cell_id))
+        continue;
+    end
+    keep{2*nkeep+1} = char(varnames(k));
+    keep{2*nkeep+2} = v;
+    nkeep = nkeep + 1;
+end
+
+if nkeep > 0
+    sce.list_cell_attributes = [sce.list_cell_attributes, keep(1:2*nkeep)];
+end
+end
+
+function t = in_alignbybarcode(t, cellid)
+% Reorder metadata rows to match sce.c_cell_id. write.csv puts the meta.data row
+% names in the first column; when those are the barcodes the join is exact,
+% otherwise the original row order is kept.
+
+if isempty(cellid) || width(t) < 1, return; end
+rowid = string(t.(t.Properties.VariableNames{1}));
+[isfound, idx] = ismember(string(cellid), rowid);
+if all(isfound) && numel(unique(idx)) == numel(idx)
+    t = t(idx, :);
+end
 end

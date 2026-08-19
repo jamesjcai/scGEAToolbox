@@ -9,6 +9,24 @@ quest = ["Share optional diagnostic data to help us improve SCGEATOOL. ", ...
          "No personal information is collected."];
 pbtns = ["Yes","No"];
 
+% Prevent a duplicate dialog. uigetpref pumps the event loop while it waits
+% for a response, so triggering the Help menu again before answering would
+% otherwise open a second copy. Bring the existing dialog forward instead.
+% The open state is held on groot (not a persistent) so onCleanup can always
+% clear it on exit, including Ctrl-C, without touching a torn-down workspace.
+r = groot;
+flag = "scgeaTelemetryDialogOpen";
+if isappdata(r, flag) && getappdata(r, flag)
+    existing = findall(r, "Type", "figure", "Name", title);
+    if ~isempty(existing), figure(existing(1)); end
+    pval = getpref(group, pref, "ask");
+    tf = false;
+    return;
+end
+
+setappdata(r, flag, true);
+resetGuard = onCleanup(@() setappdata(r, flag, false));
+
 [pval,tf] = uigetpref(group,pref,title,quest,pbtns,...
 "CheckboxState",1,"DefaultButton","No");
 

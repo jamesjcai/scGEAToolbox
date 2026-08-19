@@ -1,15 +1,15 @@
 function [idx] = i_selmultidialog(items, preselected_items, parentfig)
-    % selectionDialog creates a dialog for selecting multiple items.
-    %
-    % Usage:
-    %   idx = selectionDialog(items, preselected_items)
-    %
-    % Inputs:
-    %   items              - cell array of strings (all available items)
-    %   preselected_items  - cell array of strings (initial selected items)
-    %
-    % Output:
-    %   idx - indices of selected items in `items`
+% selectionDialog creates a dialog for selecting multiple items.
+%
+% Usage:
+%   idx = selectionDialog(items, preselected_items)
+%
+% Inputs:
+%   items              - cell array of strings (all available items)
+%   preselected_items  - cell array of strings (initial selected items)
+%
+% Output:
+%   idx - indices of selected items in `items`
 
 %{
 items = arrayfun(@(x) sprintf('Item %d',x), 1:10, 'UniformOutput', false);

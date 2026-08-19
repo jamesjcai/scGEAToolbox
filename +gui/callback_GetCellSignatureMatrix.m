@@ -51,32 +51,57 @@ if tf2 ~= 1, return; end
 
 n = length(indx2);
 Y = zeros(sce.NumCells, n);
+scorenames = listitems(indx2);      % names of the selected scores
+valid = false(n, 1);
 
 [~, methodid] = gui.i_pickscoremethod([], FigureHandle);
 if isempty(methodid), return; end
 
 fw = gui.myWaitbar(FigureHandle);
 for k = 1:n
-    a = listitems{indx2(k)};
+    a = scorenames{k};
     b = sprintf('Processing %s', a);
     if n ~= k
         gui.myWaitbar(FigureHandle, fw, false, '', b, k/n);
     else
         gui.myWaitbar(FigureHandle, fw, false, '', b, (k - 1)/n);
     end
-    [y] = pkg.e_cellscores(sce.X, sce.g, a, methodid, false);
+    % A signature with too few expressed genes errors in e_cellscores; skip
+    % it with a warning instead of aborting the whole analysis.
+    try
+        y = pkg.e_cellscores(sce.X, sce.g, a, methodid, false);
+    catch ME
+        warning('Skipping score "%s": %s', a, ME.message);
+        y = [];
+    end
     if ~isempty(y)
         Y(:, k) = y(:);
+        valid(k) = true;
     end
 end
-
 gui.myWaitbar(FigureHandle, fw);
+
+% Drop scores that could not be computed so one sparse signature does not
+% abort the run or add an all-zero axis to the plots.
+if ~any(valid)
+    gui.myWarndlg(FigureHandle, ['No scores could be computed. The selected ' ...
+        'signatures have too few expressed genes in this dataset.']);
+    return;
+end
+if ~all(valid)
+    gui.myWarndlg(FigureHandle, sprintf( ...
+        '%d of %d score(s) skipped (too few expressed genes): %s', ...
+        sum(~valid), n, strjoin(string(scorenames(~valid)), ', ')));
+    Y = Y(:, valid);
+    scorenames = scorenames(valid);
+    n = numel(scorenames);
+end
 c_cellid=sce.c_cell_id;
 if ~isstring(c_cellid)
     c_cellid=string(c_cellid);
 end
 T = array2table(Y, 'VariableNames', ...
-listitems(indx2), 'RowNames', ...
+scorenames, 'RowNames', ...
 matlab.lang.makeUniqueStrings(c_cellid));
 T.Properties.DimensionNames{1} = 'Cell_ID';
 needwait = true;
@@ -92,23 +117,26 @@ gui.i_exporttable(T, needwait,'Tcellsignmt','CellSignatTable', ...
 % assignin('base','listitems',listitems(indx2));
 % assignin('base','labelx',listitems(indx2));
 
-labelx = listitems(indx2)';
+labelx = scorenames';
 % T=table(Y,'VariableNames', ...
 %     matlab.lang.makeValidName(listitems(indx2)));
 
-answer = gui.myQuestdlg(FigureHandle, 'Compare between different cell groups?', '');
+answer = gui.myQuestdlg(FigureHandle, ...
+    ['Compare signature scores between cell groups?', newline, newline, ...
+    'Yes: one radar polygon per cell group.', newline, ...
+    'No: a single radar polygon for all cells combined.'], ...
+    'Cell group comparison');
 if strcmp(answer, 'No')
-
-    return;
-
+    % Do not compare groups: treat all cells as one group so the radar plot
+    % (n >= 3 scores) still shows the overall signature profile.
+    thisc = repmat("All cells combined", sce.NumCells, 1);
 elseif strcmp(answer, 'Yes')
-
+    allowunique = false;
+    [thisc] = gui.i_select1class(sce, allowunique, [], [], FigureHandle);
+    if isempty(thisc), return; end
 else
     return;
 end
-allowunique = false;
-[thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);
-if isempty(thisc), return; end
 
 if n == 1
         gui.i_violinplot(Y, thisc, labelx, true, [], [], FigureHandle);

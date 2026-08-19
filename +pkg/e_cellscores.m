@@ -28,6 +28,28 @@ catch ME
         'ReadVariableNames', true);
 end
 
+% Append the curated glycobiology gene sets (pkg.e_glycogenesets) so they are
+% offered alongside the spreadsheet-defined scores, e.g. in the gene-program
+% radar plot. Defensive: if the collection is unavailable, the xlsx-defined
+% scores still work.
+try
+    [~, ~, ~, Tglyco] = pkg.e_glycogenesets();
+    isnew = ~matches(string(Tglyco.Name), string(T.ScoreType), "IgnoreCase", true);
+    Tglyco = Tglyco(isnew, :);
+    nglyco = height(Tglyco);
+    if nglyco > 0
+        glycoRows = table( ...
+            cellstr(Tglyco.Name), cellstr(Tglyco.Genes), ...
+            repmat({''}, nglyco, 1), cellstr(Tglyco.Reference), ...
+            repmat({'Glycobiology'}, nglyco, 1), ...
+            VariableNames=["ScoreType", "PositiveMarkers", ...
+            "NegativeMarkers", "Reference", "SignatureTag"]);
+        T = [T; glycoRows(:, T.Properties.VariableNames)];
+    end
+catch
+    % Glycobiology collection unavailable; keep the spreadsheet-defined scores.
+end
+
 % T=sortrows(T,"ScoreType");
 
 if ischar(scoretypeid) || isstring(scoretypeid)

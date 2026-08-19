@@ -8,7 +8,7 @@ oldcn = sce.NumCells;
 oldgn = sce.NumGenes;
 
 if sce.NumGenes<=500
-    gui.myWarndlg(FigureHandle, 'Number of cells is too small.');
+    gui.myWarndlg(FigureHandle, 'Number of genes is too small.');
     return;
 end
 
@@ -47,8 +47,8 @@ if sce.NumCells*sce.NumGenes < 4e8
     sceori = copy(sce);
     % disp('Ready for reversible.');
 else
-    answer = gui.myQuestdlg(FigureHandle, 'You are about to change the SCE data. This cannot be undone.');
-    if ~strcmp(answer, 'Yes'), return; end
+    confirmanswer = gui.myQuestdlg(FigureHandle, 'You are about to change the SCE data. This cannot be undone.');
+    if ~strcmp(confirmanswer, 'Yes'), return; end
     sceori = [];
 end
 
@@ -187,47 +187,44 @@ gui.myWaitbar(FigureHandle, fw);
 newcn = sce.NumCells;
 newgn = sce.NumGenes;
 
+% sce is a handle object that was modified in place, so restoring sceori
+% requires pushing the pristine copy back to the caller.
 if newgn==0
-        if ~isempty(sceori)
-            gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
-            % requirerefresh = false;
-            % sce = sceori;
-            sce = copy(sceori);
-        else
-            requirerefresh = true;
-        end
-        return;
-    end
-if newcn==0
-        if ~isempty(sceori)
-            gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
-            % requirerefresh = false;
-            % sce = sceori;
-            sce = copy(sceori);
-        else
-            requirerefresh = true;
-        end
-        return;
-    end
-if oldcn-newcn==0 && oldgn-newgn==0
-        gui.myHelpdlg(FigureHandle, "No cells and genes are removed.");
-        % requirerefresh = false;
-        return;
-    end
-if ~isempty(sceori)
-        answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
-                oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
-                {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
-        if ~strcmp(answer, 'Accept Changes')
-            % requirerefresh = false;
-            % sce = sceori;
-            sce = copy(sceori);
-        else
-            requirerefresh = true;
-        end
+    if ~isempty(sceori)
+        gui.myHelpdlg(FigureHandle, "All genes are removed. Operation is cancelled.");
+        sce = copy(sceori);
+        gui.myGuidata(FigureHandle, sce, src);
     else
         requirerefresh = true;
     end
+    return;
+end
+if newcn==0
+    if ~isempty(sceori)
+        gui.myHelpdlg(FigureHandle, "All cells are removed. Operation is cancelled.");
+        sce = copy(sceori);
+        gui.myGuidata(FigureHandle, sce, src);
+    else
+        requirerefresh = true;
+    end
+    return;
+end
+if oldcn-newcn==0 && oldgn-newgn==0
+    gui.myHelpdlg(FigureHandle, "No cells and genes are removed.");
+    return;
+end
+if ~isempty(sceori)
+    acceptanswer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
+            oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
+            {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
+    if ~strcmp(acceptanswer, 'Accept Changes')
+        sce = copy(sceori);
+    else
+        requirerefresh = true;
+    end
+else
+    requirerefresh = true;
+end
 gui.myGuidata(FigureHandle, sce, src);
 
 end

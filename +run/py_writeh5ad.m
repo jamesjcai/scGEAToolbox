@@ -54,7 +54,7 @@ if verbose
         if pkg.i_isvalid(fw)
             gui.gui_waitbar(fw, true);
         end
-        error(cmdout);
+        error('%s', cmdout);
     end
 end
 

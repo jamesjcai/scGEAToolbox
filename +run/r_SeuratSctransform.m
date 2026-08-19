@@ -6,7 +6,7 @@ isdebug = false;
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_SeuratSctransform');
-if ~isok, error(msg);
+if ~isok, error('%s', msg);
     return;
 end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end

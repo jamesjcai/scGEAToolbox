@@ -31,29 +31,29 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         'Library Size vs. Number of Genes', ...
         'Abundant lncRNAs vs. Number of Genes'};
 
-       if gui.i_isuifig(FigureHandle)
-            [indx, tf] = gui.myListdlg(FigureHandle, listitems, 'Select Filter');
-        else
-            [indx, tf] = listdlg('PromptString', {'Select Filter'}, ...
-                'SelectionMode', 'single', ...
-                'ListString', listitems, ...
-                'ListSize', [260, 300]);
-        end
+if gui.i_isuifig(FigureHandle)
+    [indx, tf] = gui.myListdlg(FigureHandle, listitems, 'Select Filter');
+else
+    [indx, tf] = listdlg('PromptString', {'Select Filter'}, ...
+        'SelectionMode', 'single', ...
+        'ListString', listitems, ...
+        'ListSize', [260, 300]);
+end
 
 if tf ~= 1
-       % requirerefresh = false;
-        return;
-    end
+   % requirerefresh = false;
+    return;
+end
 
 hasDuplicates = numel(unique(sce.g)) < numel(sce.g);
 if hasDuplicates
-        [requirerefresh, sce] = gui.gui_rmdugenes(sce, FigureHandle);
-    end
+    [requirerefresh, sce] = gui.gui_rmdugenes(sce, FigureHandle);
+end
 
 %    sceXori = sce.X;
 %    scegori = sce.g;
 
-if sce.NumCells*sce.NumGenes < 4e8
+    if sce.NumCells*sce.NumGenes < 4e8
         sceori = copy(sce);
         % disp('Ready for reversible.');
     else
@@ -472,7 +472,7 @@ if needremove
 newcn = sce.NumCells;
 newgn = sce.NumGenes;
 
-if newgn==0
+    if newgn==0
         if ~isempty(sceori)
             gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
             sce = copy(sceori);
@@ -483,7 +483,7 @@ if newgn==0
         end
         return;
     end
-if newcn==0
+    if newcn==0
         if ~isempty(sceori)
             gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
             sce = copy(sceori);
@@ -494,12 +494,12 @@ if newcn==0
         end
         return;
     end
-if oldcn-newcn==0 && oldgn-newgn==0
+    if oldcn-newcn==0 && oldgn-newgn==0
         gui.myHelpdlg(FigureHandle, "No cells and genes are removed.");
         return;
     end
 
-if ~isempty(sceori)
+    if ~isempty(sceori)
         answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
                 oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
                 {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
@@ -511,32 +511,9 @@ if ~isempty(sceori)
             requirerefresh = true;
         end
     else
+        gui.myHelpdlg(FigureHandle, sprintf('%d genes removed; %d cells removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
+            oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn), '');
         requirerefresh = true;
     end
 gui.myGuidata(FigureHandle, sce, src);
 end
-
-
-    % function [whitelist]=i_selectwhitelist_DEL(sce)
-    %     whitelist=[];
-    %     answer = gui.myQuestdlg(FigureHandle, 'Genes in whitelist will not be removed. Select whitelist genes?',...
-    %                 'Whitelist Genes','Yes','No','Cancel','No');
-    %     switch answer
-    %         case 'Yes'
-    %             [gsorted]=gui.i_sortgenenames(sce);
-    %             if isempty(gsorted), return; end
-    %             [idx]=gui.i_selmultidialog(gsorted);
-    %             if isempty(idx), return; end
-    %             if isscalar(idx) && idx==0, return; end
-    %             whitelist=gsorted(idx);
-    %         case 'No'
-    %             whitelist=[];
-    %             return;
-    %         case 'Cancel'
-    %             whitelist=0;
-    %             return;
-    %         otherwise
-    %             whitelist=0;
-    %             return;
-    %     end
-    % end

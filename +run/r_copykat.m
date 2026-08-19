@@ -14,7 +14,7 @@ isdebug = true;
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_copykat');
-if ~isok, error(msg);
+if ~isok, error('%s', msg);
     return;
 end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end

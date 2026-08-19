@@ -32,7 +32,7 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
-    error(cmdout);
+    error('%s', cmdout);
 end
 
 

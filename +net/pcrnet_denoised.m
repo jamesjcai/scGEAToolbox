@@ -44,7 +44,7 @@ if exist('@tensor/tensor.m', 'file') ~= 2
     error('Need Tensor Toolbox for MATLAB (https://www.tensortoolbox.org/)');
 end
 
-if exist('net.pcrnet', 'file') ~= 2
+if isempty(which('net.pcrnet'))
     error('Need net.pcrnet (scGEAToolbox)');
 end
 

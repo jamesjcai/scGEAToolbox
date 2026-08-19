@@ -38,7 +38,7 @@ hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
 h = imagesc(Y);
 set(gca, 'XTick', a-b);
-set(gca, 'XTickLabel', strrep(cL, '_', '\_'));
+set(gca, 'XTickLabel', gui.i_escapeunderscore(cL));
 % set(gca,'XTickLabelRotation',0);
 set(gca, 'YTick', 1:length(glist));
 set(gca, 'YTickLabel', glist);
@@ -93,7 +93,7 @@ function in_callback_changenorm(~, ~)
         delete(h);
         h = imagesc(Y);
         set(gca, 'XTick', a-b);
-        set(gca, 'XTickLabel', strrep(cL, '_', '\_'));
+        set(gca, 'XTickLabel', gui.i_escapeunderscore(cL));
         set(gca, 'YTick', 1:length(glist));
         set(gca, 'YTickLabel', glist);
         set(gca, 'TickLength', [0, 0]);
@@ -107,7 +107,7 @@ function in_callback_flipxy(~, ~)
         if fliped
             h = imagesc(Y');
             set(gca, 'YTick', a-b);
-            set(gca, 'YTickLabel', strrep(cL, '_', '\_'));
+            set(gca, 'YTickLabel', gui.i_escapeunderscore(cL));
             % set(gca,'YTickLabelRotation',90);
             set(gca, 'XTick', 1:length(glist));
             set(gca, 'XTickLabel', glist);
@@ -116,7 +116,7 @@ function in_callback_flipxy(~, ~)
         else
             h = imagesc(Y);
             set(gca, 'XTick', a-b);
-            set(gca, 'XTickLabel', strrep(cL, '_', '\_'));
+            set(gca, 'XTickLabel', gui.i_escapeunderscore(cL));
             % set(gca,'XTickLabelRotation',0);
             set(gca, 'YTick', 1:length(glist));
             set(gca, 'YTickLabel', glist);
@@ -188,7 +188,7 @@ function in_callback_summarymap(~, ~)
 
         [mx,idx]=unique(MX,'stable');
         z = Z(idx,:);
-        h = heatmap(strrep(cL, '_', '\_'), mx, z);
+        h = heatmap(gui.i_escapeunderscore(cL), mx, z);
         h.Title = 'Marker Gene Heatmap';
         h.XLabel = 'Group';
         h.YLabel = 'Marker Gene';
@@ -216,7 +216,7 @@ function in_callback_summarymapT(~, ~)
 
         [mx,idx]=unique(MX,'stable');
         z = Z(idx,:);
-        h = heatmap(mx, strrep(cL, '_', '\_'), z.');
+        h = heatmap(mx, gui.i_escapeunderscore(cL), z.');
         h.Title = 'Marker Gene Heatmap';
         h.YLabel = 'Group';
         h.XLabel = 'Marker Gene';

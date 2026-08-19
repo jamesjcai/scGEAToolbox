@@ -49,7 +49,7 @@ end
 fw = gui.myWaitbar(FigureHandle);
 disp('Constructing gene regulatory network...')
 try
-    A = net.pcrnet(X, 3, true, true, useparallel, ~useparallel, useGPU);
+    A = net.pcrnet(X, 3, false, true, useparallel, ~useparallel, useGPU);
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);

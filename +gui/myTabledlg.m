@@ -18,19 +18,22 @@ ut.RowName = {};
 ut.ColumnWidth = {'1x'};
 ut.ColumnEditable = false;
 
+ut.SelectionType = 'row';
 if allowmulti
-    ut.SelectionType = 'row'; % Allows shift/ctrl click
+    ut.Multiselect = 'on'; % Allows shift/ctrl click
 else
-    ut.SelectionType = 'row';
-    % Note: uitable doesn't have a strict 'single' mode like listbox,
-    % but we can enforce it in the SelectionChangedFcn if absolutely necessary.
+    ut.Multiselect = 'off';
 end
 
 % Handle pre-selection
 if ~isempty(prefersel)
     [~, pre_idx] = ismember(prefersel, options);
-    % In uitable, Selection is [row, col]. For whole row selection:
-    ut.Selection = [pre_idx(:), ones(numel(pre_idx), 1)];
+    pre_idx = pre_idx(pre_idx > 0); % drop entries not present in options
+    if ~allowmulti
+        pre_idx = pre_idx(1:min(1, numel(pre_idx)));
+    end
+    % With SelectionType 'row', Selection is a 1-by-N array of row indices.
+    ut.Selection = pre_idx(:)';
 end
 
 % Update KeyPress to work with table rows
@@ -62,8 +65,8 @@ end
 
 % --- Process Results ---
 if pkg.i_isvalid(d) && d.UserData
-    % Selection property returns N-by-2 matrix [row, col]
-    rows = ut.Selection(:, 1);
+    % With SelectionType 'row', Selection is a 1-by-N array of row indices
+    rows = ut.Selection(:);
     if isempty(rows)
         indx = [];
         tf = 0;
@@ -95,7 +98,7 @@ if isempty(key) || ~ischar(key), return; end
 idx = find(startsWith(options, key, 'IgnoreCase', true), 1);
 if ~isempty(idx)
     % Move selection to the first match
-    ut.Selection = [idx, 1];
+    ut.Selection = idx;
     % Scroll to the row to ensure it's visible (Available in newer MATLAB versions)
     scroll(ut, 'row', idx);
 end

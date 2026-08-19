@@ -374,22 +374,30 @@ for k = 1:numel(candidates)
         return
     end
 end
-% Last resort: hardcoded sibling path
-asset_dir = 'C:\Users\jingc\Documents\GitHub\scGEAToolbox_dev\assets\Ligand_Receptor';
+% Last resort: resolve through the toolbox itself, so the lookup does not
+% depend on any one machine's folder layout.
+w = which('sc_glycostate');
+if ~isempty(w)
+    asset_dir = fullfile(fileparts(w), 'assets', 'Ligand_Receptor');
+else
+    asset_dir = fullfile(fileparts(mfilename('fullpath')), '..', '..', ...
+        'assets', 'Ligand_Receptor');
+end
 end
 
 function pval = i_perm_pval(X, lig_row, rec_row, s_cells, r_cells, obs_prob, n_perm)
 % Permutation p-value for single-group communication probability.
 % obs_prob already computed from ct_mean; only null distribution needed here.
-% Shuffles cell-type membership by drawing random same-size subsets.
+% Draws random same-size sender and receiver groups independently, so the
+% null is valid even for autocrine edges (sender and receiver the same type)
+% and when the two group sizes together exceed the cell count.
 n_cells = size(X, 2);
 n_s = numel(s_cells);
 n_r = numel(r_cells);
 null_probs = zeros(n_perm, 1);
 for b = 1:n_perm
-    perm    = randperm(n_cells);
-    s_p     = perm(1:n_s);
-    r_p     = perm(n_s+1:n_s+n_r);
+    s_p     = randperm(n_cells, n_s);
+    r_p     = randperm(n_cells, n_r);
     null_probs(b) = mean(X(lig_row, s_p)) * mean(X(rec_row, r_p));
 end
 pval = mean(null_probs >= obs_prob);

@@ -4,8 +4,14 @@ function [X] = sc_transform(X, varargin)
 % Supports:
 %   - PearsonResiduals
 %   - kNNSmoothing
-%   - SCTransform / SCT
+%   - SCTransform / SCT      (R engine, Seurat::SCTransform, vst.flavor "v2")
+%   - SCTransformMATLAB      (native MATLAB port, no R required)
 %   - FreemanTukey
+%
+% The SCTransform and SCTransformMATLAB options implement the same
+% algorithm; the former calls R/Seurat, the latter is a pure-MATLAB
+% reproduction (see sctransform_v2) that agrees with R to a correlation
+% of ~0.99999 on the Pearson residuals.
 %
 % Example: X = sc_transform(X, 'type', 'PearsonResiduals');
 
@@ -16,8 +22,9 @@ function [X] = sc_transform(X, varargin)
 
 p = inputParser;
 defaultType = 'PearsonResiduals';
-validTypes = {'PearsonResiduals', 'kNNSmoothing', 'SCTransform', ...
-    'FreemanTukey', 'SCT'};
+validTypes = {'PearsonResiduals', 'kNNSmoothing', 'FreemanTukey', ...
+    'SCTransform', 'SCT', 'SCTransformR', ...          % R (Seurat) engine
+    'SCTransformMATLAB', 'SCTransformM'};              % native MATLAB port
 checkType = @(x) any(validatestring(x, validTypes));
 
 addRequired(p, 'X', @isnumeric);
@@ -47,14 +54,22 @@ switch lower(p.Results.type)
         %
         X = knn_smooth(X, 5, 10);
 
-    case {'sct', 'sctransform'}
-        % sc_sct
+    case {'sct', 'sctransform', 'sctransformr'}
+        % sctransform via R/Seurat (SCTransform, vst.flavor "v2")
         % sctransform: Variance Stabilizing Transformations for Single Cell UMI Data
         % Hafemeister & Satija 2019
         % https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1
+        % https://satijalab.org/seurat/archive/v4.3/sctransform_v2_vignette
         [X] = run.r_SeuratSctransform(X, string(1:size(X, 1)));
 
-        % https://satijalab.org/seurat/archive/v4.3/sctransform_v2_vignette
+    case {'sctransformmatlab', 'sctransformm'}
+        % sctransform via the native MATLAB port (no R required).
+        % Reproduces sctransform::vst(vst.flavor = "v2") Pearson residuals.
+        X = sctransform_v2(X);
+        % Genes below the min_cells threshold are returned as NaN rows by
+        % the reference algorithm; zero them for a usable dense matrix,
+        % matching the PearsonResiduals convention above.
+        X(isnan(X)) = 0;
 
     case 'freemantukey'
         % https://github.com/flo-compbio/monet/blob/master/monet/util/expression.py

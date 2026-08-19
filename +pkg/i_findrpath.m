@@ -71,17 +71,21 @@ end % end of i_findrpath
 
 
 function env = myGetEnv
-% Get the environmental values from the operation system.
-% Returns key-value pairs stored in 'env' cell array.
+% Get the environment values needed to locate R on Windows.
+% Returns key-value pairs stored in 'env' cell array. Only the keys used by
+% the caller are queried (via getenv) so that no Java runtime is required.
 % e.g.:
-%  >> env=myGetEnv;
-% >>  env{8,1} =  'ProgramFiles'
-%  >> env{8,2} =  'C:\Program Files'
-% Weirong Chen  March-8-2015
-envmap = java.lang.System.getenv();
-envkey = cell(envmap.keySet.toArray);
-envvalue = cell(envmap.values.toArray);
-env = [envkey, envvalue];
+%  >> env = myGetEnv;
+%  >> env{1,1} = 'ProgramFiles'
+%  >> env{1,2} = 'C:\Program Files'
+envkey = {'ProgramFiles'; 'ProgramW6432'; 'ProgramFiles(x86)'};
+envvalue = cell(numel(envkey), 1);
+for i = 1:numel(envkey)
+    envvalue{i} = getenv(envkey{i});
+end
+% Drop keys that are not defined on this machine.
+isSet = ~cellfun(@isempty, envvalue);
+env = [envkey(isSet), envvalue(isSet)];
 end % end of function
 
 function n = FindWhich(StringCellArray, TargetString, nOutput)

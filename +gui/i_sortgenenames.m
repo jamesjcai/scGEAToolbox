@@ -6,7 +6,7 @@ if ~isempty(parentfig)
 end
 gsorted = [];
 answer2 = gui.myQuestdlg(parentfig, 'How to sort genes?', 'Sort Genes', ...
-{'Alphabetic', 'Average Expression'}, 'Alphabetic');
+{'Alphabetic', 'Average Expression', 'Unsorted'}, 'Alphabetic');
 if isempty(answer2), return; end
 
 if isa(sce, 'SingleCellExperiment')
@@ -25,6 +25,8 @@ if isa(sce, 'SingleCellExperiment')
             % [T] = sc_genestats(sce.X, sce.g);
             [~, idx] = sort(mean(sce.X,2), 'descend');
             gsorted = sce.g(idx);
+        case 'Unsorted'
+            gsorted = sce.g;
         case '% of Nonzero Cells'
             % [T] = sc_genestats(sce.X, sce.g);
             % [~, idx] = sort(T.Dropout_rate, 'ascend');
@@ -57,6 +59,8 @@ elseif isa(sce, 'SingleCellExperiment2')
         case 'Average Expression'
             [~, idx] = sort(mean(sce.X,2), 'descend');
             gsorted = sce.geneAnn.names(idx);
+        case 'Unsorted'
+            gsorted = sce.geneAnn.names;
         case '% of Nonzero Cells'
             % [T] = sc_genestats(sce.X, sce.g);
             % [~, idx] = sort(T.Dropout_rate, 'ascend');

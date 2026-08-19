@@ -113,7 +113,7 @@ ylim([0.5, max([4, length(txgene)]) - 0.5]);
 set(gca, 'YTick', 0:length(tgene))
 set(gca, 'YTickLabel', txgene)
 set(gca, 'XTick', 0:length(cL))
-cL = strrep(cL, "_", "\_");
+cL = gui.i_escapeunderscore(cL);
 set(gca, 'XTickLabel', [{''}; cL(:); {''}])
 colormap(flipud(summer));
 box on
@@ -129,7 +129,7 @@ cb.Position(4) = cb.Position(4) * (5 / length(tgene));
 ax.Position = axposition;
 
 if ~isempty(ttxt)
-    ttxt=strrep(ttxt,'_','\_');
+    ttxt = gui.i_escapeunderscore(ttxt);
     title(ttxt);
 end
 hx.addCustomButton('off', @i_renamecat, 'edit.jpg', 'Rename groups...');

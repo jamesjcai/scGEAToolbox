@@ -14,248 +14,114 @@ function [T] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, varargin)
 %     TWOSIDED  - logical, run both directions (default: true)
 %
 %   Name-Value pairs:
-%     'n_dim'   - spectral embedding dimensions (default: 50)
-%     'mu'      - cross-cell-type correspondence weight (default: 0.9)
+%     'n_dim'   - spectral embedding dimensions (default: 3, as the reference)
+%     'mu'      - cross-cell-type correspondence weight (default: 1.0, as the reference)
 %     'pval'    - p-value threshold for null test, 1.0 returns all pairs
 %                 (default: 1.0)
 %     'verbose' - print progress messages (default: true)
 %
+%   Correspondence Name-Value pairs:
+%     'w12mode' - "lr" (default) builds the correspondence block from cognate
+%                 ligand-receptor pairs, weight 1 each. "outer" reproduces the
+%                 reference implementation's dense expression outer product
+%                 over all gene pairs, in which the L-R database plays no part
+%                 in the alignment and is used only to name candidates. See
+%                 TEN.I_XCTW12.
+%     'alpha'   - mean/variance blend for w12mode="outer" (default: 0.5)
+%     'grnoffset' - constant added to EVERY element of each GRN block before
+%                 assembly (default: 1.0, as core.py). This is what connects
+%                 the graph and makes the Laplacian PSD; it also makes the
+%                 alignment graph dense, so subset genes for large problems.
+%                 Pass 0 to reproduce results recorded before it was restored.
+%                 See TEN.I_XCTBLOCK.
+%
+%   Solver Name-Value pairs:
+%     'solver'   - "spectral" (default) or "nn". The spectral route solves the
+%                  alignment in closed form via the Laplacian eigenvectors.
+%                  The "nn" route trains two networks to minimise the same
+%                  loss, as the published Python implementation does; because
+%                  its embedding is confined to the image of that network
+%                  family, it is a different method rather than a different
+%                  solver, and generally attains a higher loss. Requires Deep
+%                  Learning Toolbox.
+%     'n_steps'  - Adam iterations for solver="nn" (default: 1000)
+%     'lr'       - Adam learning rate for solver="nn" (default: 0.01)
+%     'seed'     - RNG seed for solver="nn" (default: 0)
+%
 %   Output:
-%     T - table with columns: ligand, receptor, dist, p_value
+%     T - table with columns: ligand, receptor, dist, correspondence, p_value
 %         If twosided=true, T is a cell array {T1, T2} where T1 is
-%         CELLTYPE1→CELLTYPE2 and T2 is CELLTYPE2→CELLTYPE1.
+%         CELLTYPE1->CELLTYPE2 and T2 is CELLTYPE2->CELLTYPE1.
 %
 %   Algorithm:
-%     Builds partial-correlation GRNs for each cell type via sc_pcnetpar,
-%     then performs spectral manifold alignment via graph Laplacian
-%     eigenvectors on the combined [GRN_source, W_LR; W_LR', GRN_target]
-%     weight matrix.  Ligand-receptor pairs from the built-in database act
-%     as correspondences that pull ligand and receptor gene embeddings
-%     together.  Significance is assessed by a nonparametric left-tail null
-%     test comparing candidate L-R distances to a sampled background.
+%     Builds partial-correlation GRNs for each cell type via net.pcrnet, then
+%     performs spectral manifold alignment via graph Laplacian eigenvectors on
+%     the combined [GRN_source, W_LR; W_LR', GRN_target] weight matrix.
+%     Ligand-receptor pairs from the built-in database act as correspondences
+%     that pull ligand and receptor gene embeddings together.  Significance is
+%     assessed by a nonparametric left-tail null test comparing candidate L-R
+%     distances to a sampled background.
+%
+%   For glycan-context-aware correspondences, see TEN.SCTENIFOLDXCT_GLYCO,
+%   which shares this function's engine and adds the glyco channels without
+%   altering anything here.
 %
 %   This function is a drop-in MATLAB replacement for +run/py_scTenifoldXct.
 %   Reference: Ma et al., Cell Systems 2023. PMID:36787742
+%
+% see also: TEN.SCTENIFOLDXCT_GLYCO, TEN.I_XCTCORE, TEN.I_ALIGNEMBED
 
 if nargin < 4, twosided = true; end
 
+% The glyco options used to live here. They now have their own entry point, so
+% point the caller at it rather than letting inputParser report an unrecognised
+% name-value pair.
+i_rejectglyco(varargin);
+
 p = inputParser;
-addOptional(p, 'n_dim',   50,   @(x) isnumeric(x) && x > 0);
-addOptional(p, 'mu',      0.9,  @(x) isnumeric(x) && x > 0);
+addOptional(p, 'n_dim',   3,    @(x) isnumeric(x) && x > 0);
+addOptional(p, 'mu',      1.0,  @(x) isnumeric(x) && x > 0);
 addOptional(p, 'pval',    1.0,  @(x) isnumeric(x) && x >= 0);
 addOptional(p, 'verbose', true, @islogical);
+addParameter(p, 'w12mode', "lr",       @(x) ismember(string(x), ["lr","outer"]));
+addParameter(p, 'alpha',   0.5,        @(x) isnumeric(x) && x >= 0 && x <= 1);
+addParameter(p, 'grnoffset', 1.0,      @(x) isnumeric(x) && isscalar(x) && x >= 0);
+addParameter(p, 'useparallel', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
+addParameter(p, 'solver',  "spectral", @(x) ismember(string(x), ["spectral","nn"]));
+addParameter(p, 'n_steps', 1000,       @(x) isnumeric(x) && x > 0);
+addParameter(p, 'lr',      0.01,       @(x) isnumeric(x) && x > 0);
+addParameter(p, 'seed',    0,          @isnumeric);
 parse(p, varargin{:});
 
-n_dim   = round(p.Results.n_dim);
-mu_     = p.Results.mu;
-pval_t  = p.Results.pval;
-verbose = p.Results.verbose;
+cfg = ten.i_xctcfg(p.Results, "sctenifoldxct");
 
-% ── 1. Prepare expression matrices ───────────────────────────────────────
+% -- Subset to the two cell types -----------------------------------------
 sce = copy(sce_ori);
 idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
 sce = sce.selectcells(idx);
 
-is_s = sce.c_cell_type_tx == celltype1;
-is_t = sce.c_cell_type_tx == celltype2;
-
 X = sce.X;
 if issparse(X), X = full(X); end
-X   = single(X);
-g   = sce.g;
-X_s = X(:, is_s);   % genes × source cells
-X_t = X(:, is_t);   % genes × target cells
+X = single(X);
 
-if verbose
-    fprintf('[sctenifoldxct] %s: %d genes × %d cells\n', ...
-        celltype1, size(X_s,1), size(X_s,2));
-    fprintf('[sctenifoldxct] %s: %d genes × %d cells\n', ...
-        celltype2, size(X_t,1), size(X_t,2));
-end
+T = ten.i_xctcore(X, sce.g, sce.c_cell_type_tx, celltype1, celltype2, ...
+    twosided, cfg);
 
-% ── 2. Load ligand-receptor database ─────────────────────────────────────
-pw1     = fileparts(mfilename('fullpath'));
-lr_mat  = fullfile(pw1, '..', 'assets', 'Ligand_Receptor', 'Ligand_Receptor.mat');
-lr_txt  = fullfile(pw1, '..', 'assets', 'Ligand_Receptor', 'Ligand_Receptor.txt');
-
-if exist(lr_mat, 'file')
-    db     = load(lr_mat, 'ligand', 'receptor');
-    lig_db = upper(string(db.ligand(:)));
-    rec_db = upper(string(db.receptor(:)));
-else
-    % Fallback: read from text file (tab-delimited, cols 3 and 5)
-    T_lr   = readtable(lr_txt, 'FileType', 'text', 'Delimiter', '\t');
-    lig_db = upper(string(T_lr{:,3}));
-    rec_db = upper(string(T_lr{:,5}));
-end
-if verbose
-    fprintf('[sctenifoldxct] L-R database: %d pairs loaded.\n', numel(lig_db));
-end
-
-% ── 3. Build GRNs ────────────────────────────────────────────────────────
-if verbose, fprintf('[sctenifoldxct] Building GRN: %s ...\n', celltype1); end
-A_s = net.pcrnet(X_s, 3, false, true, false, false, pkg.i_usegpu(X_s));
-A_s = A_s ./ max(abs(A_s(:)));
-A_s = ten.e_filtadjc(A_s, 0.75, false);   % dense, thresholded
-
-if verbose, fprintf('[sctenifoldxct] Building GRN: %s ...\n', celltype2); end
-A_t = net.pcrnet(X_t, 3, false, true, false, false, pkg.i_usegpu(X_t));
-A_t = A_t ./ max(abs(A_t(:)));
-A_t = ten.e_filtadjc(A_t, 0.75, false);
-
-% ── 4. Manifold alignment + null test ────────────────────────────────────
-if verbose
-    fprintf('[sctenifoldxct] Aligning %s → %s ...\n', celltype1, celltype2);
-end
-T1 = i_xct(X_s, X_t, g, A_s, A_t, lig_db, rec_db, n_dim, mu_, pval_t, verbose);
-
-if twosided
-    if verbose
-        fprintf('[sctenifoldxct] Aligning %s → %s ...\n', celltype2, celltype1);
-    end
-    T2 = i_xct(X_t, X_s, g, A_t, A_s, lig_db, rec_db, n_dim, mu_, pval_t, verbose);
-    T  = {T1, T2};
-else
-    T = T1;
-end
-
-end % main function
+end % sctenifoldxct
 
 
-%% ── LOCAL FUNCTIONS ──────────────────────────────────────────────────────
-
-function T = i_xct(X_s, ~, g, A_s, A_t, lig_db, rec_db, n_dim, mu_, pval_t, verbose)
-% I_XCT  Spectral manifold alignment for one direction (source → target).
-
-ng   = size(X_s, 1);   % number of genes (same for source and target)
-g_up = upper(string(g(:)));
-
-% ── Build sparse L-R correspondence matrix W12 (ng × ng) ─────────────────
-n_lr = numel(lig_db);
-li_idx = zeros(n_lr, 1);
-ri_idx = zeros(n_lr, 1);
-n_valid = 0;
-for k = 1:n_lr
-    li = find(g_up == lig_db(k), 1);
-    ri = find(g_up == rec_db(k), 1);
-    if ~isempty(li) && ~isempty(ri)
-        n_valid = n_valid + 1;
-        li_idx(n_valid) = li;
-        ri_idx(n_valid) = ri;
+%% ---- explanatory error for the relocated glyco options ----
+function i_rejectglyco(args)
+moved = ["glyco", "glycochannel", "glycolambda", "glycomode", "glycoscale"];
+for k = 1:2:numel(args)
+    if ~(ischar(args{k}) || isstring(args{k})), continue; end
+    name = lower(string(args{k}));
+    if ismember(name, moved)
+        error("TEN:SCTENIFOLDXCT:GlycoMoved", ...
+            "'%s' is no longer accepted here. The glyco channels moved to " + ...
+            "TEN.SCTENIFOLDXCT_GLYCO, which takes the same arguments minus " + ...
+            "'glyco' itself. Replace the call with " + ...
+            "ten.sctenifoldxct_glyco(sce, celltype1, celltype2, ...).", name);
     end
 end
-li_idx = li_idx(1:n_valid);
-ri_idx = ri_idx(1:n_valid);
-
-if n_valid == 0
-    warning('sctenifoldxct:noPairs', ...
-        'No L-R pairs found in gene list. Returning empty table.');
-    T = table();
-    return;
-end
-if verbose
-    fprintf('[sctenifoldxct]   %d L-R pairs matched in data.\n', n_valid);
-end
-
-% Aggregate duplicate L-R pairs (sum weights)
-W12 = sparse(li_idx, ri_idx, ones(n_valid,1), ng, ng);
-
-% ── Build symmetric GRN weight matrices ──────────────────────────────────
-% Symmetrize and shift by +1 on diagonal for graph connectivity
-%   (follows convention in ten.i_ma used by sctenifoldnet)
-W11 = sparse(0.5*(A_s + A_s'));
-W22 = sparse(0.5*(A_t + A_t'));
-
-% Scale mu to balance within/across-type connection strengths
-w11_sum = sum(abs(W11(:)));
-w22_sum = sum(abs(W22(:)));
-w12_sum = sum(abs(W12(:)));
-if w12_sum == 0
-    mu_scale = 0;
-else
-    mu_scale = mu_ * (w11_sum + w22_sum) / (2 * w12_sum);
-end
-
-% Block weight matrix: [source | cross; cross' | target]
-W = [W11,                mu_scale .* W12;
-     mu_scale .* W12',   W22            ];
-
-% ── Graph Laplacian (unnormalized) ────────────────────────────────────────
-d = full(sum(abs(W), 2));   % degree vector (using |W| for signed graphs)
-L = spdiags(d, 0, 2*ng, 2*ng) - W;
-
-% ── Spectral embedding via n_dim smallest non-trivial eigenvectors ────────
-n_ev   = min(n_dim + 4, 2*ng - 2);   % request a few extra for filtering
-opts.isreal  = true;
-opts.issym   = true;
-opts.tol     = 1e-6;
-[V, D_ev] = eigs(L, n_ev, 'smallestreal', opts);
-ev = real(diag(D_ev));
-V  = real(V);
-[ev, ord] = sort(ev, 'ascend');
-V  = V(:, ord);
-
-% Discard trivial (near-zero, constant) eigenvectors
-keep = ev >= 1e-8;
-V    = V(:, keep);
-ev   = ev(keep);   %#ok<NASGU>
-
-if size(V, 2) < n_dim
-    n_dim_used = size(V, 2);
-    if verbose
-        warning('sctenifoldxct:dimReduced', ...
-            'Only %d non-trivial eigenvectors available; n_dim reduced from %d.', ...
-            n_dim_used, n_dim);
-    end
-else
-    n_dim_used = n_dim;
-end
-V = V(:, 1:n_dim_used);   % (2*ng) × n_dim_used
-
-P_s = V(1:ng,    :);   % source gene embeddings  (ng × n_dim)
-P_t = V(ng+1:end,:);   % target gene embeddings  (ng × n_dim)
-
-% ── Candidate L-R pair distances ─────────────────────────────────────────
-n_cand  = n_valid;
-cand_d  = zeros(n_cand, 1, 'single');
-for k = 1:n_cand
-    diff_k   = P_s(li_idx(k),:) - P_t(ri_idx(k),:);
-    cand_d(k) = sqrt(sum(diff_k.^2));
-end
-
-% ── Null distribution: sample random non-L-R gene pairs ──────────────────
-% L-R pairs are ~n_valid out of ng^2 total; random sampling rarely hits them
-n_null = max(50000, 100 * n_cand);
-n_null = min(n_null, ng^2 - n_cand);   % cap at available pairs
-
-rng_state = rng;   % save rng state (non-destructive)
-rand_i = randi(ng, n_null, 1);
-rand_j = randi(ng, n_null, 1);
-rng(rng_state);
-
-diff_null = P_s(rand_i,:) - P_t(rand_j,:);
-null_d    = sqrt(sum(diff_null.^2, 2));
-
-% ── Left-tail null test ───────────────────────────────────────────────────
-%   p_value(k) = fraction of null distances ≤ cand_d(k)
-%   Small p_value → candidate distance unusually small → strong interaction
-p_vals = sum(null_d(:) <= cand_d(:)', 1)' ./ numel(null_d);
-
-% ── Assemble output table ─────────────────────────────────────────────────
-lig_out  = g(li_idx);
-rec_out  = g(ri_idx);
-
-% Lookup per-pair W12 weights (number of duplicate LR entries, if any)
-w12_vals = full(W12(sub2ind([ng,ng], li_idx, ri_idx)));
-
-T = table(lig_out, rec_out, double(cand_d), w12_vals, p_vals, ...
-'VariableNames', {'ligand','receptor','dist','correspondence','p_value'});
-T = T(T.p_value <= pval_t, :);
-T = sortrows(T, 'dist', 'ascend');
-
-if verbose
-    fprintf('[sctenifoldxct]   %d significant L-R pairs (pval ≤ %.2f).\n', ...
-        height(T), pval_t);
-end
-
-end % i_xct
+end % i_rejectglyco

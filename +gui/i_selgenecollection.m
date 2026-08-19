@@ -18,11 +18,13 @@ if isempty(preferredspecies)
     selitems = {'MSigDB Molecular Signatures (Human)', ...
                 'MSigDB Molecular Signatures (Mouse)', ...
                 'DoRothEA TF Targets', ...
-                'Custom Gene Sets'};
+                'Custom Gene Sets', ...
+                'Glycobiology Gene Sets'};
 else
     selitems = {'MSigDB Molecular Signatures', ...
                 'DoRothEA TF Targets', ...
-                'Custom Gene Sets'};
+                'Custom Gene Sets', ...
+                'Glycobiology Gene Sets'};
 end
 
 if gui.i_isuifig(parentfig)
@@ -49,6 +51,9 @@ if isempty(preferredspecies)
         case 4
             species = 'human';
             indx1 = 3;
+        case 5
+            species = 'human';
+            indx1 = 4;
     end
 else
     switch indx1

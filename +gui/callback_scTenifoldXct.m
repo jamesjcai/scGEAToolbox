@@ -6,24 +6,28 @@ sce = copy(sce_ori);
 if ~gui.gui_showrefinfo('scTenifoldXct [PMID:36787742]', FigureHandle), return; end
 
 % ── 1. Method selection ───────────────────────────────────────────────────
-% Default to Path A (Neural Network) when Deep Learning Toolbox is available,
-% otherwise fall back to Path B (Spectral + PCNet).
+% All three MATLAB paths build PCNet networks through net.pcrnet, so all three
+% need Statistics and Machine Learning Toolbox. Only Path A needs Deep Learning
+% on top of that.
 has_dlt = license('test', 'Neural_Network_Toolbox') && ...
           (exist('dlarray', 'builtin') || exist('dlarray', 'file'));
+has_stats = license('test', 'Statistics_Toolbox') && ...
+          (exist('zscore', 'file') > 0);
 
 methodlist = {
-'Neural Network       (MATLAB Path A — Deep Learning Toolbox)',
-'Spectral + PCNet     (MATLAB Path B)',
-'Spectral + Pearson   (MATLAB Path B Lite — no extra toolbox)',
+'Neural Network       (Path A — reproduces the published training loop)';
+'Spectral             (Path B — toolbox settings: PCNet, 0.75 edge filter)';
+'Spectral, reference  (Path B — PCNet nComp=5, unfiltered, as core.py)';
 'Python               (scTenifoldXct package, original)'
 };
 MTHD_NN     = 1;
 MTHD_SPEC   = 2;
-MTHD_LITE   = 3;
+MTHD_REF    = 3;
 MTHD_PYTHON = 4;
 
 def_midx = MTHD_NN;
 if ~has_dlt, def_midx = MTHD_SPEC; end
+if ~has_stats, def_midx = MTHD_PYTHON; end
 
 [midx, tf] = gui.myListdlg(FigureHandle, methodlist, ...
 'Select scTenifoldXct implementation:', methodlist(def_midx));
@@ -39,7 +43,78 @@ if midx == MTHD_NN && ~has_dlt
     return;
 end
 
+% Block every MATLAB path if Statistics and Machine Learning Toolbox is absent.
+% This used to be advertised as a toolbox-free option, which stopped being true
+% when the within-type networks moved from Pearson co-expression to PCNet.
+if ismember(midx, [MTHD_NN, MTHD_SPEC, MTHD_REF]) && ~has_stats
+    gui.myErrordlg(FigureHandle, ...
+        ['Statistics and Machine Learning Toolbox is required for the MATLAB ' ...
+         'implementations, which build their within-type networks with PCNet ' ...
+         '(net.pcrnet), but it was not found on this system. Select the ' ...
+         'Python implementation instead.'], ...
+        'scTenifoldXct:noStats');
+    return;
+end
+
 use_python = (midx == MTHD_PYTHON);
+
+% ── 1b. Correspondence matrix (W12) mode ─────────────────────────────────
+% The two modes do not answer the same question, so this is a real choice
+% rather than a tuning knob, and it is worth stating plainly before asking.
+% Only the MATLAB paths expose it: the Python package always rebuilds its own
+% correspondence from expression (query_DB defaults to None) and never consults
+% the L-R database during alignment, so there is nothing to select there.
+w12mode = "lr";
+if ~use_python
+    OPT_LR = 'Ligand-receptor (default)';
+    OPT_OUTER = 'Outer product';
+    answerw = gui.myQuestdlg(FigureHandle, ...
+        ['scTenifoldXct joins the two cell types'' gene networks through a ' ...
+         'correspondence matrix W12. How that matrix is built decides which ' ...
+         'question the analysis answers, so the two modes are not ' ...
+         'interchangeable.' newline newline ...
+         'Ligand-receptor: one entry per known L-R pair from the built-in ' ...
+         'database, so the alignment is driven by curated biology. This is ' ...
+         'the toolbox default.' newline newline ...
+         'Outer product: a dense expression-derived score over every gene ' ...
+         'pair, reproducing the published Python implementation. The L-R ' ...
+         'database takes no part in the alignment and is used only to rank ' ...
+         'the results afterwards.' newline newline ...
+         'Choose Outer product for parity with the reference, or keep ' ...
+         'Ligand-receptor for a database-driven analysis.'], ...
+        'Correspondence matrix (W12)', {OPT_LR, OPT_OUTER}, OPT_LR);
+    if isempty(answerw), return; end
+    if strcmp(answerw, OPT_OUTER), w12mode = "outer"; end
+end
+
+% ── 1c. Parallel computing ───────────────────────────────────────────────
+% net.pcrnet regresses each gene on the principal components of the others.
+% That loop dominates the runtime and runs as a parfor when asked. Follows the
+% idiom in callback_scTenifoldNet1lite: a GPU wins if present, because
+% net.pcrnet cannot combine parfor with gpuArray.
+useparallel = false;
+if ~use_python
+    if pkg.i_usegpu(sce.X)
+        disp('GPU detected — using CUDA GPU acceleration.');
+    else
+        answerp = gui.myQuestdlg(FigureHandle, ...
+            ['Build the gene regulatory networks with parallel computing?' ...
+             newline newline ...
+             'Usually NOT worth it. net.pcrnet runs one SVD per gene, and ' ...
+             'the serial loop is already parallel: multithreaded BLAS spreads ' ...
+             'each SVD across every core, worth 3.0x at 600 genes and 5.7x ' ...
+             'at 1856. A parfor fragments that work and fights it.' ...
+             newline newline ...
+             'Measured on 20 cores, 784 cells, against serial with no pool: ' ...
+             'roughly break-even at 600 genes, 0.5x at 1200 and 0.3x at ' ...
+             '1856 - about three times slower. A Threads pool is no better. ' ...
+             'Worth trying only for small gene sets.'], ...
+            'Parallel Computing', ...
+            {'Not use parallel', 'Use parallel'}, 'Not use parallel');
+        if isempty(answerp), return; end
+        useparallel = strcmp(answerp, 'Use parallel');
+    end
+end
 
 % ── 2. Python-only setup (wkdir + pyenv) ─────────────────────────────────
 prepare_input_only = false;
@@ -131,26 +206,29 @@ switch midx
         X_t = sce.X(:, sce.c_batch_id == "Target");
         g   = sce.g;
         try
-            Tres = ten.xct.xctmain_nn(X_s, X_t, g, 'twosided', twosided);
+            Tres = ten.xct.xctmain_nn(X_s, X_t, g, 'twosided', twosided, ...
+                'w12mode', w12mode, 'useparallel', useparallel);
         catch ME
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
 
-    case MTHD_SPEC   % ── Path B: Spectral + PCNet ───────────────────────────
+    case MTHD_SPEC   % ── Path B: spectral, toolbox GRN settings ─────────────
         try
-            Tres = ten.sctenifoldxct(sce, string(cL{x1}), string(cL{x2}), twosided);
+            Tres = ten.sctenifoldxct(sce, string(cL{x1}), string(cL{x2}), ...
+                twosided, 'w12mode', w12mode, 'useparallel', useparallel);
         catch ME
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
 
-    case MTHD_LITE   % ── Path B Lite: Spectral + Pearson ────────────────────
+    case MTHD_REF   % ── Path B: spectral, reference GRN settings ────────────
         X_s = sce.X(:, sce.c_batch_id == "Source");
         X_t = sce.X(:, sce.c_batch_id == "Target");
         g   = sce.g;
         try
-            Tres = ten.xct.xctmain(X_s, X_t, g, 'twosided', twosided);
+            Tres = ten.xct.xctmain(X_s, X_t, g, 'twosided', twosided, ...
+                'w12mode', w12mode, 'useparallel', useparallel);
         catch ME
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;

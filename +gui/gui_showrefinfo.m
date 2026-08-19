@@ -22,72 +22,31 @@ if ~isempty(idx)
 end
 
 if isempty(txt) , return; end
-% fprintf('%s\n%s\n', reftarget, txt);
 
-%{
-if gui.i_isuifig(parentfig)
+% refinfo.txt stores line breaks as the literal characters "\n" (and tabs as
+% "\t"). Convert them to real newline/tab characters so the dialog renders on
+% multiple lines instead of showing "\n". Use literal replacement rather than
+% compose/sprintf so any "%" in the help text is left untouched.
+txt = replace(string(txt), "\t", sprintf("\t"));
+txt = replace(txt, "\n", newline);
 
-    hFig = uifigure("WindowStyle","modal",'Visible','off');
-    hFig.Position(3)=0.75*hFig.Position(3);
-    hFig.Position(4)=0.75*hFig.Position(4);
-    g = uigridlayout(hFig,[3 3]);
-    g.RowHeight = {'fit','2x','fit'};
-    g.ColumnWidth = {'1x',75,75};
+% Drop a trailing ";" (with any trailing spaces) at the end of each line.
+% These were list separators that are redundant now that each item renders
+% on its own line.
+txt = regexprep(txt, ';[ \t]*$', '', 'lineanchors');
 
-    lbl = uilabel(g,"Text",reftarget);
-    lbl.Layout.Row = 1;
-    lbl.Layout.Column = 1;
-
-    txa = uitextarea(g);
-    txa.Layout.Row = 2;
-    txa.Layout.Column = [1 3];
-    txa.Value = compose(txt);
-
-    % txa.Position(4)=txa.Position(4)*2;
-    if nargout>0
-        oktext = "Continue";
-    else
-        oktext = "OK";
-    end
-
-    btn = uibutton(g,"Text",oktext);
-    btn.Layout.Row = 3;
-    btn.Layout.Column = 2 + (nargout==0);
-    btn.ButtonPushedFcn = @(src,event) textEntered(src,event,btn);
-    % btn.Position(3) = 50;
-
-    if nargout > 0
-        btn2 = uibutton(g,"Text","Cancel");
-        btn2.Layout.Row = 3;
-        btn2.Layout.Column = 3;
-        btn2.ButtonPushedFcn = @(src,event) textEntered(src,event,btn2);
-    end
-
-    gui.i_movegui2parent(hFig, parentfig);
-
-    % hFig.WindowStyle="modal";
-    % pause(0.5);
-    drawnow;
-    pause(0.2);
-    hFig.Visible=true;
-    uiwait(hFig);
-
+if nargout == 0
+    % Informational display (e.g. Help > Shortcuts User Guide). A single
+    % dismiss button is the right affordance here, not Continue/Cancel.
+    gui.myHelpdlg(parentfig, txt, reftarget);
+    y = true;
 else
-    %}
-answer = gui.myQuestdlg(parentfig, ...
-         txt, reftarget, {'Continue','Cancel'}, 'Continue');
-     switch answer
-         case 'Continue'
-             y = true;
-         otherwise
-     end
-% end
-
-function textEntered(~,~,btn)
-    if strcmp(btn.Text,oktext)
+    % Used as a confirmation gate by callers, e.g.:
+    %   if ~gui.gui_showrefinfo(target, fig), return; end
+    answer = gui.myQuestdlg(parentfig, ...
+        txt, reftarget, {'Continue', 'Cancel'}, 'Continue');
+    if strcmp(answer, 'Continue')
         y = true;
     end
-    delete(hFig);
 end
-
 end

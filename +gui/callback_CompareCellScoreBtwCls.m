@@ -206,14 +206,65 @@ answer2 = gui.myQuestdlg(FigureHandle, sprintf(['This function will calculates a
                     if tf2 ~= 1, return; end
 
                     n = length(indx2);
-                    y = cell(n,1); ttxt=cell(n,1);
+                    y = cell(n,1); ttxt = cell(n,1); posgc = cell(n,1);
+                    valid = false(n,1);
                     [~, methodid] = gui.i_pickscoremethod([], FigureHandle);
 
                     fw=gui.myWaitbar(FigureHandle);
                     for k = 1:n
-                        [y{k}, ~, posg] = pkg.e_cellscores(sce.X, sce.g, ...
-                            indx2(k), methodid, false);
                         ttxt{k} = T.ScoreType(indx2(k));
+                        % Skip a signature with too few expressed genes (which
+                        % errors in e_cellscores) instead of aborting the run.
+                        try
+                            [y{k}, ~, posgc{k}] = pkg.e_cellscores(sce.X, ...
+                                sce.g, indx2(k), methodid, false);
+                        catch ME
+                            warning('Skipping score "%s": %s', ...
+                                string(T.ScoreType(indx2(k))), ME.message);
+                            y{k} = [];
+                        end
+                        valid(k) = ~isempty(y{k});
+                    end
+                    gui.myWaitbar(FigureHandle, fw);
+
+                    if ~any(valid)
+                        gui.myWarndlg(FigureHandle, ['No scores could be ' ...
+                            'computed. The selected signatures have too few ' ...
+                            'expressed genes in this dataset.']);
+                        return;
+                    end
+                    if ~all(valid)
+                        gui.myWarndlg(FigureHandle, sprintf( ...
+                            '%d of %d score(s) skipped (too few expressed genes): %s', ...
+                            sum(~valid), n, ...
+                            strjoin(string(T.ScoreType(indx2(~valid))), ', ')));
+                        y = y(valid); ttxt = ttxt(valid); posgc = posgc(valid);
+                    end
+                    posg = posgc{end};
+
+                case 'Glycobiology Gene Sets'
+                    [setmatrx, gsetnames, setgenes] = pkg.e_glycogenesets();
+                    listitems = gsetnames;
+                    if gui.i_isuifig(FigureHandle)
+                        [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
+                            'Select Module:');
+                    else
+                        [indx2, tf2] = listdlg('PromptString', 'Select Module', ...
+                            'SelectionMode', 'multiple', 'ListString', ...
+                            cellstr(listitems), 'ListSize', [300, 300]);
+                    end
+                    if tf2 ~= 1, return; end
+
+                    n = numel(indx2);
+                    y = cell(n,1); ttxt = cell(n,1);
+                    [~, methodid] = gui.i_pickscoremethod([], FigureHandle);
+                    if isempty(methodid), return; end
+
+                    fw = gui.myWaitbar(FigureHandle);
+                    for k = 1:n
+                        posg = setgenes(setmatrx(indx2(k), :));
+                        y{k} = gui.e_cellscore(sce, posg, methodid, false, FigureHandle);
+                        ttxt{k} = gsetnames(indx2(k));
                     end
                     gui.myWaitbar(FigureHandle, fw);
                 % TF activity analysis has moved to Analyze > TF Activity Analysis

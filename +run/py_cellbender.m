@@ -44,7 +44,7 @@ if status ~= 0
     % if pkg.i_isvalid(fw)
     %    gui.gui_waitbar(fw, true);
     % end
-    error(cmdout);
+    error('%s', cmdout);
 end
 if nargin < 1, input_h5 = []; end
 if ~exist(input_h5,"file")
@@ -56,7 +56,7 @@ if ~exist(input_h5,"file")
     input_h5 = fullfile(pathname, filenm);
 end
 
-tmpfilelist = {'input.txt', 'output.h5'};
+tmpfilelist = {'input.txt', 'output_filtered.h5'};
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 % input_h5 = """"+input_h5+"""";
 

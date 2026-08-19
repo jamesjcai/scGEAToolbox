@@ -89,21 +89,31 @@ switch selectedProvider
     case 'Ollama'
         a = '';
         try
-            a = webread("http://localhost:11434");
+            % Use 127.0.0.1 rather than localhost: Ollama binds 127.0.0.1, but
+            % localhost resolves to ::1 first on some hosts, which would make a
+            % working install look absent.
+            a = webread("http://127.0.0.1:11434");
         catch
             % ollama may not be running; a stays empty and the check below fails over
         end
         if strcmp(a, 'Ollama is running')
-            a = webread('http://localhost:11434/api/tags');
+            a = webread('http://127.0.0.1:11434/api/tags');
                 % [a,str]=dos('Ollama list');
                 % if a == 0
                 % tokens = regexp(str, '([a-zA-Z0-9.-]+):latest', 'tokens');
                 % model_names = cellfun(@(x) x{1}, tokens, 'UniformOutput', false);
 
 
-           if size(a.models, 1) > 0
-               model_names = string(cellfun(@(m) m.name, a.models, ...
-                   'UniformOutput', false));
+           if isfield(a, 'models') && size(a.models, 1) > 0
+               % jsondecode returns a struct array when every model object has
+               % the same fields and a cell array when they differ, so both
+               % shapes have to be handled.
+               if iscell(a.models)
+                   model_names = string(cellfun(@(m) m.name, a.models, ...
+                       'UniformOutput', false));
+               else
+                   model_names = string({a.models.name});
+               end
 
            if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
@@ -123,6 +133,12 @@ switch selectedProvider
                 else
                     return;
                 end
+            else
+                gui.myWarndlg(parentfig, sprintf([ ...
+                    'Ollama is running, but no models are installed.\n\n' ...
+                    'Pull one from a terminal first, for example:\n' ...
+                    '    ollama pull qwen3:4b']));
+                return;
             end
         else
             gui.myHelpdlg(parentfig, 'Ollama is not running.');

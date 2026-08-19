@@ -11,7 +11,7 @@ oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_fgsea');
 if ~isok
-    error(msg);
+    error('%s', msg);
     return;
 end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end

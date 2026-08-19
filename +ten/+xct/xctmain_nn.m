@@ -1,7 +1,7 @@
-function [T] = xctmain_nn(X_s, X_t, g, varargin)
+function [T, emb] = xctmain_nn(X_s, X_t, g, varargin)
 % XCTMAIN_NN  Neural-network manifold alignment for cell-cell interaction.
-%   Path A: faithful MATLAB translation of the published scTenifoldXct
-%   training loop.  Requires Deep Learning Toolbox (R2022b+).
+%   Path A: MATLAB translation of the published scTenifoldXct training loop
+%   (see Provenance below).  Requires Deep Learning Toolbox (R2022b+).
 %
 %   For a toolbox-free alternative see ten.xct.xctmain (Path B, spectral).
 %
@@ -16,9 +16,10 @@ function [T] = xctmain_nn(X_s, X_t, g, varargin)
 %
 %   Name-Value pairs:
 %     'twosided'  - run both directions (default: true)
-%     'n_dim'     - embedding dimension (default: 50)
-%     'mu'        - cross-type correspondence weight (default: 0.9)
-%     'corr_thr'  - |Pearson r| cut-off for co-expression edges (default: 0.3)
+%     'n_dim'     - embedding dimension (default: 3, as the reference)
+%     'mu'        - cross-type correspondence weight (default: 1.0, as the reference)
+%     'ncomp'     - PCNet principal components (default: 5, as in core.py)
+%     'grn_q'     - GRN edge-filtering quantile; 0 disables (default: 0)
 %     'n_steps'   - Adam training iterations (default: 1000)
 %     'lr'        - Adam learning rate (default: 0.01)
 %     'pval'      - p-value cut-off; 1.0 returns all pairs (default: 1.0)
@@ -28,7 +29,7 @@ function [T] = xctmain_nn(X_s, X_t, g, varargin)
 %     T  - table: ligand, receptor, dist, p_value
 %          When twosided=true, T is a cell {T1, T2}.
 %
-%   Algorithm (Path A — neural network, faithful to Python scTenifoldXct):
+%   Algorithm (Path A — neural network, following Python scTenifoldXct):
 %
 %     Two 3-layer feedforward networks f_s and f_t (one per cell type) map
 %     each gene's expression profile across cells to an n_dim-dimensional
@@ -43,19 +44,50 @@ function [T] = xctmain_nn(X_s, X_t, g, varargin)
 %
 %       L = trace(P' · L_W · P) / 3000
 %
-%     where P = U·V'  (Stiefel retraction via economy SVD of stacked outputs)
-%     and L_W is the unnormalised Laplacian of the block weight matrix
+%     where P is the Stiefel retraction of the stacked network outputs and
+%     L_W is the unnormalised Laplacian of the block weight matrix
 %
 %       W = [ GRN_source,   μ·W_LR  ]
 %           [ μ·W_LR',   GRN_target ]
 %
 %     Ligand-receptor pairs in W_LR pull the corresponding gene embeddings
 %     together; the GRN structure keeps biologically related genes adjacent.
-%     Gradients flow through dlsvd; both networks are updated with Adam.
+%     Both networks are updated with Adam.  Each step retracts the stacked
+%     network outputs onto the Stiefel manifold with an exact economy SVD, so
+%     P'*P = I holds throughout training, not only at the end.  ten.i_nnembed
+%     owns the training loop and reports the orthogonality error of what it
+%     returns.
 %
-%   This is mathematically equivalent to the Python implementation.
-%   The GRN proxy here is thresholded Pearson co-expression instead of
-%   sc_pcnetpar; for the PCNet-backed version see ten.sctenifoldxct.
+%   Provenance: a reimplementation of the published Python scTenifoldXct,
+%   written against that package rather than ported from vendored source
+%   (external/py_scTenifoldXct holds only driver scripts that import it).
+%   Checked line-by-line against nn.py, stiefel.py and core.py of
+%   cailab-tamu/scTenifoldXct.
+%
+%   Verified identical: the 3-layer sigmoid/sigmoid/linear architecture; the
+%   layer widths, since scipy gmean([n_cells, n_dim]) is sqrt(n_cells*n_dim)
+%   and their a=4 is the 4*n_h here; torch.nn.Linear's default initialisation;
+%   Adam at lr 0.01 for 1000 steps with matching betas and epsilon; the loss
+%   trace(P'*L*P)/3000, including that unexplained /3000; the Laplacian degree
+%   convention; the Riemannian gradient and its backpropagation through the
+%   retraction; and the returned embedding, which the reference takes from
+%   inside the final iteration rather than recomputing afterwards.
+%
+%   One deviation remains, and it is unavoidable: the RNG streams differ, so
+%   the two cannot produce bitwise-identical weights from the same seed. Every
+%   comparison is therefore distributional, read against the reference's own
+%   seed-to-seed variation as the ceiling.
+%
+%   Note that MATLAB does not apply core.py's +1 GRN offset. That is a
+%   caller-level choice, not part of this training loop, but it means W here is
+%   signed where the reference's is not; see the DEGREE CONVENTION section of
+%   TEN.I_NNEMBED for what that implies.
+%
+%   The GRN is PCNet via ten.i_xctgrn, configured to match core.py's
+%   make_pcNet(nComp=5) with no edge filtering. Note that ten.sctenifoldxct
+%   does NOT currently use those settings - it builds its networks with
+%   ncomp=3 and a 0.75 quantile filter - so results from the two entry points
+%   are not directly comparable.
 %
 %   Reference: Ma et al., Cell Systems 2023. PMID:36787742
 
@@ -66,25 +98,35 @@ if ~(exist('dlarray', 'builtin') || exist('dlarray', 'file'))
 end
 
 % ── Parse inputs ─────────────────────────────────────────────────────────
+i_rejectcorrthr(varargin);
+
 p = inputParser;
 addParameter(p, 'twosided', true,  @islogical);
-addParameter(p, 'n_dim',    50,    @(x) isnumeric(x) && x > 0);
-addParameter(p, 'mu',       0.9,   @(x) isnumeric(x) && x > 0);
-addParameter(p, 'corr_thr', 0.3,   @(x) isnumeric(x) && x >= 0 && x <= 1);
+addParameter(p, 'n_dim',    3,     @(x) isnumeric(x) && x > 0);
+addParameter(p, 'mu',       1.0,   @(x) isnumeric(x) && x > 0);
+addParameter(p, 'ncomp',    5,     @(x) isnumeric(x) && x >= 2);
+addParameter(p, 'grn_q',    0,     @(x) isnumeric(x) && x >= 0 && x < 1);
 addParameter(p, 'n_steps',  1000,  @(x) isnumeric(x) && x > 0);
 addParameter(p, 'lr',       0.01,  @(x) isnumeric(x) && x > 0);
 addParameter(p, 'pval',     1.0,   @(x) isnumeric(x) && x >= 0);
 addParameter(p, 'verbose',  true,  @islogical);
+addParameter(p, 'w12mode', "outer", @(x) ismember(string(x), ["outer","lr"]));
+addParameter(p, 'alpha',   0.5,   @(x) isnumeric(x) && x >= 0 && x <= 1);
+addParameter(p, 'grnoffset', 1.0, @(x) isnumeric(x) && isscalar(x) && x >= 0);
+addParameter(p, 'useparallel', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
 parse(p, varargin{:});
 
 twosided = p.Results.twosided;
 n_dim    = round(p.Results.n_dim);
 mu_      = p.Results.mu;
-corr_thr = p.Results.corr_thr;
+ncomp    = round(p.Results.ncomp);
+grn_q    = p.Results.grn_q;
 n_steps  = round(p.Results.n_steps);
 lr       = p.Results.lr;
 pval_t   = p.Results.pval;
 verbose  = p.Results.verbose;
+w12mode  = string(p.Results.w12mode);
+alpha_   = p.Results.alpha;
 
 X_s = double(full(X_s));
 X_t = double(full(X_t));
@@ -129,15 +171,20 @@ X_s = i_lognorm(X_s);
 X_t = i_lognorm(X_t);
 
 % ── Run ───────────────────────────────────────────────────────────────────
-T1 = i_align_nn(X_s, X_t, g, lig_db, rec_db, ...
-                n_dim, mu_, corr_thr, n_steps, lr, pval_t, verbose);
+cfg = struct('n_dim', n_dim, 'mu', mu_, 'ncomp', ncomp, 'grn_q', grn_q, ...
+    'n_steps', n_steps, 'lr', lr, 'pval', pval_t, 'verbose', verbose, ...
+    'w12mode', w12mode, 'alpha', alpha_, 'grnoffset', p.Results.grnoffset, ...
+    'useparallel', logical(p.Results.useparallel));
+
+[T1, E1] = i_align_nn(X_s, X_t, g, lig_db, rec_db, cfg);
 
 if twosided
-    T2 = i_align_nn(X_t, X_s, g, lig_db, rec_db, ...
-                    n_dim, mu_, corr_thr, n_steps, lr, pval_t, verbose);
+    [T2, E2] = i_align_nn(X_t, X_s, g, lig_db, rec_db, cfg);
     T  = {T1, T2};
+    emb = {E1, E2};
 else
     T = T1;
+    emb = E1;
 end
 
 end % xctmain_nn
@@ -145,19 +192,29 @@ end % xctmain_nn
 
 %% ── CORE ALIGNMENT ───────────────────────────────────────────────────────
 
-function T = i_align_nn(X_s, X_t, g, lig_db, rec_db, ...
-                        n_dim, mu_, corr_thr, n_steps, lr, pval_t, verbose)
+function [T, emb] = i_align_nn(X_s, X_t, g, lig_db, rec_db, cfg)
 % I_ALIGN_NN  Neural-network manifold alignment for one direction.
 
+n_dim   = cfg.n_dim;
+mu_     = cfg.mu;
+ncomp   = cfg.ncomp;
+grn_q   = cfg.grn_q;
+n_steps = cfg.n_steps;
+lr      = cfg.lr;
+pval_t  = cfg.pval;
+verbose = cfg.verbose;
+w12mode = cfg.w12mode;
+alpha_  = cfg.alpha;
+grnoffset = cfg.grnoffset;
+useparallel = cfg.useparallel;
+
 ng        = size(X_s, 1);
-n_cells_s = size(X_s, 2);
-n_cells_t = size(X_t, 2);
 g_up      = upper(g);
 
-% ── 1. Pearson co-expression (within-type GRN proxy) ─────────────────────
-if verbose, fprintf('[xctmain_nn]   Building co-expression matrices ...\n'); end
-W11 = i_coexpr(X_s, corr_thr);   % sparse ng × ng
-W22 = i_coexpr(X_t, corr_thr);   % sparse ng × ng
+% ── 1. Within-type PCNet GRNs ────────────────────────────────────────────
+if verbose, fprintf('[xctmain_nn]   Building PCNet GRNs ...\n'); end
+W11 = ten.i_xctgrn(X_s, ncomp, grn_q, verbose, useparallel);   % sparse ng × ng
+W22 = ten.i_xctgrn(X_t, ncomp, grn_q, verbose, useparallel);   % sparse ng × ng
 
 % ── 2. L-R correspondence matrix (sparse ng × ng) ────────────────────────
 n_lr   = numel(lig_db);
@@ -175,78 +232,40 @@ for k = 1:n_lr
 end
 li_idx = li_buf(1:n_hit);
 ri_idx = ri_buf(1:n_hit);
+emb = struct('P_s', [], 'P_t', [], 'li_idx', li_idx, 'ri_idx', ri_idx);
 if n_hit == 0
     warning('xctmain_nn:noPairs', 'No L-R pairs found. Returning empty table.');
     T = table(); return;
 end
 if verbose, fprintf('[xctmain_nn]   %d L-R pairs matched.\n', n_hit); end
 
-W12 = sparse(li_idx, ri_idx, ones(n_hit,1), ng, ng);
+% Correspondence block. "outer" reproduces core.py:_build_w with its default
+% query_DB=None, in which the L-R database does not enter the alignment at all
+% and is applied only when candidates are ranked below.
+W12 = ten.i_xctw12(X_s, X_t, ng, mode=w12mode, alpha=alpha_, ...
+    li_idx=li_idx, ri_idx=ri_idx, lognorm=false);
 
 % ── 3. Block weight matrix W and graph Laplacian L ───────────────────────
-%   Follows Python scTenifoldXct exactly — no +1 shift (raw GRN + L-R links).
-w1_sum  = sum(abs(W11(:)));
-w2_sum  = sum(abs(W22(:)));
-w12_sum = sum(abs(W12(:)));
-mu_scale = mu_ * (w1_sum + w2_sum) / (2 * max(w12_sum, eps));
+%   The offset is added to EVERY GRN element, as core.py:415 does. An earlier
+%   comment here claimed this file followed the reference "exactly - no +1
+%   shift"; that was backwards, and the omission is what left the graph
+%   disconnected. See TEN.I_XCTBLOCK.
+W = ten.i_xctblock(W11, W22, W12, mu_, grnoffset);
 
-W = [W11,               mu_scale .* W12;
-     mu_scale .* W12',  W22            ];    % (2*ng) × (2*ng) sparse
-
-% Unnormalised graph Laplacian: L = diag(|W|·1) − W
-d = full(sum(abs(W), 2));
-L_dense = single(full(spdiags(d, 0, 2*ng, 2*ng) - W));  % dense single
-
-% ── 4. Initialise networks ────────────────────────────────────────────────
-%   Architecture: D_in → FC(4·n_h,σ) → FC(n_h,σ) → FC(n_dim)
-%   D_in = n_cells of that cell type; n_h = floor(sqrt(n_cells · n_dim))
-rng(0);  % reproducibility
-ps = i_init_params(n_cells_s, n_dim);   % source network
-pt = i_init_params(n_cells_t, n_dim);   % target network
-
-% Convert data to single-precision dlarray (unlabelled = custom training)
-Xs_dl = dlarray(single(X_s));   % ng × n_cells_s
-Xt_dl = dlarray(single(X_t));   % ng × n_cells_t
-L_dl  = dlarray(L_dense);       % (2*ng) × (2*ng)  — constant w.r.t. params
-
-% ── 5. Training loop (Adam, Stiefel retraction via SVD each step) ─────────
-%   Mirrors Python ManifoldAlignmentNet.train() exactly:
-%     outputs = cat([net_s(X_s); net_t(X_t)])
-%     P = U·V'  from SVD(outputs)           ← Stiefel retraction
-%     loss = trace(P'·L·P) / 3000
-%     backprop + Adam step
+% ── 4-6. Train the networks and extract the embedding ────────────────────
+%   Delegated to ten.i_nnembed so that this function and ten.sctenifoldxct
+%   share one implementation of the published training loop.
 if verbose
     fprintf('[xctmain_nn]   Training (%d steps, lr=%.4f) ...\n', n_steps, lr);
 end
 
-[avg_s,   avgSq_s]   = deal([]);   % Adam trailing-average state (auto-init)
-[avg_t,   avgSq_t]   = deal([]);
+[P_s, P_t] = ten.i_nnembed(W, ng, n_dim, X_s, X_t, ...
+    n_steps=n_steps, lr=lr, verbose=verbose);
 
-for step = 1:n_steps
-    [loss_val, grads] = dlfeval(@i_grad_fn, ps, pt, Xs_dl, Xt_dl, L_dl);
-
-    grads_s = grads{1};
-    grads_t = grads{2};
-
-    [ps, avg_s, avgSq_s] = adamupdate(ps, grads_s, avg_s, avgSq_s, step, lr);
-    [pt, avg_t, avgSq_t] = adamupdate(pt, grads_t, avg_t, avgSq_t, step, lr);
-
-    if verbose && (step == 1 || mod(step, 100) == 0)
-        fprintf('[xctmain_nn]     step %4d / %d   loss = %.6f\n', ...
-            step, n_steps, extractdata(loss_val));
-    end
-end
-
-% ── 6. Extract final embeddings ───────────────────────────────────────────
-out_s   = extractdata(i_net_fwd(Xs_dl, ps));   % ng × n_dim
-out_t   = extractdata(i_net_fwd(Xt_dl, pt));   % ng × n_dim
-outputs = [out_s; out_t];                       % (2*ng) × n_dim
-
-% Stiefel projection (same retraction as during training)
-[U, ~, V] = svd(outputs, 'econ');
-P   = U * V';      % (2*ng) × n_dim
-P_s = P(1:ng, :);
-P_t = P(ng+1:end, :);
+% Returned so ten.xct.xctmain2_nn can build its chi-square statistic over all
+% gene pairs, which the candidate-only output table cannot support.
+emb.P_s = P_s;
+emb.P_t = P_t;
 
 % ── 7. Candidate L-R distances ────────────────────────────────────────────
 cand_d = zeros(n_hit, 1);
@@ -255,16 +274,11 @@ for k = 1:n_hit
     cand_d(k) = sqrt(d_k * d_k');
 end
 
-% ── 8. Null distribution (sampled random non-L-R pairs) ──────────────────
-n_null = max(50000, 100 * n_hit);
-n_null = min(n_null, ng^2 - n_hit);
-rand_i = randi(ng, n_null, 1);
-rand_j = randi(ng, n_null, 1);
-diff_n = P_s(rand_i,:) - P_t(rand_j,:);
-null_d = sqrt(sum(diff_n.^2, 2));
-
-% Left-tail p-value: fraction of null ≤ candidate (small = strong signal)
-p_vals = sum(null_d(:) <= cand_d(:)', 1)' ./ numel(null_d);
+% ── 8. Left-tail null test ───────────────────────────────────────────────
+% Exhaustive over non-candidate pairs, as stat.py::null_test. Small p-value
+% means the candidate distance is unusually small. See TEN.I_XCTNULL for why
+% this replaced a sampled null.
+p_vals = ten.i_xctnull(P_s, P_t, li_idx, ri_idx, W12);
 
 % ── 9. Assemble output ────────────────────────────────────────────────────
 w12_vals = full(W12(sub2ind([ng,ng], li_idx, ri_idx)));
@@ -281,96 +295,24 @@ end
 end % i_align_nn
 
 
-%% ── NEURAL NETWORK PRIMITIVES ────────────────────────────────────────────
-
-function [loss, grads] = i_grad_fn(ps, pt, Xs_dl, Xt_dl, L_dl)
-% I_GRAD_FN  Loss and gradients — called inside dlfeval.
-%
-%   loss = trace(P' · L · P) / 3000
-%   where P = U·V'  (SVD Stiefel retraction of stacked net outputs).
-%   Gradients flow back through the polar factor iteration to both parameter structs.
-
-out_s   = i_net_fwd(Xs_dl, ps);   % ng_s × n_dim  (dlarray)
-out_t   = i_net_fwd(Xt_dl, pt);   % ng_t × n_dim  (dlarray)
-outputs = [out_s; out_t];          % (ng_s+ng_t) × n_dim
-
-% Stiefel retraction: P = polar factor of outputs (≡ U·V' from economy SVD)
-% Computed via Newton-Schulz iteration — uses only matrix multiply and scalar
-% ops, all of which dlarray supports for automatic differentiation.
-nrm = sqrt(sum(outputs .^ 2, 'all'));
-P = outputs ./ nrm;                % normalise so spectral norm < sqrt(3)
-for ns_iter = 1:10
-    P = 1.5 .* P - 0.5 .* (P * (P' * P));
-end                                % (ng_s+ng_t) × n_dim  (dlarray)
-
-% Laplacian loss  trace(P'·L·P)/3000  =  sum(P .* (L·P)) / 3000
-% L_dl is a constant dlarray — gradients accumulate only through P
-loss = sum(P .* (L_dl * P), 'all') / 3000;
-
-% Gradients w.r.t. both parameter structs simultaneously
-grads = dlgradient(loss, {ps, pt});
-
-end % i_grad_fn
-
-
-function out = i_net_fwd(X, p)
-% I_NET_FWD  Forward pass through one 3-layer network.
-%
-%   X   : ng × n_cells  (each row = one gene's expression profile)
-%   p   : struct with fields W1,b1,W2,b2,W3,b3  (dlarray)
-%   out : ng × n_dim    (each row = one gene's embedding)
-%
-%   Layer sizes (set at init): n_cells → 4·n_h → n_h → n_dim
-%   Activations: sigmoid on hidden layers, linear output.
-
-h1  = sigmoid(X  * p.W1 + p.b1);   % ng × H1
-h2  = sigmoid(h1 * p.W2 + p.b2);   % ng × H2
-out =          h2 * p.W3 + p.b3;   % ng × n_dim
-
-end % i_net_fwd
-
-
-function p = i_init_params(n_cells, n_dim)
-% I_INIT_PARAMS  Xavier-initialised parameter struct for one network.
-%   n_h = floor(sqrt(n_cells * n_dim))  (geometric mean, as in Python)
-%   H1  = 4 * n_h,  H2 = n_h
-
-n_h  = max(floor(sqrt(n_cells * n_dim)), 1);
-H1   = 4 * n_h;
-H2   = n_h;
-
-% Xavier (Glorot) uniform initialisation  ±sqrt(6/(fan_in+fan_out))
-p.W1 = dlarray(i_xavier(n_cells, H1,    'single'));
-p.b1 = dlarray(zeros(1, H1,             'single'));
-p.W2 = dlarray(i_xavier(H1,    H2,      'single'));
-p.b2 = dlarray(zeros(1, H2,             'single'));
-p.W3 = dlarray(i_xavier(H2,    n_dim,   'single'));
-p.b3 = dlarray(zeros(1, n_dim,          'single'));
-
-end % i_init_params
-
-
-function W = i_xavier(fan_in, fan_out, prec)
-% I_XAVIER  Xavier uniform weight matrix.
-lim = sqrt(6 / (fan_in + fan_out));
-W   = (rand(fan_in, fan_out, prec) * 2 - 1) .* lim;
-end % i_xavier
-
-
 %% ── SHARED HELPERS (duplicated from xctmain for self-containment) ────────
 
-function W = i_coexpr(X, thr)
-% I_COEXPR  Thresholded Pearson co-expression (sparse, base MATLAB only).
-mu  = mean(X, 2);
-sig = std(X, 0, 2);
-sig(sig < eps) = 1;
-Xz  = (X - mu) ./ sig;
-C   = (Xz * Xz') ./ max(size(X,2) - 1, 1);
-C   = max(min(C, 1), -1);
-C(abs(C) < thr) = 0;
-C(1:size(C,1)+1:end) = 0;   % zero diagonal
-W   = sparse(C);
-end % i_coexpr
+function i_rejectcorrthr(args)
+% I_REJECTCORRTHR  Explain the removal of the Pearson GRN option.
+%   The 'corr_thr' argument selected a cut-off for a Pearson co-expression
+%   proxy that no longer exists, so silently ignoring it would leave callers
+%   believing they had configured a network they had not.
+
+isname = cellfun(@(a) (ischar(a) || isstring(a)) && strcmpi(a, 'corr_thr'), args);
+if any(isname)
+    error("TEN:XCT:XCTMAIN_NN:CorrThrRemoved", ...
+        "'corr_thr' is no longer supported. Within-type networks are now " + ...
+        "built with PCNet rather than thresholded Pearson co-expression, " + ...
+        "to match the published Python implementation. Use 'ncomp' to set " + ...
+        "the number of principal components, or 'grn_q' to filter edges.");
+end
+
+end % i_rejectcorrthr
 
 
 function X = i_lognorm(X)

@@ -70,6 +70,13 @@ if nargin < 1 || isempty(fx)
     text(fa,20, 270,'Loading...','Color',[.7 .7 .7],'FontSize',12);
     fx.Visible=true;
     hold(fa,"on");
+
+    % Keep the splash on screen long enough to be seen, even when the app
+    % initializes quickly (the caller deletes the figure as soon as startup
+    % finishes, which can otherwise make the splash flash by).
+    minSplashSeconds = 1.5;
+    drawnow;
+    pause(minSplashSeconds);
 else
     fa = findall(fx,'type','axes');
     X=10:390;

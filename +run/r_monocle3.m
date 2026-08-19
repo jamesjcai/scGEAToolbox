@@ -10,7 +10,7 @@ t = []; s = []; m = [];
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_monocle3');
-if ~isok, error(msg); end
+if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.h5', 'output.h5', 'input.mat'};

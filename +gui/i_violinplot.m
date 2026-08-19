@@ -16,10 +16,10 @@ hFig=hx.FigHandle;
 isdescend = false;
 OldTitle = [];
 % OldXTickLabel = [];
-cLorder = strrep(cLorder, '_', '\_');
+cLorder = gui.i_escapeunderscore(cLorder);
 thisc = strrep(string(thisc), '_', '\_');
 pkg.i_bindviolinplot(y, thisc, colorit, cLorder);
-title(strrep(ttxt, '_', '\_'));
+title(gui.i_escapeunderscore(ttxt));
 % ylabel(selitems{indx1});
 
 

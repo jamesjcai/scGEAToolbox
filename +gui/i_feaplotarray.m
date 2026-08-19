@@ -18,7 +18,7 @@ end
 [c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
 if noanswer, return; end
 
-cL = strrep(cL(:),'_','\_');
+cL = gui.i_escapeunderscore(cL(:));
 [yes] = ismember(tgene, g);
 if ~any(yes), warning('No genes found.'); return; end
 z = length(tgene) - sum(yes);

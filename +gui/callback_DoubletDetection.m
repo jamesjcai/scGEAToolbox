@@ -48,14 +48,29 @@ if ~any(isDoublet)
 end
 
 if sce.NumCells == length(doubletscore)
-    tmpf_doubletdetection = figure('WindowStyle', 'modal');
+    % The preview is a plain figure. WindowStyle='modal' would keep it above
+    % every other window and block input to them, including the confirmation
+    % below.
+    tmpf_doubletdetection = figure();
     gui.i_stemscatter(sce.s, doubletscore);
     ax = gca;
     zlabel(ax, 'Doublet Score');
     title(ax, sprintf('Doublet Detection (%s)', methodtag))
-    if strcmp(gui.myQuestdlg(FigureHandle, ...
-            sprintf("Remove %d doublets?", sum(isDoublet))),'Yes')
+
+    % Ask through the preview figure, not FigureHandle: anchored to the main
+    % app the question is drawn inside that window and ends up underneath the
+    % preview. A traditional figure parent gets a questdlg of its own instead,
+    % which stacks above the plot and leaves it visible while deciding.
+    answer = gui.myQuestdlg(tmpf_doubletdetection, ...
+        sprintf("Remove %d doublets?", sum(isDoublet)));
+
+    % Close the preview whatever the answer, so declining does not leave an
+    % orphan figure behind, and so the message below is not covered by it.
+    if pkg.i_isvalid(tmpf_doubletdetection)
         close(tmpf_doubletdetection);
+    end
+
+    if strcmp(answer, 'Yes')
         sce = sce.removecells(isDoublet);
         gui.myGuidata(FigureHandle, sce, src);
         gui.myHelpdlg(FigureHandle, 'Doublets deleted.');

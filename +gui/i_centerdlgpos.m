@@ -63,44 +63,13 @@ end
 % -------------------------------------------------------------------------
 function idx = i_cursor_monitor_idx(monitors, defaultIdx)
 % Return the index into monitors of the monitor under the mouse cursor.
-% Converts Java AWT virtual-desktop coordinates to MATLAB MonitorPositions
-% space using the primary monitor's DPI scale factor as a bridge.
+% groot's PointerLocation is already reported in the same coordinate space
+% as MonitorPositions, so no Java AWT / DPI bridging is needed.
 idx = defaultIdx;
 try
-    % Identify primary MATLAB monitor: nearest to corner (1, 1).
-    [~, pi] = min(abs(monitors(:,1)-1) + abs(monitors(:,2)-1));
-    pm = monitors(pi, :); % [x y w h] in MATLAB logical pixels
-
-    % Identify primary Java monitor: the screen device whose bounds start
-    % at Java origin (0, 0).
-    ge  = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
-    gds = ge.getScreenDevices();
-    jw = 0; jh = 0;
-    for k = 1:numel(gds)
-        b = gds(k).getDefaultConfiguration().getBounds();
-        if b.x == 0 && b.y == 0
-            jw = b.width;
-            jh = b.height;
-            break;
-        end
-    end
-    if jw == 0, return; end % Java did not find a primary monitor
-
-    % DPI scale: Java primary logical pixels → MATLAB logical pixels.
-    % Both Java and MATLAB use the system (primary-monitor) DPI for the
-    % virtual-desktop origin, so this ratio is the DPI scale factor.
-    sx = jw / pm(3); % e.g. 3440 / 2752 = 1.25
-    sy = jh / pm(4);
-
-    % Mouse position in Java virtual-desktop coords (y increases downward).
-    pt = java.awt.MouseInfo.getPointerInfo().getLocation();
-
-    % Convert to MATLAB coords (y increases upward from primary bottom).
-    mx = pm(1) + pt.x / sx;
-    my = pm(2) + pm(4) - 1 - pt.y / sy;
-
-    % fprintf('[i_centerdlgpos] cursor: Java(%g,%g) -> MATLAB(%.1f,%.1f)\n', ...
-    %     pt.x, pt.y, mx, my);
+    pl = get(groot, 'PointerLocation'); % [x y] in MATLAB screen pixels
+    mx = pl(1);
+    my = pl(2);
 
     % Find which MATLAB monitor contains the mouse.
     inMon = mx >= monitors(:,1) & mx < monitors(:,1)+monitors(:,3) & ...

@@ -74,4 +74,14 @@ switch option
             tgsPos = unique(strsplit(string(T.PositiveMarkers(k)), ','));
             setmatrx(k,:)=ismember(setgenes,tgsPos);
         end
+    case {4,'Glycobiology','Glycobiology Gene Sets'}
+        pw1 = fileparts(mfilename('fullpath'));
+        glycofile = fullfile(pw1, '..', 'assets', 'GeneSets', ...
+            'glycobiology.mat');
+        if isfile(glycofile)
+            load(glycofile, 'setmatrx', 'setnames', 'setgenes');
+        else
+            % Fall back to building the collection on the fly.
+            [setmatrx, setnames, setgenes] = pkg.e_glycogenesets();
+        end
 end

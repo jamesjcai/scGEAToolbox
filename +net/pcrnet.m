@@ -50,7 +50,11 @@ if dozscore
     X = zscore(X);
 end
 if UseGPU
-    X = gpuArray(X);
+    % full() is required: sparse gpuArray does not support the two-index
+    % slicing X(:, cols) used in the loop below. X is cells-by-genes here, so
+    % densifying costs csubsmpl*ngene*8 bytes -- 32 MB at 500 cells x 8000
+    % genes -- which is negligible next to the g-by-g adjacency.
+    X = gpuArray(full(X));
 end
 n = size(X, 2);
 A = 1 - eye(n);

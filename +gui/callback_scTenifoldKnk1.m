@@ -45,7 +45,7 @@ switch answer
             end
         end
         if isempty(b) || ~any(valididx)
-            [anw] = gui.myQuestdlg(FigureHandle, 'Workspace contains no network varible. Read from .mat file?','');
+            [anw] = gui.myQuestdlg(FigureHandle, 'Workspace contains no network variable. Read from .mat file?','');
             if ~strcmp(anw, 'Yes'), return; end
             [A0] = in_readA0fromfile(sce.NumGenes);
             if isempty(A0) || size(A0, 1) ~= sce.NumGenes || size(A0, 2) ~= sce.NumGenes

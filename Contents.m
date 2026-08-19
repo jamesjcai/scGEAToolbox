@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.3.7 14-Jul-2026
+% Version 26.4.0 19-Aug-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -15,6 +15,7 @@
 %   sc_filterg                - cutoff < 1:  interpreted as minimum non-zero fraction (dropout-rate mode)
 %   sc_genestat               - SC_GENESTAT  Compute per-gene statistics and optionally filter invalid values
 %   sc_genestats              - SC_GENESTATS  Compute per-gene statistics into a tidy table
+%   sc_geosketch              - SC_GEOSKETCH Geometric sketching subsample of cells.
 %   sc_grn                    - SC_GRN Construct single-cell gene regulatory network (scGRN)
 %   sc_grnview                - SC_GRNVIEW  Display a gene regulatory network as a graph GUI.
 %   sc_grnview2               - SC_GRNVIEW2  Display two gene regulatory networks side-by-side.
@@ -59,3 +60,4 @@
 %   sc_umap                   - UMAP embedding of cells
 %   sc_writefile              - sc_writefile is a function.
 %   scgeatool                 - SCGEATOOL - Launch App Designer GUI
+%   sctransform_v2            - SCTRANSFORM_V2  Pure-MATLAB port of sctransform::vst(vst.flavor = "v2").

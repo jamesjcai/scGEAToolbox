@@ -19,6 +19,7 @@ if (ismcc || isdeployed) && pkg.i_isreportgenavailable('ppt'), makePPTCompilable
 
 
 hx = gui.myFigure(parentfig, true);
+
 hFig = hx.FigHandle;
 hFig.Position(3) = hFig.Position(3) * 1.8;
 

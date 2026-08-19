@@ -17,7 +17,7 @@ for k = 1:max(c)
     a(k) = sum(c <= k);
     b(k) = round(sum(c == k)./2);
 end
-rowlabels = strrep(rowlabels, '_', '\_');
+rowlabels = gui.i_escapeunderscore(rowlabels);
 hx=gui.myFigure(parentfig);
 
 %{

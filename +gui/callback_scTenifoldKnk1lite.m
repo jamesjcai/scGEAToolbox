@@ -65,7 +65,7 @@ if isempty(A0)
     fw = gui.myWaitbar(FigureHandle);
     disp('Constructing gene regulatory network...')
     try
-        A0 = net.pcrnet(X, 3, true, true, useparallel, ~useparallel, useGPU);
+        A0 = net.pcrnet(X, 3, false, true, useparallel, ~useparallel, useGPU);
     catch ME
         gui.myWaitbar(FigureHandle, fw, true);
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);

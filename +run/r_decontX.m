@@ -11,7 +11,7 @@ oldpth = pwd();
 cleanupObj = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_decontX');
 
-if ~isok, error(msg); end
+if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 if isa(X, 'SingleCellExperiment')

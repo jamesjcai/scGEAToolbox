@@ -65,7 +65,7 @@ end
 if exist('tensor.m', 'file') ~= 2
     error('Need tensor_toolbox');
 end
-if exist('net.pcrnet', 'file') ~= 2
+if isempty(which('net.pcrnet'))
     error('Need net.pcrnet in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
 end
 

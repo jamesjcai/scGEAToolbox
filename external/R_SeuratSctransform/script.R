@@ -22,9 +22,7 @@ if (file.exists("input.mat")){
 }
 
 # https://satijalab.org/seurat/articles/sctransform_vignette.html
-# store mitochondrial percentage in object meta data
-sce <- PercentageFeatureSet(sce, pattern = "^MT-", col.name = "percent.mt")
-sce <- SCTransform(sce, vars.to.regress = "percent.mt", verbose = FALSE, vst.flavor = "v2")
+sce <- SCTransform(sce, verbose = FALSE, vst.flavor = "v2")
 
 #Apply sctransform normalization
 #Note that this single command replaces NormalizeData, ScaleData, and FindVariableFeatures.

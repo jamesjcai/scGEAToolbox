@@ -9,7 +9,7 @@ isdebug = false;
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_SeuratCellCycle');
-if ~isok, error(msg);
+if ~isok, error('%s', msg);
     c = [];
     T = [];
     return;

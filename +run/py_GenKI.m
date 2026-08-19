@@ -1,7 +1,7 @@
 function [T] = py_GenKI(X, g, idx, wkdir, isdebug)
 
 if nargin < 5, isdebug = true; end
-if nargin < 4, wkdir = []; end
+if nargin < 4, wkdir = pkg.i_tempdirfile(); end
 
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
@@ -47,7 +47,7 @@ if status ~= 0
     if pkg.i_isvalid(fw)
          gui.gui_waitbar(fw, true);
     end
-    error(cmdout);
+    error('%s', cmdout);
 end
 
 
@@ -78,7 +78,7 @@ end
 %     end
 
 try
-    tmpfilelist = {'X.mat', 'g.txt', 'pcnet_Source.mat', ...
+    tmpfilelist = {'X.mat', 'g.txt', 'c.txt', 'pcnet_Source.mat', ...
         'idx.mat', 'output.csv', fullfile('GRNs', 'pcNet_example.npz')};
     if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
     if issparse(X)

@@ -39,20 +39,27 @@ end
 
 
 %% ---- Method 1: UCell (rank-based) ----
-function [score] = i_ucell(X, genelist, tgsPos)
-% UCell-inspired rank-based scoring
-% https://doi.org/10.1016/j.csbj.2021.06.043
+function [score] = i_ucell(X, genelist, tgsPos, maxRank)
+% UCell rank-based signature scoring (Andreatta & Carmona, 2021).
+% ref: https://doi.org/10.1016/j.csbj.2021.06.043
+% ref: https://github.com/carmonalab/UCell
 
-genelist = upper(genelist);
-tgsPos = upper(tgsPos);
+if nargin < 4 || isempty(maxRank), maxRank = 1500; end
 
-idx1 = matches(genelist, tgsPos, 'IgnoreCase', true);
-n1 = sum(idx1);
+idx = matches(genelist, tgsPos, 'IgnoreCase', true);
+n = sum(idx);
 
+% Per-cell ranks with highest expression at rank 1; average ties.
 R = tiedrank(-full(X));
-R(R > 1500) = 1500 + 1;
-u = sum(R(idx1, :)) - (n1 * (n1 - 1)) / 2;
-score = 1 - u / (n1 * 1500);
+R(R > maxRank) = maxRank + 1;
+
+% Mann-Whitney U statistic per cell: rank sum minus its minimum n(n+1)/2.
+rankSum = sum(R(idx, :), 1);
+u = rankSum - (n * (n + 1)) / 2;
+score = 1 - u / (n * maxRank);
+
+% Cells whose signature genes all rank beyond maxRank score 0 (UCell).
+score(all(R(idx, :) > maxRank, 1)) = 0;
 score = score(:);
 end
 
@@ -63,8 +70,8 @@ function [score] = i_admdl(X, genelist, tgsPos, tgsNeg, nbin, ctrl)
 % ref: https://github.com/satijalab/seurat/blob/master/R/utilities.R
 % ref: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8271111/
 
-if nargin < 6, ctrl = 5; end
-if nargin < 5, nbin = 25; end
+if nargin < 6, ctrl = 100; end
+if nargin < 5, nbin = 24; end
 if nargin < 4, tgsNeg = []; end
 
 if issparse(X), X = full(X); end
@@ -80,18 +87,23 @@ end
 end
 
 function [score] = i_admdl_calculate(X, genelist, tgs, directtag, nbin, ctrl)
-if nargin < 6, ctrl = 5; end
-if nargin < 5, nbin = 25; end
+if nargin < 6, ctrl = 100; end
+if nargin < 5, nbin = 24; end
 if nargin < 4, directtag = 1; end
 
 cluster_length = size(X, 1);
 data_avg = mean(X, 2);
-[~, I] = sort(data_avg);
 
+% Break exact ties (e.g. all-zero genes) before binning, matching Seurat's
+% addition of rnorm(n)/1e30 to data.avg prior to cut_number.
+data_avg = data_avg + randn(size(data_avg)) / 1e30;
+
+[~, I] = sort(data_avg);
 data_avg = data_avg(I);
 gsorted = genelist(I);
 Xsorted = X(I, :);
 
+% Equal-frequency bins over sorted mean expression (Seurat cut_number).
 assigned_bin = zeros(cluster_length, 1);
 bin_size = cluster_length / nbin;
 for i = 1:nbin
@@ -101,11 +113,18 @@ for i = 1:nbin
 end
 
 idx = matches(gsorted, tgs, 'IgnoreCase', true);
-selected_bins = unique(assigned_bin(idx));
-samebin_genes = gsorted(ismember(assigned_bin, selected_bins));
+
+% Draw ctrl control genes from each feature gene's own bin (per-feature
+% sampling, matching Seurat) rather than from a pool of all feature bins.
 ctrl_cell = cell(length(tgs), 1);
 for i = 1:length(tgs)
-    ctrl_cell{i} = randsample(samebin_genes, ctrl);
+    gi = find(matches(gsorted, tgs(i), 'IgnoreCase', true), 1);
+    if isempty(gi)
+        continue;
+    end
+    bin_genes = gsorted(assigned_bin == assigned_bin(gi));
+    k = min(ctrl, numel(bin_genes));
+    ctrl_cell{i} = bin_genes(randsample(numel(bin_genes), k));
 end
 ctrl_use = unique(vertcat(ctrl_cell{:}));
 
@@ -121,50 +140,42 @@ end
 
 
 %% ---- Method 3: AUCell (AUC recovery curve) ----
-function [score] = i_aucell(X, genelist, tgsPos)
-% AUCell - Area Under the recovery Curve scoring
+function [score] = i_aucell(X, genelist, tgsPos, aucMaxRank)
+% AUCell - Area Under the recovery Curve scoring (Aibar et al., 2017).
+% ref: https://doi.org/10.1038/nmeth.4463
+% ref: https://bioconductor.org/packages/AUCell
 
 [nGenes, nCells] = size(X);
 
-% Default aucMaxRank: 5% of genes, minimum 50
-aucMaxRank = max(50, round(0.05 * nGenes));
+% Default aucMaxRank: top 5% of genes (Bioconductor AUCell default).
+if nargin < 4 || isempty(aucMaxRank)
+    aucMaxRank = ceil(0.05 * nGenes);
+end
 
-% Find gene indices for the positive markers
 idx = matches(genelist, tgsPos, 'IgnoreCase', true);
-geneIndices = find(idx);
-
-if isempty(geneIndices)
+nSet = sum(idx);
+if nSet == 0
     score = NaN(nCells, 1);
     return;
 end
 
-% Rank and score each cell without storing full rankings matrix
 if issparse(X), X = full(X); end
+
+% Maximum attainable area: whole gene set occupies the top ranks.
+maxArea = nSet * aucMaxRank - nSet * (nSet + 1) / 2;
+
 score = zeros(nCells, 1);
-for cellIdx = 1:nCells
-    [~, ranking] = sort(X(:, cellIdx), 'descend');
-    [~, ranks] = sort(ranking);
-    score(cellIdx) = i_aucell_auc(ranks, geneIndices, aucMaxRank);
+for c = 1:nCells
+    [~, order] = sort(X(:, c), 'descend');
+    ranks = zeros(nGenes, 1);
+    ranks(order) = 1:nGenes;
+
+    % Ranks of the gene set that fall within the recovery window.
+    setRanks = ranks(idx);
+    setRanks = setRanks(setRanks <= aucMaxRank);
+
+    % Area under the step recovery curve equals sum(aucMaxRank - rank_i).
+    area = numel(setRanks) * aucMaxRank - sum(setRanks);
+    score(c) = area / maxArea;
 end
-end
-
-function auc = i_aucell_auc(geneRanks, geneSet, maxRank)
-% Calculate AUC for a single gene set in a single cell
-
-setRanks = geneRanks(geneSet);
-setRanks = setRanks(setRanks <= maxRank);
-
-if isempty(setRanks)
-    auc = 0;
-    return;
-end
-
-setRanks = sort(setRanks);
-nGenesInSet = length(setRanks);
-
-x = [0; setRanks; maxRank];
-y = [0; (1:nGenesInSet)'/nGenesInSet; 1];
-
-auc = trapz(x, y) / maxRank;
-auc = max(0, (auc - 0.5) * 2);
 end

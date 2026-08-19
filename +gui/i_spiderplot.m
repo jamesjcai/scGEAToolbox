@@ -5,7 +5,10 @@ if nargin < 4, sce = []; end
 
 [c, cL] = findgroups(string(thisc));
 % P = grpstats(Y, c, 'mean');
-P = splitapply(@mean, Y, c)';
+% Grouped means: rows = cell groups (spider series), columns = signatures
+% (spider axes). Do not transpose -- spider_plot expects series-by-axes, and
+% the axis labels (labelx) index the columns.
+P = splitapply(@mean, Y, c);
 n = size(P, 2);
 
 %         axes_limits=[repmat(min([0, min(P(:))]),1,n);...
@@ -35,13 +38,13 @@ showlegend = true;
 
 bkcolor = gui.i_getthemebkgcolor(hFig);
 
-labelx = strrep(labelx, '_', '\_');
+labelx = gui.i_escapeunderscore(labelx);
 spider_plot_R2019b(P, 'AxesLabels', labelx, ...
 'AxesPrecision', 2, 'AxesLimits', axes_limits, ...
 'BackgroundColor', bkcolor, ...
 'AxesFontColor', 1-bkcolor, ...
 'AxesZeroColor', 1-bkcolor);
-cL = strrep(cL, '_', '\_');
+cL = gui.i_escapeunderscore(cL);
 legend(cL, 'Location', 'best');
 if ~isempty(titlex), title(titlex); end
 hx.show(parentfig);

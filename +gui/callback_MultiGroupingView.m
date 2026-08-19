@@ -130,7 +130,7 @@ if hastip, return; end
 
 for kx = 1:length(thiscv)
     [c1, cL1] = findgroups(string(thiscv{kx}));
-    cL1 = strrep(cL1,'_','\_');
+    cL1 = gui.i_escapeunderscore(cL1);
     if max(c1) < 50
         hv{kx}.DataTipTemplate.DataTipRows = dataTipTextRow('', cL1(c1));
         for i = 1:max(c1)

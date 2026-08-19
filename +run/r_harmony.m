@@ -11,7 +11,7 @@ if isempty(wkdir), wkdir = pkg.i_tempdirfile(); end
 oldpth = pwd();
 cleanupObj = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_harmony');
-if ~isok, error(msg);
+if ~isok, error('%s', msg);
     return;
 end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end

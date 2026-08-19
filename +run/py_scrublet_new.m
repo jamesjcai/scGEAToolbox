@@ -1,7 +1,7 @@
 function [isDoublet, doubletscore] = py_scrublet_new(X, wkdir, isdebug)
 
 if nargin < 3, isdebug = true; end
-if nargin < 2, wkdir = []; end
+if nargin < 2, wkdir = pkg.i_tempdirfile(); end
 
 isDoublet = [];
 doubletscore = [];
@@ -43,7 +43,7 @@ if status ~= 0
     if pkg.i_isvalid(fw)
         gui.gui_waitbar(fw, true);
     end
-    error(cmdout);
+    error('%s', cmdout);
 end
 
 

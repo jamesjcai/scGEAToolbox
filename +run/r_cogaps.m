@@ -26,7 +26,7 @@ Tmarkers = [];
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_CoGAPS');
-if ~isok, error(msg); end
+if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.mat', 'genes.txt', 'output.h5', 'output_markers.csv'};

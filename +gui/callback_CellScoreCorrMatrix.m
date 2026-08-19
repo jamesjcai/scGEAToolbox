@@ -122,11 +122,7 @@ else
         case 'Cancel'
             return;
         case 'Use another'
-            % absolutePath = matlab.io.file.absolutePath(defaultscorefile);
-            % absolutePath=fileparts(which(defaultscorefile));
-            absolutePath = char(java.io.File(defaultscorefile).getCanonicalPath());
-            % javaFile = java.io.File(defaultscorefile);
-            % absolutePath = char(javaFile.getAbsolutePath());
+            absolutePath = pkg.i_normalizepath(defaultscorefile);
             [file, path] = uigetfile(defaultscorefilename, ...
                 'Select File', absolutePath);
             if isequal(file, 0), return; end

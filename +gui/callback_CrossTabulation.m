@@ -164,12 +164,12 @@ function in_plot1
             % bar series may not expose CData on every backend; colormap still applies
         end
         xticks(1:length(labelsx));
-        labelsx1 = strrep(labelsx, '_', '\_');
+        labelsx1 = gui.i_escapeunderscore(labelsx);
         xticklabels(labelsx1);
 
         xlabel(strrep(clabel, '_', '\_'))
         ylabel('# of cells')
-        labelsy1 = strrep(labelsy, '_', '\_');
+        labelsy1 = gui.i_escapeunderscore(labelsy);
         lgd = legend(labelsy1, 'Location', 'bestoutside');
         title(lgd, strrep(llabel, '_', '\_'));
     end
@@ -204,10 +204,10 @@ function in_plot2
         % title(clabel2);
         xticks(1:length(labelsx));
 
-        labelsx2 = strrep(labelsx, '_', '\_');
+        labelsx2 = gui.i_escapeunderscore(labelsx);
         xticklabels(labelsx2);
         ylim([0, 1]);
-        labelsy2 = strrep(labelsy, '_', '\_');
+        labelsy2 = gui.i_escapeunderscore(labelsy);
         lgd = legend(labelsy2, 'Location', 'bestoutside');
         title(lgd, strrep(llabel, '_', '\_'));
     end

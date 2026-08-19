@@ -138,7 +138,7 @@ for k = 1:numel(cell_types)
     A0 = [];
     try
         disp('Constructing gene regulatory network...')
-        A0 = net.pcrnet(X, 3, true, true, useparallel, ~useparallel, useGPU);
+        A0 = net.pcrnet(X, 3, false, true, useparallel, ~useparallel, useGPU);
     catch ME
         fprintf('FAILED (network construction): %s\n', ME.message);
         i_log(out_dir, sprintf('FAILED "%s" (pcrnet): %s', ct_k, ME.message));

@@ -1,7 +1,8 @@
 function [T] = xctmain2(X_s1, X_t1, X_s2, X_t2, g, varargin)
-% XCTMAIN2  Differential cell-cell interaction, Path B Lite (Pearson, base MATLAB).
+% XCTMAIN2  Differential cell-cell interaction, Path B (spectral).
 %   Wraps ten.xct.xctmain run on each sample independently, then performs
-%   a differential fold-change test.  No extra toolboxes required.
+%   a differential fold-change test.  Inherits xctmain's PCNet GRNs and so
+%   requires Statistics and Machine Learning Toolbox.
 %
 %   T = ten.xct.xctmain2(X_s1, X_t1, X_s2, X_t2, g)
 %   T = ten.xct.xctmain2(X_s1, X_t1, X_s2, X_t2, g, Name, Value)
@@ -13,50 +14,65 @@ function [T] = xctmain2(X_s1, X_t1, X_s2, X_t2, g, varargin)
 %
 %   Name-Value pairs:
 %     'twosided'  - run both directions (default: true)
-%     'n_dim'     - spectral embedding dimensions (default: 50)
-%     'mu'        - cross-type correspondence weight (default: 0.9)
-%     'corr_thr'  - |Pearson r| cut-off for GRN edges (default: 0.3)
+%     'n_dim'     - spectral embedding dimensions (default: 3, as the reference)
+%     'mu'        - cross-type correspondence weight (default: 0.9, as merge.py)
+%     'ncomp'     - PCNet principal components (default: 5)
+%     'grn_q'     - GRN edge-filtering quantile; 0 disables (default: 0)
 %     'verbose'   - print progress (default: true)
 %
 %   Output:
-%     T  - table: ligand, receptor, dist_s1, dist_s2, FC, p_value
-%          FC < 1: interaction stronger in sample 1
-%          FC > 1: interaction stronger in sample 2
+%     T  - table: ligand, receptor, dist_s1, dist_s2, diff2, FC, p_value,
+%          q_value, sorted by diff2 descending.
 %          When twosided=true, T is a cell {T_dir1, T_dir2}.
 %
 %   Algorithm:
-%     Calls ten.xct.xctmain (pval=1.0) on each sample to obtain per-pair
-%     embedding distances.  Matched pairs are joined on (ligand, receptor).
-%     FC = dist_s1 / dist_s2.  Two-tailed p-value is computed empirically:
-%     null |log2(FC)| values are drawn by randomly cross-pairing d1 and d2
-%     distances, simulating the H0 that the two distance vectors are
-%     exchangeable.
+%     Calls ten.xct.xctmain (pval=1.0) on each sample to obtain the aligned
+%     embeddings, then applies stat.py::chi2_diff_test via TEN.I_XCTCHI2:
+%     diff2 = (dist_s1 - dist_s2)^2 over EVERY gene pair, scaled by its own
+%     mean, referred to a right-tail chi-square, and Benjamini-Hochberg
+%     corrected across all pairs before restricting to the candidates.
+%
+%   THE TEST CHANGED ON 2026-07-20 AND SO DID `FC`. It was a two-tailed
+%   empirical test on log2(dist_s1/dist_s2) against randomly cross-paired
+%   distances, which matched nothing in the reference. `FC` is now the scaled
+%   chi-square statistic, not a ratio, so it is not comparable to values
+%   recorded before that date, and direction is no longer encoded - read
+%   dist_s1 against dist_s2 for that.
 
 p = inputParser;
 addOptional(p, 'twosided', true, @islogical);
-addOptional(p, 'n_dim',    50,   @(x) isnumeric(x) && x > 0);
+% Differential path: merge.py sets n_dim=3 and mu=0.9, where the single-pair
+% class uses mu=1.0. Follow merge.py here.
+addOptional(p, 'n_dim',    3,    @(x) isnumeric(x) && x > 0);
 addOptional(p, 'mu',       0.9,  @(x) isnumeric(x) && x > 0);
-addOptional(p, 'corr_thr', 0.3,  @(x) isnumeric(x) && x >= 0 && x <= 1);
+addOptional(p, 'ncomp',    5,    @(x) isnumeric(x) && x >= 2);
+addOptional(p, 'grn_q',    0,    @(x) isnumeric(x) && x >= 0 && x < 1);
 addOptional(p, 'verbose',  true, @islogical);
+addParameter(p, 'w12mode', "outer", @(x) ismember(string(x), ["outer","lr"]));
+addParameter(p, 'alpha',   0.5,   @(x) isnumeric(x) && x >= 0 && x <= 1);
+addParameter(p, 'grnoffset', 1.0, @(x) isnumeric(x) && isscalar(x) && x >= 0);
+addParameter(p, 'useparallel', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
 parse(p, varargin{:});
 opts = p.Results;
 
-pass = {'n_dim', opts.n_dim, 'mu', opts.mu, 'corr_thr', opts.corr_thr, ...
-        'pval', 1.0, 'verbose', opts.verbose};
+pass = {'n_dim', opts.n_dim, 'mu', opts.mu, 'ncomp', opts.ncomp, ...
+        'grn_q', opts.grn_q, 'pval', 1.0, 'verbose', opts.verbose, ...
+        'w12mode', opts.w12mode, 'alpha', opts.alpha, ...
+        'grnoffset', opts.grnoffset, 'useparallel', opts.useparallel};
 
 % ── Direction 1 ───────────────────────────────────────────────────────────
 if opts.verbose, fprintf('[xctmain2] Sample 1, direction 1...\n'); end
-Ta1 = ten.xct.xctmain(X_s1, X_t1, g, 'twosided', false, pass{:});
+[~, Ea1] = ten.xct.xctmain(X_s1, X_t1, g, 'twosided', false, pass{:});
 if opts.verbose, fprintf('[xctmain2] Sample 2, direction 1...\n'); end
-Ta2 = ten.xct.xctmain(X_s2, X_t2, g, 'twosided', false, pass{:});
-T1  = i_diff(Ta1, Ta2, opts.verbose);
+[~, Ea2] = ten.xct.xctmain(X_s2, X_t2, g, 'twosided', false, pass{:});
+T1  = i_diff(Ea1, Ea2, g, opts.verbose, 'xctmain2');
 
 if opts.twosided
     if opts.verbose, fprintf('[xctmain2] Sample 1, direction 2...\n'); end
-    Tb1 = ten.xct.xctmain(X_t1, X_s1, g, 'twosided', false, pass{:});
+    [~, Eb1] = ten.xct.xctmain(X_t1, X_s1, g, 'twosided', false, pass{:});
     if opts.verbose, fprintf('[xctmain2] Sample 2, direction 2...\n'); end
-    Tb2 = ten.xct.xctmain(X_t2, X_s2, g, 'twosided', false, pass{:});
-    T2  = i_diff(Tb1, Tb2, opts.verbose);
+    [~, Eb2] = ten.xct.xctmain(X_t2, X_s2, g, 'twosided', false, pass{:});
+    T2  = i_diff(Eb1, Eb2, g, opts.verbose, 'xctmain2');
     T   = {T1, T2};
 else
     T = T1;
@@ -67,55 +83,48 @@ end % main
 
 %% ── LOCAL FUNCTION ───────────────────────────────────────────────────────
 
-function Td = i_diff(T_s1, T_s2, verbose)
-% I_DIFF  Join two single-sample XCT tables and compute differential FC test.
+function Td = i_diff(E1, E2, g, verbose, tag)
+% I_DIFF  Differential chi-square test on aligned distances.
+%   Follows merge.py's nn_aligned_diff together with stat.py::chi2_diff_test:
+%   the statistic is diff2 = (dist_s1 - dist_s2)^2 evaluated over EVERY gene
+%   pair, scaled by its own mean, referred to a right-tail chi-square, and
+%   Benjamini-Hochberg corrected across all pairs. Restriction to the candidate
+%   L-R pairs happens last.
+%
+%   The embeddings are required rather than the two candidate-only tables,
+%   because mean(diff2) is taken over all pairs and it sets every p-value.
+%
+%   Replaced a two-tailed empirical test on log2(dist_s1/dist_s2) against
+%   randomly cross-paired distances, which matched nothing in the reference.
+%   See TEN.I_XCTCHI2.
 
-if isempty(T_s1) || isempty(T_s2) || height(T_s1) == 0 || height(T_s2) == 0
+if isempty(E1.P_s) || isempty(E2.P_s)
     Td = table(); return;
 end
-
-% ── Join on (ligand, receptor) ────────────────────────────────────────
-key1 = upper(string(T_s1.ligand)) + "|" + upper(string(T_s1.receptor));
-key2 = upper(string(T_s2.ligand)) + "|" + upper(string(T_s2.receptor));
-[~, ia, ib] = intersect(key1, key2, 'stable');
-
-if isempty(ia)
-    Td = table();
-    if verbose
-        warning('xctmain2:noCommonPairs', ...
-            'No common L-R pairs between the two samples.');
-    end
-    return;
+if ~isequal(E1.li_idx, E2.li_idx) || ~isequal(E1.ri_idx, E2.ri_idx)
+    error([tag ':pairMismatch'], ...
+        ['The two samples matched different L-R pairs, so their embeddings ' ...
+         'cannot be compared elementwise. Both must be run on one gene list.']);
 end
 
-lig = T_s1.ligand(ia);
-rec = T_s1.receptor(ia);
-d1  = T_s1.dist(ia);
-d2  = T_s2.dist(ib);
+ng = size(E1.P_s, 1);
+D1 = pdist2(double(E1.P_s), double(E1.P_t));
+D2 = pdist2(double(E2.P_s), double(E2.P_t));
 
-% ── Fold change ───────────────────────────────────────────────────────
-FC  = d1 ./ max(d2, 1e-8);
-lfc = log2(FC);
+diff2_all = (D1 - D2).^2;                       % merge.py:110
+[p_all, q_all, FC_all] = ten.i_xctchi2(diff2_all(:), dof=1, tail="right");
 
-% ── Null: cross-pair random FC (H0: d1 and d2 exchangeable) ──────────
-n_pairs = numel(d1);
-n_null  = max(50000, 100 * n_pairs);
-rng_state = rng;
-ri1 = randi(n_pairs, n_null, 1);
-ri2 = randi(n_pairs, n_null, 1);
-rng(rng_state);
-null_lfc  = log2(d1(ri1) ./ max(d2(ri2), 1e-8));
+candLin = sub2ind([ng, ng], E1.li_idx, E1.ri_idx);
+g = string(g(:));
 
-% Two-tailed p-value
-p_vals = sum(abs(null_lfc) >= abs(lfc)', 1)' ./ n_null;
-
-% ── Output table ─────────────────────────────────────────────────────
-Td = table(lig, rec, d1, d2, FC, p_vals, ...
-    'VariableNames', {'ligand','receptor','dist_s1','dist_s2','FC','p_value'});
-Td = sortrows(Td, 'p_value', 'ascend');
+Td = table(g(E1.li_idx), g(E1.ri_idx), D1(candLin), D2(candLin), ...
+    diff2_all(candLin), FC_all(candLin), p_all(candLin), q_all(candLin), ...
+    'VariableNames', {'ligand', 'receptor', 'dist_s1', 'dist_s2', 'diff2', ...
+    'FC', 'p_value', 'q_value'});
+Td = sortrows(Td, 'diff2', 'descend');          % stat.py:89
 
 if verbose
-    fprintf('[xctmain2]   %d common L-R pairs; %d with p < 0.05.\n', ...
-        height(Td), sum(Td.p_value < 0.05));
+    fprintf('[%s]   %d L-R pairs; %d with q < 0.05.\n', ...
+        tag, height(Td), sum(Td.q_value < 0.05));
 end
 end

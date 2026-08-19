@@ -20,7 +20,7 @@ switch p.Results.type
     case 'deseq'
         [X] = pkg.norm_deseq(X);
     case 'shiftedclr'
-        [X] = pkg.norm_shiftedclr(X);
+        [X] = pkg.norm_shiftedclr_scclr(X);
     otherwise
         error('sc_norm:InvalidType', 'Unknown normalization type: %s', p.Results.type);
 end

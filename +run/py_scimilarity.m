@@ -44,7 +44,7 @@ if ~prepare_input_only
         disp(cmdlinestr)
         [status, cmdout] = system(cmdlinestr, '-echo');
         if status ~= 0
-            error(cmdout);
+            error('%s', cmdout);
         else
             disp('Code requirement check is done.')
         end

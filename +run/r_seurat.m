@@ -6,7 +6,7 @@ if nargin < 4, isdebug = false; end
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_Seurat');
-if ~isok, error(msg); end
+if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 

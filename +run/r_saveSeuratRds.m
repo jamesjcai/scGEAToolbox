@@ -8,7 +8,7 @@ if nargin < 2, error('run.saveSeuratRds(sce,filename)'); end
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_SeuratSaveRds');
-if ~isok, error(msg);
+if ~isok, error('%s', msg);
     return;
 end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end

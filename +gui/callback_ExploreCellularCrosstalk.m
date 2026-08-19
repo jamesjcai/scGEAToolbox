@@ -42,7 +42,8 @@ if ~strcmp(answer, 'Yes'), return; end
 
         n = length(OUT.ligandok);
         if n == 0
-            gui.myWarndlg(FigureHandle, 'Not detected.');
+            gui.myWarndlg(FigureHandle, 'No ligand-receptor crosstalk detected.');
+            return;
         end
 
         gui.TableViewerApp(T, FigureHandle, "TalklrRes");

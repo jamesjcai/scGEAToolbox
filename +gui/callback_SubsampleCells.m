@@ -15,10 +15,6 @@ if isempty(methodoption)
         case 'Uniform Sampling'
             methodoption = 1;
         case 'Geometric Sketching [PMID:31176620]'
-            if ~pkg.i_checkpython
-                gui.myWarndlg(FigureHandle, 'Python not installed.','');
-                return;
-            end
             methodoption = 2;
         otherwise
             return;
@@ -39,8 +35,8 @@ elseif methodoption == 2
         if issparse(Xn)
             Xn = full(Xn);
         end
-        [~, Xn] = pca(Xn, 'NumComponents', 300);
-        ids = run.py_geosketch(Xn, tn);
+        [~, Xn] = pca(Xn, 'NumComponents', min(300, size(Xn, 2)));
+        ids = sc_geosketch(Xn, tn);
     catch ME
         gui.myWaitbar(FigureHandle, fw);
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);

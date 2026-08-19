@@ -2,7 +2,7 @@ function [sout] = py_harmonypy(s, batchid, wkdir, isdebug)
 arguments
 s(:, :) {mustBeNumeric}
 batchid(1, :) {mustBePositive, mustBeInteger}
-wkdir = []
+wkdir = pkg.i_tempdirfile()
 isdebug = true
 end
 % if nargin < 4, isdebug = true; end
@@ -43,7 +43,7 @@ if status ~= 0
     if pkg.i_isvalid(fw)
         gui.gui_waitbar(fw, true);
     end
-    error(cmdout);
+    error('%s', cmdout);
 end
 
 sout = [];
