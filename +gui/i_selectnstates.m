@@ -21,7 +21,7 @@ i_additem(full(sum(sce.X))', 'Library Size');
 i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
 % i_additem(zeros(sce.NumCells,1), 'Mt-reads Ratio');
 
-function i_additem(itemv, itemn)
+    function i_additem(itemv, itemn)
         if ~isempty(itemv) && length(unique(itemv)) >= 1
             if continuousonly
                 if isnumeric(itemv)
@@ -36,71 +36,70 @@ function i_additem(itemv, itemn)
 listitems = [baselistitems, sce.list_cell_attributes(1:2:end)];
 nx = length(baselistitems);
 
-    % a=evalin('base','whos');
-    % b=struct2cell(a);
-    % v=false(length(a),1);
-    % for k=1:length(a)
-    %     if max(a(k).size)==sce.NumCells && min(a(k).size)==1
-    %         v(k)=true;
-    %     end
-    % end
-    % if any(v)
-    %     a=a(v);
-    %     b=b(:,v);
-    %     listitems=[listitems,'Customized C...'];
-    % end
+% a=evalin('base','whos');
+% b=struct2cell(a);
+% v=false(length(a),1);
+% for k=1:length(a)
+%     if max(a(k).size)==sce.NumCells && min(a(k).size)==1
+%         v(k)=true;
+%     end
+% end
+% if any(v)
+%     a=a(v);
+%     b=b(:,v);
+%     listitems=[listitems,'Customized C...'];
+% end
 
 n = length(listitems);
 if n < 1
-        gui.myWarndlg(parentfig, ['This function requires at least one ', ...
-                        'grouping variable (e.g., BATCH_ID, ', ...
-                        'CLUSTER_ID, or CELL_TYPE_TXT).']);
-        return;
-    end
+    gui.myWarndlg(parentfig, ['This function requires at least one ', ...
+        'grouping variable (e.g., BATCH_ID, ', ...
+        'CLUSTER_ID, or CELL_TYPE_TXT).']);
+    return;
+end
+
 
 n = length(listitems);
 preftagname ='selectednstates';
 defaultindx = getpref('scgeatoolbox', preftagname, [n-1, n]);
 if any(defaultindx > n) || any(defaultindx < 1), defaultindx = [n-1, n]; end
-if isempty(initialsel)
-        initialsel = defaultindx;
-    end
+if isempty(initialsel), initialsel = defaultindx; end
 
-       if gui.i_isuifig(parentfig)
-           % if ~isempty(initialsel)
-               [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
-                    'Select cell state/grouping variable:', ...
-                    listitems(initialsel));
-           % else
-           %    [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
-           %         'Select cell state/grouping variable:');
-           % end
-        else
-            % if ~isempty(initialsel)
-                [indx2, tf2] = listdlg('PromptString', ...
-                    {'Select cell state/grouping variable:'}, ...
-                    'SelectionMode', 'multiple', ...
-                    'ListString', listitems, ...
-                    'InitialValue', initialsel, 'ListSize', [220, 300]);
-            % else
-            %    [indx2, tf2] = listdlg('PromptString', ...
-            %        {'Select cell state/grouping variable:'}, ...
-            %        'SelectionMode', 'multiple', ...
-            %        'ListString', listitems, ...
-            %        'ListSize', [220, 300]);
-            % end
-       end
+if gui.i_isuifig(parentfig)
+    % if ~isempty(initialsel)
+    [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
+        'Select cell state/grouping variable:', ...
+        listitems(initialsel));
+    % else
+    %    [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
+    %         'Select cell state/grouping variable:');
+    % end
+else
+    % if ~isempty(initialsel)
+    [indx2, tf2] = listdlg('PromptString', ...
+        {'Select cell state/grouping variable:'}, ...
+        'SelectionMode', 'multiple', ...
+        'ListString', listitems, ...
+        'InitialValue', initialsel, 'ListSize', [220, 300]);
+    % else
+    %    [indx2, tf2] = listdlg('PromptString', ...
+    %        {'Select cell state/grouping variable:'}, ...
+    %        'SelectionMode', 'multiple', ...
+    %        'ListString', listitems, ...
+    %        'ListSize', [220, 300]);
+    % end
+end
 
 if tf2 == 1
-        thisc=cell(length(indx2),1);
-        clabel=cell(length(indx2),1);
-        for k=1:length(indx2)
-            [thisc{k}, clabel{k}] = i_getidx(indx2(k));
-        end
-        setpref('scgeatoolbox', preftagname, indx2);
+    thisc=cell(length(indx2),1);
+    clabel=cell(length(indx2),1);
+    for k=1:length(indx2)
+        [thisc{k}, clabel{k}] = i_getidx(indx2(k));
     end
+    setpref('scgeatoolbox', preftagname, indx2);
+end
 
-function [thisc, clabel] = i_getidx(indx)
+    function [thisc, clabel] = i_getidx(indx)
         clabel = listitems{indx};
         switch clabel
             case 'Library Size'

@@ -3,6 +3,16 @@ function [T, A0, A1] = sctenifoldnet(X0, X1, genelist, varargin)
 %
 % X0 and X1 are gene x cell matrices
 %
+% Name-value options: 'qqplot', 'smplmethod', 'tdmethod', 'nsubsmpl',
+% 'csubsmpl', 'savegrn', 'useparallel'.
+%
+% 'useparallel' (default false) runs TEN.I_NC's network-construction loop as a
+% parfor, one worker per subsampled network. See I_NC's header before turning
+% it on: the serial path is already parallel through multithreaded BLAS, so
+% the realistic gain is modest rather than nsubsmpl-fold, and the parallel
+% branch draws different bootstrap subsamples than the serial one - equivalent
+% in distribution, reproducible from a seed, but not the same cells.
+%
 import ten.*
 
 if ~(ismcc || isdeployed)
@@ -34,6 +44,7 @@ addOptional(p, 'tdmethod', "CP", @(x) (isstring(x) | ischar(x)) & ismember(upper
 addOptional(p, 'nsubsmpl', 10, @(x) fix(x) == x & x > 0);
 addOptional(p, 'csubsmpl', 500, @(x) fix(x) == x & x > 0);
 addOptional(p, 'savegrn', true, @islogical);
+addOptional(p, 'useparallel', false, @islogical);
 parse(p, varargin{:});
 doqqplot = p.Results.qqplot;
 tdmethod = p.Results.tdmethod;
@@ -41,6 +52,7 @@ nsubsmpl = p.Results.nsubsmpl;
 csubsmpl = p.Results.csubsmpl;
 smplmethod = p.Results.smplmethod;
 savegrn = p.Results.savegrn;
+useparallel = p.Results.useparallel;
 
 switch upper(tdmethod)
     case "CP"
@@ -84,7 +96,7 @@ rng('default');
 
 tic
 disp('Sample 1/2 ...')
-[XM] = i_nc(X0, nsubsmpl, 3, csubsmpl, usebootstrp);
+[XM] = i_nc(X0, nsubsmpl, 3, csubsmpl, usebootstrp, useparallel);
 toc
 tic
 disp('Tensor decomposition')
@@ -100,7 +112,7 @@ if savegrn
 end
 tic
 disp('Sample 2/2 ...')
-[XM] = i_nc(X1, nsubsmpl, 3, csubsmpl, usebootstrp);
+[XM] = i_nc(X1, nsubsmpl, 3, csubsmpl, usebootstrp, useparallel);
 toc
 tic
 disp('Tensor decomposition')

@@ -27,7 +27,7 @@ switch p.Results.type
         s = run.ml_PHATE(X, 3, plotit, false);
         [t] = pkg.i_pseudotime_by_splinefit(s, 1, plotit);
     case 'tscan'
-        t = run.ml_TSCAN(X, 'plotit', true);
+        t = run.ml_TSCAN(X, 'plotit', plotit);
     otherwise
         error('sc_trajectory:InvalidType', 'Unknown trajectory type: %s', p.Results.type);
 end

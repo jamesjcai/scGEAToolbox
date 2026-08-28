@@ -19,7 +19,9 @@ if ~pkg.i_license
 end
 
 preftagname ='geocellarmodeid';
-defaultindx = getpref('scgeatoolbox', preftagname, 1);
+% Default to mode 3 (remote hypotheses, local analysis). Once the user picks a
+% mode it is remembered, so this fallback only applies on first use.
+defaultindx = getpref('scgeatoolbox', preftagname, 3);
 
 % Choose execution mode
 modeOptions = [ ...
@@ -33,9 +35,14 @@ if ~ok, return; end
 mode = sel;   % 1 = local, 2 = P1 local/P2 remote, 3 = P1 remote/P2 local, 4 = remote
 setpref('scgeatoolbox', preftagname, sel);
 
-% Modes 1 and 2 run Phase 1 locally — require the MATLAB LLM Add-On and API key
-if mode <= 2
-    if ~exist("openAIChat", "file")
+% Modes 1-3 all call an LLM locally, so all three need the MATLAB LLM Add-On
+% and an API key:
+%   modes 1, 2 - Phase 1 hypothesis generation
+%   mode  3    - interpret_agent at the end of local Phase 2
+% Only mode 4 (server handles everything) needs no local LLM.
+if mode <= 3
+    % Match llm.geocellar.i_makechat, which accepts either client.
+    if ~exist("openAIChat", "file") && ~exist("ollamaChat", "file")
         gui.myHelpdlg(FigureHandle, ...
             ["The 'Large Language Models (LLMs) with MATLAB' Add-On is required." ...
              newline "Install it from the MATLAB Add-On Explorer."]);

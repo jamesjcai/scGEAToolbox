@@ -1,7 +1,29 @@
-function sc_uitabgrpfig_vioplot(y, tabnamelist, thisc, parentfig)
+function sc_uitabgrpfig_vioplot(y, tabnamelist, thisc, parentfig, plotkind, labelinfo)
+% SC_UITABGRPFIG_VIOPLOT One tab per score, violin plot in each.
+%
+%   plotkind (optional) is 'violin' (default) or 'bar'. 'bar' renders every
+%   tab as a bar plot with SEM error bars up front - the same view the
+%   "Switch to Bar Plot" toolbar button produces. The toolbar button stays
+%   available either way.
+%
+%   labelinfo (optional) struct describing the axes, any field omissible:
+%       .ylabel  y-axis label            (default 'Score')
+%       .xlabel  x-axis label            (default 'Cell group')
+%       .method  how the values were produced; appended to the y-axis label
+%                after a separator, e.g. 'Cell score - UCell'
+%                (default '' - y label left as .ylabel)
+%   The tab title names the score; these say what the numbers are and where
+%   they came from. Every redraw path re-applies them, so switching plot
+%   kind or reordering groups does not strip the axes bare.
 
 if ~iscell(y), y = {y}; end
+if nargin<6, labelinfo = struct(); end
+if nargin<5 || isempty(plotkind), plotkind = 'violin'; end
 if nargin<4, parentfig = []; end
+
+ylab      = i_field(labelinfo, 'ylabel', 'Score');
+xlab      = i_field(labelinfo, 'xlabel', 'Cell group');
+methodtxt = i_field(labelinfo, 'method', '');
 if ~isempty(parentfig)
     figure(parentfig);
     cleanupObj = onCleanup(@() figure(parentfig));
@@ -46,7 +68,7 @@ for k=1:n
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',tabnamelist(k)));
     ax0{k} = axes('parent',tab{k});
     pkg.i_bindviolinplot(y{k}, thisc, true, cLorder);
-    title(ax0{k}, strrep(tabnamelist(k), '_', '\_'));
+    i_decorate(ax0{k}, k);
     % subtitle(ax0{k}, gui.i_getsubtitle(c));
     % gui.i_setautumncolor(c, a, true, any(c==0));
 end
@@ -72,6 +94,34 @@ gui.myWaitbar(parentfig, fw);
 
 ccx = true;
 
+if strcmpi(plotkind, 'bar')
+    % Reuse the toolbar's bar renderer rather than duplicating it. ccx=false
+    % makes i_updatebarplot pick the white fill that the first "Switch to
+    % Bar Plot" click produces; 0 means "no tab to leave alone", so every
+    % tab is converted (idx=[] would skip them all, since ks~=[] is empty).
+    ccx = false;
+    i_updatebarplot(0);
+end
+
+
+function i_decorate(ax, k)
+        % Title and axis labels, in one place. Every path that recreates an
+        % axes calls this, so the labels come back with the plot instead of
+        % being lost on the first redraw.
+        title(ax, strrep(tabnamelist(k), '_', '\_'));
+        ytxt = string(ylab);
+        if strlength(string(methodtxt)) > 0
+            % The method belongs on the y axis: it describes what the
+            % values ARE, so it reads with the quantity rather than
+            % floating above the plot as a separate caption. Separator
+            % rather than parentheses because method names carry their own
+            % - 'AUCell (AUC recovery)' would otherwise nest brackets.
+            ytxt = ytxt + " - " + string(methodtxt);
+        end
+        ytxt = strrep(ytxt, '_', '\_');
+        if strlength(ytxt) > 0, ylabel(ax, ytxt); end
+        if strlength(string(xlab)) > 0, xlabel(ax, xlab); end
+    end
 
 function in_mergetabs(~, ~)
         figure;
@@ -111,7 +161,7 @@ function in_callback_showbarplot(~,~)
         disp('Error bar shows the standard error of the mean (SEM), i.e., the standard deviation and dividing it by the square root of the sample size')
         set(ax0{idx},'xticklabel',cLx);
 
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+        i_decorate(ax0{idx}, idx);
         if length(tab)>1
             answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
             if ~strcmp(answer,'Yes'), return; end
@@ -140,7 +190,7 @@ function i_updatebarplot(idx)
                 % sv = splitapply(@std, y{ks}, thisc)./sqrt(splitapply(@numel, y{ks}, thisc));
                 errorbar(ax0{ks}, 1:length(mv), mv, zeros(size(sv)), sv, 'color', 'k' ,'linestyle','none');
                 set(ax0{ks},'xticklabel',cLx);
-                title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));
+                i_decorate(ax0{ks}, ks);
             end
         end
     end
@@ -164,7 +214,7 @@ function in_callback_updatealltab(idx)
                 delete(ax0{ks});
                 ax0{ks} = axes('parent',tab{ks});
                 pkg.i_bindviolinplot(y{ks}, thisc, colorit, cLorder);
-                title(ax0{ks}, strrep(tabnamelist(ks), '_', '\_'));
+                i_decorate(ax0{ks}, ks);
             end
         end
     end
@@ -175,7 +225,7 @@ function in_callback_invertcolor(~, ~)
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
         pkg.i_bindviolinplot(y{idx}, thisc, colorit, cLorder);
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+        i_decorate(ax0{idx}, idx);
         tabgp.SelectedTab=tab{idx};
         drawnow;
         if length(tab)>1
@@ -250,7 +300,7 @@ function in_callback_sortbymean(~, ~)
             ax0{idx} = axes('parent',tab{idx});
             cLorder = cLx_sorted;
             pkg.i_bindviolinplot(y{idx}, thisc, colorit, cLorder);
-            title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+            i_decorate(ax0{idx}, idx);
         end
     end
 
@@ -261,7 +311,7 @@ function in_callback_reordersamples(~, ~)
         delete(ax0{idx});
         ax0{idx} = axes('parent',tab{idx});
         pkg.i_bindviolinplot(y{idx}, thisc, colorit, cLorderx);
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+        i_decorate(ax0{idx}, idx);
 
         if length(tab)>1
             answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
@@ -284,7 +334,7 @@ function in_callback_selectsamples(~, ~)
         y_picked = y{idx}(picked);
         thisc_picked = thisc(picked);
         pkg.i_bindviolinplot(y_picked, thisc_picked, colorit, cLorderx);
-        title(ax0{idx}, strrep(tabnamelist(idx), '_', '\_'));
+        i_decorate(ax0{idx}, idx);
 
         if length(tab)>1
             answer = gui.myQuestdlg(hFig, 'Apply to other tabs?','');
@@ -454,4 +504,14 @@ function in_callback_savedata(~, ~)
         gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
     end
 
+end
+
+
+function v = i_field(s, name, default)
+% One optional field of a settings struct, or its default.
+if isstruct(s) && isfield(s, name) && ~isempty(s.(name))
+    v = s.(name);
+else
+    v = default;
+end
 end

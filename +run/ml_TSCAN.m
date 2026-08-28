@@ -32,7 +32,7 @@ if do_geneculst
     Z = linkage(Y);
     clu = cluster(Z, 'maxclust', n);
     % X = grpstats(X, clu, @(x) mean(x, 1));
-    X = splitapply(@(x) mean(x, 1), X', clu);
+    X = splitapply(@(x) mean(x, 1), X, clu);
     % Xn=[];
     % for k=1:27
     %    Xn=[Xn;mean(X(idx==k,:),1)];
@@ -82,7 +82,10 @@ clunum = idx1 + 1;
 warning on
 
 
-gmfit = fitgmdist(X, clunum, 'CovarianceType', 'full');
+% Use the same regularization as the AIC selection loop above; refitting
+% without it can fail on an ill-conditioned covariance for the very
+% clunum that selection just chose.
+gmfit = fitgmdist(X, clunum, 'CovarianceType', 'full', 'RegularizationValue', 0.1);
 clusterid = cluster(gmfit, X);
 % clucenter = grpstats(X, clusterid, @mean);
 clucenter = splitapply(@mean, X, clusterid);

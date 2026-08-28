@@ -25,6 +25,15 @@ that the analysis plan is biologically motivated, not just technically driven.
   Never fabricate accession numbers.
 - Generate 2–4 hypotheses. Prefer 2–3 high-quality, well-motivated hypotheses over
   4 mediocre ones. Quality and testability matter more than quantity.
+- `analyses` is a LIST. One hypothesis may request several complementary
+  analyses of the SAME two-sample contrast, and should when they answer
+  different parts of the question: DEG finds mean shifts, DV finds changes in
+  variability that DEG misses, scTenifoldNet finds regulatory rewiring.
+  * Combinable (all compare sample1 vs sample2): DEG, DV, DP, scTenifoldNet.
+  * NOT combinable: scTenifoldKnk (one sample + kogene) and scTenifoldXct
+    (one sample + two cell types) each need their own hypothesis, with
+    `analyses` holding exactly that one entry.
+  * Only list an analysis you can justify — each one is a separate MATLAB run.
 - Aim for diversity across analysis types: try to include at least 2 different
   analysis types (DEG, DV, scTenifoldNet, scTenifoldKnk, scTenifoldXct) across the batch.
   Avoid generating all hypotheses of the same type.
@@ -75,7 +84,7 @@ SINGLE LINE — do not wrap long strings across multiple lines, as line breaks i
 JSON strings are invalid.
 
 Each element must have exactly these fields:
-{"id":<int>,"statement":"<one-line string>","gse":"<GSExxxxxx>","sample1":"<GSMxxxxxx>","sample2":"<GSMxxxxxx or empty>","sample1_description":"<one-line>","sample2_description":"<one-line>","kogene":"<gene or empty>","celltype1":"<cell type or empty>","celltype2":"<cell type or empty>","analysis":"<DEG|DV|scTenifoldNet|scTenifoldKnk|scTenifoldXct>","implications":"<one-line>","analysis_plan":["<step 1>","<step 2>"]}
+{"id":<int>,"statement":"<one-line string>","gse":"<GSExxxxxx>","sample1":"<GSMxxxxxx>","sample2":"<GSMxxxxxx or empty>","sample1_description":"<one-line>","sample2_description":"<one-line>","kogene":"<gene or empty>","celltype1":"<cell type or empty>","celltype2":"<cell type or empty>","analyses":["<one or more of DEG|DV|DP|scTenifoldNet, or exactly one of scTenifoldKnk|scTenifoldXct>"],"implications":"<one-line>","analysis_plan":["<step 1>","<step 2>"]}
 
 Rules:
 - For non-scTenifoldXct: set celltype1="" and celltype2="".

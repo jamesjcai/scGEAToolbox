@@ -48,9 +48,14 @@ if normit
     [X] = pkg.norm_libsize(X);
 end
 
-u = mean(X, 2, 'omitnan');
-vx = var(X, 0, 2, 'omitnan');
+% Per-gene statistics must be dense. For sparse X these come back sparse,
+% which fitglm below rejects ("Value of Y must not be sparse") and which
+% log(fitratio) cannot evaluate. They are nGenes-long vectors, so densifying
+% is cheap; for dense X these calls are no-ops.
+u = full(mean(X, 2, 'omitnan'));
+vx = full(var(X, 0, 2, 'omitnan'));
 cv2 = vx ./ u.^2;
+dropr = full(dropr);
 
 xi = 1 ./ u;
 yi = cv2;
@@ -101,6 +106,11 @@ if sortit
     T.fitratio(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
     [T, hvgidx] = sortrows(T, 'fitratio', 'descend');
     Xsorted = Xori(hvgidx, :);
+    gsorted = T.genes;
+else
+    % Keep the second and third outputs defined so callers and the plotting
+    % block below work when sorting is disabled. Order matches the input.
+    Xsorted = Xori;
     gsorted = T.genes;
 end
 % T=T(removedidx,:);

@@ -7,11 +7,25 @@ else
     [FigureHandle, sce] = gui.gui_getfigsce(src);
 end
 
-[thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
+% Several grouping variables may be picked; they are crossed into one
+% composite label per cell ("Macrophages | IL"), matching what the cell
+% score comparison does. Everything below treats thisc as a per-cell label
+% vector, so the composite needs no special handling past this point.
+[thisc, clabel] = gui.i_selectnclass(sce,[],[],[],FigureHandle);
 if isempty(thisc), return; end
 thisc = string(thisc);
 [~, cLorder] = findgroups(thisc);
-[newidx] = gui.i_selmultidialog(cLorder, cLorder, FigureHandle);
+
+% Preselecting every group is the helpful default for a short list and the
+% wrong one for a long one - crossing variables multiplies the level count,
+% and past a couple of dozen the user's job becomes deselecting rather than
+% selecting.
+if numel(cLorder) <= 20
+    presel = cLorder;
+else
+    presel = cLorder(1);
+end
+[newidx] = gui.i_selmultidialog(cLorder, presel, FigureHandle);
 if isempty(newidx), return; end
 picked = ismember(thisc, cLorder(newidx));
 % cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
@@ -58,6 +72,7 @@ switch answer
             end
         end
         ylabelv = glist;
+        ylab = 'Expression';
 
     case 'Cell State'
         [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [1], FigureHandle);
@@ -75,12 +90,18 @@ switch answer
             end
         else
             gui.myHelpdlg(FigureHandle, 'No valid cell state variables. Violinplot cannot be shown.');
+            return;
         end
+        ylab = 'Value';
     otherwise
         return;
 end
 % assignin("base","ylabelv",ylabelv);
 % assignin("base","thisyv",thisyv);
 % assignin("base","thisc",thisc);
-gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle);
+% The tab names the gene or state; these say what the axes are. Without the
+% ylabel the plot defaults to 'Score', which is right for a cell score and
+% wrong for expression.
+labelinfo = struct('ylabel', ylab, 'xlabel', clabel);
+gui.sc_uitabgrpfig_vioplot(thisyv, ylabelv, thisc, FigureHandle, [], labelinfo);
 end

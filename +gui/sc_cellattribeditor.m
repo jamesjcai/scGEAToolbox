@@ -305,6 +305,11 @@ function [sce, needupdate] = in_relabelattrib(sce, clabel, thisc, parentfig)
 % are written back as numbers when that is what the attribute held, so relabeling
 % a numeric cluster id 1,2,3 to 3,2,1 does not turn it into text; renaming those
 % same ids to names does, which is the point of the edit.
+%
+% Cells that were NaN come back from the dialog as <missing>, which str2double
+% turns into NaN again. That is the value they already had, so it does not count
+% as a failure to parse - without the ismissing test below, one NaN anywhere in
+% a numeric attribute would force the whole attribute to text on any edit.
 
 needupdate = false;
 newvals = gui.i_relabeldlg(parentfig, thisc, ...
@@ -313,7 +318,7 @@ if isempty(newvals), return; end
 
 if isnumeric(thisc)
     numvals = str2double(newvals);
-    if ~any(isnan(numvals))
+    if ~any(isnan(numvals) & ~ismissing(newvals))
         newvals = numvals;
     end
 end

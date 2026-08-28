@@ -15,58 +15,7 @@ end
 thisc = [];
 clabel = '';
 
-listitems = {'Current Class (C)'};
-if ~isempty(sce.c_cluster_id)
-    if allowsingle
-        listitems = [listitems, 'Cluster ID'];
-    else
-        if numel(unique(sce.c_cluster_id)) > 1
-            listitems = [listitems, 'Cluster ID'];
-        end
-    end
-end
-if ~isempty(sce.c_cell_type_tx)
-    if allowsingle
-        listitems = [listitems, 'Cell Type'];
-    else
-        if numel(unique(sce.c_cell_type_tx)) > 1
-            listitems = [listitems, 'Cell Type'];
-        end
-    end
-end
-
-if ~isempty(sce.c_cell_cycle_tx)
-    if allowsingle
-        listitems = [listitems, 'Cell Cycle Phase'];
-    else
-        if numel(unique(sce.c_cell_cycle_tx)) > 1
-            listitems = [listitems, 'Cell Cycle Phase'];
-        end
-    end
-end
-if ~isempty(sce.c_batch_id)
-    if allowsingle
-        listitems = [listitems, 'Batch ID'];
-    else
-        if numel(unique(sce.c_batch_id)) > 1
-            listitems = [listitems, 'Batch ID'];
-        end
-    end
-end
-
-a = evalin('base', 'whos');
-b = struct2cell(a);
-v = false(length(a), 1);
-for k = 1:length(a)
-    if max(a(k).size) == sce.NumCells && min(a(k).size) == 1
-        v(k) = true;
-    end
-end
-if any(v)
-    a = a(v);
-    b = b(:, v);
-    listitems = [listitems, 'Workspace Variable...'];
-end
+[listitems, a, b] = i_classlistitems(sce, allowsingle);
 
 % listitems={'Current Class (C)','Cluster ID','Batch ID',...
 %            'Cell Type','Cell Cycle Phase'};
@@ -77,8 +26,16 @@ if ~isempty(prefersel)
 end
 
 if gui.i_isuifig(parentfig)
+    % allowmulti = false, explicitly. myListdlg defaults it to TRUE, which
+    % used to give this dialog a multi-select listbox that the code below
+    % cannot honour: listitems{indx2} with a vector indx2 quietly yields
+    % only the first value, so extra picks were accepted and then dropped
+    % without a word. The listdlg fallback right below has always said
+    % 'single'; this is the uifigure branch agreeing with it, and with the
+    % name of this function. To grouping by several variables at once, use
+    % gui.i_selectnclass.
     [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
-        promptstr, prefersel);
+        promptstr, prefersel, false);
 else
     if y
         [indx2, tf2] = listdlg('PromptString', ...
@@ -129,7 +86,13 @@ function [c] = i_pickvariable
         % valididx=ismember(b(4,:),'double');
         % a=a(valididx);
         if gui.i_isuifig(parentfig)
-            [indx, tf] = gui.myListdlg(parentfig, b(1, :), 'Select variable:');
+            % Same reason as above, and a nastier failure if left multi:
+            % a(indx).name with a vector indx expands to a comma-separated
+            % list, turning line 'evalin(''base'', name)' into the
+            % three-argument evalin(context, expr, catch_expr) form - which
+            % silently evaluates the second pick only when the first throws.
+            [indx, tf] = gui.myListdlg(parentfig, b(1, :), ...
+                'Select variable:', [], false);
         else
             [indx, tf] = listdlg('PromptString', {'Select variable:'}, ...
                 'liststring', b(1, :), 'SelectionMode', 'single');

@@ -1,4 +1,8 @@
-function [cs] = e_cellscore(sce, posg, methodid, showwaitbar, parentfig)
+function [cs, methodid] = e_cellscore(sce, posg, methodid, showwaitbar, parentfig)
+% Second output reports the method actually used. When METHODID comes in
+% empty this function asks the user for one, and without returning it the
+% caller had no way to know which algorithm produced the scores - so a
+% figure built from them could not say either. Empty when cancelled.
 
 if nargin < 5, parentfig = []; end
 

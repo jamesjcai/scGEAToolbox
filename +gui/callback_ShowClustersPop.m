@@ -11,7 +11,10 @@ answer = gui.myQuestdlg(FigureHandle, ['Select a grouping variable and ' ...
 'show cell groups in new figures individually?']);
 if ~strcmp(answer, 'Yes'), return; end
 
-[thisc, ~] = gui.i_select1class(sce, true,'','',FigureHandle);
+% Several grouping variables may be picked; they cross into one composite
+% label per cell ("Macrophages | IL"). Downstream treats thisc as a
+% per-cell label vector, so the composite needs no special handling.
+[thisc, ~] = gui.i_selectnclass(sce, true,'','',FigureHandle);
 if isempty(thisc), return; end
 [c, cL] = findgroups(string(thisc));
 % [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);

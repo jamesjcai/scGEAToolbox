@@ -21,6 +21,11 @@ function newvals = i_relabeldlg(parentfig, vals, dlgtitle)
 %
 % Two distinct values can be merged by giving them the same new value.
 %
+% Missing values - NaN in a numeric attribute, <missing> in a string one - are
+% shown as one more distinct value, under a "<missing>" placeholder, so they can
+% be counted and given a real name. Leaving that row alone writes missing back
+% rather than the placeholder text.
+%
 % see also: gui.sc_cellattribeditor, pkg.i_grp2idxsorted
 
 if nargin < 1, parentfig = []; end
@@ -31,7 +36,23 @@ if isempty(vals), return; end
 
 [grp, labels] = pkg.i_grp2idxsorted(vals);
 labels = string(labels(:));
-counts = accumarray(grp(:), 1, [numel(labels), 1]);
+grp = grp(:);
+
+% findgroups assigns no group to a missing value, so pkg.i_grp2idxsorted hands
+% back NaN for those rows. Give them a group of their own: accumarray below
+% rejects NaN subscripts outright, and a NaN would index nothing when the edited
+% labels are mapped back onto the cells.
+ismissinggrp = isnan(grp);
+missingtag = strings(0, 1);
+if any(ismissinggrp)
+    % Suffixed if some cell genuinely holds the text "<missing>", so the
+    % placeholder row can never be confused with a real value.
+    missingtag = string(matlab.lang.makeUniqueStrings("<missing>", labels));
+    labels = [labels; missingtag];
+    grp(ismissinggrp) = numel(labels);
+end
+
+counts = accumarray(grp, 1, [numel(labels), 1]);
 
 dlgSize = [420, 450];
 dlgPos = gui.i_centerdlgpos(parentfig, dlgSize);
@@ -62,12 +83,22 @@ end
 d.UserData = false;
 drawnow;
 d.Visible = 'on';
-d.WindowStyle = 'modal';
+
+% WindowStyle='modal' is intentionally omitted, for the reason gui.myListdlg
+% records: on a multi-monitor setup whose monitors differ in DPI, MATLAB
+% re-centers a modal window onto the primary monitor and discards the Position
+% computed above by gui.i_centerdlgpos. uiwait blocks the caller either way, so
+% the dialog is functionally modal without it.
 uiwait(d);
 
 if pkg.i_isvalid(d) && d.UserData
     newlabels = strtrim(string(ut.Data.NewValue));
     if ~isequal(newlabels, labels)
+        % An untouched placeholder row means the user did not name the missing
+        % cells, so they stay missing instead of picking up the placeholder text.
+        if ~isempty(missingtag) && newlabels(end) == missingtag
+            newlabels(end) = missing;
+        end
         newvals = newlabels(grp);
         newvals = reshape(newvals, size(vals));
     end

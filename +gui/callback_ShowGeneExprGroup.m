@@ -5,7 +5,10 @@ function callback_ShowGeneExprGroup(src, ~)
 % [axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
     allowunique = false;
-    [thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);
+    % Several grouping variables may be picked; they cross into one composite
+    % label per cell ("Macrophages | IL"). Downstream treats thisc as a
+    % per-cell label vector, so the composite needs no special handling.
+    [thisc] = gui.i_selectnclass(sce, allowunique,[],[],FigureHandle);
     if isempty(thisc), return; end
 
     answer = gui.myQuestdlg(FigureHandle, ...

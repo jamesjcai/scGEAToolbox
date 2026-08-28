@@ -35,8 +35,8 @@ dlgPos = round(gui.i_centerdlgpos(parentfig, dlgSize));
 %    d = uifigure('Name', Title, 'Position', dlgPos, ...
 %        'WindowStyle', 'modal');
 
- % parentfig.WindowStyle = 'alwaysontop';
- % disp('alwaysontop')
+% parentfig.WindowStyle = 'alwaysontop';
+% disp('alwaysontop')
 
 % WindowStyle='modal' is intentionally omitted: on multi-monitor setups
 % where the secondary monitor has a different DPI, MATLAB's modal centering
@@ -78,11 +78,11 @@ d.UserData = false;
 
 % Create OK button
 btnOK = uibutton(d, 'Text', 'OK', 'Position', [60 20 80 30], ...
-'ButtonPushedFcn', @(btn,event) okCallback(d));
+    'ButtonPushedFcn', @(btn,event) okCallback(d));
 
 % Create Cancel button
 btnCancel = uibutton(d, 'Text', 'Cancel', 'Position', [160 20 80 30], ...
-'ButtonPushedFcn', @(btn,event) uiresume(d));
+    'ButtonPushedFcn', @(btn,event) uiresume(d));
 
 if ~isMATLABReleaseOlderThan('R2025a')
     try
@@ -144,10 +144,10 @@ end
 function enforceNormalState(fig)
 % disp('If user tries to minimize, restore immediately');
 
-    if fig.WindowState == "minimized"
-        drawnow limitrate
-        fig.WindowState = "normal";
-    end
+if fig.WindowState == "minimized"
+    drawnow limitrate
+    fig.WindowState = "normal";
+end
 end
 
 function okCallback(d)

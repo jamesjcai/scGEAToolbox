@@ -8,7 +8,10 @@ function callback_ShowGeneExprCompr(src, ~)
 if isempty(glist), return; end
 
 allowunique = false;
-[thisc] = gui.i_select1class(sce, allowunique,[],[],FigureHandle);
+% Several grouping variables may be picked; they cross into one composite
+% label per cell ("Macrophages | IL"). Downstream treats thisc as a
+% per-cell label vector, so the composite needs no special handling.
+[thisc] = gui.i_selectnclass(sce, allowunique,[],[],FigureHandle);
 if isempty(thisc), return; end
 if isscalar(unique(thisc))
         answer = gui.myQuestdlg(FigureHandle, "All cells are in the same group. No comparison will be made. Continue?", ...

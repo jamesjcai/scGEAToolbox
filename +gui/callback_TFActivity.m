@@ -32,7 +32,10 @@ end
 
 % ---- Step 2: cell grouping (comparison mode only) -------------------------
 if showcomparision
-    [thisc] = gui.i_select1class(sce, false, [], [], FigureHandle);
+    % Several grouping variables may be picked; they cross into one composite
+    % label per cell ("Macrophages | IL"). Downstream treats thisc as a
+    % per-cell label vector, so the composite needs no special handling.
+    [thisc, clabel] = gui.i_selectnclass(sce, false, [], [], FigureHandle);
     if isempty(thisc), return; end
     if isscalar(unique(thisc))
         gui.myWarndlg(FigureHandle, 'All cells are in the same group. Cannot compare.');
@@ -105,13 +108,16 @@ scores_sel   = cs(indx, :);          % nSelected × nCells
 labels_sel   = tflist(indx);         % matched TF names
 
 if showcomparision
+    % The tab names the TF; these say what the axes are. Without the ylabel
+    % the figure defaults to the generic 'Score'.
+    labelinfo = struct('ylabel', 'TF activity', 'xlabel', clabel);
     if isscalar(indx)
         gui.sc_uitabgrpfig_vioplot(scores_sel(1, :), ...
-            char(labels_sel(1)), thisc, FigureHandle);
+            char(labels_sel(1)), thisc, FigureHandle, [], labelinfo);
     else
         y_cell = num2cell(scores_sel, 2);
         gui.sc_uitabgrpfig_vioplot(y_cell, ...
-            cellstr(labels_sel), thisc, FigureHandle);
+            cellstr(labels_sel), thisc, FigureHandle, [], labelinfo);
     end
 else
     if isscalar(indx)

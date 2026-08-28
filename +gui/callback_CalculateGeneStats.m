@@ -30,7 +30,10 @@ groupingConfirmed = gui.myQuestdlg(FigureHandle, ['Grouping cells? Select Yes to
 'Select No to include all cells.'], 'Grouping');
 
 if strcmp(groupingConfirmed, 'Yes')
-    thisc = gui.i_select1class(sce,[],[],[],FigureHandle);
+    % Several grouping variables may be picked; they cross into one composite
+    % label per cell ("Macrophages | IL"). Downstream treats thisc as a
+    % per-cell label vector, so the composite needs no special handling.
+    thisc = gui.i_selectnclass(sce,[],[],[],FigureHandle);
     if isempty(thisc), return; end
     [c, cL] = findgroups(string(thisc));
 

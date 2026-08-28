@@ -1,13 +1,34 @@
-function [h] = i_scoreheatmap(Y, rowlabels, sce, parentfig)
-
+function [h] = i_scoreheatmap(Y, rowlabels, sce, parentfig, thisc)
+% THISC, when given, is the grouping already chosen by the caller - one
+% label per column of Y. Passing it in matters for more than saving a
+% click: the caller may have grouped by several crossed variables, which
+% the i_select1class dialog below has no way to offer, so re-asking there
+% would quietly describe a different partition than the one the scores
+% were compared under.
 
 if nargin < 4, parentfig = []; end
-
-[thisc, ~] = gui.i_select1class(sce,[],[],[],parentfig);
+if nargin < 5 || isempty(thisc)
+    [thisc, ~] = gui.i_select1class(sce,[],[],[],parentfig);
+end
 if isempty(thisc), return; end
-[c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
-if noanswer, return; end
 
+% Skip the reorder prompt when there are too many groups for it to be
+% usable - i_reordergroups insists every item be reselected by hand, which
+% is a hostile ask at dozens of levels. Fall back to its natural order.
+if numel(unique(thisc)) > 30
+    [c, cL] = findgroups(string(thisc));
+else
+    [c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
+    if noanswer, return; end
+end
+
+% The tick positions and divider lines below are cumulative group sizes, so
+% they only describe the image if its columns are actually in group order.
+% Y arrives in original cell order, so sort both together - without this
+% the labels and the yellow separators mark boundaries the picture does not
+% have.
+[c, ord] = sort(c(:));
+Y = Y(:, ord);
 
 % szgn = grpstats(c, c, @numel);
 szgn = splitapply(@numel, c, c);
