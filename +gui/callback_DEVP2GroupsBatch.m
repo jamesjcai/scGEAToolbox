@@ -135,8 +135,20 @@ for k=1:length(CellTypeList)
         matlab.lang.makeValidName(string(CellTypeList{k})));
         filesaved = fullfile(outdir, outfile);
 
-        Tup = T(T.DiffSign > 0, :);
-        Tdn = T(T.DiffSign < 0, :);
+        % A significance cutoff, as the DE branch above gets from
+        % pkg.e_processdetable. Splitting on DiffSign alone put EVERY tested
+        % gene into one list or the other - measured on this project's own
+        % output, 7,550 of 7,550 - because sc_dvg returns the full ranked
+        % table and nothing here ever filtered it. DiffDist > 0 additionally
+        % drops the spline-boundary genes whose distance was discarded.
+        % e_fdr_bh returns h (logical) FIRST and adjusted p FOURTH -
+        % taking output 1 as a q-value silently inverts the test.
+        [~, ~, ~, dvq] = pkg.e_fdr_bh(T.pval, 0.05, 'pdep', 'no');
+        isok = T.DiffDist > 0 & dvq(:) <= 0.05;
+        fprintf(['\nDV genes with BH q <= %.3f and a usable spline ' ...
+            'distance are retained: %d of %d.\n'], 0.05, sum(isok), height(T));
+        Tup = T(T.DiffSign > 0 & isok, :);
+        Tdn = T(T.DiffSign < 0 & isok, :);
 
         [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2);
 

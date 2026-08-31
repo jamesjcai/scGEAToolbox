@@ -18,7 +18,7 @@ needupdatesce = false;
 
 % Tracks which of the original cells are still in play. Selecting two groups
 % below subsets sce, so scores would then cover only those cells; keepidx
-% lets the save step recognise that case and skip saving.
+% lets the save step recognize that case and skip saving.
 keepidx = true(sce.NumCells, 1);
 
 aa = 'Yes, compare scores (violinplot)';
@@ -57,47 +57,13 @@ else
                 return;
         end
     else    % length(unique(thisc)) ~= 1
-        [ci, cLi] = findgroups(string(thisc));
-        listitems = natsort(cLi);
-        n = length(listitems);
-
-        % This dialog has always accepted any number of groups
-        % despite its old 'Select two groups:' title. Crossing
-        % variables multiplies the level count, so it is now
-        % the main way to prune a wide grouping down to
-        % something readable - say what it does, and stop
-        % preselecting everything once the list is long enough
-        % that deselecting is the harder job.
-        grpprompt = sprintf('Select groups to compare (%s):', clabel);
-        if n <= 20
-            preferx = listitems;
-            initx = 1:n;
-        else
-            preferx = [];
-            initx = 1;   % listdlg wants a valid index, not []
-        end
-
-        if gui.i_isuifig(FigureHandle)
-            [indxx, tfx] = gui.myListdlg(FigureHandle, listitems, ...
-                grpprompt, preferx, true);
-        else
-            [indxx, tfx] = listdlg('PromptString', {grpprompt}, ...
-                'SelectionMode', 'multiple', ...
-                'ListString', listitems, ...
-                'InitialValue', initx, ...
-                'ListSize', [220 300]);
-        end
-
-        if tfx == 1
-            [y1, idx1] = ismember(listitems(indxx), cLi);
-            assert(all(y1));
-            idx2 = ismember(ci, idx1);
-            sce = sce.selectcells(idx2);  % OK
-            thisc = thisc(idx2);
-            keepidx = idx2(:);
-        else
-            return;
-        end
+        % Shared with gui.callback_Violinplot so both group choosers
+        % look and behave the same - see gui.i_selectgroupsubset.
+        idx2 = gui.i_selectgroupsubset(thisc, clabel, FigureHandle);
+        if isempty(idx2), return; end
+        sce = sce.selectcells(idx2);  % OK
+        thisc = thisc(idx2);
+        keepidx = idx2(:);
     end
 end
 drawnow;
@@ -207,82 +173,13 @@ switch selecteditem
 
         [y, methodid] = gui.e_cellscore(sce, posg, [], [], FigureHandle);
 
-    case 'Predefined Custom Gene Sets'
+    case {'Predefined Custom Gene Sets', 'Glycobiology Gene Sets'}
         % if ~gui.gui_showrefinfo('Predefined Cell Score', FigureHandle), return; end
-        [~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
-        listitems = T.ScoreType;
-        if gui.i_isuifig(FigureHandle)
-            [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
-                'Select Score:');
-        else
-            [indx2, tf2] = listdlg('PromptString', 'Select Score', ...
-                'SelectionMode', 'multiple', 'ListString', ...
-                listitems, 'ListSize', [260, 300]);
-        end
-        if tf2 ~= 1, return; end
-
-        n = length(indx2);
-        y = cell(n,1); ttxt = cell(n,1); posgc = cell(n,1);
-        valid = false(n,1);
-        [~, methodid] = gui.i_pickscoremethod([], FigureHandle);
-
-        fw=gui.myWaitbar(FigureHandle);
-        for k = 1:n
-            ttxt{k} = T.ScoreType(indx2(k));
-            % Skip a signature with too few expressed genes (which
-            % errors in e_cellscores) instead of aborting the run.
-            try
-                [y{k}, ~, posgc{k}] = pkg.e_cellscores(sce.X, ...
-                    sce.g, indx2(k), methodid, false);
-            catch ME
-                warning('Skipping score "%s": %s', ...
-                    string(T.ScoreType(indx2(k))), ME.message);
-                y{k} = [];
-            end
-            valid(k) = ~isempty(y{k});
-        end
-        gui.myWaitbar(FigureHandle, fw);
-
-        if ~any(valid)
-            gui.myWarndlg(FigureHandle, ['No scores could be ' ...
-                'computed. The selected signatures have too few ' ...
-                'expressed genes in this dataset.']);
-            return;
-        end
-        if ~all(valid)
-            gui.myWarndlg(FigureHandle, sprintf( ...
-                '%d of %d score(s) skipped (too few expressed genes): %s', ...
-                sum(~valid), n, ...
-                strjoin(string(T.ScoreType(indx2(~valid))), ', ')));
-            y = y(valid); ttxt = ttxt(valid); posgc = posgc(valid);
-        end
-        posg = posgc{end};
-
-    case 'Glycobiology Gene Sets'
-        [setmatrx, gsetnames, setgenes] = pkg.e_glycogenesets();
-        listitems = gsetnames;
-        if gui.i_isuifig(FigureHandle)
-            [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
-                'Select Module:');
-        else
-            [indx2, tf2] = listdlg('PromptString', 'Select Module', ...
-                'SelectionMode', 'multiple', 'ListString', ...
-                cellstr(listitems), 'ListSize', [300, 300]);
-        end
-        if tf2 ~= 1, return; end
-
-        n = numel(indx2);
-        y = cell(n,1); ttxt = cell(n,1);
-        [~, methodid] = gui.i_pickscoremethod([], FigureHandle);
-        if isempty(methodid), return; end
-
-        fw = gui.myWaitbar(FigureHandle);
-        for k = 1:n
-            posg = setgenes(setmatrx(indx2(k), :));
-            y{k} = gui.e_cellscore(sce, posg, methodid, false, FigureHandle);
-            ttxt{k} = gsetnames(indx2(k));
-        end
-        gui.myWaitbar(FigureHandle, fw);
+        % Both entries score the same collection: pkg.e_cellscores already
+        % appends pkg.e_glycogenesets to its table, so the glycobiology
+        % entry is that table filtered to SignatureTag='Glycobiology'.
+        [y, ttxt, posg, methodid] = i_scorePredefinedSets(sce, ...
+            selecteditem, FigureHandle);
         % TF activity analysis has moved to Analyze > TF Activity Analysis
         % (gui.callback_TFActivity), which provides a dedicated workflow
         % with TF pre-selection and multi-TF display support.
@@ -377,6 +274,108 @@ if needupdatesce
         src.sce = sce;
     end
 end
+end
+
+
+function [y, ttxt, posg, methodid] = i_scorePredefinedSets(sce, ...
+    collection, parentfig)
+%I_SCOREPREDEFINEDSETS Pick signatures from the predefined table and score them.
+%
+%   collection decides which rows of the pkg.e_cellscores table are offered:
+%     'Glycobiology Gene Sets'      - only the curated glycobiology modules
+%     'Predefined Custom Gene Sets' - asks which collection(s) first, via
+%                                     gui.i_picksignaturetags, then the
+%                                     scores within them
+%
+%   These used to be two branches with two separate scoring calls, even
+%   though pkg.e_cellscores appends pkg.e_glycogenesets to its own table and
+%   tags those rows SignatureTag='Glycobiology' - the gene lists and the
+%   resulting scores were identical either way. The glycobiology branch also
+%   lacked this one's guard for signatures with too few expressed genes,
+%   which left y and ttxt at different lengths and made
+%   i_saveScoresAsAttributes silently skip saving every score, not just the
+%   failed one. One code path with a row filter avoids both problems.
+%
+%   Returns an empty y when the user cancels or nothing could be scored; the
+%   caller treats that as "stop here".
+
+y = {}; ttxt = {}; posg = []; methodid = [];
+
+[~, T] = pkg.e_cellscores(sce.X, sce.g, 0);
+
+if strcmp(collection, 'Glycobiology Gene Sets')
+    % Already a named collection - no point asking which one.
+    rows = find(strcmp(string(T.SignatureTag), "Glycobiology"));
+    prompt = 'Select Module:';
+    dlgwidth = 300;
+else
+    [rows, taglabel] = gui.i_picksignaturetags(T, parentfig);
+    if isempty(rows), return; end
+    if strlength(taglabel) > 0
+        prompt = char("Select Score (" + taglabel + "):");
+    else
+        prompt = 'Select Score:';
+    end
+    dlgwidth = 260;
+end
+if isempty(rows)
+    gui.myWarndlg(parentfig, ...
+        'No signatures are available in this collection.');
+    return;
+end
+listitems = string(T.ScoreType(rows));
+
+if gui.i_isuifig(parentfig)
+    [indx, tf] = gui.myListdlg(parentfig, listitems, prompt);
+else
+    [indx, tf] = listdlg('PromptString', prompt, ...
+        'SelectionMode', 'multiple', 'ListString', ...
+        cellstr(listitems), 'ListSize', [dlgwidth, 300]);
+end
+if tf ~= 1 || isempty(indx), return; end
+
+[~, methodid] = gui.i_pickscoremethod([], parentfig);
+if isempty(methodid), return; end
+
+sel = rows(indx);
+n = numel(sel);
+y = cell(n, 1); ttxt = cell(n, 1); posgc = cell(n, 1);
+valid = false(n, 1);
+
+fw = gui.myWaitbar(parentfig);
+for k = 1:n
+    % Brace-index to a string scalar rather than a 1-by-1 cell, so every
+    % label reaching i_scoreNames and the plot has the same shape.
+    ttxt{k} = string(T.ScoreType{sel(k)});
+    % Skip a signature with too few expressed genes (which errors in
+    % e_cellscores) instead of aborting the run.
+    try
+        [y{k}, ~, posgc{k}] = pkg.e_cellscores(sce.X, ...
+            sce.g, sel(k), methodid, false);
+    catch ME
+        warning('Skipping score "%s": %s', ...
+            string(T.ScoreType(sel(k))), ME.message);
+        y{k} = [];
+    end
+    valid(k) = ~isempty(y{k});
+end
+gui.myWaitbar(parentfig, fw);
+
+if ~any(valid)
+    gui.myWarndlg(parentfig, ['No scores could be computed. The ' ...
+        'selected signatures have too few expressed genes in this ' ...
+        'dataset.']);
+    y = {}; ttxt = {}; methodid = [];
+    return;
+end
+if ~all(valid)
+    gui.myWarndlg(parentfig, sprintf( ...
+        '%d of %d score(s) skipped (too few expressed genes): %s', ...
+        sum(~valid), n, ...
+        strjoin(string(T.ScoreType(sel(~valid))), ', ')));
+    y = y(valid); ttxt = ttxt(valid); posgc = posgc(valid);
+end
+posg = posgc{end};
 end
 
 

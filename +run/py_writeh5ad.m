@@ -59,7 +59,8 @@ if verbose
 end
 
 tmpfilelist = {'X.mat', 'g.csv', 'c.csv'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 if issparse(sce.X)
     X = single(full(sce.X));

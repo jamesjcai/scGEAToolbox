@@ -76,7 +76,16 @@ switch lower(method)
         T1.Properties.VariableNames{1} = 'gene';
 
         T = [T1 T2 table(DiffDist) table(DiffSign) table(pval)];
+
+        % idxx marks genes whose nearest point on either spline is the first
+        % or last knot, where the fit is not trustworthy, so their distance
+        % is discarded. DiffSign has to go with it: a gene with DiffDist 0
+        % has no magnitude and therefore no direction, and leaving the sign
+        % behind let callers that split on sign alone report a zero-effect
+        % gene as up- or down-variable. That was 218 of 7,550 genes on the
+        % measured case, every one of them reported as a hit.
         T.DiffDist(idxx) = 0;
+        T.DiffSign(idxx) = 0;
         T = sortrows(T, 'DiffDist', 'descend');
 
     case 'brennecke'

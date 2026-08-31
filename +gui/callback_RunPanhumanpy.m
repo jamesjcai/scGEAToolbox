@@ -1,11 +1,16 @@
 function [needupdatesce, T] = callback_RunPanhumanpy(src, ~)
 
 needupdatesce = false;
-% [y, prepare_input_only] = gui.i_memorychecked;
-% if ~y, return; end
-prepare_input_only = false;
+[y, prepare_input_only] = gui.i_memorychecked([], []);
+if ~y, return; end
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
+
+% Preparing input files does not touch sce.c_cell_type_tx; only ask about
+% overwriting labels when this run will actually assign new ones.
+if ~prepare_input_only && ~gui.i_confirmoverwritecelltype(FigureHandle, sce)
+    return;
+end
 
 % https://genentech.github.io/scimilarity/notebooks/cell_annotation_tutorial.html
 % SCimilarity trained model. Download SCimilarity models.
@@ -71,9 +76,7 @@ else
     try
         [c, T] = run.py_panhumanpy(sce, wkdir, true);
         assert(sce.NumCells==numel(c));
-        if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
-            sce.setCellAttribute('old_cell_type', sce.c_cell_type_tx);
-        end
+        pkg.i_stashcelltypehistory(sce);
         sce.c_cell_type_tx = c;
     catch ME
         gui.myWaitbar(FigureHandle, fw, true);

@@ -7,28 +7,19 @@ else
     [FigureHandle, sce] = gui.gui_getfigsce(src);
 end
 
+allowunique = false;
 % Several grouping variables may be picked; they are crossed into one
 % composite label per cell ("Macrophages | IL"), matching what the cell
 % score comparison does. Everything below treats thisc as a per-cell label
 % vector, so the composite needs no special handling past this point.
-[thisc, clabel] = gui.i_selectnclass(sce,[],[],[],FigureHandle);
+[thisc, clabel] = gui.i_selectnclass(sce,allowunique,[],[],FigureHandle);
 if isempty(thisc), return; end
 thisc = string(thisc);
-[~, cLorder] = findgroups(thisc);
 
-% Preselecting every group is the helpful default for a short list and the
-% wrong one for a long one - crossing variables multiplies the level count,
-% and past a couple of dozen the user's job becomes deselecting rather than
-% selecting.
-if numel(cLorder) <= 20
-    presel = cLorder;
-else
-    presel = cLorder(1);
-end
-[newidx] = gui.i_selmultidialog(cLorder, presel, FigureHandle);
-if isempty(newidx), return; end
-picked = ismember(thisc, cLorder(newidx));
-% cLorderx = cLorder(ismember(cLorder,cLorder(newidx)));
+% Shared with gui.callback_CompareCellScoreBtwCls so both group choosers
+% look and behave the same - see gui.i_selectgroupsubset.
+picked = gui.i_selectgroupsubset(thisc, clabel, FigureHandle);
+if isempty(picked), return; end
 if ~all(picked), thisc = thisc(picked); end
 
 answer = gui.myQuestdlg(FigureHandle, "Violinplot for gene expression or cell state variables?","", ...

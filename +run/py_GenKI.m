@@ -80,7 +80,8 @@ end
 try
     tmpfilelist = {'X.mat', 'g.txt', 'c.txt', 'pcnet_Source.mat', ...
         'idx.mat', 'output.csv', fullfile('GRNs', 'pcNet_example.npz')};
-    if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+    pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+    % run cannot leave a previous run's output to be picked up as this one's
     if issparse(X)
         X = single(full(X));
     else

@@ -9,7 +9,7 @@ else
 end
 
 idx = [];
-hFig = uifigure('Name','Item Selection (High Capacity)', ...
+hFig = uifigure('Name','Item Selection', ...
 'Position',[650 290 600 450], 'Visible','off');
 
 % Internal helper to configure table appearance
@@ -90,7 +90,13 @@ end
 
 function moveTable(src, ~, isAdding)
 if isempty(src.Selection), return; end
-rows = unique(src.Selection(:, 1));
+% Selection(:) not Selection(:,1). With SelectionType='row' a uitable
+% returns Selection as a 1-by-N ROW VECTOR of row indices, so taking
+% column 1 kept only the first selected row and the '>' button moved one
+% item however many were highlighted. The (:,1) form is right for
+% SelectionType='cell', where Selection is N-by-2 [row col], but this
+% table is 'row' - see applyStyle.
+rows = unique(src.Selection(:));
 names = src.Data.Items(rows);
 if isAdding
     selItems = [selItems; names];

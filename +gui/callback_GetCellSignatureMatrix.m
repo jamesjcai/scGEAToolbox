@@ -8,46 +8,40 @@ function callback_GetCellSignatureMatrix(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-preselected = [];
-
 [~, T] = pkg.e_cellscores([], [], 0);
-sigtags = unique(string(T.SignatureTag));
-sigtags = sigtags(strlength(sigtags) > 0);
-if ~isempty(sigtags)
-    sigtags = [sigtags; "-------------------------"; ...
-        "Select scores to make a customized score set..."];
 
-    if gui.i_isuifig(FigureHandle)
-        [indx1, tf1] = gui.myListdlg(FigureHandle, sigtags, ...
-            'Select a predefined score set');
-    else
-        [indx1, tf1] = listdlg('PromptString', 'Select a predefined score set', ...
-            'SelectionMode', 'single', 'ListString', ...
-            sigtags, 'ListSize', [260, 300]);
-    end
+% Same collection chooser as gui.callback_CompareCellScoreBtwCls - see
+% gui.i_picksignaturetags. It replaces a hand-rolled list that dropped
+% untagged signatures, carried a "-----" separator row that silently
+% aborted the callback when clicked, and only preselected a collection
+% inside the full 145-item list rather than narrowing to it.
+[rows, taglabel] = gui.i_picksignaturetags(T, FigureHandle);
+if isempty(rows), return; end
 
-    if tf1 ~= 1, return; end
-    if contains(sigtags(indx1), '----'), return; end
-
-    idx = T.SignatureTag == sigtags(indx1);
-    if any(idx)
-        [~, ix] = natsort(T.ScoreType);
-        preselected = idx(ix);
-    end
+listitems = natsort(T.ScoreType(rows));
+if strlength(taglabel) > 0
+    % A named collection is the set the user asked for, so start with all
+    % of it selected; they can still deselect.
+    scoreprompt = char("Select Scores (" + taglabel + ")");
+    preselected = true(numel(listitems), 1);
+else
+    scoreprompt = 'Select Scores';
+    preselected = false(numel(listitems), 1);
 end
-listitems = natsort(T.ScoreType);
+
 if gui.i_isuifig(FigureHandle)
     [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
-        'Select Scores',...
-        listitems(preselected));
+        scoreprompt, listitems(preselected));
 else
-    [indx2, tf2] = listdlg('PromptString', 'Select Scores', ...
+    initval = find(preselected);
+    if isempty(initval), initval = 1; end   % listdlg wants a valid index
+    [indx2, tf2] = listdlg('PromptString', scoreprompt, ...
         'SelectionMode', 'multiple', 'ListString', ...
         listitems, 'ListSize', [260, 300], ...
-        'InitialValue', find(preselected));
+        'InitialValue', initval);
 end
 
-if tf2 ~= 1, return; end
+if tf2 ~= 1 || isempty(indx2), return; end
 
 n = length(indx2);
 Y = zeros(sce.NumCells, n);

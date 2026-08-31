@@ -50,7 +50,8 @@ if ~prepare_input_only
 pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
 tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
         'input.h5ad', 'output.h5ad'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 [Xnorm] = pkg.norm_libsize(sce.X, 10000);
 Xnorm = log1p(full(Xnorm));

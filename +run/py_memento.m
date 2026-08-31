@@ -37,6 +37,8 @@ end
 
 
 tmpfilelist = {'X.mat', 'g.csv', 'c.csv'};
+% X.mat/g.csv/c.csv are inputs prepared outside this function, not temp
+% files it produces - only remove them when the caller opts out of debug.
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 

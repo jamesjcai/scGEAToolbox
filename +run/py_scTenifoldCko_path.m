@@ -39,7 +39,8 @@ tmpfilelist = {'X1.mat', 'X2.mat', 'g1.txt', 'c1.txt', 'g2.txt', 'c2.txt', 'outp
         '1/pcnet_Source.mat', '1/pcnet_Target.mat', ...
         '2/pcnet_Source.mat', '2/pcnet_Target.mat'};
 
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 in_prepareX12intact(sce);
 

@@ -34,6 +34,19 @@ function A = i_xctgrn(X, ncomp, q, verbose, useparallel, opts)
 %                  TEN.I_NCT, which filters and saves the raw network itself.
 %     fastersvd  - swap svds for lmsvd inside net.pcrnet (default false).
 %                  Slower, and non-deterministic; see below.
+%     precomputed - an ng-by-ng adjacency to use in place of net.pcrnet's
+%                  output, e.g. a network built by another tool for the same
+%                  genes and cell population. Its diagonal is zeroed (a
+%                  precomputed network may carry self-terms net.pcrnet's
+%                  regression never produces) and it is then scaled/filtered/
+%                  symmetrized exactly as a freshly-built one would be, so
+%                  cfg.mu and cfg.grnoffset stay meaningful downstream. X is
+%                  still required, for its size only - X is genes-by-cells,
+%                  precomputed must be genes-by-genes for the same genes.
+%                  Substituting a network built by a different method (a
+%                  different ncomp, a bootstrapped/denoised one, ...) changes
+%                  what is being tested, not just how it was computed; that is
+%                  a deliberate choice for the caller to make, not a hidden one.
 %
 %   OUTPUT:
 %     A - ng-by-ng adjacency matrix; sparse and symmetric by default
@@ -68,10 +81,17 @@ arguments
     opts.symmetrize (1, 1) logical = true
     opts.fastersvd (1, 1) logical = false
     opts.scale (1, 1) logical = true
+    opts.precomputed double = []
 end
 
 ng = size(X, 1);
-if ncomp < 2 || ncomp >= ng
+if ~isempty(opts.precomputed)
+    if ~isequal(size(opts.precomputed), [ng, ng])
+        error("TEN:I_XCTGRN:BadPrecomputedSize", ...
+            "precomputed must be %d-by-%d (X has %d genes). Received %s.", ...
+            ng, ng, ng, mat2str(size(opts.precomputed)));
+    end
+elseif ncomp < 2 || ncomp >= ng
     error("TEN:I_XCTGRN:BadNComp", ...
         "NCOMP must be at least 2 and fewer than the %d genes in X. " + ...
         "Received %g.", ng, ncomp);
@@ -124,9 +144,14 @@ end
 % including the scTenifoldNet and scTenifoldKnk paths that had used it since
 % before this function existed.
 t0 = tic;
-useGPU = pkg.i_usegpu(X);
-A = net.pcrnet(X, ncomp, opts.fastersvd, true, useparallel && ~useGPU, ...
-    false, useGPU);
+if ~isempty(opts.precomputed)
+    A = double(opts.precomputed);
+    A(1:ng+1:end) = 0;   % net.pcrnet never produces self-terms; match that
+else
+    useGPU = pkg.i_usegpu(X);
+    A = net.pcrnet(X, ncomp, opts.fastersvd, true, useparallel && ~useGPU, ...
+        false, useGPU);
+end
 
 % scale=True: normalize by the largest absolute entry. Off for ten.i_nct,
 % which hands the raw network to its own filtering and saving step.
@@ -154,8 +179,13 @@ if opts.symmetrize
 end
 
 if verbose
-    fprintf('[i_xctgrn] %d genes, ncomp=%d, %.1f%% nonzero, %.1f s\n', ...
-        ng, ncomp, 100*nnz(A)/ng^2, toc(t0));
+    if isempty(opts.precomputed)
+        fprintf('[i_xctgrn] %d genes, ncomp=%d, %.1f%% nonzero, %.1f s\n', ...
+            ng, ncomp, 100*nnz(A)/ng^2, toc(t0));
+    else
+        fprintf('[i_xctgrn] %d genes, precomputed network, %.1f%% nonzero, %.1f s\n', ...
+            ng, 100*nnz(A)/ng^2, toc(t0));
+    end
 end
 
 end

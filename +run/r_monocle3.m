@@ -6,7 +6,7 @@ if nargin < 3 || isempty(ndim), ndim = 2; end
 if nargin < 4, wkdir = pkg.i_tempdirfile(); end
 if nargin < 5, isdebug = false; end
 
-t = []; s = []; m = [];
+t = []; s = []; m = []; q = [];
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_monocle3');
@@ -14,7 +14,8 @@ if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.h5', 'output.h5', 'input.mat'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 if issparse(X), X = full(X); end
 save('input.mat', 'X', 'idx', 'ndim', '-v7.3');
@@ -32,6 +33,10 @@ if exist('output.h5', 'file')
     s = h5read('output.h5', '/s');
     m = h5read('output.h5', '/m');
     q = h5read('output.h5', '/q');
+else
+    error('run.r_monocle3:noOutput', ...
+        ['R finished but did not write %s to %s. The R console ', ...
+         'output above should say why.'], 'output.h5', pwd);
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 end

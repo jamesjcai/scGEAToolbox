@@ -1,6 +1,7 @@
-function [pred] = r_copykat(sce, wkdir, speciesid)
+function [pred] = r_copykat(sce, wkdir, speciesid, isdebug)
 
 pred = [];
+if nargin < 4, isdebug = true; end
 if nargin < 3
     speciesid = 'human';   % mouse
 end
@@ -10,18 +11,15 @@ end
 % PMID: 33462507
 
 
-isdebug = true;
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_copykat');
-if ~isok, error('%s', msg);
-    return;
-end
+if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.h5'};
-pkg.i_deletefiles(tmpfilelist);
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 pkg.e_writeh5(full(sce.X), sce.g, 'input.h5');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
 if isempty(Rpath)
@@ -51,6 +49,10 @@ if exist(outfile,'file')
     % y(pred == "aneuploid") = 1;
     % y(pred == "diploid") = 0;
     % y = y(sortid);
+else
+    error('run.r_copykat:noOutput', ...
+        ['R finished but did not write %s to %s. The R console ', ...
+         'output above should say why.'], outfile, pwd);
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 end

@@ -11,6 +11,11 @@ app = scgeatoolApp(varargin{:});
 % catch
 %     % best-effort: the GUI still works without the injected CoGAPS menu
 % end
+try
+    gui.i_reorganizeannotatemenu(app);
+catch
+    % best-effort: the GUI still works with the Annotate menu unreorganized
+end
 if nargout > 0
     varargout{1} = app;
 end

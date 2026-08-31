@@ -87,7 +87,8 @@ tmpfilelist = {'X.mat', 'X.txt', 'g.txt', 'c.txt', 'output.txt', ...
 'pcnet_Source.npz', 'pcnet_Target.npz', ...
 'A1.mat', 'A2.mat', 'pcnet_Source.mat', 'pcnet_Target.mat'};
 
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 % load(fullfile(pw1,'..','assets','Ligand_Receptor','Ligand_Receptor.mat'), ...
 %     'ligand','receptor');

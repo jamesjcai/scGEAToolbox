@@ -20,7 +20,8 @@ prgfoldername = 'py_MELD';
 if ~pyok, return; end
 cd(wrkpth);
 tmpfilelist = {'batchid.txt', 'input.txt', 'output.txt', 'input.mat'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 if issparse(X), X = full(X); end
 X = sc_norm(X);

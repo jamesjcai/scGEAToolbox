@@ -18,13 +18,17 @@ end
 if pkg.i_isvalid(myupdatefcn3fig) && isa(myupdatefcn3fig, 'matlab.ui.Figure')
     figure(myupdatefcn3fig);
 end
-stem(1:length(X(idx, :)), X(idx, :), 'marker', 'none');
+n1=length(X(idx, :));
+x1 = X(idx, :);
+stem(1:n1, x1, 'marker', 'none');
+
 if ~isempty(Y)
     hold on
-    stem(1+length(X(idx, :)):length(Y(idx, :))+length(X(idx, :)), ...
+    stem(1+n1:length(Y(idx, :))+n1, ...
         Y(idx, :), 'marker', 'none');
 end
 title(txt)
 xlabel('Cell Index')
 ylabel('Expression Level')
-end
+end    
+

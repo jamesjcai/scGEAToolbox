@@ -22,9 +22,6 @@ if ~isfolder(wrkdir)
     if isempty(wrkdir), return; end
 end
 
-preftagname = 'llmodelprovider';
-s = getpref('scgeatoolbox', preftagname);
-providermodel = strsplit(s, ':');
 
 % Build JSON for up- and down-regulated programs (program name, fold-change, p-value)
 s_up = '';
@@ -54,46 +51,21 @@ prompt1 = "You are a researcher analyzing differential gene program activity in 
 feedbk_up = [];
 feedbk_dn = [];
 done1 = false;
-done2 = false;
+done2 = false;   % stay false when s_up/s_dn are empty and no call is made
 
-switch providermodel{1}
-    case 'Ollama'
-        try
-            webread("http://localhost:11434");
-        catch
-            disp('Ollama is not running.');
-            return;
-        end
-        if ~isempty(s_up)
-            [done1, feedbk_up] = llm.callOllama(prompt1 + "Up-regulated programs: " + s_up, providermodel{2});
-        end
-        if ~isempty(s_dn)
-            [done2, feedbk_dn] = llm.callOllama(prompt1 + "Down-regulated programs: " + s_dn, providermodel{2});
-        end
-    case 'TAMUAIChat'
-        if ~isempty(s_up)
-            [done1, feedbk_up] = llm.callTAMUAIChat([], prompt1 + "Up-regulated programs: " + s_up, providermodel{2});
-        end
-        if ~isempty(s_dn)
-            [done2, feedbk_dn] = llm.callTAMUAIChat([], prompt1 + "Down-regulated programs: " + s_dn, providermodel{2});
-        end
-    case 'Gemini'
-        if ~isempty(s_up)
-            [done1, feedbk_up] = llm.callGemini([], prompt1 + "Up-regulated programs: " + s_up, providermodel{2});
-        end
-        if ~isempty(s_dn)
-            [done2, feedbk_dn] = llm.callGemini([], prompt1 + "Down-regulated programs: " + s_dn, providermodel{2});
-        end
-    case 'OpenAI'
-        if ~isempty(s_up)
-            [done1, feedbk_up] = llm.callOpenAIChat([], prompt1 + "Up-regulated programs: " + s_up, providermodel{2});
-        end
-        if ~isempty(s_dn)
-            [done2, feedbk_dn] = llm.callOpenAIChat([], prompt1 + "Down-regulated programs: " + s_dn, providermodel{2});
-        end
-    otherwise
-        warning('Invalid LLM provider and/or model.');
-        return;
+% Same single dispatch as e_DETableSummary. The OpenAI arm here had the
+% identical defect - three arguments passed to a two-argument function.
+[provider, model] = llm.i_llmsettings();
+
+if ~isempty(s_up)
+    [feedbk_up, done1] = llm.i_askllm( ...
+        prompt1 + "Up-regulated programs: " + s_up, provider, model);
+    if ~done1, feedbk_up = []; end
+end
+if ~isempty(s_dn)
+    [feedbk_dn, done2] = llm.i_askllm( ...
+        prompt1 + "Down-regulated programs: " + s_dn, provider, model);
+    if ~done2, feedbk_dn = []; end
 end
 
 if ~(done1 || done2)

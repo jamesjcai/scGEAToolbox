@@ -9,11 +9,7 @@ isdebug = false;
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_SeuratCellCycle');
-if ~isok, error('%s', msg);
-    c = [];
-    T = [];
-    return;
-end
+if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 if ~isdebug
@@ -34,8 +30,9 @@ if exist('output.csv', 'file')
     T = readtable('output.csv', 'ReadVariableNames', true);
     c = string(T.Phase);
 else
-    c = [];
-    T = [];
+    error('run.r_SeuratCellCycle:noOutput', ...
+        ['R finished but did not write output.csv to %s. The R console ', ...
+         'output above should say why.'], pwd);
 end
 if ~isdebug
     if exist('input.txt', 'file'), delete('input.txt'); end

@@ -63,7 +63,8 @@ tmpfilelist = {'input.mat', 'output.mat'};
 % wrkpth=fullfile(pw1,'external','py_harmonypy');
 % cd(wrkpth);
 % tmpfilelist={'output.csv','input1.csv','input2.csv'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 if issparse(s), s = full(s); end
 save('input.mat', '-v7.3', 's', 'batchid');

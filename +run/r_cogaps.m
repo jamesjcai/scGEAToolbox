@@ -30,7 +30,8 @@ if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.mat', 'genes.txt', 'output.h5', 'output_markers.csv'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 if issparse(X), X = full(X); end
 nPatterns = double(nPatterns);
@@ -58,7 +59,13 @@ if exist('output.h5', 'file')
     if size(P, 1) ~= size(X, 2) && size(P, 2) == size(X, 2)
         P = P';
     end
+else
+    error('run.r_cogaps:noOutput', ...
+        ['R finished but did not write output.h5 to %s. The R console ', ...
+         'output above should say why.'], pwd);
 end
+% The PatternMarker table is optional - CoGAPS can legitimately produce none,
+% so Tmarkers keeps the empty value set at the top of the function.
 if exist('output_markers.csv', 'file')
     Tmarkers = readtable('output_markers.csv', 'Delimiter', ',');
 end

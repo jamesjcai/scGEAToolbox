@@ -4,17 +4,16 @@ if nargin < 3, wkdir = pkg.i_tempdirfile(); end
 [status] = 0;
 isdebug = false;
 
-if nargin < 2, error('run.saveSeuratRds(sce,filename)'); end
+if nargin < 2, error('run.r_saveSeuratRds(sce,filename)'); end
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_SeuratSaveRds');
-if ~isok, error('%s', msg);
-    return;
-end
+if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.h5', 'output.Rds'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 % if ~strcmp(unique(sce.c_cell_type_tx), "undetermined")
 pkg.e_writeh5(full(sce.X), sce.g, 'input.h5', sce.c_cell_type_tx, sce.c_batch_id);

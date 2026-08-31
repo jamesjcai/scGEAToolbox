@@ -1,11 +1,14 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.4.1 26-Aug-2026
+% Version 26.4.2 30-Aug-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
 %   online_landing            - online_landing is a script.
+%   sc_annotatecells          - SC_ANNOTATECELLS Assign cell types by any available method, through one call.
+%   sc_causalcccnet           - SC_CAUSALCCCNET  Local approximation of a causalCCC/MIIC network.
 %   sc_cellcyclescore         - Score cell cycle phases
 %   sc_cellscore              - SC_CELLSCORE  Cell-level gene signature scoring.
+%   sc_celltypeanno           - sc_celltypeanno is a function.
 %   sc_cluster_s              - sc_cluster_s - cluster cells using cell embeding s
 %   sc_cluster_x              - sc_cluster_x - cluster cells using UMI matrix X
 %   sc_deg                    - SC_DEG - DEG analysis using Mann–Whitney U test or t-test

@@ -14,20 +14,24 @@ if isa(X, 'SingleCellExperiment') && isnumeric(genelist)
     sce = X;
     ndim = genelist;
 else
-    if nargin < 2, error("[sce]=run.SeuratWorkflow(X,genelist)"); end
+    if nargin < 2, error("[sce]=run.r_seurat(X,genelist)"); end
     sce = SingleCellExperiment(X, genelist);
     ndim = 2;
 end
 
 tmpfilelist = {'input.mat', 'output.h5', 'g.txt'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 X = sce.X;
 if issparse(X), X = full(X); end
 save('input.mat', 'X', 'ndim', '-v7.3');
 writematrix(sce.g, 'g.txt');
 
-Rpath = getpref('scgeatoolbox', 'rexecutablepath');
+Rpath = getpref('scgeatoolbox', 'rexecutablepath', []);
+if isempty(Rpath)
+    error('R environment has not been set up.');
+end
 
 codefullpath = fullfile(codepath,'script.R');
 pkg.i_addwd2script(codefullpath, wkdir, 'R');
@@ -71,6 +75,10 @@ if exist('output.h5', 'file')
     end
 
     sce.s = s_tsne;
+else
+    error('run.r_seurat:noOutput', ...
+        ['R finished but did not write %s to %s. The R console ', ...
+         'output above should say why.'], 'output.h5', pwd);
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 end

@@ -57,7 +57,8 @@ if ~exist(input_h5,"file")
 end
 
 tmpfilelist = {'input.txt', 'output_filtered.h5'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 % input_h5 = """"+input_h5+"""";
 
 writelines(input_h5,"input.txt");

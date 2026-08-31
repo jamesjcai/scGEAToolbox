@@ -23,6 +23,7 @@ answer3 = strtrim(answer{3});
 
 if ~isempty(answer1) && ~isempty(answer2)
     pw1 = pwd();
+    cleanupCwd = onCleanup(@() cd(pw1)); %#ok<NASGU>
     a = tempname;
     mkdir(a);
     cd(a);
@@ -41,13 +42,11 @@ if ~isempty(answer1) && ~isempty(answer2)
         end
         [X, genelist, celllist, ftdone] = sc_read10xdir(a);
     catch ME
-        cd(pw1);
         gui.gui_waitbar(fw, true);
         errordlg(ME.message);
         return;
     end
     gui.gui_waitbar(fw);
-    cd(pw1);
 end
 end
 

@@ -31,6 +31,19 @@ n = length(genesets);
 output = cell(n, 1);
 
 if isempty(backgroundlist)
+    % No background means the classic Enrichr endpoint, which tests against
+    % the whole library universe rather than the genes that could actually
+    % have been called. For single-cell data that is almost never what is
+    % wanted: a list drawn from one cell type enriches for that cell type's
+    % terms no matter what the contrast did, because the DETECTED set already
+    % did. It changes p-values by orders of magnitude and reorders the terms.
+    % This is a warning rather than an error because a genuine whole-genome
+    % question exists - but it should be a choice, not a default nobody saw.
+    warning('ml_Enrichr:NoBackground', ...
+        ['No background gene list. Falling back to the classic Enrichr ' ...
+         'endpoint, which tests against the entire library universe. Pass ' ...
+         'the genes that were actually tested (e.g. sce.g, or the DE table''s ' ...
+         'gene column) as argument 2 to use the speedrichr background API.']);
     base_url = 'https://maayanlab.cloud/Enrichr/addList';
     formData = MultipartFormProvider('list', strjoin(genelist, newline), ...
                'description', 'genelist');

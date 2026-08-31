@@ -8,7 +8,7 @@ addRequired(p, 's', @isnumeric);
 addOptional(p, 'k', 6, @(x) (x > 0) && isnumeric(x) && isscalar(x));
 addOptional(p, 'species', "mouse", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["human", "mouse"]));
 addOptional(p, 'organ', "all", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["all", "heart", "immunesystem", "brain", "pancreas"]));
-addOptional(p, 'tmethod', "alona", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["alona", "singler"]));
+addOptional(p, 'tmethod', "alona", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), "alona"));
 addOptional(p, 'cmethod', "snndpc", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["snndpc", "kmeans", "kmedoids", "dbscan", "spectclust"]));
 parse(p, X, genelist, s, varargin{:});
 k = p.Results.k;
@@ -46,9 +46,9 @@ for i = 1:max(c)
         case 'alona'
             [Tct] = run.ml_alona_new(Xi, gi, [], 'species', species);
             ctxt = Tct.C1_Cell_Type{1};
-        case 'singler'
-            cx = run.r_singler(Xi, gi, species);
-            ctxt = unique(cx(mode(findgroups(cx), 'all') == findgroups(cx)));
+        otherwise
+            error('sc_celltypeexplorer_auto:unknownMethod', ...
+                'Unsupported annotation method "%s". Use "alona".', tmethod);
     end
     ctxt = strrep(ctxt, '_', '\_');
     if size(s, 2) >= 3

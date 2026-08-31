@@ -48,6 +48,21 @@ function [T] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, varargin)
 %     'lr'       - Adam learning rate for solver="nn" (default: 0.01)
 %     'seed'     - RNG seed for solver="nn" (default: 0)
 %
+%   Precomputed-GRN Name-Value pairs:
+%     'grn1'     - ng-by-ng adjacency to use for CELLTYPE1 instead of building
+%                  one via net.pcrnet, where ng = numel(sce.g). Must be in the
+%                  same gene order as sce.g. [] (default) builds as usual.
+%     'grn2'     - same, for CELLTYPE2.
+%                  Passing either skips that side's pcrnet call - the
+%                  expensive step at cell counts in the tens of thousands -
+%                  but the matrix still goes through TEN.I_XCTGRN's scale/
+%                  filter/symmetrize so cfg.mu and cfg.grnoffset stay
+%                  meaningful. A network built by a different method (a
+%                  different ncomp, a bootstrapped/denoised one, ...) is a
+%                  different quantity than the one net.pcrnet(X,3) would have
+%                  built here, not a faster way to get the same answer - see
+%                  TEN.I_XCTGRN.
+%
 %   Output:
 %     T - table with columns: ligand, receptor, dist, correspondence, p_value
 %         If twosided=true, T is a cell array {T1, T2} where T1 is
@@ -91,6 +106,8 @@ addParameter(p, 'solver',  "spectral", @(x) ismember(string(x), ["spectral","nn"
 addParameter(p, 'n_steps', 1000,       @(x) isnumeric(x) && x > 0);
 addParameter(p, 'lr',      0.01,       @(x) isnumeric(x) && x > 0);
 addParameter(p, 'seed',    0,          @isnumeric);
+addParameter(p, 'grn1',    [],         @(x) isempty(x) || (isnumeric(x) && ismatrix(x)));
+addParameter(p, 'grn2',    [],         @(x) isempty(x) || (isnumeric(x) && ismatrix(x)));
 parse(p, varargin{:});
 
 cfg = ten.i_xctcfg(p.Results, "sctenifoldxct");
@@ -100,6 +117,12 @@ sce = copy(sce_ori);
 idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
 sce = sce.selectcells(idx);
 
+ng = numel(sce.g);
+i_checkgrnsize(p.Results.grn1, ng, 'grn1');
+i_checkgrnsize(p.Results.grn2, ng, 'grn2');
+cfg.grn1 = double(p.Results.grn1);
+cfg.grn2 = double(p.Results.grn2);
+
 X = sce.X;
 if issparse(X), X = full(X); end
 X = single(X);
@@ -108,6 +131,17 @@ T = ten.i_xctcore(X, sce.g, sce.c_cell_type_tx, celltype1, celltype2, ...
     twosided, cfg);
 
 end % sctenifoldxct
+
+
+%% ---- validate a precomputed GRN against the gene count ----
+function i_checkgrnsize(A, ng, name)
+if isempty(A), return; end
+if ~isequal(size(A), [ng, ng])
+    error("TEN:SCTENIFOLDXCT:BadGrnSize", ...
+        "'%s' must be %d-by-%d (sce.g has %d genes after subsetting to " + ...
+        "the two cell types). Received %s.", name, ng, ng, ng, mat2str(size(A)));
+end
+end % i_checkgrnsize
 
 
 %% ---- explanatory error for the relocated glyco options ----

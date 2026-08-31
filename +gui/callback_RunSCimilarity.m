@@ -6,6 +6,12 @@ if ~y, return; end
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
+% Preparing input files does not touch sce.c_cell_type_tx; only ask about
+% overwriting labels when this run will actually assign new ones.
+if ~prepare_input_only && ~gui.i_confirmoverwritecelltype(FigureHandle, sce)
+    return;
+end
+
 % https://genentech.github.io/scimilarity/notebooks/cell_annotation_tutorial.html
 % SCimilarity trained model. Download SCimilarity models.
 % Note, this is a large tarball - downloading and uncompressing can take a several minutes.
@@ -70,9 +76,7 @@ else
     try
         [c] = run.py_scimilarity(sce, modeldir, wkdir, target_celltypes, true);
         assert(sce.NumCells==numel(c));
-        if ~(isscalar(unique(sce.c_cell_type_tx)) && unique(sce.c_cell_type_tx)=="undetermined")
-            sce.setCellAttribute('old_cell_type', sce.c_cell_type_tx);
-        end
+        pkg.i_stashcelltypehistory(sce);
         sce.c_cell_type_tx = c;
     catch ME
         gui.myWaitbar(FigureHandle, fw, true);

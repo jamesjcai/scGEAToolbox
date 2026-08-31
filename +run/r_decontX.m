@@ -19,7 +19,8 @@ if isa(X, 'SingleCellExperiment')
 end
 
 tmpfilelist = {'input.mat', 'output.h5'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 if issparse(X), X = full(X); end
 save('input.mat', 'X', '-v7.3');

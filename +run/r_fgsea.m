@@ -12,12 +12,12 @@ cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepath] = commoncheck_R('R_fgsea');
 if ~isok
     error('%s', msg);
-    return;
 end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 tmpfilelist = {'input.txt', 'output.txt'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 % if exist('input.txt', 'file'), delete('input.txt'); end
 % if exist('output.txt', 'file'), delete('output.txt'); end
@@ -64,6 +64,10 @@ pkg.i_runrcode(codefullpath, Rpath);
 pause(1);
 if exist('output.txt', 'file')
     s = readtable('output.txt', "Delimiter", ',');
+else
+    error('run.r_fgsea:noOutput', ...
+        ['R finished but did not write %s to %s. The R console ', ...
+         'output above should say why.'], 'output.txt', pwd);
 end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 end

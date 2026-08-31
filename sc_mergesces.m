@@ -147,6 +147,114 @@ catch ME
         'SCE.STRUCT_CELL_EMBEDDINGS not merged: %s', ME.message);
 end
 
+% Modalities are merged rather than dropped. Unlike the blocks above this one
+% is NOT wrapped in try/catch: a modality that silently disappears on merge is
+% exactly the failure the PRESENT mask exists to prevent, and swallowing the
+% error would hide it.
+sce = i_mergemodalities(sce, sce1, sce2, method);
+
+end
+
+
+function sce = i_mergemodalities(sce, sce1, sce2, method)
+%I_MERGEMODALITIES Carry both inputs' modalities onto the merged cell axis.
+%
+%   Three cases, one per modality name in the union of the two inputs:
+%
+%   In BOTH  - the feature axes are merged with the SAME method as the genes,
+%              via SC_MERGEDATA (which is generic over row names), and the
+%              cells concatenate. An 'intersect' merge therefore keeps the
+%              peaks or antibodies common to both panels, exactly as it keeps
+%              the genes common to both.
+%
+%   In ONE   - the modality still belongs on the merged object, because its
+%              cells are half of the merged cells. The other half gets zero
+%              columns and a FALSE entry in PRESENT. That is the same
+%              distinction the loader draws for a cell a modality never
+%              measured: absent is not a measured zero, and collapsing the two
+%              would claim an assay covered cells it never saw.
+%
+%   Feature annotations survive only when the merge leaves that modality's
+%   feature axis unchanged; after an intersect or union they describe features
+%   that may no longer be there, so they are dropped with a warning rather
+%   than silently re-indexed onto the wrong rows.
+
+names = union(sce1.modalityNames(), sce2.modalityNames(), 'stable');
+if isempty(names), return, end
+
+n1 = sce1.NumCells;
+n2 = sce2.NumCells;
+
+for k = 1:numel(names)
+    name = names(k);
+    m1 = sce1.getModality(name);
+    m2 = sce2.getModality(name);
+
+    if ~isempty(m1) && ~isempty(m2)
+        [X, f] = sc_mergedata(m1.X, m2.X, m1.f, m2.f, method);
+        present = [m1.present, m2.present];
+        type = m1.type;
+        if m1.type ~= m2.type
+            warning('sc_mergesces:ModalityTypeMismatch', ...
+                ['Modality "%s" is type "%s" in one input and "%s" in the ', ...
+                 'other; keeping "%s".'], name, m1.type, m2.type, m1.type);
+        end
+        source = m1;
+        if isempty(f)
+            warning('sc_mergesces:ModalityNoCommonFeatures', ...
+                ['Modality "%s" has no features in common between the two ', ...
+                 'inputs under ''%s''; it is attached with zero features.'], ...
+                name, method);
+        end
+    elseif ~isempty(m1)
+        [X, f] = i_padmodality(m1, 0, n2);
+        present = [m1.present, false(1, n2)];
+        type = m1.type;
+        source = m1;
+        warning('sc_mergesces:ModalityPartialCoverage', ...
+            ['Modality "%s" exists in only one input, so %d of %d merged ', ...
+             'cells are marked absent in its PRESENT mask.'], ...
+            name, n2, n1 + n2);
+    else
+        [X, f] = i_padmodality(m2, n1, 0);
+        present = [false(1, n1), m2.present];
+        type = m2.type;
+        source = m2;
+        warning('sc_mergesces:ModalityPartialCoverage', ...
+            ['Modality "%s" exists in only one input, so %d of %d merged ', ...
+             'cells are marked absent in its PRESENT mask.'], ...
+            name, n1, n1 + n2);
+    end
+
+    sce.setModality(name, X, f, type, present);
+
+    % Re-attach annotations only if this modality's features came through
+    % untouched; otherwise row j no longer describes feature j.
+    if width(source.featureAnn) > 0
+        if isequal(string(f(:)), string(source.f(:)))
+            for v = string(source.featureAnn.Properties.VariableNames)
+                sce.setFeatureAnnotation(name, v, source.featureAnn.(v));
+            end
+        else
+            warning('sc_mergesces:ModalityAnnotationDropped', ...
+                ['Modality "%s" changed its feature axis on merge, so its ', ...
+                 '%d feature annotation(s) were dropped.'], ...
+                name, width(source.featureAnn));
+        end
+    end
+end
+end
+
+
+function [X, f] = i_padmodality(m, nBefore, nAfter)
+% Place a modality's cells inside a wider axis, zero-filling the rest.
+nf = numel(m.f);
+if issparse(m.X)
+    X = [sparse(nf, nBefore), m.X, sparse(nf, nAfter)];
+else
+    X = [zeros(nf, nBefore, 'like', m.X), m.X, zeros(nf, nAfter, 'like', m.X)];
+end
+f = m.f;
 end
 
 

@@ -2,6 +2,23 @@ function [T, A0] = sctenifoldknk(X, genelist, kogene, varargin)
 % T=sctenifoldknk(X,genelist,"Foxp3");
 %
 % X is a gene x cell matrix from the wild-type
+%
+% CHECK THE RESULT AGAINST A NULL BEFORE USING IT. T's p-values come from
+% TEN.I_DR, which fits a chi-square to drdist/mean(drdist). That asks whether
+% a gene moved more than the average gene moved in this run - not whether it
+% moved because of KOGENE. On a network with strong hub structure the same
+% genes top the ranking whichever row is zeroed, and the enrichment computed
+% from them describes the network rather than the knockout.
+%
+% TEN.KNKNULLCONTROL settles it by knocking out random genes from the same A0
+% and rescoring against that background. It costs minutes, needs the A0
+% returned here, and reports a verdict:
+%
+%     [T, A0] = ten.sctenifoldknk(X, genelist, "Foxp3");
+%     [Tnull, S] = ten.knknullcontrol(A0, "Foxp3", genelist);
+%     disp(S.Verdict)
+%
+% see also: TEN.KNKNULLCONTROL, TEN.I_KNK, TEN.I_DR, TEN.SCTENIFOLDNET
 import ten.*
 
 if nargin < 3
@@ -47,9 +64,17 @@ if size(X, 1) ~= length(genelist)
     error('Length of genelist should be the same as the number of rows of X0 or X1.');
 end
 
-if exist('@tensor/tensor.m', 'file') ~= 2
-    error('Need Tensor Toolbox for MATLAB (https://www.tensortoolbox.org/)');
-end
+% Add the Tensor Toolbox from the saved preference if it is not already on
+% the path, then error only if it genuinely is not installed.
+%
+% This used to error outright, which made the function fail in any MATLAB
+% that had not happened to call ten.sctenifoldnet first - that one does the
+% addpath itself, so an interactive session picked the path up as a side
+% effect and a fresh `matlab -batch` did not. A long unattended run would
+% then die at its first contrast. ten.check_tensor_toolbox is the toolbox's
+% own helper for exactly this and is what ten.sctenifoldnet's own preamble
+% amounts to.
+ten.check_tensor_toolbox;
     %    if exist('ten.i_td1.m','file')~=2
     %        error('Need i_td1.m in the scTendifoldNet https://github.com/cailab-tamu/scTenifoldNet/tree/master/MATLAB');
     %    end

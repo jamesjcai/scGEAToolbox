@@ -12,7 +12,7 @@ ismember(lower(string(x)), ["human", "mouse"]));
 addOptional(p, 'organ', "all", @(x) (isstring(x) | ischar(x)) & ...
 ismember(lower(string(x)), ["all", "heart", "immunesystem", "brain", "pancreas"]));
 addOptional(p, 'method', "alona", @(x) (isstring(x) | ischar(x)) & ...
-ismember(lower(string(x)), ["alona", "singler"]));
+ismember(lower(string(x)), "alona"));
 parse(p, X, genelist, s, varargin{:});
 species = p.Results.species;
 organ = p.Results.organ;
@@ -89,13 +89,9 @@ end
                 case 'alona'
                     [Tct] = pkg.i_celltypebrushed(X, genelist, s, ptsSelected, species, organ);
                     ctxt = Tct.C1_Cell_Type;
-                case 'singler'
-                    % [~,i]=ismember(brushedData,s,'rows');
-                    i = ptsSelected;
-                    Xi = X(:, i);
-                    [Xi, gi] = sc_selectg(Xi, genelist);
-                    cx = run.r_singler(Xi, gi, species);
-                    ctxt = unique(cx);
+                otherwise
+                    error('sc_celltypeexplorer:unknownMethod', ...
+                        'Unsupported annotation method "%s". Use "alona".', method);
             end
             [indx, tf] = listdlg('PromptString', {'Select cell type', ...
                 '', ''}, 'SelectionMode', 'single', ...

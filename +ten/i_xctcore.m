@@ -37,6 +37,13 @@ function T = i_xctcore(X, g, ctype, celltype1, celltype2, twosided, cfg)
 %     provenance - logical; when true the output gains channel, glyco_module and
 %                  glyco_weight columns describing the correspondence actually
 %                  used. Left false the schema is exactly the published one.
+%     grn1, grn2 - [] to build each cell type's GRN via TEN.I_XCTGRN as usual,
+%                  or an ng-by-ng precomputed adjacency (same gene order as g)
+%                  to use for CELLTYPE1/CELLTYPE2 instead, skipping the
+%                  net.pcrnet build for that side. See TEN.I_XCTGRN's
+%                  'precomputed' option for what still happens to it (scale,
+%                  optional filter, symmetrize) and why substituting a network
+%                  built by a different method is a real methodological choice.
 %
 %   OUTPUT:
 %     T - table with columns ligand, receptor, dist, correspondence, p_value,
@@ -75,11 +82,23 @@ end
 % apart in anything except their arguments. TEN.I_XCTGRN owns the pcrnet call,
 % the max-normalisation, the filtering and the symmetrisation, and records why
 % parallel and fastersvd are both left off.
-if verbose, fprintf('[%s] Building GRN: %s ...\n', tag, celltype1); end
-A_s = ten.i_xctgrn(X_s, 3, 0.75, false, cfg.useparallel);
+if verbose
+    if isempty(cfg.grn1)
+        fprintf('[%s] Building GRN: %s ...\n', tag, celltype1);
+    else
+        fprintf('[%s] Using precomputed GRN: %s (skipping pcrnet build)\n', tag, celltype1);
+    end
+end
+A_s = ten.i_xctgrn(X_s, 3, 0.75, false, cfg.useparallel, precomputed=cfg.grn1);
 
-if verbose, fprintf('[%s] Building GRN: %s ...\n', tag, celltype2); end
-A_t = ten.i_xctgrn(X_t, 3, 0.75, false, cfg.useparallel);
+if verbose
+    if isempty(cfg.grn2)
+        fprintf('[%s] Building GRN: %s ...\n', tag, celltype2);
+    else
+        fprintf('[%s] Using precomputed GRN: %s (skipping pcrnet build)\n', tag, celltype2);
+    end
+end
+A_t = ten.i_xctgrn(X_t, 3, 0.75, false, cfg.useparallel, precomputed=cfg.grn2);
 
 % -- Alignment, one direction at a time -----------------------------------
 if verbose

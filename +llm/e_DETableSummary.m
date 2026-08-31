@@ -28,11 +28,6 @@ if ~isfolder(wrkdir)
     if isempty(wrkdir), return; end
 end
 
-preftagname = 'llmodelprovider';
-s = getpref('scgeatoolbox', preftagname);
-providermodel = strsplit(s,':');
-
-% assert(ismember(providermodel{1}, {'Ollama','Gemini','TAMUAIChat'}));
 
 warning off
 s_up = '';
@@ -81,73 +76,19 @@ prompt1 = "You are a researcher working on gene function enrichment analysis try
     "Please write an executive summary to report the results of your analysis. " + ...
     "The comparison being analyzed is: " + infotagstr + ". ";
 
-feedbk_up = [];
-feedbk_dw = [];
-done1 = false;
-done2 = false;
-switch providermodel{1}
-    case 'Ollama'
-        % assert(strcmp(providermodel{1}, 'Ollama'))
-        try
-            aa=webread("http://localhost:11434");
-            disp(aa)
-        catch ME
-            disp('Ollama is not running.');
-            return;
-        end
-        %{
-        chat = ollamaChat(providermodel{2}, TimeOut = 1200);
-        prompt2 = "Here is the output of Enrichr: " + s_up;
-        feedbk_up = chat.generate(prompt1 + prompt2);
+% One dispatch for every provider gui.i_setllmmodel offers, instead of a
+% per-provider arm. The arms had drifted: the OpenAI one called
+% llm.callOpenAIChat([], prompt, model), but that function takes only
+% (prompt, model), so selecting OpenAI raised "Too many input arguments"
+% rather than summarizing anything.
+[provider, model] = llm.i_llmsettings();
 
-        prompt2 = "Here is the output of Enrichr: " + s_dn;
-        feedbk_dn = chat.generate(prompt1 + prompt2);
-        %}
-        prompt2 = "Here is the output of Enrichr: " + s_up;
-        [done1, feedbk_up] = llm.callOllama(prompt1 + prompt2, providermodel{2});
-        prompt2 = "Here is the output of Enrichr: " + s_dn;
-        [done2, feedbk_dn] = llm.callOllama(prompt1 + prompt2, providermodel{2});
-
-    case 'TAMUAIChat'
-        prompt2 = "Here is the output of Enrichr: " + s_up;
-        [done1, feedbk_up] = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
-        prompt2 = "Here is the output of Enrichr: " + s_dn;
-        [done2, feedbk_dn] = llm.callTAMUAIChat([], prompt1 + prompt2, providermodel{2});
-    case 'Gemini'
-        prompt2 = "Here is the output of Enrichr: " + s_up;
-        [done1, feedbk_up] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
-        prompt2 = "Here is the output of Enrichr: " + s_dn;
-        [done2, feedbk_dn] = llm.callGemini([], prompt1 + prompt2, providermodel{2});
-
-    case 'OpenAI'
-        prompt2 = "Here is the output of Enrichr: " + s_up;
-        [done1, feedbk_up] = llm.callOpenAIChat([], prompt1 + prompt2, providermodel{2});
-        prompt2 = "Here is the output of Enrichr: " + s_dn;
-        [done2, feedbk_dn] = llm.callOpenAIChat([], prompt1 + prompt2, providermodel{2});
-
-        %{
-        prompt2 = "Here is the output of Enrichr: " + s_up;
-        assignin("base","prompt1",prompt1);
-        assignin("base","prompt2",prompt2);
-        response = llm.geminiGenerateContent(prompt1 + prompt2);
-        if response.StatusCode == "OK"
-            feedbk_up = response.Body.Data.candidates.content.parts.text;
-        else
-            feedbk_up = response.Body.Data.error;
-        end
-        prompt2 = "Here is the output of Enrichr: " + s_dn;
-        response = llm.geminiGenerateContent(prompt1 + prompt2);
-        assignin("base","prompt3", prompt2);
-        if response.StatusCode == "OK"
-            feedbk_dn = response.Body.Data.candidates.content.parts.text;
-        else
-            feedbk_dn = response.Body.Data.error;
-        end
-        %}
-    otherwise
-        warning('Invalid LLM provider and/or model.');
-        return;
-end
+prompt2 = "Here is the output of Enrichr: " + s_up;
+[feedbk_up, done1] = llm.i_askllm(prompt1 + prompt2, provider, model);
+prompt2 = "Here is the output of Enrichr: " + s_dn;
+[feedbk_dn, done2] = llm.i_askllm(prompt1 + prompt2, provider, model);
+if ~done1, feedbk_up = []; end
+if ~done2, feedbk_dn = []; end
 
 
 if ~(done1 || done2)

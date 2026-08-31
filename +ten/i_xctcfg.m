@@ -5,9 +5,11 @@ function cfg = i_xctcfg(res, tag)
 %   TEN.SCTENIFOLDXCT_GLYCO, into the struct TEN.I_XCTCORE expects. TAG is the
 %   string used to prefix progress messages.
 %
-%   The correspondence hook and provenance flag default to the published
-%   behaviour: weight-1 cognate pairs and no extra output columns. Callers that
-%   want otherwise overwrite cfg.corrfcn and cfg.provenance after this returns.
+%   The correspondence hook, provenance flag and precomputed-GRN slots default
+%   to the published behaviour: weight-1 cognate pairs, no extra output
+%   columns, and a freshly-built network per cell type. Callers that want
+%   otherwise overwrite cfg.corrfcn, cfg.provenance, cfg.grn1 and cfg.grn2
+%   after this returns.
 %
 %   Kept separate so the two entry points cannot disagree about defaults.
 %
@@ -37,5 +39,7 @@ cfg.slv = struct( ...
 cfg.tag = tag;
 cfg.corrfcn = [];
 cfg.provenance = false;
+cfg.grn1 = [];
+cfg.grn2 = [];
 
 end % i_xctcfg

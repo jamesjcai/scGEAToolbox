@@ -56,8 +56,16 @@ for k=1:length(CellTypeList)
         matlab.lang.makeValidName(string(CellTypeList{k})));
         filesaved = fullfile(outdir, outfile);
 
-        Tup = T(T.DiffSign > 0, :);
-        Tdn = T(T.DiffSign < 0, :);
+        % Same cutoff as callback_DEVP2GroupsBatch. sc_dvg returns every
+        % gene ranked and applies no threshold, so splitting on DiffSign
+        % alone reported the entire gene set as up- or down-variable.
+        % e_fdr_bh returns h FIRST and adjusted p FOURTH.
+        [~, ~, ~, dvq] = pkg.e_fdr_bh(T.pval, 0.05, 'pdep', 'no');
+        isok = T.DiffDist > 0 & dvq(:) <= 0.05;
+        fprintf(['\nDV genes with BH q <= %.3f and a usable spline ' ...
+            'distance are retained: %d of %d.\n'], 0.05, sum(isok), height(T));
+        Tup = T(T.DiffSign > 0 & isok, :);
+        Tdn = T(T.DiffSign < 0 & isok, :);
 
         [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2);
 

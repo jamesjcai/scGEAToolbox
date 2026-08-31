@@ -41,21 +41,32 @@ if isempty(ingenelist) || all(strlength(ingenelist) < 1)
     end
 
 
-if askbackground && n > 100
-        answer = gui.myQuestdlg(FigureHandle, 'Add background list?','');
+% The background defaults to every gene in the object, because that is the
+% set a hit could have come from. The old default was no background at all,
+% which tests against the whole library universe and makes any list drawn
+% from one cell type enrich for that cell type's terms regardless of the
+% contrast. "No background" is still reachable, but it is now the deliberate
+% third option rather than what happens when the dialog is dismissed - and
+% the n > 100 guard is gone, since a small gene set needs the background more,
+% not less.
+if askbackground
+        answer = gui.myQuestdlg(FigureHandle, ...
+            'Background gene set for enrichment?', '', ...
+            {'All genes in this dataset', 'Choose a subset', 'No background'}, ...
+            'All genes in this dataset');
         switch answer
-            case 'Yes'
+            case 'All genes in this dataset'
+                backgroundlist = sce.g;
+            case 'Choose a subset'
                 [idx] = gui.i_selmultidialog(sce.g, sce.g, FigureHandle);
                 if isempty(idx), return; end
                 if idx == 0, return; end
                 backgroundlist = sce.g(idx);
-            case 'No'
+            case 'No background'
                 backgroundlist = [];
-            case 'Cancel'
-                return;
+            otherwise      % dialog dismissed - fall back to the safe default
+                backgroundlist = sce.g;
         end
-    else
-        backgroundlist = [];
     end
 
 if isempty(enrichrtype)

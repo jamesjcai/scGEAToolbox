@@ -41,11 +41,33 @@ if ~isempty(parentfig)
     cleanupObj = onCleanup(@() figure(parentfig));
 end
 
-    if length(items) > 1e4
+    %if length(items) > 1e4
         idx = gui.i_shuttleselect(items, preselected_items, parentfig);
         return;
-    end
+    %end
+end
 
+
+function mustBeValidItemList(x)
+% Validator for the arguments block at the top of this file.
+%
+% It has to live OUTSIDE the %{ ... %} that begins just below. A second copy
+% sits further down inside that block, and because MATLAB block comments
+% NEST - %{ at lines 53 and 170, %} at 237 and 249 - the whole tail of this
+% file is commented out, that copy along with it. The arguments block was
+% therefore referencing a validator that did not exist, and every caller
+% failed with "Unrecognized function or variable 'mustBeValidItemList'".
+if ~isempty(x)
+    if ~(iscellstr(x) || isstring(x) || iscategorical(x))
+        error('Items must be a cell array of char, string array, or 1-D categorical array.');
+    end
+    if ~isvector(x)
+        error('Items must be a 1-D array.');
+    end
+end
+end
+
+%{
     if ~isempty(preselected_items)
         assert(all(ismember(preselected_items, items)));
     end
@@ -241,3 +263,4 @@ if ~isempty(x)
     end
 end
 end
+%}

@@ -8,14 +8,15 @@ if nargin < 1, error('run.r_readSeuratRds(filename)'); end
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_SeuratReadRds');
-if ~isok, error('%s', msg), return; end
+if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 isdebug = false;
 tmpfilelist = {'inputrdsfile.txt', 'output.h5', ...
 'g.csv', 'X.csv', 'umap.csv', 'barcodes.csv', ...
 'annotation.csv', 'metadata.csv'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 
 writematrix(filename, 'inputrdsfile.txt');
@@ -61,6 +62,10 @@ if exist('output.h5', 'file')
         warning('Matrix size changed.');
     end
     disp('X is read.');
+else
+    error('run.r_readSeuratRds:noOutput', ...
+        ['R finished but did not write %s to %s. The R console ', ...
+         'output above should say why.'], 'output.h5', pwd);
 end
 
 X = pkg.e_uint2sparse(X);
