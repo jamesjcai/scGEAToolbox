@@ -76,7 +76,7 @@ else
     try
         [c, T] = run.py_panhumanpy(sce, wkdir, true);
         assert(sce.NumCells==numel(c));
-        pkg.i_stashcelltypehistory(sce);
+        stashname = pkg.i_stashcelltypehistory(sce);
         sce.c_cell_type_tx = c;
     catch ME
         gui.myWaitbar(FigureHandle, fw, true);
@@ -86,5 +86,11 @@ else
     gui.myGuidata(FigureHandle, sce, src);
     needupdatesce = true;
     gui.myWaitbar(FigureHandle, fw);
+
+    % Say what was assigned and where the labels it replaced went; the
+    % pre-flight warning could only name the attribute generically.
+    msg = sprintf('%d cell type(s) assigned to %d cells by panhumanpy.', ...
+        numel(unique(string(c))), sce.NumCells);
+    gui.myHelpdlg(FigureHandle, msg + gui.i_stashnotice(stashname));
 end
 end

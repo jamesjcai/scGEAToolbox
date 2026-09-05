@@ -24,8 +24,15 @@ if isempty(obj.s) || forced
            [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
         end
 
-        idx = false(size(obj.g));
-        idx(1:numhvg) = true;
+        % Take the top numhvg of what came back, not of what went in.
+        % SC_SPLINEFIT drops genes that are all zero, so on a subset of the
+        % cells - one cell type isolated for subtype annotation, say - fewer
+        % genes come back than obj.g has. Building the mask from obj.g then
+        % puts a true past the end of X as soon as the subset leaves fewer
+        % than numhvg expressed genes, and the indexing errors.
+        nkeep = min(numhvg, numel(g));
+        idx = false(numel(g), 1);
+        idx(1:nkeep) = true;
 
         X = X(idx, :);
         g = g(idx);

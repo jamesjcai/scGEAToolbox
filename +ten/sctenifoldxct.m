@@ -1,4 +1,4 @@
-function [T] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, varargin)
+function [T, grns] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, varargin)
 % SCTENIFOLDXCT  Native MATLAB implementation of scTenifoldXct.
 %   Detects ligand-receptor-mediated cell-cell interactions by spectral
 %   manifold alignment of gene regulatory networks.  No Python required.
@@ -6,6 +6,7 @@ function [T] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, varargin)
 %   T = ten.sctenifoldxct(SCE, CELLTYPE1, CELLTYPE2)
 %   T = ten.sctenifoldxct(SCE, CELLTYPE1, CELLTYPE2, TWOSIDED)
 %   T = ten.sctenifoldxct(SCE, CELLTYPE1, CELLTYPE2, TWOSIDED, Name, Value)
+%   [T, grns] = ten.sctenifoldxct(...)   % also return the GRNs actually used
 %
 %   Inputs:
 %     SCE       - SingleCellExperiment object
@@ -62,11 +63,49 @@ function [T] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, varargin)
 %                  different quantity than the one net.pcrnet(X,3) would have
 %                  built here, not a faster way to get the same answer - see
 %                  TEN.I_XCTGRN.
+%     'grn1_processed', 'grn2_processed' - true if the matching grn1/grn2 is
+%                  itself a grns.A_s/A_t this function previously returned
+%                  (see the grns output below) - skips scale/filter/symmetrize
+%                  a second time, which is NOT a no-op for the q=0.75 filter
+%                  (default false; see TEN.I_XCTGRN's 'processed' option).
+%
+%   Discovery-mode Name-Value pairs:
+%     'candidates' - "database" (default) restricts the output to L-R
+%                  database matches, as published. "all" instead ranks
+%                  EVERY gene pair by embedding distance and reports the
+%                  closest 'topN', regardless of whether either gene is a
+%                  known ligand or receptor - for finding candidate pairs
+%                  the database does not already know about. Combine with
+%                  w12mode="outer" for a run that does not use the L-R
+%                  database at all; w12mode="lr" (the default) still uses it
+%                  to build the alignment even when candidates="all" only
+%                  changes what gets reported afterward. The output schema
+%                  differs in this mode: no p_value (there is no separate
+%                  background left once every pair is a candidate) - instead
+%                  a percentile column (smaller = closer than more of the
+%                  other ~25 million gene pairs) and is_known_lr, marking
+%                  which of the top pairs happen to already be in the
+%                  database. See TEN.I_XCTCORE's i_xctdiscover.
+%     'topN'     - how many top pairs to report when candidates="all"
+%                  (default 200). Ignored when candidates="database".
 %
 %   Output:
-%     T - table with columns: ligand, receptor, dist, correspondence, p_value
-%         If twosided=true, T is a cell array {T1, T2} where T1 is
-%         CELLTYPE1->CELLTYPE2 and T2 is CELLTYPE2->CELLTYPE1.
+%     T    - candidates="database" (the default): table with columns ligand,
+%            receptor, dist, correspondence, p_value. candidates="all":
+%            table with columns ligand, receptor, dist, percentile,
+%            is_known_lr. If twosided=true, T is a cell array {T1, T2} where
+%            T1 is CELLTYPE1->CELLTYPE2 and T2 is CELLTYPE2->CELLTYPE1.
+%     grns - requested by asking for a second output; struct with fields
+%            A_s, A_t (the ng-by-ng adjacency actually used for CELLTYPE1/
+%            CELLTYPE2 - freshly built, or grn1/grn2 passed through TEN.
+%            I_XCTGRN's scale/filter/symmetrize either way) and genes. One
+%            pair regardless of twosided - both directions align the same
+%            two networks, just swapped - so there is nothing to return
+%            twice. Building it costs nothing extra: A_s/A_t already exist
+%            by the time T does. This is how to keep a network net.pcrnet
+%            just built (cell counts in the tens of thousands make that
+%            expensive) for later reuse - e.g. as another call's grn1/grn2 -
+%            without rebuilding it.
 %
 %   Algorithm:
 %     Builds partial-correlation GRNs for each cell type via net.pcrnet, then
@@ -108,9 +147,15 @@ addParameter(p, 'lr',      0.01,       @(x) isnumeric(x) && x > 0);
 addParameter(p, 'seed',    0,          @isnumeric);
 addParameter(p, 'grn1',    [],         @(x) isempty(x) || (isnumeric(x) && ismatrix(x)));
 addParameter(p, 'grn2',    [],         @(x) isempty(x) || (isnumeric(x) && ismatrix(x)));
+addParameter(p, 'grn1_processed', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
+addParameter(p, 'grn2_processed', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
+addParameter(p, 'candidates', "database", @(x) ismember(string(x), ["database","all"]));
+addParameter(p, 'topN', 200, @(x) isnumeric(x) && isscalar(x) && x > 0);
 parse(p, varargin{:});
 
 cfg = ten.i_xctcfg(p.Results, "sctenifoldxct");
+cfg.candidates = string(p.Results.candidates);
+cfg.topN = round(p.Results.topN);
 
 % -- Subset to the two cell types -----------------------------------------
 sce = copy(sce_ori);
@@ -122,13 +167,20 @@ i_checkgrnsize(p.Results.grn1, ng, 'grn1');
 i_checkgrnsize(p.Results.grn2, ng, 'grn2');
 cfg.grn1 = double(p.Results.grn1);
 cfg.grn2 = double(p.Results.grn2);
+cfg.grn1_processed = logical(p.Results.grn1_processed);
+cfg.grn2_processed = logical(p.Results.grn2_processed);
 
 X = sce.X;
 if issparse(X), X = full(X); end
 X = single(X);
 
-T = ten.i_xctcore(X, sce.g, sce.c_cell_type_tx, celltype1, celltype2, ...
-    twosided, cfg);
+if nargout > 1
+    [T, grns] = ten.i_xctcore(X, sce.g, sce.c_cell_type_tx, celltype1, ...
+        celltype2, twosided, cfg);
+else
+    T = ten.i_xctcore(X, sce.g, sce.c_cell_type_tx, celltype1, celltype2, ...
+        twosided, cfg);
+end
 
 end % sctenifoldxct
 

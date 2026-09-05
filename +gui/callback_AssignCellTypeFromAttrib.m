@@ -22,40 +22,39 @@ requirerefresh = false;
 [parentfig, sce] = gui.gui_getfigsce(src);
 if isempty(sce) || sce.NumCells == 0, return; end
 
+% Restoring a stashed annotation is one of the uses of this callback, so the
+% labels it replaces are stashed too and the round trip works in both
+% directions. Ask before any of the pickers open.
+if ~gui.i_confirmoverwritecelltype(parentfig, sce), return; end
+
 [t, srcname] = in_picksourcetable(sce, parentfig);
 if isempty(t), return; end
 
-% Score the columns before anything is put on screen. When nothing qualifies the
-% warning must be the only window that opens: myWarndlg draws inside parentfig
-% rather than as its own window, so a table viewer opened first would hide it.
+% Score the columns before anything is put on screen, so that when nothing
+% qualifies the warning is the only window that opens.
 [~, ~, ranked] = pkg.i_guesscelltypecol(t, sce.NumCells);
 if isempty(ranked) || height(ranked) == 0
     gui.myWarndlg(parentfig, in_noqualifyreason(t, srcname, sce.NumCells));
     return;
 end
 
-% Show the candidate columns alongside the picker so their values can be
-% inspected while choosing. Only the ranked columns are shown, so the table
-% matches the choices on offer instead of also listing columns the picker has
-% already ruled out. drawnow realizes the window now, otherwise its deferred
-% paint flushes while the picker waits and raises it over the picker.
-viewerfig = gui.TableViewerApp(t(:, ranked.Name), parentfig, "CellTypeCandidates");
-drawnow;
-
+% The picker alone, no table viewer alongside it. A viewer of the candidate
+% columns was shown here so their values could be inspected while choosing,
+% but it is a separate window while the picker is drawn inside parentfig, so
+% the two could not be placed or stacked without one obscuring the other. The
+% picker already lists each candidate's distinct-value count and example
+% values, which is what the viewer was there to supply.
 [ctype, colname] = gui.i_pickcelltypecolumn(t, sce, parentfig, [], ranked);
-
-% Close the viewer before any message dialog, which is drawn inside parentfig
-% and would otherwise sit behind the viewer window.
-if pkg.i_isvalid(viewerfig), delete(viewerfig); end
 if isempty(ctype), return; end
 
+stashname = pkg.i_stashcelltypehistory(sce);
 sce.c_cell_type_tx = ctype;
 gui.myGuidata(parentfig, sce, src);
 requirerefresh = true;
 
-gui.myHelpdlg(parentfig, sprintf( ...
-    'Cell type assigned from %s, column "%s" (%d types).', ...
-    srcname, colname, numel(unique(ctype))));
+msg = sprintf('Cell type assigned from %s, column "%s" (%d types).', ...
+    srcname, colname, numel(unique(ctype)));
+gui.myHelpdlg(parentfig, msg + gui.i_stashnotice(stashname));
 end
 
 function msg = in_noqualifyreason(t, srcname, ncells)
@@ -98,43 +97,47 @@ ncells = sce.NumCells;
 scetag = '';
 tsce = in_attributetable(sce);
 if ~isempty(tsce)
-    scetag = sprintf('Cell attributes on this dataset (%d columns)', width(tsce));
+    scetag = sprintf('Use this dataset''s own cell attributes (%d columns)', ...
+        width(tsce));
 end
 
-names = {};
-if ~(ismcc || isdeployed)
-    a = evalin('base', 'whos');
-    if ~isempty(a)
-        istbl = strcmp({a.class}, 'table');
-        nrow = cellfun(@(x) x(1), {a.size});
-        names = {a(istbl & nrow == ncells).name};
-    end
-end
-
-loadtag = 'Load Table from File...';
-items = [names, {loadtag}];
+% The two external sources are named, and their table picked, the same way as
+% in GUI.SC_CELLATTRIBEDITOR: one entry each rather than one entry per
+% workspace variable. The flat list read better when a qualifying table
+% happened to be in the workspace, but it changed shape with whatever was
+% there, and when nothing qualified it silently offered nothing at all -
+% GUI.I_PICKWORKSPACETABLE says which variables it found and why they did not
+% qualify.
+loadtag = 'Read a column from a table file (CSV, TSV or TXT)';
+wstag = 'Read a column from a table variable in the workspace';
+items = {loadtag, wstag};
 if ~isempty(scetag)
     items = [{scetag}, items];
 end
 
-prompt = 'Select a source of per-cell columns:';
+% The instruction goes in the prompt label, which wraps; the Title stays
+% short because the window title bar clips without saying so.
+prompt = ['Where are the per-cell columns that hold the cell type ', ...
+    'annotation?'];
 if gui.i_isuifig(parentfig)
-    [indx, tf] = gui.myListdlg(parentfig, items, prompt, [], false);
+    [indx, tf] = gui.myListdlg(parentfig, items, 'Cell Type Source', [], ...
+        false, true, [480, 200], prompt);
 else
-    [indx, tf] = listdlg('PromptString', {prompt}, ...
-        'SelectionMode', 'single', 'ListString', items, 'ListSize', [300, 300]);
+    [indx, tf] = listdlg('PromptString', {prompt}, 'SelectionMode', 'single', ...
+        'ListString', items, 'ListSize', [460, 120]);
 end
 if tf ~= 1 || isempty(indx), return; end
 
-if ~isempty(scetag) && strcmp(items{indx}, scetag)
-    t = tsce;
-    srcname = 'cell attributes';
-elseif strcmp(items{indx}, loadtag)
-    [t, srcname] = gui.i_readtablefile(parentfig, ncells);
-    if isempty(t), return; end
-else
-    t = evalin('base', items{indx});
-    srcname = items{indx};
+% scetag is '' when the dataset carries no cell attributes, in which case it is
+% not in items either, so the case simply never matches.
+switch items{indx}
+    case scetag
+        t = tsce;
+        srcname = 'cell attributes';
+    case loadtag
+        [t, srcname] = gui.i_readtablefile(parentfig, ncells);
+    case wstag
+        [t, srcname] = gui.i_pickworkspacetable(parentfig, ncells);
 end
 end
 
@@ -155,3 +158,4 @@ names = matlab.lang.makeUniqueStrings(matlab.lang.makeValidName(names(isok)));
 vals = cellfun(@(v) v(:), vals(isok), 'UniformOutput', false);
 t = table(vals{:}, 'VariableNames', names);
 end
+

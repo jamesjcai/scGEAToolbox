@@ -1,12 +1,56 @@
 function [indx, tf] = myListdlg(parentfig, options, Title, ...
-    prefersel, allowmulti, allowresize, dlgSize)
+    prefersel, allowmulti, allowresize, dlgSize, prompt)
+%MYLISTDLG Pick from a list, in a dialog centered on parentfig.
+%
+%   [indx, tf] = gui.myListdlg(parentfig, options, Title)
+%   [indx, tf] = gui.myListdlg(parentfig, options, Title, prefersel, ...
+%                              allowmulti, allowresize, dlgSize, prompt)
+%
+%   parentfig   figure to center on and return focus to; [] centers on screen
+%   options     the items, a cellstr or string array
+%   Title       the dialog's WINDOW title. The title bar clips anything long
+%               and gives no hint that it did, so keep this to a few words
+%               and put the instruction in prompt.
+%   prefersel   item(s) selected initially, by value or index (default: none)
+%   allowmulti  allow selecting more than one (default: true)
+%   allowresize allow resizing the dialog (default: true)
+%   dlgSize     [width, height] in pixels (default: [300, 450]). The height
+%               is the room for the list and buttons; a prompt adds to it
+%               rather than eating into the list.
+%   prompt      instruction shown as a wrapped label above the list, where
+%               there is room for a full sentence. '' for none, which is the
+%               default and leaves the layout exactly as it was.
+%
+%   indx is the index/indices of the chosen items, tf is 1 when OK was
+%   pressed and 0 when the dialog was cancelled or closed.
+%
+%   Prefer Title + prompt over a long Title alone: a truncated title bar is
+%   the usual reason a list dialog reads as unexplained.
+%
+%   See also gui.myQuestdlg, gui.myInputdlg, gui.i_centerdlgpos.
 
-if nargin < 7
+if nargin < 8 || isempty(prompt), prompt = ''; end
+if nargin < 7 || isempty(dlgSize)
     dlgSize = [300, 450]; % [Width, Height]
 end
 if nargin < 6, allowresize = true; end
 if nargin < 5, allowmulti = true; end
 if nargin < 4, prefersel = []; end
+
+prompt = char(string(prompt));
+
+% Reserve room for the prompt on top of the requested height, so passing one
+% never shrinks the list. The line count is estimated from the dialog width
+% rather than measured, which would need a realized figure; uilabel word
+% wrapping does the actual breaking, so the estimate only has to be close
+% enough not to clip.
+promptHeight = 0;
+if ~isempty(prompt)
+    charsPerLine = max(20, floor((dlgSize(1)-40)/6.2));
+    numLines = max(1, ceil(numel(prompt)/charsPerLine));
+    promptHeight = numLines*17 + 6;
+    dlgSize(2) = dlgSize(2) + promptHeight + 8;
+end
 
 if length(options) > 1e4
     [indx, tf] = gui.myTabledlg(parentfig, options, Title, prefersel, allowmulti);
@@ -61,8 +105,19 @@ if isnumeric(prefersel) && ~isempty(prefersel)
     prefersel = options(idx);
 end
 
+% The prompt sits at the top; the list takes what is left between it and the
+% button row. With no prompt topUsed is 20, leaving the same dlgSize(2)-60-20
+% the list has always had.
+topUsed = 20;
+if promptHeight > 0
+    uilabel(d, 'Text', prompt, 'WordWrap', 'on', ...
+        'VerticalAlignment', 'top', ...
+        'Position', [20, dlgSize(2)-20-promptHeight, dlgSize(1)-40, promptHeight]);
+    topUsed = 20 + promptHeight + 8;
+end
+
 % Create a listbox for selection
-lbHeight = dlgSize(2) - 60 - 20;   % dialog height minus button row and top padding
+lbHeight = dlgSize(2) - topUsed - 60;   % minus prompt, top padding, button row
 if ~isempty(prefersel) && any(ismember(prefersel, options))
     lb = uilistbox(d, 'Items', options, 'Position', [20 60 dlgSize(1)-40 lbHeight], ...
         'MultiSelect', multitag, 'Value', prefersel);
@@ -76,12 +131,11 @@ d.KeyPressFcn = @(src, event) jumpToFirstMatch(lb, event);
 % Use UserData to track whether OK was confirmed
 d.UserData = false;
 
-% Create OK button
-btnOK = uibutton(d, 'Text', 'OK', 'Position', [60 20 80 30], ...
+% Create OK and Cancel buttons. The handles are not kept: nothing below
+% refers to them, and holding them only drew a Code Analyzer warning.
+uibutton(d, 'Text', 'OK', 'Position', [60 20 80 30], ...
     'ButtonPushedFcn', @(btn,event) okCallback(d));
-
-% Create Cancel button
-btnCancel = uibutton(d, 'Text', 'Cancel', 'Position', [160 20 80 30], ...
+uibutton(d, 'Text', 'Cancel', 'Position', [160 20 80 30], ...
     'ButtonPushedFcn', @(btn,event) uiresume(d));
 
 if ~isMATLABReleaseOlderThan('R2025a')

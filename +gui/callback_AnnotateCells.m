@@ -97,7 +97,7 @@ fw = gui.myWaitbar(FigureHandle, [], false, ...
     sprintf('Annotating cell types using %s...', method));
 try
     args = namedargs2cell(opts);
-    [sce, T] = sc_annotatecells(sce, args{:});
+    [sce, T, stashname] = sc_annotatecells(sce, args{:});
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
@@ -128,7 +128,7 @@ if any(~isnan(T.Confidence))
             msg, nunsure, height(T));
     end
 end
-gui.myHelpdlg(FigureHandle, msg);
+gui.myHelpdlg(FigureHandle, msg + gui.i_stashnotice(stashname));
 
 gui.i_exporttable(T, true, 'Tcelltypeanno', 'CellTypeAnnotation', ...
     [], [], FigureHandle);

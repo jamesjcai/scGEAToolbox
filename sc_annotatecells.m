@@ -1,7 +1,7 @@
-function [sce, T] = sc_annotatecells(sce, options)
+function [sce, T, stashname] = sc_annotatecells(sce, options)
 %SC_ANNOTATECELLS Assign cell types by any available method, through one call.
 %
-%   [sce, T] = SC_ANNOTATECELLS(sce)
+%   [sce, T, stashname] = SC_ANNOTATECELLS(sce)
 %   [sce, T] = SC_ANNOTATECELLS(sce, Method="llm", Tissue="pancreas")
 %   [sce, T] = SC_ANNOTATECELLS(sce, Method="consensus", Methods=["markers" "llm"])
 %
@@ -59,6 +59,10 @@ function [sce, T] = sc_annotatecells(sce, options)
 %                attribute before overwriting. Default true.
 %     Verbose    print progress. Default true.
 %
+%   STASHNAME is the 'old_cell_type_N' cell attribute that the labels being
+%   replaced were kept in, or "" if there were none. A GUI caller needs it
+%   to tell the user where they went; see GUI.I_STASHNOTICE.
+%
 %   PROVENANCE
 %   The method, its settings and the time are appended to sce.metadata, so a
 %   saved object can still say whether its labels came from PanglaoDB or from
@@ -89,6 +93,8 @@ arguments
     options.Verbose (1,1) logical = true
 end
 
+stashname = "";
+
 if options.Method == "consensus"
     [labels, T] = i_consensus(sce, options);
     detail = "methods=" + strjoin(options.Methods, "+");
@@ -104,15 +110,18 @@ if isempty(labels)
     return
 end
 
-% Overwriting labels silently loses them. Every GUI callback that assigns
-% cell types stashes the previous ones the same way; this makes that the
-% rule rather than the majority behaviour. Each call adds a new numbered
-% attribute rather than replacing one slot, so a history of past
-% annotations survives, not just the most recent one.
+% Overwriting labels silently loses them. The GUI annotation callbacks
+% stash the previous ones the same way; this makes that the rule rather
+% than the majority behaviour. Each call adds a new numbered attribute
+% rather than replacing one slot, so a history of past annotations
+% survives, not just the most recent one. Callbacks that repurpose
+% c_cell_type_tx as a working group vector (GUI.CALLBACK_SCTENIFOLDCKO,
+% GUI.CALLBACK_SCTENIFOLDXCT) deliberately do not stash.
 if options.KeepOld
-    name = pkg.i_stashcelltypehistory(sce);
-    if name ~= "" && options.Verbose
-        fprintf('[annotate] previous labels kept in the ''%s'' attribute.\n', name);
+    stashname = pkg.i_stashcelltypehistory(sce);
+    if stashname ~= "" && options.Verbose
+        fprintf('[annotate] previous labels kept in the ''%s'' attribute.\n', ...
+            stashname);
     end
 end
 

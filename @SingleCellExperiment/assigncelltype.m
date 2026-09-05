@@ -1,7 +1,23 @@
-function obj = assigncelltype(obj, speciesid, keepclusterid)
+function obj = assigncelltype(obj, speciesid, keepclusterid, keepold)
+%ASSIGNCELLTYPE Assign cell type identity to clusters from marker genes.
+%
+%   obj = obj.assigncelltype()
+%   obj = obj.assigncelltype(speciesid, keepclusterid, keepold)
+%
+%   Matches each cluster in c_cluster_id against PanglaoDB and writes the
+%   result to c_cell_type_tx.
+%
+%   speciesid      'human' (default) or 'mouse'.
+%   keepclusterid  append '_{k}' to each label. Default true.
+%   keepold        stash any existing cell type labels in a new numbered
+%                  'old_cell_type_N' cell attribute before overwriting, so
+%                  an earlier annotation is not silently lost. Default
+%                  true. There is no dialog to ask on this path, so the
+%                  flag is how a caller that means to discard them says so.
+%
+%   See also SC_ANNOTATECELLS, PKG.I_STASHCELLTYPEHISTORY.
 
-% Assigning cell type identity to clusters.
-
+if nargin < 4 || isempty(keepold), keepold = true; end
 if nargin < 3 || isempty(keepclusterid), keepclusterid = true; end
 if nargin < 2 || isempty(speciesid), speciesid = 'human'; end
 
@@ -18,6 +34,9 @@ for ik = 1:max(c)
         ctxt = sprintf('%s_{%d}', ctxt, ik);
     end
     cL(ik) = ctxt;
+end
+if keepold
+    pkg.i_stashcelltypehistory(obj);
 end
 obj.c_cell_type_tx = cL(c);
 end

@@ -15,7 +15,7 @@ end
 mfolder = fileparts(mfilename('fullpath'));
 
 load(fullfile(mfolder, ...
-'..', 'assets', 'TFome', 'tfome_tfgenes.mat'), 'tfgenes');
+    '..', 'assets', 'TFome', 'tfome_tfgenes.mat'), 'tfgenes');
 
 
 w = 3;
@@ -60,21 +60,21 @@ hx.show(parentfig);
 oldidx = 0;
 oldG1 = [];
 
-function in_networkvis_curvy(~, ~)
+    function in_networkvis_curvy(~, ~)
         fw = gui.myWaitbar(hFig);
         gui.i_networkvis(G1, [p1.XData' p1.YData'], true, ...
             p1.NodeFontSize, hFig);
         gui.myWaitbar(hFig, fw);
     end
 
-  function in_networkvis_linear(~, ~)
+    function in_networkvis_linear(~, ~)
         fw = gui.myWaitbar(hFig);
         gui.i_networkvis(G1, [p1.XData' p1.YData'], false, ...
             p1.NodeFontSize, hFig);
         gui.myWaitbar(hFig, fw);
-  end
+    end
 
-function in_RefreshAll(~, ~)
+    function in_RefreshAll(~, ~)
         if ~isempty(oldG1)
             G1 = oldG1;
         end
@@ -82,7 +82,7 @@ function in_RefreshAll(~, ~)
         title(h1,figname);
     end
 
-function SendToGephiLite(~, ~)
+    function SendToGephiLite(~, ~)
         fw = gui.myWaitbar(hFig);
         fname = net.e_m2gexf(G1);
         gui.myWaitbar(hFig, fw);
@@ -106,7 +106,7 @@ function SendToGephiLite(~, ~)
         end
     end
 
-function SaveAdj(~, ~)
+    function SaveAdj(~, ~)
         if ~(ismcc || isdeployed)
             answer = gui.myQuestdlg(hFig, 'Export & save network to:', '', ...
                 {'Workspace', 'File'}, 'Workspace');
@@ -143,7 +143,7 @@ function SaveAdj(~, ~)
         end
     end
 
-function ChangeFontSize(~, ~)
+    function ChangeFontSize(~, ~)
         i_changefontsize(p1);
         function i_changefontsize(p)
             if p.NodeFontSize >= 20
@@ -154,7 +154,7 @@ function ChangeFontSize(~, ~)
         end
     end
 
-function ChangeWeight(~, ~)
+    function ChangeWeight(~, ~)
         % a=3:10;
         % w=a(randi(length(a),1));
         w = w + 1;
@@ -170,7 +170,7 @@ function ChangeWeight(~, ~)
         % end
     end
 
-function ChangeLayout(~, ~)
+    function ChangeLayout(~, ~)
         a = ["auto", "layered", "subspace", "force", "circle", "reset"];
         l = l + 1;
         if l > 5, l = 1; end
@@ -184,7 +184,7 @@ function ChangeLayout(~, ~)
         end
     end
 
-function ChangeDirected(~, ~)
+    function ChangeDirected(~, ~)
         if isempty(oldG1), oldG1 = G1; end
         if isa(G1, 'digraph')
             oldG1 = G1;
@@ -209,20 +209,20 @@ function ChangeDirected(~, ~)
         end
     end
 
-function ChangeCutoff(~, ~)
+    function ChangeCutoff(~, ~)
         list = {'0.00 (show all edges)', ...
             '0.30', '0.35', '0.40', '0.45', ...
             '0.50', '0.55', '0.60', ...
             '0.65', '0.70', '0.75', '0.80', '0.85', ...
             '0.90', '0.95 (show 5% of edges)'};
-       if gui.i_isuifig(hFig)
+        if gui.i_isuifig(hFig)
             [indx, tf] = gui.myListdlg(hFig, list, ...
                 'Select a cutoff:'); % Using empty string for prompt
-       else
+        else
             [indx, tf] = listdlg('ListString', list, ...
                 'SelectionMode', 'single', ...
                 'ListSize', [220, 300]);
-       end
+        end
         if tf
             if indx == 1
                 cutoff = 0;
@@ -234,9 +234,9 @@ function ChangeCutoff(~, ~)
             answer = gui.myQuestdlg(hFig, "Keep original network?","");
             switch answer
                 case 'Yes'
-            [p1] = i_replotg(p1, G1, h1, cutoff);
+                    [p1] = i_replotg(p1, G1, h1, cutoff);
                 case 'No'
-            [p1, G1] = i_replotg(p1, G1, h1, cutoff);
+                    [p1, G1] = i_replotg(p1, G1, h1, cutoff);
                 otherwise
                     return;
             end
@@ -245,7 +245,7 @@ function ChangeCutoff(~, ~)
     end
 
 
-function [p] = drawnetwork(G, h)
+    function [p] = drawnetwork(G, h)
         % G.Edges.Weight = rand(length(G.Edges.Weight),1);
         p = plot(h, G, 'ButtonDownFcn', @startDragFcn);
         layout(p,'force');
@@ -267,7 +267,10 @@ function [p] = drawnetwork(G, h)
 
         if any(ix)
             cc = repmat(p.NodeLabelColor, G.numnodes, 1);
-            cc(ix, :) = repmat([1, 0, 0], sum(ix), 1);
+            % Not a hardcoded red: pure red is 4.00:1 against the white
+            % ground here, under the 4.5:1 readability floor, and the TF
+            % labels are the ones the reader came for. See gui.i_accentred.
+            cc(ix, :) = repmat(gui.i_accentred(hFig), sum(ix), 1);
             p.NodeLabelColor = cc;
         end
 
@@ -293,7 +296,7 @@ function [p] = drawnetwork(G, h)
         end
     end
 
-function AnimateCutoff(~, ~)
+    function AnimateCutoff(~, ~)
         listc = 0.05:0.05:0.95;
         f = waitbar(0, 'Cutoff = 0.05', 'Name', 'Edge Pruning...', ...
             'CreateCancelBtn', 'setappdata(gcbf,''canceling'',1)');
@@ -319,7 +322,7 @@ function AnimateCutoff(~, ~)
         delete(f)
     end
 
-function [p, G] = i_replotg(p, G, h, cutoff)
+    function [p, G] = i_replotg(p, G, h, cutoff)
         a = h.Title.String;
         x = p.XData;
         y = p.YData;
@@ -338,39 +341,39 @@ function [p, G] = i_replotg(p, G, h, cutoff)
         title(a)
     end
 
-    % Callback to initiate dragging
-function startDragFcn(hObj, ~)
+% Callback to initiate dragging
+    function startDragFcn(hObj, ~)
         % Get data for the clicked point
         % fig = ancestor(hObj, 'figure');
         set(hFig, 'WindowButtonMotionFcn', {@draggingFcn, hObj});
         set(hFig, 'WindowButtonUpFcn', @stopDragFcn);
     end
 
-    % Function to drag the point
-function draggingFcn(~, ~, hObj)
-            % Current cursor position in data coordinates
-            cp = get(gca, 'CurrentPoint');
-            % Update the y-data of the nearest point
-            yData = get(hObj, 'YData');
-            xData = get(hObj, 'XData');
-    %       [~, idx] = min(abs(xData - cp(1,1))); % Find closest x to mouse
-    %       yData(idx) = cp(1,2); % Update y value
-    %       set(hObj, 'YData', yData);
-            if oldidx == 0 % ~dataengated
-                idx = dsearchn([xData' yData'], [cp(1,1) cp(1,2)]);
-                oldidx = idx;
-                % dataengated = true;
-            else
-                idx = oldidx;
-            end
-            xData(idx) = cp(1,1);
-            yData(idx) = cp(1,2);
-            set(hObj, 'XData', xData); % Update y value
-            set(hObj, 'YData', yData);
+% Function to drag the point
+    function draggingFcn(~, ~, hObj)
+        % Current cursor position in data coordinates
+        cp = get(gca, 'CurrentPoint');
+        % Update the y-data of the nearest point
+        yData = get(hObj, 'YData');
+        xData = get(hObj, 'XData');
+        %       [~, idx] = min(abs(xData - cp(1,1))); % Find closest x to mouse
+        %       yData(idx) = cp(1,2); % Update y value
+        %       set(hObj, 'YData', yData);
+        if oldidx == 0 % ~dataengated
+            idx = dsearchn([xData' yData'], [cp(1,1) cp(1,2)]);
+            oldidx = idx;
+            % dataengated = true;
+        else
+            idx = oldidx;
+        end
+        xData(idx) = cp(1,1);
+        yData(idx) = cp(1,2);
+        set(hObj, 'XData', xData); % Update y value
+        set(hObj, 'YData', yData);
     end
 
-    % Function to stop dragging
-function stopDragFcn(~, ~)
+% Function to stop dragging
+    function stopDragFcn(~, ~)
         % fig = gcbf;
         set(hFig, 'WindowButtonMotionFcn', '');
         set(hFig, 'WindowButtonUpFcn', '');
@@ -471,20 +474,20 @@ end
 
 % Callback function to update marker size when zooming
 function updatePatchSize(patchObj, x, y)
-markerSize = 0.08;
-ax = gca;
-originalUnits = ax.Units; % Store original unit
-ax.Units = 'pixels';
-axPos = ax.Position;
-xLimits = xlim(ax);
-yLimits = ylim(ax);
-dx = (xLimits(2) - xLimits(1)) * markerSize / axPos(3);
-dy = (yLimits(2) - yLimits(1)) * markerSize / axPos(4);
-ax.Units = originalUnits;    % Restore original units (important!)
-dx = 1000*dx;
-dy = 1000*dy;
-[X,Y] = xy2XY(x, y, dx, dy);
-for k = 1:length(x)
-    set(patchObj{k}, 'XData', X(k,:), 'YData', Y(k,:));
-end
+    markerSize = 0.08;
+    ax = gca;
+    originalUnits = ax.Units; % Store original unit
+    ax.Units = 'pixels';
+    axPos = ax.Position;
+    xLimits = xlim(ax);
+    yLimits = ylim(ax);
+    dx = (xLimits(2) - xLimits(1)) * markerSize / axPos(3);
+    dy = (yLimits(2) - yLimits(1)) * markerSize / axPos(4);
+    ax.Units = originalUnits;    % Restore original units (important!)
+    dx = 1000*dx;
+    dy = 1000*dy;
+    [X,Y] = xy2XY(x, y, dx, dy);
+    for k = 1:length(x)
+        set(patchObj{k}, 'XData', X(k,:), 'YData', Y(k,:));
+    end
 end

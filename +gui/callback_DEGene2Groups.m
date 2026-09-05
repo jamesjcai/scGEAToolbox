@@ -57,6 +57,11 @@ plotAction(1) = struct('Text', 'Generate Volcano Plot', ...
 plotAction(2) = struct('Text', 'Enrichr Analysis', ...
     'Tooltip', 'Run Enrichr with up/down-regulated DE genes', ...
     'Callback', @in_callback_enrichr_fromtable);
+% Enrichr is threshold-based over-representation on the up/down gene lists;
+% this is the threshold-free complement, testing the whole ranking offline.
+plotAction(3) = struct('Text', 'Gene-Set Test', ...
+    'Tooltip', 'Competitive gene-set test over the full ranked gene list', ...
+    'Callback', @in_callback_gsettest_fromtable);
 
 % Show all genes plus the filtered up- and down-regulated genes as separate
 % views, matching the sheets written to the Excel file.
@@ -68,6 +73,13 @@ gui.TableViewerApp(views, FigureHandle, outfile, plotAction);
 
 function in_callback_generatevolcano(~, figtab)
     e_volcano(T, Tup, Tdn, figtab);
+end
+
+function in_callback_gsettest_fromtable(~, figtab)
+    % T here is the processed table from pkg.in_DETableProcess, which keeps
+    % every measured gene -- the universe the competitive null needs.
+    gui.i_rungsettest(string(T.gene), T.avg_log2FC, figtab, ...
+        [outfile, '_GeneSet'], 'avg_log2FC');
 end
 
 function in_callback_enrichr_fromtable(~, figtab)

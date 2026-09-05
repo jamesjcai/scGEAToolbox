@@ -25,6 +25,31 @@ function T = i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg)
 %     grnoffset  - constant added to every GRN element; see TEN.I_XCTBLOCK
 %     useparallel- pass a parfor down to net.pcrnet; see TEN.I_XCTGRN
 %     tag        - string used to prefix progress messages
+%     candidates - "database" (default) restricts the output to L-R database
+%                  matches, as published. "all" instead ranks EVERY gene
+%                  pair by |diff2| descending and returns the top cfg.topN,
+%                  regardless of database membership - a discovery mode. The
+%                  chi-square test (TEN.I_XCTCHI2) already runs over every
+%                  gene pair internally either way (merge.py builds its full
+%                  table before testing), so this only changes which rows of
+%                  that already-exhaustive result are kept, plus adds an
+%                  is_known_lr column. A fully database-free run also needs
+%                  w12mode="outer".
+%     topN       - how many top pairs to report when candidates="all"
+%                  (default 200). Ignored when candidates="database".
+%     grn_s1, grn_t1, grn_s2, grn_t2 - [] to build that cell type/sample's GRN
+%                  via TEN.I_XCTGRN as usual, or an ng-by-ng precomputed
+%                  adjacency (same gene order as sce1.g/sce2.g) to use
+%                  instead, skipping the net.pcrnet build for that one. s1/s2
+%                  match SCE1/SCE2; s/t match CELLTYPE1/CELLTYPE2 as passed to
+%                  this call (i.e. before any twosided direction swap - the
+%                  swap reorders which bundle plays source/target, not which
+%                  network was built for which cell type). See TEN.I_XCTGRN's
+%                  'precomputed' option for what still happens to each (scale,
+%                  filter, symmetrize) and TEN.SCTENIFOLDXCT's grn1/grn2 for
+%                  why substituting a network built by a different method is a
+%                  real methodological choice, doubly so here where the TEST
+%                  is a comparison between two such networks.
 %     corrfcn    - [] for the published weight-1 correspondence, or a handle
 %                     [li, ri, w, module, channel] = ...
 %                         corrfcn(g, li, ri, src, tgt, sampleIdx)
@@ -60,12 +85,21 @@ if verbose
 end
 
 [li_idx, ri_idx] = i_matchlr(upper(string(g(:))), lig_db, rec_db);
-if isempty(li_idx)
+% candidates="all" does not need a database match at all (matched anyway,
+% cheaply, only to flag is_known_lr on the discovery output); w12mode="lr"
+% still needs at least one pair to build the correspondence block either way.
+if cfg.candidates == "database" && isempty(li_idx)
     warning('ten:i_xct2core:noPairs', 'No L-R pairs found in gene list.');
     T = table();
     return;
 end
-if verbose
+if cfg.w12mode == "lr" && isempty(li_idx)
+    warning('ten:i_xct2core:noPairs', ...
+        'No L-R pairs found in gene list; w12mode="lr" needs at least one pair.');
+    T = table();
+    return;
+end
+if verbose && ~isempty(li_idx)
     fprintf('[%s] %d L-R pairs matched in data.\n', tag, numel(li_idx));
 end
 
@@ -73,12 +107,20 @@ end
 % Same shared builder and settings as ten.sctenifoldxct: ncomp=3 with a 0.75
 % edge filter. TEN.I_XCTGRN owns the pcrnet call, the max-normalisation, the
 % filtering and the symmetrisation.
-if verbose, fprintf('[%s] Building GRNs for sample 1 ...\n', tag); end
-A_s1 = ten.i_xctgrn(X_s1, 3, 0.75, false, cfg.useparallel);
-A_t1 = ten.i_xctgrn(X_t1, 3, 0.75, false, cfg.useparallel);
-if verbose, fprintf('[%s] Building GRNs for sample 2 ...\n', tag); end
-A_s2 = ten.i_xctgrn(X_s2, 3, 0.75, false, cfg.useparallel);
-A_t2 = ten.i_xctgrn(X_t2, 3, 0.75, false, cfg.useparallel);
+if verbose
+    fprintf('[%s] Sample 1 GRNs: %s\n', tag, i_grnsource(cfg.grn_s1, cfg.grn_t1));
+end
+A_s1 = ten.i_xctgrn(X_s1, 3, 0.75, false, cfg.useparallel, ...
+    precomputed=cfg.grn_s1, processed=cfg.grn_s1_processed);
+A_t1 = ten.i_xctgrn(X_t1, 3, 0.75, false, cfg.useparallel, ...
+    precomputed=cfg.grn_t1, processed=cfg.grn_t1_processed);
+if verbose
+    fprintf('[%s] Sample 2 GRNs: %s\n', tag, i_grnsource(cfg.grn_s2, cfg.grn_t2));
+end
+A_s2 = ten.i_xctgrn(X_s2, 3, 0.75, false, cfg.useparallel, ...
+    precomputed=cfg.grn_s2, processed=cfg.grn_s2_processed);
+A_t2 = ten.i_xctgrn(X_t2, 3, 0.75, false, cfg.useparallel, ...
+    precomputed=cfg.grn_t2, processed=cfg.grn_t2_processed);
 
 % One bundle per sample, so the direction swap is a single operation and the
 % argument list stays readable.
@@ -152,6 +194,12 @@ D2 = pdist2(double(P_s2), double(P_t2));
 diff2_all = (D1 - D2).^2;                       % merge.py:110
 [p_all, q_all, FC_all] = ten.i_xctchi2(diff2_all(:), dof=1, tail="right");
 
+if cfg.candidates == "all"
+    Td = i_xct2discover(D1, D2, diff2_all, FC_all, p_all, q_all, g, li1, ri1, ...
+        cfg.topN, cfg.tag, verbose);
+    return
+end
+
 candLin = sub2ind([ng, ng], li1, ri1);
 d1 = D1(candLin);
 d2 = D2(candLin);
@@ -182,6 +230,38 @@ if verbose
 end
 
 end % i_xct2dir
+
+
+%% ---- discovery mode: rank every gene pair by |diff2| (largest shift) ----
+function Td = i_xct2discover(D1, D2, diff2_all, FC_all, p_all, q_all, g, li_idx, ri_idx, topN, tag, verbose)
+%I_XCT2DISCOVER  Every gene pair, not just L-R database matches, ranked by
+%how much its distance moved between the two samples. The chi-square test
+%(p_all/q_all) already covers every pair - built from the same diff2_all
+%this ranks - so unlike the single-sample discovery mode nothing new is
+%computed here, only which rows get returned.
+ng = size(diff2_all, 1);
+diff2_all(1:ng+1:end) = -Inf;   % a gene is not its own ligand/receptor
+[sortedDiff2, lin] = sort(diff2_all(:), 'descend');
+nPairs = ng * (ng - 1);
+keep = 1:min(topN, nPairs);
+lin = lin(keep);
+[si, ti] = ind2sub([ng, ng], lin);
+
+known = false(numel(lin), 1);
+if ~isempty(li_idx)
+    known = ismember(lin, sub2ind([ng, ng], li_idx, ri_idx));
+end
+
+Td = table(g(si), g(ti), D1(lin), D2(lin), sortedDiff2(keep), FC_all(lin), ...
+    p_all(lin), q_all(lin), known, 'VariableNames', {'ligand', 'receptor', ...
+    'dist_s1', 'dist_s2', 'diff2', 'FC', 'p_value', 'q_value', 'is_known_lr'});
+
+if verbose
+    fprintf(['[%s]   candidates=all: top %d of %d gene pairs by diff2 (%d already in ' ...
+        'the L-R database); %d with q < 0.05.\n'], tag, height(Td), nPairs, ...
+        sum(Td.is_known_lr), sum(Td.q_value < 0.05));
+end
+end % i_xct2discover
 
 
 %% ---- spectral manifold alignment for one sample ----
@@ -271,6 +351,18 @@ end
 li_idx = li(1:n);
 ri_idx = ri(1:n);
 end % i_matchlr
+
+
+%% ---- describe whether a sample's GRNs are built or precomputed ----
+function s = i_grnsource(grnA, grnB)
+if isempty(grnA) && isempty(grnB)
+    s = 'building both (net.pcrnet)';
+elseif ~isempty(grnA) && ~isempty(grnB)
+    s = 'using precomputed for both (skipping pcrnet build)';
+else
+    s = 'using precomputed for one, building the other';
+end
+end % i_grnsource
 
 
 %% ---- built-in ligand-receptor database ----

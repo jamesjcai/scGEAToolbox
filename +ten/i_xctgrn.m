@@ -47,6 +47,20 @@ function A = i_xctgrn(X, ncomp, q, verbose, useparallel, opts)
 %                  different ncomp, a bootstrapped/denoised one, ...) changes
 %                  what is being tested, not just how it was computed; that is
 %                  a deliberate choice for the caller to make, not a hidden one.
+%     processed  - the PRECOMPUTED network already went through this exact
+%                  scale/filter/symmetrize pipeline (e.g. it is the A_s/A_t
+%                  TEN.SCTENIFOLDXCT's grns output returned from an earlier
+%                  call) - skip doing it again and use PRECOMPUTED as-is
+%                  (default false). This exists because the steps are not all
+%                  idempotent: Q-filtering an already-filtered network filters
+%                  it again relative to its now-smaller nonzero set, so a
+%                  second pass at the same Q removes MORE edges, not the same
+%                  ones - net.pcrnet(X,3) -> filter once -> filter again is a
+%                  different, sparser network than net.pcrnet(X,3) -> filter
+%                  once, not the same result recomputed. Scale and symmetrize
+%                  are themselves idempotent, so this only matters because Q
+%                  is not; it is simplest to skip all three together whenever
+%                  the input has already been through them.
 %
 %   OUTPUT:
 %     A - ng-by-ng adjacency matrix; sparse and symmetric by default
@@ -82,6 +96,7 @@ arguments
     opts.fastersvd (1, 1) logical = false
     opts.scale (1, 1) logical = true
     opts.precomputed double = []
+    opts.processed (1, 1) logical = false
 end
 
 ng = size(X, 1);
@@ -143,6 +158,13 @@ end
 % fastersvd was turned off at every call site in the toolbox on 2026-07-20,
 % including the scTenifoldNet and scTenifoldKnk paths that had used it since
 % before this function existed.
+if opts.processed && isempty(opts.precomputed)
+    error("TEN:I_XCTGRN:ProcessedNeedsPrecomputed", ...
+        "processed=true has nothing to skip processing ON without precomputed " + ...
+        "also being given - a freshly built network still needs scale/filter/" + ...
+        "symmetrize. Pass precomputed too, or leave processed at its default.");
+end
+
 t0 = tic;
 if ~isempty(opts.precomputed)
     A = double(opts.precomputed);
@@ -153,29 +175,34 @@ else
         false, useGPU);
 end
 
-% scale=True: normalize by the largest absolute entry. Off for ten.i_nct,
-% which hands the raw network to its own filtering and saving step.
-if opts.scale
-    mx = max(abs(A), [], "all");
-    if mx > 0
-        A = A./mx;
+if ~opts.processed
+    % scale=True: normalize by the largest absolute entry. Off for ten.i_nct,
+    % which hands the raw network to its own filtering and saving step.
+    if opts.scale
+        mx = max(abs(A), [], "all");
+        if mx > 0
+            A = A./mx;
+        end
     end
-end
 
-% q > 0: optional edge filtering, off by default to match pcNet.py.
-if q > 0
-    A = ten.e_filtadjc(A, q, false);
-end
+    % q > 0: optional edge filtering, off by default to match pcNet.py.
+    if q > 0
+        A = ten.e_filtadjc(A, q, false);
+    end
 
-% symmetric=True, applied last as in pcNet.py.
-%
-% SYMMETRIZE=FALSE exists for scTenifoldNet and scTenifoldKnk, which must keep
-% the network directed: sctenifoldnet.m runs the tensor decomposition on the
-% raw asymmetric stack and only symmetrizes afterwards, right before manifold
-% alignment. Symmetrizing here would move that step earlier and change the
-% algorithm, so it is off for those callers and on for every xct one.
-if opts.symmetrize
-    A = sparse(0.5*(A + A.'));
+    % symmetric=True, applied last as in pcNet.py.
+    %
+    % SYMMETRIZE=FALSE exists for scTenifoldNet and scTenifoldKnk, which must
+    % keep the network directed: sctenifoldnet.m runs the tensor decomposition
+    % on the raw asymmetric stack and only symmetrizes afterwards, right
+    % before manifold alignment. Symmetrizing here would move that step
+    % earlier and change the algorithm, so it is off for those callers and on
+    % for every xct one.
+    if opts.symmetrize
+        A = sparse(0.5*(A + A.'));
+    end
+else
+    A = sparse(A);   % match the shape (sparse) the processed branch produces
 end
 
 if verbose

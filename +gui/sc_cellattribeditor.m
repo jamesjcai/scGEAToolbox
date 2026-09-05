@@ -51,21 +51,28 @@ if ~addnew    % edit
     end
 
     % Values can be edited one distinct value at a time, typed in one line per
-    % cell, or taken from a column of a delimited text file, the same way
-    % gui.callback_AssignCellTypeFromAttrib offers a file as a source of
-    % per-cell columns. Distinct-value editing is the only one of the three that
-    % does not grow with the number of cells, so it leads for a long attribute.
+    % cell, or taken from a column of a per-cell table - this dataset's own cell
+    % attribute table, a delimited text file, or a table variable in the base
+    % workspace, the same sources gui.callback_AssignCellTypeFromAttrib offers.
+    % Distinct-value editing is the only one that does not grow with the number
+    % of cells, so it leads for a long attribute.
     canrelabel = in_canrelabel(thisc);
     islong = numel(thisc) > in_maxrawvalues();
-    switch in_picksource(parentfig, ...
-            sprintf('Select a source of values for "%s":', clabel), canrelabel, islong)
+    tsce = in_scetable(sce, clabel);
+    srctag = in_picksource(parentfig, sprintf( ...
+        'Where should the values for "%s" come from?', clabel), ...
+        canrelabel, islong, 'Cell Attribute Values', width(tsce) > 0);
+    switch srctag
         case 'relabel'
             [sce, needupdate] = in_relabelattrib(sce, clabel, thisc, parentfig);
             return;
-        case 'file'
-            [sce, needupdate] = in_replaceattribfromfile(sce, clabel, thisc, parentfig);
+        case {'sce', 'file', 'workspace'}
+            if ~in_confirmnewannotation(sce, clabel, parentfig), return; end
+            [sce, needupdate] = in_replaceattribfromtable(sce, clabel, thisc, ...
+                parentfig, srctag, tsce);
             return;
         case 'manual'
+            if ~in_confirmnewannotation(sce, clabel, parentfig), return; end
             if ~in_confirmrawedit(parentfig, numel(thisc)), return; end
         otherwise
             return;
@@ -98,12 +105,16 @@ if ~addnew    % edit
 
 else    % add new
 
-    % Values can be typed in or taken from a column of a delimited text file,
-    % the same way gui.callback_AssignCellTypeFromAttrib offers a file as a
-    % source of per-cell columns.
-    switch in_picksource(parentfig, 'Select a source of attribute values:', false, false)
-        case 'file'
-            [sce, needupdate] = in_addattribsfromfile(sce, parentfig);
+    % Values can be typed in or taken from a column of a per-cell table: this
+    % dataset's own cell attribute table, a delimited text file, or a table
+    % variable in the base workspace.
+    tsce = in_scetable(sce);
+    srctag = in_picksource(parentfig, ...
+        'Where should the values for the new attribute come from?', ...
+        false, false, 'New Cell Attribute', width(tsce) > 0);
+    switch srctag
+        case {'sce', 'file', 'workspace'}
+            [sce, needupdate] = in_addattribsfromtable(sce, parentfig, srctag, tsce);
             return;
         case 'manual'
             if ~in_confirmrawedit(parentfig, sce.NumCells), return; end
@@ -200,25 +211,47 @@ if addnew
     gui.myHelpdlg(parentfig, 'Cell Attribute Added.');
     needupdate = true;
 else
-    sce = in_setattribvalue(sce, clabel, newthisc);
-    gui.myHelpdlg(parentfig, 'Cell Attribute Changed.');
+    [sce, stashname] = in_setattribvalue(sce, clabel, newthisc);
+    gui.myHelpdlg(parentfig, ...
+        "Cell Attribute Changed." + gui.i_stashnotice(stashname));
     needupdate = true;
 end
 end
 
 
-function src = in_picksource(parentfig, prompt, allowrelabel, preferrelabel)
+function src = in_picksource(parentfig, prompt, allowrelabel, preferrelabel, ...
+        dlgtitle, allowsce)
 % Ask where the attribute values come from. '' when cancelled.
 %
 % allowrelabel adds distinct-value editing to the choices, and preferrelabel
-% makes it the pre-selected one, which is what a long attribute wants.
+% makes it the pre-selected one, which is what a long attribute wants. allowsce
+% adds this dataset's own cell attribute table, and is false when that table has
+% no column to offer - every attribute is the wrong length, or the only one
+% there is the attribute being edited.
+%
+% The instruction goes in GUI.MYLISTDLG's prompt label, which wraps, rather
+% than in its Title, which the window title bar clips without saying so. Each
+% choice still names what it reads and in what shape, so the list stands on
+% its own if the prompt is skimmed. The dialog is sized to the text rather
+% than left at the tall, narrow default meant for long lists.
+
+if nargin < 5 || isempty(dlgtitle), dlgtitle = 'Cell Attribute Values'; end
+if nargin < 6, allowsce = false; end
 
 src = '';
-relabeltag = 'Edit Distinct Values...';
-typetag = 'Type in Values...';
-loadtag = 'Load Table from File...';
+relabeltag = 'Rename the distinct values (edit labels one by one)';
+typetag = 'Type in the values (one line per cell)';
+scetag = 'Select a column from the cell attribute table';
+loadtag = 'Read a column from a table file (CSV, TSV or TXT)';
+wstag = 'Read a column from a table variable in the workspace';
 
-items = {typetag, loadtag};
+% The dataset's own attribute table goes directly after typing the values in:
+% both take what is already in this session, ahead of the two choices that
+% bring a table in from outside it.
+items = {typetag, loadtag, wstag};
+if allowsce
+    items = {typetag, scetag, loadtag, wstag};
+end
 prefersel = typetag;
 if allowrelabel
     items = [{relabeltag}, items];
@@ -226,10 +259,11 @@ if allowrelabel
 end
 
 if gui.i_isuifig(parentfig)
-    [indx, tf] = gui.myListdlg(parentfig, items, prompt, prefersel, false);
+    [indx, tf] = gui.myListdlg(parentfig, items, dlgtitle, prefersel, false, ...
+        true, [480, 200], prompt);
 else
     [indx, tf] = listdlg('PromptString', {prompt}, 'SelectionMode', 'single', ...
-        'ListString', items, 'ListSize', [300, 100], ...
+        'ListString', items, 'ListSize', [460, 100], ...
         'InitialValue', find(strcmp(items, prefersel), 1));
 end
 if tf ~= 1 || isempty(indx), return; end
@@ -237,11 +271,80 @@ if tf ~= 1 || isempty(indx), return; end
 switch items{indx}
     case relabeltag
         src = 'relabel';
+    case scetag
+        src = 'sce';
     case loadtag
         src = 'file';
+    case wstag
+        src = 'workspace';
     otherwise
         src = 'manual';
 end
+end
+
+function [t, srcname] = in_gettable(srctag, parentfig, nrows, tsce)
+% Fetch a per-cell table from whichever source in_picksource returned, so the
+% two importers below do not each need to know about all of them. tsce is this
+% dataset's own attribute table, already built by the caller to decide whether
+% to offer it at all.
+
+switch srctag
+    case 'sce'
+        t = tsce;
+        srcname = 'the cell attribute table';
+    case 'workspace'
+        [t, srcname] = gui.i_pickworkspacetable(parentfig, nrows);
+    otherwise
+        [t, srcname] = gui.i_readtablefile(parentfig, nrows);
+end
+end
+
+function t = in_scetable(sce, excludelabel)
+% Build a per-cell table out of this dataset's own attributes: the standard
+% fields followed by everything in list_cell_attributes, the same content the
+% View/Export Cell Attribute Table shows.
+%
+% Unlike PKG.I_MAKEATTRIBUTESTABLE, each column keeps the class it is stored in
+% rather than being converted to text, so copying one numeric attribute onto
+% another does not send its values through str2double on the way.
+%
+% excludelabel drops one attribute by its display name, which is how the
+% attribute being edited is kept from being offered as a source for itself.
+
+if nargin < 2, excludelabel = ''; end
+
+t = table();
+n = sce.NumCells;
+if n == 0, return; end
+
+names = [{'Cell ID', 'Batch ID', 'Cluster ID', 'Cell Type', ...
+    'Cell Cycle Phase'}, sce.list_cell_attributes(1:2:end)];
+vals = [{sce.c_cell_id, sce.c_batch_id, sce.c_cluster_id, ...
+    sce.c_cell_type_tx, sce.c_cell_cycle_tx}, ...
+    sce.list_cell_attributes(2:2:end)];
+
+keep = false(1, numel(names));
+for k = 1:numel(names)
+    if strcmp(names{k}, excludelabel), continue; end
+    v = vals{k};
+    if ischar(v)
+        v = string(cellstr(v));   % char matrix, as older .mat files store cell ids
+    elseif iscell(v)
+        v = string(v);
+    end
+    if numel(v) ~= n, continue; end
+    vals{k} = v(:);
+    keep(k) = true;
+end
+if ~any(keep), return; end
+
+% Table variable names have to be valid identifiers, and the standard fields
+% carry spaces. IN_REPLACEATTRIBFROMTABLE ignores spaces and underscores when it
+% pre-selects a column, so 'Cell Type' still matches CellType here.
+colnames = matlab.lang.makeUniqueStrings( ...
+    matlab.lang.makeValidName(names(keep)));
+vals = vals(keep);
+t = table(vals{:}, 'VariableNames', colnames);
 end
 
 function n = in_maxdistinct()
@@ -300,6 +403,18 @@ answer = gui.myQuestdlg(parentfig, sprintf(['Loading %d values into the editor '
 tf = strcmp(answer, 'Yes');
 end
 
+function tf = in_confirmnewannotation(sce, clabel, parentfig)
+% Warn before every cell type value is replaced at once, the same way the
+% annotation callbacks do. Only the wholesale paths ask: relabeling distinct
+% values renames the annotation that is already there rather than supplying a
+% different one, and asking on every rename would be noise. The stash in
+% IN_SETATTRIBVALUE happens either way, so nothing is lost on a rename.
+
+tf = true;
+if ~strcmp(clabel, 'Cell Type'), return; end
+tf = gui.i_confirmoverwritecelltype(parentfig, sce);
+end
+
 function [sce, needupdate] = in_relabelattrib(sce, clabel, thisc, parentfig)
 % Edit the attribute one distinct value at a time. Values that parse as numbers
 % are written back as numbers when that is what the attribute held, so relabeling
@@ -323,25 +438,28 @@ if isnumeric(thisc)
     end
 end
 
-sce = in_setattribvalue(sce, clabel, newvals);
+[sce, stashname] = in_setattribvalue(sce, clabel, newvals);
 needupdate = true;
 
-gui.myHelpdlg(parentfig, 'Cell Attribute Changed.');
+gui.myHelpdlg(parentfig, ...
+    "Cell Attribute Changed." + gui.i_stashnotice(stashname));
 end
 
-function [sce, needupdate] = in_replaceattribfromfile(sce, clabel, thisc, parentfig)
-% Replace the values of an existing attribute with a column of a per-cell table.
+function [sce, needupdate] = in_replaceattribfromtable(sce, clabel, thisc, ...
+        parentfig, srctag, tsce)
+% Replace the values of an existing attribute with a column of a per-cell table,
+% read either from a file or from a table variable in the base workspace.
 %
 % The column is coerced to the class of the values it replaces rather than taken
-% as the file holds it: Cluster ID has to stay numeric and Cell Type has to stay
-% text, whatever the file happens to carry. An attribute that is empty so far has
-% no class to match, so there the file's own type is kept.
+% as the table holds it: Cluster ID has to stay numeric and Cell Type has to stay
+% text, whatever the table happens to carry. An attribute that is empty so far has
+% no class to match, so there the table's own type is kept.
 
 needupdate = false;
-[t, fname] = gui.i_readtablefile(parentfig, sce.NumCells);
+[t, srcname] = in_gettable(srctag, parentfig, sce.NumCells, tsce);
 if isempty(t), return; end
 if width(t) == 0
-    gui.myWarndlg(parentfig, sprintf('There are no columns in %s to choose from.', fname));
+    gui.myWarndlg(parentfig, sprintf('There are no columns in %s to choose from.', srcname));
     return;
 end
 
@@ -379,23 +497,32 @@ if isrow(thisc) && numel(thisc) > 1
     v = v.';
 end
 
-sce = in_setattribvalue(sce, clabel, v);
+[sce, stashname] = in_setattribvalue(sce, clabel, v);
 needupdate = true;
 
-gui.myHelpdlg(parentfig, sprintf('%s replaced with column "%s" of %s.', ...
-    clabel, colnames{indx}, fname));
+msg = sprintf('%s replaced with column "%s" of %s.', ...
+    clabel, colnames{indx}, srcname);
+gui.myHelpdlg(parentfig, msg + gui.i_stashnotice(stashname));
 end
 
-function sce = in_setattribvalue(sce, clabel, newthisc)
+function [sce, stashname] = in_setattribvalue(sce, clabel, newthisc)
 % Write values to the attribute named by clabel, whether it is one of the
-% standard per-cell fields or an entry of list_cell_attributes.
+% standard per-cell fields or an entry of list_cell_attributes. Returns the
+% name of the 'old_cell_type_N' attribute the previous cell type labels were
+% stashed in, or "" when nothing was stashed, so the caller can say where
+% they went (see GUI.I_STASHNOTICE).
 
+stashname = "";
 switch clabel
     case 'Cluster ID'
         sce.c_cluster_id = newthisc;
     case 'Batch ID'
         sce.c_batch_id = newthisc;
     case 'Cell Type'
+        % Every path through the editor lands here, so one stash covers the
+        % relabel, typed-in and from-file edits alike (see
+        % PKG.I_STASHCELLTYPEHISTORY).
+        stashname = pkg.i_stashcelltypehistory(sce);
         sce.c_cell_type_tx = newthisc;
     case 'Cell Cycle Phase'
         sce.c_cell_cycle_tx = newthisc;
@@ -408,19 +535,20 @@ switch clabel
 end
 end
 
-function [sce, needupdate] = in_addattribsfromfile(sce, parentfig)
-% Add one or more columns of a per-cell table file as new cell attributes.
+function [sce, needupdate] = in_addattribsfromtable(sce, parentfig, srctag, tsce)
+% Add one or more columns of a per-cell table as new cell attributes, read
+% either from a file or from a table variable in the base workspace.
 %
-% The file carries its own column types, so unlike the typed-in path there is no
+% The table carries its own column types, so unlike the typed-in path there is no
 % data type question to answer: numeric columns are stored as numbers and
 % everything else as text. More than one column can be added at a time, which is
 % the point of importing a table rather than pasting one column of values.
 
 needupdate = false;
-[t, fname] = gui.i_readtablefile(parentfig, sce.NumCells);
+[t, srcname] = in_gettable(srctag, parentfig, sce.NumCells, tsce);
 if isempty(t), return; end
 if width(t) == 0
-    gui.myWarndlg(parentfig, sprintf('There are no columns in %s to add.', fname));
+    gui.myWarndlg(parentfig, sprintf('There are no columns in %s to add.', srcname));
     return;
 end
 
@@ -445,7 +573,7 @@ end
 needupdate = true;
 
 gui.myHelpdlg(parentfig, sprintf('%d cell attribute(s) added from %s: %s.', ...
-    numel(indx), fname, strjoin(string(newlabels), ', ')));
+    numel(indx), srcname, strjoin(string(newlabels), ', ')));
 end
 
 function trimmed_text = trimBottomEmpty(input_text)

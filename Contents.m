@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.4.2 30-Aug-2026
+% Version 26.4.3 03-Sep-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -11,6 +11,7 @@
 %   sc_celltypeanno           - sc_celltypeanno is a function.
 %   sc_cluster_s              - sc_cluster_s - cluster cells using cell embeding s
 %   sc_cluster_x              - sc_cluster_x - cluster cells using UMI matrix X
+%   sc_csubtypeanno           - SC_CSUBTYPEANNO Annotate the subtypes of one primary cell type.
 %   sc_deg                    - SC_DEG - DEG analysis using Mann–Whitney U test or t-test
 %   sc_dpg                    - SC_DPG - Differential Program (DP) analysis between two groups of cells
 %   sc_dvg                    - SC_DVG - Differential variability (DV) analysis between two groups
@@ -22,6 +23,7 @@
 %   sc_grn                    - SC_GRN Construct single-cell gene regulatory network (scGRN)
 %   sc_grnview                - SC_GRNVIEW  Display a gene regulatory network as a graph GUI.
 %   sc_grnview2               - SC_GRNVIEW2  Display two gene regulatory networks side-by-side.
+%   sc_gsettest               - SC_GSETTEST  Competitive gene-set tests for a ranked gene list.
 %   sc_hvg                    - Identify HVGs
 %   sc_ifft                   - scGFT — Synthetic Cell Generation
 %   sc_impute                 - Imputation

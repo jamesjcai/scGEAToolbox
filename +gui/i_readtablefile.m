@@ -22,7 +22,8 @@ function [t, fname] = i_readtablefile(parentfig, nrows, dlgtitle)
 % unusable; when a tab is among the delimiters found, the file is read again
 % with the tab as the only one.
 %
-% see also: gui.callback_AssignCellTypeFromAttrib, gui.sc_cellattribeditor
+% see also: gui.i_pickworkspacetable, gui.callback_AssignCellTypeFromAttrib,
+%           gui.sc_cellattribeditor
 
 if nargin < 1, parentfig = []; end
 if nargin < 2, nrows = []; end

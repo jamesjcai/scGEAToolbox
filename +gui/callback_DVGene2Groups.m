@@ -115,15 +115,22 @@ h3 = []; h3a = []; h3b = []; h4 = []; h5 = [];
 enrichrAction = struct('Text', 'Enrichr Analysis', ...
     'Tooltip', 'Run Enrichr with DV genes', ...
     'Callback', @in_callback_enrichr_fromtable);
+% Enrichr is threshold-based over-representation on the top DV genes; this is
+% the threshold-free complement, testing the whole ranking offline.
+gsetAction = struct('Text', 'Gene-Set Test', ...
+    'Tooltip', 'Competitive gene-set test over the full ranked DV gene list', ...
+    'Callback', @in_callback_gsettest_fromtable);
 % Only the splinefit method returns the xyz fit data the plot needs.
 if strcmp(methodtag, 'splinefit')
     plotAction(1) = struct('Text', 'Open Plot', ...
         'Tooltip', 'Open the interactive DV scatter plot', ...
         'Callback', @in_callback_openDVplot);
     plotAction(2) = enrichrAction;
+    plotAction(3) = gsetAction;
     figtab = gui.TableViewerApp(T, FigureHandle, outfile, plotAction);
 else
-    figtab = gui.TableViewerApp(T, FigureHandle, outfile, enrichrAction);
+    figtab = gui.TableViewerApp(T, FigureHandle, outfile, ...
+        [enrichrAction, gsetAction]);
 end
 
 
@@ -404,6 +411,13 @@ function in_callback_ChangeAlphaValue(~, ~)
             h2.MarkerFaceAlpha = h2.MarkerFaceAlpha - 0.1;
         end
     end
+
+function in_callback_gsettest_fromtable(~, figtab)
+    % DiffDist is signed (group 1 more variable = positive) and sc_dvg
+    % returns every gene surviving QC, so the ranking is complete.
+    gui.i_rungsettest(string(T.gene), T.DiffDist, figtab, ...
+        [outfile, '_GeneSet'], 'DiffDist');
+end
 
 function in_callback_enrichr_fromtable(~, figtab)
     libs = ["GO_Biological_Process_2025", "GO_Molecular_Function_2025", ...

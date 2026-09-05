@@ -64,7 +64,10 @@ end
 Zx = setmatrx * X;               % s x c
 Zy = setmatrx * Y;               % s x c
 
-gsetsize = sum(setmatrx, 2);   % gene number per set
+gsetsize = full(sum(setmatrx ~= 0, 2));   % gene number per set (counts
+                               % nonzeros so signed regulons from
+                               % pkg.e_getgenesets('TFsigned') are not
+                               % reduced to nActivated - nRepressed)
 
 n = size(Zx, 1);
 

@@ -114,7 +114,7 @@ methods
         r = size(obj.X, 1);
     end
 
-    obj = assigncelltype(obj, speciesid, keepclusterid)
+    obj = assigncelltype(obj, speciesid, keepclusterid, keepold)
     obj = clustercells(obj, k, methodid, forced, sx)
     obj = embedcells(obj, methodid, forced, usehvgs, ndim, numhvg, whitelist, showwaitbar)
     obj = estimatecellcycle(obj, forced, methodid)

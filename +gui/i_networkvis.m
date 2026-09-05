@@ -8,6 +8,14 @@ textOpts.FontSize = fontsize;
 textOpts.HorizontalAlignment = 'center';
 textOpts.VerticalAlignment = 'middle';
 textOpts.FontWeight = 'normal';
+% Node names are gene symbols and can contain underscores, which the default
+% 'tex' interpreter reads as a subscript marker - it silently eats the next
+% character, so ITGB1_receivers is drawn as "ITGB1_eceivers" and B2M_senders
+% as "B2M" with a subscript s. Set here as well as on the text() calls below,
+% because measureText passes these options straight through and a TeX-rendered
+% string measures narrower than the literal one, which throws the centring off
+% too.
+textOpts.Interpreter = 'none';
 
 
 fx = gui.myFigure(parentfig);
@@ -45,8 +53,9 @@ vangle = 0;
 
 function in_rotatetext(~, ~, increase)
 
-        textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
-        delete(textHandles); % Delete all found text objects
+        % ax, not gcf: gcf is whatever figure the user last clicked, so this
+        % could strip the labels off an unrelated figure instead of this one.
+        delete(findall(ax, 'Type', 'text'));
 
         % bkcolor = gui.i_getthemebkgcolor(gcf);
         if increase
@@ -59,6 +68,7 @@ function in_rotatetext(~, ~, increase)
             text(xy(k,1)-floor(wx/2), xy(k,2), ...
                 G.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'FontWeight','normal', ...
+                'Interpreter','none', ...
                 'HorizontalAlignment','center', ...
                 'VerticalAlignment','middle','Margin',0.2, ...
                 "Rotation", vangle);
@@ -67,8 +77,9 @@ function in_rotatetext(~, ~, increase)
 
 
 function in_addtext(~, ~)
-        textHandles = findall(gcf, 'Type', 'text'); % Find all text objects in the current figure
-        delete(textHandles); % Delete all found text objects
+        % ax, not gcf: gcf is whatever figure the user last clicked, so this
+        % could strip the labels off an unrelated figure instead of this one.
+        delete(findall(ax, 'Type', 'text'));
 
         bkcolor = gui.i_getthemebkgcolor(gcf);
 
@@ -78,6 +89,7 @@ function in_addtext(~, ~)
                 G.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'Color',1-bkcolor,...
                 'FontWeight','normal', ...
+                'Interpreter','none', ...
                 'HorizontalAlignment','center', ...
                 'VerticalAlignment','middle','Margin',0.2);
         end
@@ -94,6 +106,7 @@ function in_addtext(~, ~)
         textOpts.VerticalAlignment = 'middle';
         textOpts.FontSize = 20;
         textOpts.FontWeight = 'normal';
+        textOpts.Interpreter = 'none';
     end
     hTest = text(ax, 0, 0, txt, textOpts);
     textExt = get(hTest, 'Extent');

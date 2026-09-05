@@ -1,4 +1,34 @@
-function [setmatrx, setnames, setgenes] = e_getgenesets(option,species,parentfig)
+function [setmatrx, setnames, setgenes] = e_getgenesets(option,species,parentfig,confidence)
+% E_GETGENESETS  Load a gene set collection as a membership matrix.
+%
+%   [setmatrx, setnames, setgenes] = E_GETGENESETS(option, species, parentfig)
+%   returns an nSets-by-nGenes membership matrix, the set names, and the gene
+%   symbols labelling the columns.
+%
+%   ... = E_GETGENESETS(option, species, parentfig, confidence) restricts the
+%   DoRothEA options to the given confidence levels, e.g. "ABC", 'A', or
+%   ["A" "B"]. Omit or pass [] to keep every level, which is the default and
+%   the historical behaviour. DoRothEA is heavily weighted toward its lowest
+%   level -- A 5434 edges, B 974, C 6815, D 15863, E 425418 -- so the whole
+%   collection is 94% level E. "ABC" is the decoupleR convention for regulon
+%   activity inference. CONFIDENCE is ignored, with a warning, for the
+%   non-DoRothEA options.
+%
+%   OPTION:
+%     1 / 'MSIGDB'    - MSigDB molecular signatures (opens a selector dialog)
+%     2 / 'TF'        - DoRothEA TF targets, unsigned: activated edges only,
+%                       returned logical
+%     3 / 'Predefined'- scGEAToolbox predefined marker programs
+%     4 / 'Glycobiology' - curated glycobiology gene sets
+%     5 / 'TFsigned'  - DoRothEA TF targets, signed: +1 activated and -1
+%                       repressed, returned sparse double. Use this with
+%                       methods that accept weighted set membership
+%                       (SC_GSETTEST Method="ulm", PKG.E_ULM); the unsigned
+%                       option 2 cannot detect a regulon whose targets move
+%                       in opposite directions.
+%
+% See also: SC_GSETTEST, SC_DPG, PKG.E_ULM, PKG.E_GLYCOGENESETS
+if nargin < 4, confidence = []; end
 if nargin < 3, parentfig = []; end
 if ~isempty(parentfig)
     figure(parentfig);
@@ -9,6 +39,14 @@ if isempty(species) && ~isequal(option, 1) && ~isequal(option, 'MSIGDB') && ~ise
     species = 'human';
 end
 if nargin<1 || isempty(option), option = 1; end
+
+conflevels = i_normalizeconfidence(confidence);
+if ~isempty(conflevels) && ~i_isdorotheaoption(option)
+    warning("pkg:e_getgenesets:ConfidenceIgnored", ...
+        "CONFIDENCE applies only to the DoRothEA options " + ...
+        "(2/'TF' and 5/'TFsigned'); it is ignored for option '%s'.", ...
+        string(option));
+end
 
 setmatrx=[];
 setnames=[];
@@ -48,9 +86,7 @@ switch option
         end
 
     case {'TF',2,'DoRothEA TF Targets'}
-        pw1 = fileparts(mfilename('fullpath'));
-        fname = fullfile(pw1, '..','assets', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
-        load(fname, 'T');
+        T = i_loaddorothea(conflevels);
         Ttfgn = T(T.mor > 0, :);
         [gid, gnlist] = findgroups(string(Ttfgn.target));
         [tid, tflist] = findgroups(string(Ttfgn.tf));
@@ -60,6 +96,16 @@ switch option
         setmatrx=logical(t);
         setnames=string(tflist);
         setgenes=string(gnlist);
+    case {5,'TFsigned','DoRothEA TF Targets (signed)'}
+        % Signed regulons. Unlike option 2 this keeps the repressing edges
+        % and preserves the mode of regulation. Returned sparse because the
+        % dense form is 1333-by-20295 doubles, about 216 MB.
+        T = i_loaddorothea(conflevels);
+        [gid, gnlist] = findgroups(string(T.target));
+        [tid, tflist] = findgroups(string(T.tf));
+        setmatrx = sparse(tid, gid, double(T.mor), numel(tflist), numel(gnlist));
+        setnames = string(tflist);
+        setgenes = string(gnlist);
     case {3,'Predefined'}
         [~, T] = pkg.e_cellscores([], [], 0);
         gcell2 = cell(height(T), 1);
@@ -84,4 +130,45 @@ switch option
             % Fall back to building the collection on the fly.
             [setmatrx, setnames, setgenes] = pkg.e_glycogenesets();
         end
+end
+end
+
+% =========================================================================
+function T = i_loaddorothea(conflevels)
+% Load the DoRothEA TF-target table, optionally restricted by confidence.
+pw1 = fileparts(mfilename('fullpath'));
+fname = fullfile(pw1, '..', 'assets', 'DoRothEA_TF_Target_DB', 'dorothea_hs.mat');
+S = load(fname, 'T');
+T = S.T;
+if isempty(conflevels)
+    return;
+end
+have = unique(string(T.confidence));
+unknown = setdiff(conflevels, have);
+if ~isempty(unknown)
+    error("pkg:e_getgenesets:BadConfidence", ...
+        "Unknown DoRothEA confidence level(s) %s. Available levels are %s.", ...
+        join(unknown, ", "), join(sort(have), ", "));
+end
+T = T(ismember(string(T.confidence), conflevels), :);
+end
+
+% =========================================================================
+function levels = i_normalizeconfidence(confidence)
+% Accept "ABC", 'A', ["A" "B"] or [] and return unique single-letter levels.
+if isempty(confidence)
+    levels = strings(0, 1);
+    return;
+end
+c = erase(upper(string(confidence(:))), [" ", ","]);
+levels = unique(string(num2cell(char(join(c, "")))));
+levels = levels(strlength(levels) > 0);
+levels = levels(:);
+end
+
+% =========================================================================
+function tf = i_isdorotheaoption(option)
+tf = isequal(option, 2) || isequal(option, 5) || ...
+    any(strcmpi(string(option), ["TF", "TFsigned", ...
+    "DoRothEA TF Targets", "DoRothEA TF Targets (signed)"]));
 end

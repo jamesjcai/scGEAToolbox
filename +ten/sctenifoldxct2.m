@@ -37,6 +37,46 @@ function [T] = sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided, vararg
 %     'useparallel' - build the GRNs with a parfor (default: false, and usually
 %                 the slower choice; see TEN.I_XCTGRN)
 %
+%   Precomputed-GRN Name-Value pairs:
+%     'grn_s1'   - ng-by-ng adjacency to use for CT1 in SCE1, instead of
+%                  building one via net.pcrnet, where ng = numel(sce1.g).
+%                  Must be in the same gene order as sce1.g (== sce2.g; the
+%                  two are required to share one gene list). [] (default)
+%                  builds as usual.
+%     'grn_t1'   - same, for CT2 in SCE1.
+%     'grn_s2'   - same, for CT1 in SCE2.
+%     'grn_t2'   - same, for CT2 in SCE2.
+%                  Any of the four may be supplied independently. Passing one
+%                  skips that sample/cell-type's pcrnet call, but the matrix
+%                  still goes through TEN.I_XCTGRN's scale/filter/symmetrize,
+%                  so mu and grnoffset stay meaningful. Substituting a network
+%                  built by a different method changes what this differential
+%                  test is comparing, not just how it got there - see
+%                  TEN.I_XCTGRN and TEN.SCTENIFOLDXCT's grn1/grn2, which this
+%                  mirrors for the two-sample case.
+%     'grn_s1_processed', 'grn_t1_processed', 'grn_s2_processed',
+%     'grn_t2_processed' - true if the matching grn_* is itself a grns.A_s/
+%                  A_t TEN.SCTENIFOLDXCT previously returned - skips scale/
+%                  filter/symmetrize a second time, which is NOT a no-op for
+%                  the q=0.75 filter (default false; see TEN.I_XCTGRN's
+%                  'processed' option).
+%
+%   Discovery-mode Name-Value pairs:
+%     'candidates' - "database" (default) restricts the output to L-R
+%                  database matches, as published. "all" instead ranks
+%                  EVERY gene pair by |diff2| and reports the top 'topN',
+%                  regardless of database membership - for finding pairs
+%                  whose difference between samples the database does not
+%                  already know to look for. The chi-square test already
+%                  runs over every gene pair internally either way (merge.py
+%                  builds its full table before testing), so this changes
+%                  only which rows are returned, plus adds an is_known_lr
+%                  column. Combine with w12mode="outer" for a run that does
+%                  not use the L-R database at all. See TEN.I_XCT2CORE's
+%                  i_xct2discover.
+%     'topN'     - how many top pairs to report when candidates="all"
+%                  (default 200). Ignored when candidates="database".
+%
 %   Output:
 %     T  - table: ligand, receptor, dist_s1, dist_s2, diff2, FC, p_value,
 %          q_value, sorted by diff2 descending.
@@ -83,10 +123,47 @@ addParameter(p, 'w12mode', "lr",  @(x) ismember(string(x), ["lr","outer"]));
 addParameter(p, 'alpha',   0.5,   @(x) isnumeric(x) && x >= 0 && x <= 1);
 addParameter(p, 'grnoffset', 1.0, @(x) isnumeric(x) && isscalar(x) && x >= 0);
 addParameter(p, 'useparallel', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
+addParameter(p, 'grn_s1', [], @(x) isempty(x) || (isnumeric(x) && ismatrix(x)));
+addParameter(p, 'grn_t1', [], @(x) isempty(x) || (isnumeric(x) && ismatrix(x)));
+addParameter(p, 'grn_s2', [], @(x) isempty(x) || (isnumeric(x) && ismatrix(x)));
+addParameter(p, 'grn_t2', [], @(x) isempty(x) || (isnumeric(x) && ismatrix(x)));
+addParameter(p, 'grn_s1_processed', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
+addParameter(p, 'grn_t1_processed', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
+addParameter(p, 'grn_s2_processed', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
+addParameter(p, 'grn_t2_processed', false, @(x) islogical(x) || (isnumeric(x) && isscalar(x)));
+addParameter(p, 'candidates', "database", @(x) ismember(string(x), ["database","all"]));
+addParameter(p, 'topN', 200, @(x) isnumeric(x) && isscalar(x) && x > 0);
 parse(p, varargin{:});
 
 cfg = ten.i_xct2cfg(p.Results, "sctenifoldxct2");
+cfg.candidates = string(p.Results.candidates);
+cfg.topN = round(p.Results.topN);
+
+ng = numel(sce1.g);
+i_checkgrnsize(p.Results.grn_s1, ng, 'grn_s1');
+i_checkgrnsize(p.Results.grn_t1, ng, 'grn_t1');
+i_checkgrnsize(p.Results.grn_s2, ng, 'grn_s2');
+i_checkgrnsize(p.Results.grn_t2, ng, 'grn_t2');
+cfg.grn_s1 = double(p.Results.grn_s1);
+cfg.grn_t1 = double(p.Results.grn_t1);
+cfg.grn_s2 = double(p.Results.grn_s2);
+cfg.grn_t2 = double(p.Results.grn_t2);
+cfg.grn_s1_processed = logical(p.Results.grn_s1_processed);
+cfg.grn_t1_processed = logical(p.Results.grn_t1_processed);
+cfg.grn_s2_processed = logical(p.Results.grn_s2_processed);
+cfg.grn_t2_processed = logical(p.Results.grn_t2_processed);
 
 T = ten.i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg);
 
 end % sctenifoldxct2
+
+
+%% ---- validate a precomputed GRN against the gene count ----
+function i_checkgrnsize(A, ng, name)
+if isempty(A), return; end
+if ~isequal(size(A), [ng, ng])
+    error("TEN:SCTENIFOLDXCT2:BadGrnSize", ...
+        "'%s' must be %d-by-%d (sce1.g has %d genes). Received %s.", ...
+        name, ng, ng, ng, mat2str(size(A)));
+end
+end % i_checkgrnsize

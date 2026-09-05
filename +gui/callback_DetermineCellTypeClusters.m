@@ -12,6 +12,12 @@ if isa(src, 'matlab.apps.AppBase')
     speciestag = src.speciestag;
 end
 
+% Warn before replacing existing labels, and do it here rather than after
+% the species and marker-database dialogs have been answered. The labels
+% being replaced are stashed below, so this is about the active annotation
+% changing, not about losing it.
+if ~gui.i_confirmoverwritecelltype(FigureHandle, sce), return; end
+
 [c, cL] = findgroups(string(sce.c));
 
 if usedefaultdb
@@ -102,6 +108,9 @@ end
 
 if ~manuallyselect, gui.myWaitbar(FigureHandle, fw); end
 
+% Keep the annotation this replaces as a new numbered cell attribute, the
+% same way GUI.CALLBACK_RUNSCIMILARITY and SC_ANNOTATECELLS do.
+stashname = pkg.i_stashcelltypehistory(sce);
 sce.c_cell_type_tx = string(cL(c));
 
 nx = length(unique(sce.c_cell_type_tx));
@@ -113,6 +122,13 @@ if nx > 1
         end
     end
 end
+
+% Report what was assigned, and where the labels it replaced went. The
+% pre-flight warning is a Yes/No gate that is easy to click through, so the
+% attribute name is repeated here, once the name actually exists.
+msg = sprintf('%d cell type(s) assigned to %d cells.', ...
+    numel(unique(sce.c_cell_type_tx)), sce.NumCells);
+gui.myHelpdlg(FigureHandle, msg + gui.i_stashnotice(stashname));
 
 gui.myGuidata(FigureHandle, sce, src);
 requirerefresh = true;

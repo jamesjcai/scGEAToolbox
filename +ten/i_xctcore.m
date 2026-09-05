@@ -1,4 +1,4 @@
-function T = i_xctcore(X, g, ctype, celltype1, celltype2, twosided, cfg)
+function [T, grns] = i_xctcore(X, g, ctype, celltype1, celltype2, twosided, cfg)
 %I_XCTCORE  Shared engine for the scTenifoldXct manifold-alignment entry points.
 %   T = TEN.I_XCTCORE(X, G, CTYPE, CELLTYPE1, CELLTYPE2, TWOSIDED, CFG) runs the
 %   full alignment: two GRNs, a cross-type correspondence block, a spectral or
@@ -44,11 +44,42 @@ function T = i_xctcore(X, g, ctype, celltype1, celltype2, twosided, cfg)
 %                  'precomputed' option for what still happens to it (scale,
 %                  optional filter, symmetrize) and why substituting a network
 %                  built by a different method is a real methodological choice.
+%     grn1_processed, grn2_processed - logical; true if the matching grn1/
+%                  grn2 already went through TEN.I_XCTGRN's scale/filter/
+%                  symmetrize (e.g. it is a grns.A_s/A_t this function itself
+%                  returned earlier) and that should not be done again - see
+%                  TEN.I_XCTGRN's 'processed' option for why a second pass is
+%                  not simply a no-op. Ignored when the matching grn1/grn2 is
+%                  empty. Default false.
+%     candidates - "database" (default) restricts the output to L-R database
+%                  matches, as published. "all" instead ranks EVERY gene pair
+%                  by embedding distance and returns the closest cfg.topN,
+%                  regardless of whether either gene is a known ligand or
+%                  receptor - a discovery mode for finding co-regulated pairs
+%                  the database does not already know about. The output
+%                  schema differs: no p_value/null test (there is no separate
+%                  background left once every pair is a candidate), and a
+%                  percentile column instead, plus is_known_lr marking which
+%                  of the top pairs happen to already be in the database. A
+%                  fully database-free run also needs w12mode="outer", since
+%                  w12mode="lr" still uses the database to build the
+%                  alignment itself even when candidates="all" only changes
+%                  what gets reported afterward.
 %
 %   OUTPUT:
-%     T - table with columns ligand, receptor, dist, correspondence, p_value,
-%         plus the three provenance columns when cfg.provenance is true. When
-%         TWOSIDED is true, T is {T1, T2} for the two directions.
+%     T    - table with columns ligand, receptor, dist, correspondence,
+%            p_value, plus the three provenance columns when cfg.provenance
+%            is true. When TWOSIDED is true, T is {T1, T2} for the two
+%            directions.
+%     grns - requested via a second output argument (nargout > 1); struct
+%            with fields A_s, A_t (the ng-by-ng adjacency actually used for
+%            CELLTYPE1/CELLTYPE2 - built fresh or cfg.grn1/grn2 passed
+%            through TEN.I_XCTGRN's scale/filter/symmetrize either way) and
+%            genes (g, for traceability). One pair regardless of TWOSIDED:
+%            both directions align the same two networks, just swapped.
+%            Building this struct costs nothing extra - A_s/A_t already exist
+%            by the time this could be returned - so it is always populated
+%            when asked for, never gated behind its own cfg flag.
 %
 % see also: TEN.SCTENIFOLDXCT, TEN.SCTENIFOLDXCT_GLYCO, TEN.I_ALIGNEMBED,
 %           TEN.I_XCTW12
@@ -89,7 +120,8 @@ if verbose
         fprintf('[%s] Using precomputed GRN: %s (skipping pcrnet build)\n', tag, celltype1);
     end
 end
-A_s = ten.i_xctgrn(X_s, 3, 0.75, false, cfg.useparallel, precomputed=cfg.grn1);
+A_s = ten.i_xctgrn(X_s, 3, 0.75, false, cfg.useparallel, ...
+    precomputed=cfg.grn1, processed=cfg.grn1_processed);
 
 if verbose
     if isempty(cfg.grn2)
@@ -98,7 +130,8 @@ if verbose
         fprintf('[%s] Using precomputed GRN: %s (skipping pcrnet build)\n', tag, celltype2);
     end
 end
-A_t = ten.i_xctgrn(X_t, 3, 0.75, false, cfg.useparallel, precomputed=cfg.grn2);
+A_t = ten.i_xctgrn(X_t, 3, 0.75, false, cfg.useparallel, ...
+    precomputed=cfg.grn2, processed=cfg.grn2_processed);
 
 % -- Alignment, one direction at a time -----------------------------------
 if verbose
@@ -118,6 +151,11 @@ else
     T = T1;
 end
 
+if nargout > 1
+    grns = struct('A_s', A_s, 'A_t', A_t, 'genes', string(g(:)), ...
+        'celltype1', string(celltype1), 'celltype2', string(celltype2));
+end
+
 end % i_xctcore
 
 
@@ -132,16 +170,28 @@ tag = cfg.tag;
 ng = size(X_s, 1);          % number of genes (same for source and target)
 
 % -- Match database pairs against the gene list ---------------------------
+% Matched unconditionally even in candidates="all": w12mode="lr" needs it
+% for the correspondence block regardless of candidate scope, and even a
+% w12mode="outer" discovery run uses it to flag which top pairs happen to
+% already be known (is_known_lr), so the two are not fully independent
+% pieces of information even when the OUTPUT does not stop at the database.
 [li_idx, ri_idx] = i_matchpairs(g, lig_db, rec_db);
 n_valid = numel(li_idx);
 
-if n_valid == 0
+if cfg.candidates == "database" && n_valid == 0
     warning('sctenifoldxct:noPairs', ...
         'No L-R pairs found in gene list. Returning empty table.');
     T = table();
     return;
 end
-if verbose
+if cfg.w12mode == "lr" && n_valid == 0
+    warning('sctenifoldxct:noPairs', ...
+        ['No L-R pairs found in gene list; w12mode="lr" needs at least one pair ' ...
+        'to build the correspondence block. Returning empty table.']);
+    T = table();
+    return;
+end
+if verbose && n_valid > 0
     fprintf('[%s]   %d L-R pairs matched in data.\n', tag, n_valid);
 end
 
@@ -194,6 +244,11 @@ else
         verbose=verbose);
 end
 
+if cfg.candidates == "all"
+    T = i_xctdiscover(P_s, P_t, g, li_idx, ri_idx, cfg.topN, tag, verbose);
+    return
+end
+
 % -- Candidate distances --------------------------------------------------
 n_cand = numel(li_idx);
 cand_d = zeros(n_cand, 1, 'single');
@@ -237,6 +292,41 @@ if verbose
 end
 
 end % i_xct
+
+
+%% ---- discovery mode: rank every gene pair by embedding distance ----
+function T = i_xctdiscover(P_s, P_t, g, li_idx, ri_idx, topN, tag, verbose)
+%I_XCTDISCOVER  Every gene in the source embedded against every gene in the
+%target, ranked by distance, with no L-R database restriction on the
+%output. There is no longer a separate "non-candidate" population to test
+%against (every pair IS a candidate), so instead of TEN.I_XCTNULL's p-value
+%this reports each pair's percentile among all pairs directly - equivalent
+%math (a small value still means "closer than almost everything else"), just
+%computed from the same rank the sort already produced rather than a
+%permutation test against a background that no longer exists.
+ng = size(P_s, 1);
+D = pdist2(P_s, P_t);   % ng-by-ng; D(i,j) = dist(gene i source, gene j target)
+D(1:ng+1:end) = Inf;    % a gene is not its own ligand/receptor; excluded, not just deprioritized
+
+[sortedD, lin] = sort(D(:), 'ascend');
+nPairs = ng * (ng - 1);   % off-diagonal pairs only
+keep = 1:min(topN, nPairs);
+lin = lin(keep);
+[si, ti] = ind2sub([ng, ng], lin);
+
+known = false(numel(lin), 1);
+if ~isempty(li_idx)
+    known = ismember(lin, sub2ind([ng, ng], li_idx, ri_idx));
+end
+
+T = table(g(si), g(ti), double(sortedD(keep)), keep(:)/nPairs, known, ...
+    'VariableNames', {'ligand', 'receptor', 'dist', 'percentile', 'is_known_lr'});
+
+if verbose
+    fprintf('[%s]   candidates=all: top %d of %d gene pairs by distance (%d already in the L-R database).\n', ...
+        tag, height(T), nPairs, sum(T.is_known_lr));
+end
+end % i_xctdiscover
 
 
 %% ---- indices of database pairs present in the gene list ----
