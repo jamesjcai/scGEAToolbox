@@ -18,9 +18,13 @@ if dofit
     [xData, yData] = prepareCurveData(u, lgcv);
     ft = fittype('0.5*log10(b/x+a)', 'independent', 'x', 'dependent', 'y');
     fo = fitoptions('Method', 'NonlinearLeastSquares');
-    warning('off', 'curvefit:fit:noStartPoint');
+    % Capture and restore rather than a bare off/on pair: the pair leaves
+    % warnings disabled for the rest of the session if anything between the
+    % two lines throws, and its 'on' re-enables warnings the caller may have
+    % silenced deliberately instead of restoring what they had.
+    warnState = warning('off', 'curvefit:fit:noStartPoint');
+    restoreWarn = onCleanup(@() warning(warnState));
     [fr] = fit(xData, yData, ft, fo);
-    warning('on', 'curvefit:fit:noStartPoint');
     % rangev=log10([min(xData) max(xData)]);
     rangev = log10(xlim());
     rangev(2) = log10(quantile(xData, 0.99));

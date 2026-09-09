@@ -7,7 +7,22 @@ markerlist = cell(max(c), 1);
 
 switch methodid
     case 1 % Fast method
-        [idxv] = run.ml_PickMarkers(X, genelist, c, topn);
+        % Normalise and log-transform first, the way the sibling marker
+        % function does (pkg.e_findallmarkers line 15) and the way the
+        % slow method below does with sc_transform. Only this branch --
+        % the default, and the one the GUI's Find All Markers and the
+        % CLI's --method fast both take -- used to score raw counts.
+        %
+        % run.ml_PickMarkers ranks by sum_j |mean_i - mean_j|, an
+        % absolute difference in count units with no division by
+        % expression level or library size, so on raw counts the ranking
+        % follows abundance and depth. Measured on a 300-gene fixture
+        % with 10 planted markers per cluster and cluster 2 sequenced
+        % twice as deep, cluster 2 recovered 0 of its 10 markers -- its
+        % top ten filled with ubiquitous high-abundance genes, whose
+        % argmax lands in the deepest cluster. After the transform,
+        % 10 of 10.
+        [idxv] = run.ml_PickMarkers(log1p(sc_norm(X)), genelist, c, topn);
         for k = 1:max(c)
             idx = idxv(1 + (k - 1) * topn:k * topn);
             markerlist{k} = genelist(idx(~isnan(idx)));
@@ -111,11 +126,14 @@ parfor k = 1:ng
     pct_2(k) = sum(y > 0) ./ length(y);
 end
 
-if exist('mafdr.m', 'file')
-    p_val_adj = mafdr(p_val, 'BHFDR', true);
-else
-    [~, ~, ~, p_val_adj] = pkg.e_fdr_bh(p_val);
-end
+% PKG.E_FDR replaces the two-branch block that used to sit here. Its MAFDR
+% branch and its PKG.E_FDR_BH branch are the same algorithm on clean input
+% -- they agree to 2e-16 -- but they disagree whenever the p-values carry
+% NaN, which is what RANKSUM returns for a gene with no counts in either
+% group and what a per-cell-type run produces in bulk. One drops those from
+% the family, the other counts them, so the same command gave a different
+% answer depending on whether the Bioinformatics Toolbox was installed.
+p_val_adj = pkg.e_fdr(p_val);
 sortid = (1:length(genelist))';
 if size(genelist, 2) > 1
     gene = genelist';

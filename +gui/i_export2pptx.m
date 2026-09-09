@@ -60,7 +60,13 @@ switch answer
             return;
         end
 
-        warning off
+        % Capture and restore rather than a bare off/on pair: the pair leaves
+        % warnings disabled for the rest of the session if anything between the
+        % two lines throws, and its 'on' re-enables warnings the caller may have
+        % silenced deliberately instead of restoring what they had.
+        warnState = warning();
+        restoreWarn = onCleanup(@() warning(warnState));
+        warning('off', 'all');
         for k = 1:N
             if pkg.i_isvalid(F{k})
                 images{k} = [tempname, '.png'];
@@ -110,7 +116,6 @@ switch answer
                 replace(slide3, 'Content', Picture(images{k}));
             end
         end
-        warning on
         close(ppt);
         len = length(images);
         for i = 1:len

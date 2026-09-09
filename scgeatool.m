@@ -11,6 +11,18 @@ try
 catch
     % best-effort: the GUI still works without the injected viewer menu
 end
+try
+    gui.i_addharmonymenu(app);
+catch
+    % best-effort: the GUI still works without the injected Harmony menu
+end
+% Baked into scgeatoolApp.mlapp as EstimateMalignancyinferCNVMenu; the
+% injector is kept because it is idempotent and would no-op anyway.
+% try
+%     gui.i_addinfercnvmenu(app);
+% catch
+%     % best-effort: the GUI still works without the injected inferCNV menu
+% end
 % try
 %     gui.i_addcogapsmenu(app);
 % catch

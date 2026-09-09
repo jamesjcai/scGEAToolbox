@@ -61,7 +61,12 @@ if isempty(numfig), return; end
 
 if uselasso, fw = gui.myWaitbar(FigureHandle); end
 y = double(ptsSelected);
-sce.c = 1 + ptsSelected;
+% `sce.c = 1 + ptsSelected` was here. SCE.C is the app's active cell
+% grouping and drives the colouring of the main plot; SCE is a handle
+% object, so that line replaced the user's clustering or cell-type
+% grouping with a two-level brushed/not-brushed indicator, permanently and
+% with no way back. Nothing in this callback ever read it -- the
+% regressions below use Y -- so it was pure collateral damage.
 X = sce.X';
 
 % uselasso = true;
@@ -116,24 +121,28 @@ if uselasso, gui.myWaitbar(FigureHandle, fw); end
 
 
 function idx = LRDETest(X, y, k)
-n = size(X, 1);
-p_val = zeros(n, 1);
+% The likelihood-ratio ranking lives in PKG.E_LRDETEST now, so it can be
+% tested without a figure. It used to be written out here with
+%
+%     n = size(X, 1);          % number of CELLS
+%     for x = 1:size(X, 1)     % iterating over CELLS
+%         model_data = table(X(:, x), ...);   % indexing a GENE
+%
+% and X is cells-by-genes (X = sce.X' above), so it tested genes 1..nCells
+% and never looked at the rest, while line 101 below uses the returned
+% indices to pick gene names. Measured on 40 cells and 120 genes with five
+% planted markers at genes 100-104: not one of the five was tested, and the
+% callback reported five arbitrary noise genes as the markers of the
+% brushed selection. With fewer genes than cells it raised
+% MATLAB:badsubscript instead.
 fw = gui.myWaitbar(FigureHandle);
-% Calculate p-values for each row of data_use
-for x = 1:size(X, 1)
-    if mod(x,5)==0
-        gui.myWaitbar(FigureHandle, fw, false, '', '', x/n);
-    end
-    model_data = table(X(:,x), y(:), 'VariableNames', {'GENE', 'Group'});
-    fmla = 'Group ~ GENE';
-    fmla2 = 'Group ~ 1';
-    % Fit models and compute likelihood ratio test
-    model1 = fitglm(model_data, fmla, 'Distribution', 'binomial');
-    model2 = fitglm(model_data, fmla2, 'Distribution', 'binomial');
-    lrtest_stat = 2 * (model1.LogLikelihood - model2.LogLikelihood);
-    p_val(x) = chi2cdf(lrtest_stat, model1.NumPredictors - model2.NumPredictors, 'upper');
+try
+    idx = pkg.e_lrdetest(X, y, k, ...
+        @(frac) gui.myWaitbar(FigureHandle, fw, false, '', '', frac));
+catch ME
+    gui.myWaitbar(FigureHandle, fw, true);
+    rethrow(ME);
 end
-[~, idx] = mink(p_val, k);
 gui.myWaitbar(FigureHandle, fw);
 end
 end

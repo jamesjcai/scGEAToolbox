@@ -94,8 +94,19 @@ direction = dirlist(indx2);
 fw = gui.myWaitbar(parentfig, [], false, ...
     sprintf('Running %s gene-set test...', upper(method)));
 try
+    % NumPerm and PValueTail: only Method="gsea" reads either, and its
+    % "empirical" default cannot report a p-value below 1/(NumPerm+1).
+    % Against a collection this size every set that beats the whole null
+    % ties at that floor, so no FDR cutoff separates them and the GSEA
+    % option returns nothing however strong the signal is: on a simulated
+    % ranking with one planted pathway among 3000 sets, the planted set
+    % ranked first and still came back at FDR 0.95. Fitting the tail finds
+    % it at FDR 6e-5 and calls nothing else. The tail fit needs a null of
+    % at least 5000 draws to be worth anything, which costs about 20 s
+    % here; SC_FGSEA defaults to the same number for the same reason.
     T = sc_gsettest(stats, genes, setmatrx, setnames, setgenes, ...
-        Method=method, Direction=direction, MaxSize=500);
+        Method=method, Direction=direction, MaxSize=500, ...
+        NumPerm=5000, PValueTail="gpd");
 catch ME
     gui.myWaitbar(parentfig, fw, true);
     gui.myErrordlg(parentfig, ME.message, ME.identifier);

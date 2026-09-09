@@ -14,7 +14,12 @@ for j = 1:length(celltypev)
     for ix = 1:length(g)
         if any(g(ix) == wgene) && any(g(ix) == gk)
             wi = wvalu(g(ix) == wgene);
-            z = median(Xk(gk == g(ix), :));
+            % SUM first, so a symbol appearing on more than one row --
+            % which readers do produce -- collapses to one profile
+            % instead of making MEDIAN return a row vector and the
+            % scalar assignment to S(j) below throw. For the usual
+            % single-row case sum(.,1) is the identity.
+            z = median(sum(Xk(gk == g(ix), :), 1));
             Z = Z + z * wi;
             ng = ng + 1;
         end

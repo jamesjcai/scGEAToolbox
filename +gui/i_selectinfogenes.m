@@ -26,6 +26,18 @@ end
 
 if isempty(answer), return; end
 
+% Work on a copy. SingleCellExperiment is a handle class, so
+% `sce = sce.rmmtgenes` mutates the object it was given and the direct
+% `sce.X(~idx0, :) = []` below does too. Every caller here is a GUI
+% callback that passes the app's live object and does NOT write the result
+% back -- callback_DVGene2Groups:19, callback_DVGene2GroupsBatch:16 and
+% callback_DPGene2GroupsBatch:13 all just want a filtered matrix to
+% analyse. Without the copy, opening one of those dialogs permanently
+% stripped mitochondrial, haemoglobin, ribosomal and unapproved-symbol
+% genes from the user's dataset for the rest of the session, whether or
+% not the analysis was then run.
+sce = copy(sce);
+
 fw = gui.myWaitbar(parentfig);
 if strcmpi(answer{1},'Yes') || strcmpi(answer{1},'Y')
     sce = sce.rmmtgenes;

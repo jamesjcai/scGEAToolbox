@@ -66,28 +66,54 @@ xyz = [lgu, lgcv, dropr];
 s = cumsum([0; sqrt(diff(lgu(:)).^2 + diff(lgcv(:)).^2 ...
     + diff(dropr(:)).^2)]);
 
-warning('off', 'MATLAB:rankDeficientMatrix')
-% assignin("base","xyz",xyz)
-% assignin("base","s",s)
+% ONCLEANUP rather than a bare off/on pair. The pair left the warning
+% disabled for the rest of the session if SPLINEFIT or PPVAL threw between
+% the two lines, and its "on" re-enabled a warning the caller may have
+% turned off deliberately rather than restoring what they had.
+warnState = warning('off', 'MATLAB:rankDeficientMatrix');
+restoreWarn = onCleanup(@() warning(warnState));
+
 pp1 = splinefit(s, xyz.', 15, 0.75);
 xyz1 = ppval(pp1, s)';
-warning('on', 'MATLAB:rankDeficientMatrix')
 
 [nearidx, d] = dsearchn(xyz1, xyz);
 
 fitmeanv = xyz1(:, 1);
 x = xyz(:, 1); y = xyz(:, 2);
-d(x > max(fitmeanv)) = d(x > max(fitmeanv)) ./ 100;
-d(x < min(fitmeanv)) = d(x < min(fitmeanv)) ./ 10;
-d((y - xyz1(:, 2)) < 0) = d((y - xyz1(:, 2)) < 0) ./ 100;
+aboveRange = x > max(fitmeanv);
+belowRange = x < min(fitmeanv);
+belowCurve = (y - xyz1(:, 2)) < 0;
+d(aboveRange) = d(aboveRange) ./ 100;
+d(belowRange) = d(belowRange) ./ 10;
+d(belowCurve) = d(belowCurve) ./ 100;
 
 % D = pdist2(xyz, xyz1);
 % d = min(D, [], 2);
-dx = d(d <= quantile(d, 0.9));
 
-distFit = fitdist([-dx; dx], 'Normal');
-pval = normcdf(d, 0, distFit.sigma, 'upper');
-[~, ~, ~, fdr] = pkg.e_fdr_bh(pval);
+% The three lines above are a heuristic down-weighting, not a
+% transformation: a gene whose mean falls outside the fitted range, or
+% which sits below the curve in CV, is declared not a candidate by dividing
+% its distance by 100 or 10. On real 10x data that is 94.8% of genes, and
+% their deflated distances sit ~50x below the rest, so any null fitted to
+% all of D is fitted to the deflation rather than to the noise.
+%
+% So the null is fitted on the candidates, and everything else gets p = 1.
+% An arbitrary constant times a distance has no null, and reporting one for
+% it was most of what went wrong here: the old code fitted a symmetric
+% null to the whole of D by mirroring it, then read a single tail of that
+% null with a scale taken from the standard deviation of a truncated bulk.
+% Every one of those choices pushed the same way. On the bundled 10x
+% example it called 23.3% of all genes significant at p<0.05.
+%
+% The D ranking is untouched, so gene selection by D -- which is what every
+% caller of this function actually uses; nothing reads PVAL or FDR -- is
+% exactly as before.
+isCandidate = ~(aboveRange | belowRange | belowCurve);
+pval = ones(size(d));
+if any(isCandidate)
+    pval(isCandidate) = pkg.e_deviationpvalue(d(isCandidate));
+end
+fdr = pkg.e_fdr(pval);
 
 if ~isempty(gsorted)
     genes = gsorted;

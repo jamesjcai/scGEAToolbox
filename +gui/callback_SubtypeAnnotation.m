@@ -82,12 +82,17 @@ end
 
 % Re-embedding and re-clustering a subset takes a while, and doing it for
 % several types in a row takes several times as long.
+% The species decides which primary marker file SC_CSUBTYPEANNO appends
+% from, and its SPECIESTAG argument used to be ignored. Guessing from the
+% symbol casing is what PKG.I_GUESSSPECIES is for; it had no callers.
+speciestag = pkg.i_guessspecies(sce.g);
+
 fw = gui.myWaitbar(FigureHandle);
 for k = 1:length(celltypetarget_list)
     fw = gui.myWaitbar(FigureHandle, fw, false, '', ...
         sprintf('Annotating subtypes of %s...', celltypetarget_list(k)), ...
         (k-1)/length(celltypetarget_list));
-    [sce] = sc_csubtypeanno(sce, celltypetarget_list(k), formatid);
+    [sce] = sc_csubtypeanno(sce, celltypetarget_list(k), formatid, speciestag);
 end
 gui.myWaitbar(FigureHandle, fw);
 gui.myGuidata(FigureHandle, sce, src);

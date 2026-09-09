@@ -1,78 +1,40 @@
-function [s] = ml_UMAP(X, ndim, vnum)
+function [s] = ml_UMAP(X, ndim, nneighbors)
+% ML_UMAP - UMAP embedding using the bundled external/ml_umap45 package
+%
+%   S = ML_UMAP(X, NDIM) embeds the cells of the gene-by-cell matrix X into
+%   NDIM dimensions. NNEIGHBORS defaults to 15, matching the UMAP class.
+%
+%   This is the legacy fallback used only on MATLAB releases older than
+%   R2026a; SC_UMAP calls the built-in UMAP on R2026a and newer.
 
-if nargin < 3, vnum = 45; end
+if nargin < 3, nneighbors = 15; end
 if nargin < 2, ndim = 3; end
 
-% umapversion = 'ml_UMAP44';
-if vnum == 45
-    umapversion = 'ml_umap45';
-else
-    umapversion = 'ml_UMAP44';
-end
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
-    pth1 = fullfile(pw1, '..', 'external', umapversion);
-    addpath(pth1);
-    pth2 = fullfile(pw1, '..', 'external', umapversion, 'util');
-    addpath(pth2);
-
-    % pth3 = fullfile(pw1, '..', 'external', umapversion, 'umap.jar');
-    % javaaddpath(pth3);
+    % UMAP.m needs both the package root and its util/ subfolder (Args,
+    % MatBasics, PopUp, String, ...). Those class names are generic enough
+    % to shadow other code, so the entries come off the path on the way out.
+    umappth = fullfile(fileparts(pw1), 'external', 'ml_umap45');
+    umapcleanup = pkg.i_addpathtemp(umappth, ...
+        fullfile(umappth, 'util'));   %#ok<NASGU>
 end
 
 data = transpose(X);
 
-% data=transpose(sc_transform(X));
-% data=transpose(sc_norm(X));
-
 ncells = size(data, 1);
 if ncells > 500
     if ~(ismcc || isdeployed)
-        pth = fullfile(pw1,  '..', 'external', 'ml_PHATE');
-        addpath(pth);
+        % svdpca lives in external/ml_PHATE.
+        phatecleanup = pkg.i_addpathtemp( ...
+            fullfile(fileparts(pw1), 'external', 'ml_PHATE'));   %#ok<NASGU>
     end
     data = svdpca(data, 50, 'random');
 end
 
-% if ~ispc
-%    [s] = run_umap_lite(data, 'n_components', ndim, 'verbose', false);
-% else
-[s] = run_umap_lite_super(data, ndim);
-% end
-%{
-
-if nargout>1 || plotit
-    % if verbose
-    [s,~,c]=run_umap_main(data, ...
-        'n_components',ndim);
-    % else
-    %     [s,~,c]=run_umap_main(data, ...
-    %         'n_components',ndim, ...
-    %         'verbose','none');
-    % end
-else
-
-    % if ~(ismcc || isdeployed)
-    %    if verbose
-    % [s]=run_umap_lite(data,'n_components',ndim);
-    %     else
-    %         [s]=run_umap_lite(data,'n_components',ndim,'verbose','none');
-    %     end
-    % else
-    %      umap=UMAP;
-    %      umap.method='MEX';
-    %      umap.n_components=ndim;
-    %      umap.min_dist=0.3;
-    %      umap.distance_func='euclidean';
-    %      s = umap.fit_transform(data);
-    % end
+u = UMAP;
+u.n_components = ndim;
+u.n_neighbors = nneighbors;
+u.setMethod(pkg.i_umapmethod());
+s = u.fit_transform(data);
 end
-
-% if plotit && ~isempty(s)
-%     gui.i_gscatter3(s,c);
-%     xlabel('UMAP 1')
-%     ylabel('UMAP 2')
-% end
-end
-
-%}

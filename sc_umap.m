@@ -37,17 +37,8 @@ if ~isMATLABReleaseOlderThan('R2026a')
     return;
 end
 
-% Fall back to ml_UMAP for older MATLAB versions
-done = false;
-try
-    s = run.ml_UMAP(X, ndim);
-    done = true;
-catch ME
-    warning(ME.message);
-end
-if ~done
-    disp('Try older version Matlab UMAP (v4.4).');
-    s = run.ml_UMAP(X, ndim, 44);
-end
+% Fall back to the bundled UMAP (external/ml_umap45) on older MATLAB.
+% Note: that package ships MEX binaries for Windows and Intel Mac only.
+s = run.ml_UMAP(X, ndim);
 
 end

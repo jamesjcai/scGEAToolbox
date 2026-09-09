@@ -70,7 +70,14 @@ end
 save('X.mat','-v7.3',"X");
 g = sce.g;
 writetable(table(g),'g.csv','WriteVariableNames',false);
-% barcode = sce.c_cell_id;
+% The h5ad obs index has to be unique, and i_makeattributestable reads
+% sce.c_cell_id off the object, so the ids are made unique here. SCE is a
+% handle object, though, so this used to rename the caller's cell barcodes
+% permanently: exporting a file silently rewrote the barcodes in the live
+% dataset it was exporting. Restore them on the way out, whichever way
+% this function leaves.
+originalCellId = sce.c_cell_id;
+restoreCellId = onCleanup(@() i_restorecellid(sce, originalCellId));
 sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
 T = pkg.i_makeattributestable(sce);
 writetable(T,'c.csv');
@@ -101,4 +108,9 @@ else
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+end
+
+function i_restorecellid(sce, cellid)
+% Put back the barcodes made unique for the h5ad obs index.
+sce.c_cell_id = cellid;
 end

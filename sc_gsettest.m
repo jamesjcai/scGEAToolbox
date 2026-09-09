@@ -70,7 +70,23 @@ function [T, info] = sc_gsettest(stats, genelist, setmatrx, setnames, setgenes, 
 %                    "camera", "cameraRank", "page" and "ulm".
 %     Weight       - exponent on |STATS| for Method="gsea" (default 1;
 %                    0 gives the unweighted, classic KS statistic).
-%     NumPerm      - permutations for Method="gsea" (default 1000).
+%     NumPerm      - permutations for Method="gsea" (default 1000). The null
+%                    is drawn once per distinct set size rather than once per
+%                    set, so raising this is cheaper than it looks. Use at
+%                    least 5000 with PValueTail="gpd"; see below.
+%     PValueTail   - how Method="gsea" turns the permutation null into a
+%                    p-value. "empirical" (default) counts exceedances and so
+%                    cannot report anything below 1/(NumPerm+1); every set
+%                    beyond the whole null ties there, which both blocks any
+%                    FDR cutoff on a large collection and loses the ranking
+%                    among the top hits. "gpd" fits a generalized Pareto
+%                    tail to the null when fewer than ten permutations reach
+%                    the observed score (Knijnenburg et al. 2009) and reads
+%                    the p-value off the fit. It is an approximation, and it
+%                    stands in for the multilevel sampling fgsea uses.
+%                    "gpd" needs NumPerm>=5000; below that the fit is not an
+%                    approximation but noise, and the function says so and
+%                    falls back to "empirical" rather than report it.
 %     Sort         - sort rows by ascending PValue (default true).
 %     Verbose      - print a short summary (default true).
 %
@@ -82,7 +98,8 @@ function [T, info] = sc_gsettest(stats, genelist, setmatrx, setnames, setgenes, 
 %                       positive means the set sits toward the top
 %              AUC      Mann-Whitney effect size, comparable across every
 %                       method. 0.5 = no shift, >0.5 = set ranks higher
-%              PValue   raw p-value
+%              PValue   raw p-value, two-sided for Direction="both" and
+%                       one-sided otherwise
 %              FDR      Benjamini-Hochberg adjusted p-value
 %            Method="gsea" adds ES and NES columns.
 %     info - struct holding the membership matrix, gene universe, working
@@ -119,6 +136,8 @@ arguments
     opts.InterGeneCor (:, 1) double = 0.01
     opts.Weight (1, 1) double = 1
     opts.NumPerm (1, 1) double = 1000
+    opts.PValueTail (1, 1) string {mustBeMember(opts.PValueTail, ...
+        ["empirical", "gpd"])} = "empirical"
     opts.Sort (1, 1) logical = true
     opts.Verbose (1, 1) logical = true
 end
@@ -258,7 +277,7 @@ switch opts.Method
         extra = table(es, stat, VariableNames=["ES", "NES"]);
 end
 
-[~, ~, ~, fdr] = pkg.e_fdr_bh(p, 0.05, 'pdep', 'no');
+fdr = pkg.e_fdr(p);
 
 T = table(string(names(:)), m, stat, auc, p, fdr(:), VariableNames= ...
     ["SetName", "SetSize", "Stat", "AUC", "PValue", "FDR"]);
@@ -379,33 +398,137 @@ es = zeros(nSets, 1);
 nes = zeros(nSets, 1);
 p = ones(nSets, 1);
 
-for k = 1:nSets
-    mk = m(k);
-    es(k) = i_es(w, find(Msort(k, :))', n, mk);
+% Whether the tail can be fitted at all is a property of the null's size, so
+% decide it once here rather than silently per set. Below 5000 draws the fit
+% is not an approximation but noise: on 2000 sets drawn against an iid
+% ranking -- where nothing is enriched and nothing should be called -- a
+% 1000-draw null put three of them past FDR<0.05 and gave sets of equal
+% evidence p-values four orders of magnitude apart. At 5000 the same
+% collection produced no calls and its smallest p-value was 7e-5, far above
+% what an FDR cutoff on a collection that size would accept.
+tailMethod = opts.PValueTail;
+if tailMethod == "gpd" && nperm < 5000
+    warning("sc_gsettest:tailNeedsMorePermutations", ...
+        "PValueTail=""gpd"" needs NumPerm>=5000 to fit the null tail; " + ...
+        "%d draws cannot, so the empirical p-value is used instead. " + ...
+        "Raise NumPerm to extrapolate.", nperm);
+    tailMethod = "empirical";
+end
 
+% Under gene-label permutation the null depends on the set size alone, so
+% draw one null per distinct size instead of one per set. Collections repeat
+% sizes heavily -- a few hundred distinct sizes across ten thousand sets --
+% and this is what makes a permutation count large enough to resolve small
+% p-values affordable.
+[sizes, ~, sizeOf] = unique(m);
+nullBySize = cell(numel(sizes), 1);
+for j = 1:numel(sizes)
+    mk = sizes(j);
     esp = zeros(nperm, 1);
     for b = 1:nperm
         esp(b) = i_es(w, sort(randperm(n, mk))', n, mk);
     end
+    nullBySize{j} = esp;
+end
+
+for k = 1:nSets
+    es(k) = i_es(w, find(Msort(k, :))', n, m(k));
+    esp = nullBySize{sizeOf(k)};
 
     if es(k) >= 0
         pool = esp(esp > 0);
         nhit = sum(esp >= es(k));
+        tailNull = esp;
+        observed = es(k);
     else
         pool = esp(esp < 0);
         nhit = sum(esp <= es(k));
+        tailNull = -esp;
+        observed = -es(k);
     end
     if ~isempty(pool)
         nes(k) = es(k)/abs(mean(pool));
     end
-    p(k) = (nhit + 1)/(nperm + 1);
+    p(k) = i_permpvalue(tailNull, observed, nhit, nperm, tailMethod);
 end
 
-% "up", "down" and "mixed" all reduce to top-of-list enrichment once S has
-% been transformed, so scores pointing the other way are not evidence.
-if opts.Direction ~= "both"
+if opts.Direction == "both"
+    % The side of the null that gets counted is chosen by the side the
+    % observed score landed on, so the count above is a one-sided tail
+    % probability and needs the usual two-sided factor. Without it the test
+    % rejects at twice its nominal rate, uniformly across the range: on 2000
+    % random sets against an iid ranking, P(p<0.05) was 0.087 and P(p<0.01)
+    % was 0.0155. I_CERNO doubles for the same reason.
+    p = min(1, 2*p);
+else
+    % "up", "down" and "mixed" all reduce to top-of-list enrichment once S
+    % has been transformed, so scores pointing the other way are not
+    % evidence, and what is left is genuinely one-sided.
     p(es < 0) = 1;
 end
+end
+
+% =========================================================================
+function p = i_permpvalue(nullVals, observed, nhit, nperm, method)
+% Permutation p-value, optionally extrapolated into the tail.
+%
+% The empirical value cannot go below 1/(nperm+1), and every set beyond the
+% whole null gets exactly that. On a collection of any size the multiple
+% testing correction then pushes all of them past any useful FDR cutoff, and
+% -- worse -- a set with a perfect enrichment score is tied with one that is
+% merely good, so the ranking is lost too. Fitting a generalized Pareto
+% distribution to the null tail (Knijnenburg et al., Bioinformatics 2009)
+% reads a p-value off the fitted tail instead. It is an approximation, and
+% it replaces the multilevel sampling fgsea uses for the same purpose.
+p = (nhit + 1)/(nperm + 1);
+if method ~= "gpd" || nhit > 10
+    return;
+end
+
+% How much of the null counts as "the tail" decides everything, and the fit
+% is far more sensitive to it than to anything else. On a 1000-draw null of
+% a set whose true p is 1e-4, taking the top 5% recovers 1.0e-4, while
+% taking the top 10% gives 1.8e-8 and the top 25% gives exactly 0: past a
+% few percent the fit starts describing the body of the distribution, whose
+% shape parameter is strongly negative, and the implied upper bound closes
+% in below the observation. A goodness-of-fit test does not catch this -- a
+% KS test accepts every one of those fits, and accepts the worst of them
+% most comfortably -- so the guard has to be the fraction itself.
+numExceed = min(250, max(50, floor(0.05*nperm)));
+sorted = sort(nullVals, "descend");
+threshold = sorted(numExceed + 1);
+exceedances = sorted(1:numExceed) - threshold;
+exceedances = exceedances(exceedances > 0);
+if numel(exceedances) < 20
+    return;
+end
+
+% A shape parameter below -1/2 makes GPFIT warn that it cannot give
+% standard errors. That is true and irrelevant here -- only the fitted tail
+% is wanted, never its confidence interval -- and the warning would
+% otherwise fire once per set and bury the command window.
+ws = [warning("off", "stats:gpfit:ConvergedToBoundary"), ...
+    warning("off", "stats:gpfit:ConvergedToBoundary2")];
+restoreWarning = onCleanup(@() warning(ws));
+try
+    params = gpfit(exceedances);
+catch
+    % No usable fit: keep the empirical value rather than invent one.
+    return;
+end
+
+tailP = (numExceed/nperm)*(1 - gpcdf(observed - threshold, ...
+    params(1), params(2)));
+if ~isfinite(tailP) || tailP >= p
+    return;
+end
+
+% A fitted shape below zero bounds the tail, so a sufficiently extreme
+% observation reads as exactly zero -- correctly so for a score no
+% permutation could approach, but zero is not a number this many draws can
+% justify. Stop at 1/nperm^2, roughly the square of what the empirical
+% p-value can resolve, and say so rather than reporting realmin.
+p = max(tailP, 1/nperm^2);
 end
 
 % =========================================================================

@@ -1,7 +1,13 @@
-function [T, A0, A1] = sctenifoldnet(X0, X1, genelist, varargin)
+function [T, A0, A1, genelist] = sctenifoldnet(X0, X1, genelist, varargin)
 % T=sctenifoldnet_m(X0,X1,genelist);
 %
 % X0 and X1 are gene x cell matrices
+%
+% The fourth output is the gene list the returned networks are over. It is
+% NOT the list that went in: ribosomal genes are dropped below, so A0 and
+% A1 are smaller than X0 and every row after the first dropped gene is
+% shifted. Anything that indexes A0 or A1 by position has to use this list
+% -- T.genelist will not do, because I_DR sorts T by drdist.
 %
 % Name-value options: 'qqplot', 'smplmethod', 'tdmethod', 'nsubsmpl',
 % 'csubsmpl', 'savegrn', 'useparallel'.
@@ -81,6 +87,8 @@ if isempty(which('net.pcrnet'))
     error('Need net.pcrnet in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
 end
 
+% GENELIST is narrowed here, which is why it is also an output: A0 and A1
+% below are over the surviving genes only.
 validg = ~ismember(upper(genelist), upper(pkg.i_get_ribosomalgenes));
 genelist = genelist(validg);
 X0 = sc_norm(X0(validg, :), "type", "libsize");
@@ -92,6 +100,13 @@ X1 = log1p(X1);
 % X0=sc_transform(X0);
 % X1=sc_transform(X1);
 
+% Save and restore the caller's random stream. Seeding the bootstrap subsamples is
+% fine; leaving the session parked on that seed is not -- it then
+% governs every later tsne, umap and clustering call in the session.
+% ten.sctenifoldnetstability's header documents this determinism and
+% relies on it, so the reset itself stays.
+rngState = rng();
+restoreRng = onCleanup(@() rng(rngState));
 rng('default');
 
 tic

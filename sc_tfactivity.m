@@ -41,11 +41,11 @@ function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, ...
 %
 %   REGULATORY SIGN HANDLING
 %   ┌─────────────────────────────────────────────────────────────────┐
-%   │ Methods 1–5:  use POSITIVE relationships only (mor > 0).        │
+%   │ Methods 1, 2, 4, 5, 6:  POSITIVE relationships only (mor > 0)   │
 %   │   TF activity ≈ enrichment / expression of activated targets.   │
 %   │   Repressing targets are discarded, losing half the information. │
 %   │                                                                  │
-%   │ Method 6 (VIPER):  uses the FULL signed regulon.                │
+%   │ Method 3 (VIPER):  uses the FULL signed regulon.                │
 %   │   Both activating (mor > 0) and repressing (mor < 0) targets    │
 %   │   contribute: high expression of activators OR low expression   │
 %   │   of repressors both increase the TF activity score.            │
@@ -62,8 +62,9 @@ function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, ...
 %   (3) Normalize X (log-library-size), except method 1 (rank-based).
 %   (4) Aggregate target expression → activity score cs (nTF × nCells).
 %
-% VIPER (method 6) reloads the full table, builds a signed matrix, and
-% uses a probit-rank enrichment statistic instead of simple aggregation.
+% VIPER (method 3) uses the full unfiltered table, builds a signed matrix,
+% and applies a probit-rank enrichment statistic instead of simple
+% aggregation.
 %
 % -------------------------------------------------------------------------
 % METHOD DETAILS  (methodid 1–6, ordered fastest → slowest)
@@ -71,8 +72,15 @@ function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, ...
 % Method 1 — WMEAN (Weighted Mean)  [DEFAULT]
 %   Fastest. Computes activity = t * X, where t is the TF-target weight
 %   matrix (rows = TFs, cols = genes) and X is the normalized expression
-%   matrix. Each score is the weighted sum of target gene expression per
-%   cell, equivalent to a weighted mean when mor weights are uniform.
+%   matrix, divided by sum(|t|, 2): the weighted MEAN of target expression
+%   per cell, as decoupleR defines WMEAN.
+%
+%   That division is what makes the rows comparable. Without it the score
+%   is a weighted SUM, which grows with the number of targets a TF has, so
+%   ranking TFs against one another -- which is what the GUI plots and what
+%   any "top active TFs" list does -- ranks them by regulon size. Two TFs
+%   with identical mean target expression, one with 20 measured targets and
+%   one with 800, scored 20*m and 800*m.
 %   Cost: O(nTF · nGenes · nCells) — single matrix multiply.
 %   Note: sensitive to library-size differences; normalization recommended.
 %
@@ -136,7 +144,10 @@ function [cs, tflist, gcommon, numtargetgenes] = sc_tfactivity(X, g, ...
 %   (rows = TFs, cols = cells) is the activity matrix, optimized over 100
 %   iterations using the beta-divergence (IS divergence, β = 0).
 %   Cost: O(100 · nGenes · nTF · nCells) — iterative multiplicative updates.
-%   Note: enforces non-negativity; most biologically interpretable.
+%   Note: the multiplicative updates require W >= 0, so a caller-supplied
+%   table carrying repressing targets (mor < 0) cannot be factorized as
+%   given. Those weights are clamped to zero with a warning, rather than
+%   left to drive H out of the non-negative orthant silently.
 %
 % -------------------------------------------------------------------------
 % REFERENCE DATABASE
@@ -172,6 +183,10 @@ if nargin < 4 || isempty(speciestag), speciestag = 'hs'; end
 %             fprintf('Only positive regulatory relationships are used.\n');
 % end
 
+% The unfiltered database table, when this function is the one that loaded
+% it. Stays empty when the caller supplied their own, which is then used
+% exactly as given.
+TtfgnFull = [];
 if nargin < 3 || isempty(Ttfgn)
     pw1 = fileparts(mfilename('fullpath'));
     if strcmpi(speciestag, 'hs') || strcmpi(speciestag, 'human')
@@ -191,8 +206,16 @@ if nargin < 3 || isempty(Ttfgn)
     else
         error('File %s does not exist.', fname);
     end
+    % Keep the unfiltered table. VIPER (method 3) is defined on the signed
+    % regulon and must not get the mor>0 filter that every other method
+    % wants; before this it had no way to reach the full table at all.
+    TtfgnFull = T;
     Ttfgn = T(T.mor > 0, :); % Filter positive regulatory relationships
-    fprintf('Only positive regulatory relationships are used.\n');
+    if methodid == 3
+        fprintf('Full signed regulon is used (VIPER).\n');
+    else
+        fprintf('Only positive regulatory relationships are used.\n');
+    end
 end
 
 if ~isnumeric(X) || ~ismatrix(X)
@@ -235,8 +258,12 @@ if nargout > 2, gcommon = g(k); end
 
 switch methodid
     case 1 % WMEAN — weighted mean of target gene expression
-        cs = t * X;
-        numtargetgenes = sum(t > 0, 2);
+        % Dividing by sum(|w|) is what makes this a mean. Without it the
+        % score is a weighted sum and every row sits on its own scale, so
+        % comparing TFs -- the only thing anyone does with this matrix --
+        % compares regulon sizes.
+        cs = (t * X) ./ max(sum(abs(t), 2), eps);
+        numtargetgenes = sum(t ~= 0, 2);
 
     case 2 % UCell — rank-based AUC  (see also: sc_cellscore)
         cs = zeros(size(t, 1), size(X, 2));
@@ -247,7 +274,12 @@ switch methodid
             idx1 = t(k, :) > 0;
             n1 = sum(idx1);
             if n1 > 0
-                u = sum(R(idx1, :)) - (n1 * (n1 - 1)) / 2;
+                % SUM without a dimension collapses a 1-row slice
+                % along the wrong axis: a TF with exactly one measured
+                % target got the rank sum over all cells as a scalar,
+                % broadcast to every cell and then clamped to 0 below,
+                % which is indistinguishable from a genuinely silent TF.
+                u = sum(R(idx1, :), 1) - (n1 * (n1 - 1)) / 2;
                 cs(k, :) = 1 - u / (n1 * 1500);
                 numtargetgenes(k) = n1;
             end
@@ -257,24 +289,30 @@ switch methodid
     case 3 % VIPER / aREA — signed regulon, probit-rank enrichment
         disp('ref: Alvarez et al., Nature Genetics 2016.');
         disp('PMID: 27322546  https://doi.org/10.1038/ng.3593');
-        disp('Using FULL signed regulon (activating AND repressing targets).');
 
-        % ---- reload full regulon with both positive and negative mor ----
-        if nargin < 3 || isempty(Ttfgn)
-            pw1 = fileparts(mfilename('fullpath'));
-            if strcmpi(speciestag, 'hs') || strcmpi(speciestag, 'human')
-                fname = fullfile(pw1, 'assets', 'DoRothEA_TF_Target_DB', ...
-                    'dorothea_hs.mat');
-            elseif strcmpi(speciestag, 'mm') || strcmpi(speciestag, 'mouse')
-                fname = fullfile(pw1, 'assets', 'DoRothEA_TF_Target_DB', ...
-                    'dorothea_mm.mat');
-            else
-                error('TF database not available for species ''%s''.', speciestag);
-            end
-            load(fname, 'T');           % load full T (all mor signs)
-            T_signed = T;
+        % ---- the signed regulon -----------------------------------------
+        % This used to be guarded by "if nargin < 3 || isempty(Ttfgn)",
+        % which can never be true at this point: the block at the top of
+        % the function has already assigned Ttfgn whenever it started
+        % empty. The reload was therefore dead code, T_signed was always
+        % the mor>0-filtered table, and VIPER ran on the positive-only
+        % regulon -- the same input as every other method -- while printing
+        % that it was using the full signed one. TTFGNFULL now carries the
+        % unfiltered table forward for exactly this purpose.
+        if ~isempty(TtfgnFull)
+            T_signed = TtfgnFull;       % full database, both mor signs
         else
-            T_signed = Ttfgn;           % use provided table as-is (both signs)
+            T_signed = Ttfgn;           % caller's table, used as given
+        end
+        if any(T_signed.mor < 0)
+            fprintf(['Using FULL signed regulon: %d activating and ', ...
+                '%d repressing target links.\n'], ...
+                sum(T_signed.mor > 0), sum(T_signed.mor < 0));
+        else
+            warning('sc_tfactivity:noRepressingTargets', ...
+                ['VIPER is defined on a signed regulon, but the table ', ...
+                'supplied carries no mor<0 links, so it reduces to the ', ...
+                'positive-only case.']);
         end
 
         % ---- build signed TF-target matrix (nTF × nGene) ---------------
@@ -356,7 +394,21 @@ switch methodid
         disp('PMID: 33135076 PMCID: PMC8189679 DOI: 10.1093/bioinformatics/btaa947');
         n = size(t, 1);
         v.WRfixed = n;
-        v.W = t.';
+        % The multiplicative beta-divergence updates require W >= 0. A
+        % caller-supplied signed table (SC_PATHWAYACTIVITY forwards one)
+        % otherwise puts negative entries in W, the update ratio can go
+        % negative, H leaves the non-negative orthant and Lambda = W*H can
+        % come back negative -- with no error, no warning, and the result
+        % presented as an activity matrix.
+        tnmf = t;
+        if any(tnmf(:) < 0)
+            warning('sc_tfactivity:negativeWeightsDropped', ...
+                ['NMF requires non-negative weights; %d repressing ', ...
+                'links are clamped to zero. Use method 3 (VIPER) to ', ...
+                'keep them.'], nnz(tnmf < 0));
+            tnmf(tnmf < 0) = 0;
+        end
+        v.W = tnmf.';
         [~, cs] = NMF(X, n, 100, 0, v);
         numtargetgenes = sum(t > 0, 2);
 end

@@ -1,0 +1,23 @@
+Gene genomic coordinates for CNV inference (sc_infercnv, run.ml_SCEVAN).
+
+Files
+    gene_chr_hg19.txt   30238 human genes, GRCh37
+    gene_chr_hg38.txt   29902 human genes, GRCh38
+    gene_chr_mm10.txt   28852 mouse genes, GRCm38
+
+Format: tab separated, no header, four columns
+
+    EnsemblID    Chromosome    Start    Stop
+
+Rows are pre-sorted by chromosome (1..22 human, 1..19 mouse) and then by
+start position, which is the order the CNV moving average expects. Only
+autosomes are included; sex chromosomes and scaffolds were dropped
+upstream because their copy number is confounded by donor sex.
+
+Source: scCancer2 (MIT), inst/txt/gene-chr-*.txt
+    https://github.com/czythu/scCancer
+    Guo et al., Brief Bioinform 2021;22(3):bbaa127
+    Chen et al., Bioinformatics 2024;40(2):btae028
+
+Ensembl IDs are mapped to gene symbols at load time by
+pkg.e_genecoordinates, using assets/Ensembl/Ensembl_<species>_genes.mat.

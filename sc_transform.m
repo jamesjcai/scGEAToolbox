@@ -10,7 +10,7 @@ function [X] = sc_transform(X, varargin)
 %
 % The SCTransform and SCTransformMATLAB options implement the same
 % algorithm; the former calls R/Seurat, the latter is a pure-MATLAB
-% reproduction (see sctransform_v2) that agrees with R to a correlation
+% reproduction (see sc_sctransformv2) that agrees with R to a correlation
 % of ~0.99999 on the Pearson residuals.
 %
 % Example: X = sc_transform(X, 'type', 'PearsonResiduals');
@@ -65,7 +65,7 @@ switch lower(p.Results.type)
     case {'sctransformmatlab', 'sctransformm'}
         % sctransform via the native MATLAB port (no R required).
         % Reproduces sctransform::vst(vst.flavor = "v2") Pearson residuals.
-        X = sctransform_v2(X);
+        X = sc_sctransformv2(X);
         % Genes below the min_cells threshold are returned as NaN rows by
         % the reference algorithm; zero them for a usable dense matrix,
         % matching the PearsonResiduals convention above.

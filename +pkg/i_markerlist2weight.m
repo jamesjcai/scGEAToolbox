@@ -25,6 +25,11 @@ if isempty(indata)
         %     warning(ME.message);
         %     a = sce.g(randperm(length(sce.g)));
         % end
+        % Save and restore the caller's random stream. Seeding the placeholder gene draw is
+        % fine; leaving the session parked on that seed is not -- it then
+        % governs every later tsne, umap and clustering call in the session.
+        rngState = rng();
+        restoreRng = onCleanup(@() rng(rngState));
         rng("shuffle");
         a = sce.g(randperm(length(sce.g)));
         a1 = sprintf('%s,%s,%s,%s', a(1), a(2), a(3), a(4));

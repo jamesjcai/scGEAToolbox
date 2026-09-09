@@ -54,6 +54,16 @@ extprogname = 'py_scimilarity';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
+
+% SCimilarity's align_dataset matches against ca.gene_order, which is
+% upper-case HGNC symbols, so the gene list does have to be upper-cased
+% for the run. But SCE is a handle object shared with the app, so doing it
+% in place renamed every gene in the user's live dataset for the rest of
+% the session -- including on the prepare-input-only path, which reports
+% that it changed nothing. Restore it when this callback returns, by any
+% route; the only change it is meant to leave behind is c_cell_type_tx.
+originalGeneList = sce.g;
+restoreGeneList = onCleanup(@() i_restoregenelist(sce, originalGeneList));
 sce.g = upper(sce.g);
 
 
@@ -93,4 +103,9 @@ else
         numel(unique(string(c))), sce.NumCells);
     gui.myHelpdlg(FigureHandle, msg + gui.i_stashnotice(stashname));
 end
+end
+
+function i_restoregenelist(sce, g)
+% Put back the gene list the callback upper-cased for SCimilarity.
+sce.g = g;
 end

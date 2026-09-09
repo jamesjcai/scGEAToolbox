@@ -13,7 +13,31 @@ if nargin < 2, num_CCs_to_modify = 10; end
 % G = number of genes (also frequency components)
 % numc = number of cells
 
-if issparse(X), X = full(X); end
+wasSparse = issparse(X);
+if wasSparse, X = full(X); end
+
+% XRAW is kept because the back-conversion at the end needs the counts it
+% started from. X used to be overwritten in place by the normalisation
+% below and then handed to CONVERT_TO_RAW_COUNTS as its RAW_ORIG argument,
+% so the "raw counts" it scaled were CP10K values. Measured on Poisson
+% counts with library sizes of 107 to 428, the returned matrix had library
+% sizes of 7940 to 10963 -- the CP10K scale, 20 to 90 times the input --
+% and +gui/callback_GenerateSyntheticCells merges that straight into a real
+% raw-count matrix, so the synthetic cells looked far deeper than the real
+% ones. The commented-out cast at the bottom of this function confirms
+% count-typed output was intended.
+Xraw = X;
+
+% A cell with no counts at all cannot be synthesised from: norm_libsize
+% turns its library size into NaN, so its whole column becomes NaN.
+emptyCell = sum(X, 1) == 0;
+if any(emptyCell)
+    warning('sc_ifft:emptyCells', ...
+        ['%d of %d cell(s) have no counts. Their synthetic counterparts ', ...
+        'are returned as all zeros and they are left out of the ', ...
+        'component-variance estimate.'], nnz(emptyCell), numc);
+end
+
 X = pkg.norm_libsize(X, 1e4);
 Xn = log1p(X);
 
@@ -22,14 +46,43 @@ ft_mtx = fft(Xn, [], 1);
 assert(size(ft_mtx, 2) == numc)
 
 a = abs(ft_mtx);            % amplitudes, G-by-numc
-a = a./vecnorm(a, 2, 2);    % Scaled amplitudes (Equation 20), per freq component across cells
-sigma = var(a, 0, 2);       % variance per freq component across cells, G-by-1
+
+% Equation 20 is Xhat_j[k] = |X_j[k]| / || |X_j[:]| ||_2 -- an L2 norm over
+% the FREQUENCIES of one cell. FT_MTX is G-by-numc with frequencies down
+% the rows, so that norm runs along dimension 1. This was vecnorm(a, 2, 2),
+% which normalises each frequency across cells instead: the columns then
+% had norms of 1.0177 to 1.8029 rather than 1, and the per-component
+% variance fed to A_k came out inflated by a median factor of 16.8, so
+% every synthetic cell was perturbed far more violently than the method
+% specifies. SCGFT_SYNTHESIZE in this repo implements the same equation on
+% a cells-by-genes matrix, where the frequency axis is dimension 2, and
+% takes its norm along that axis (lines 56-60); with the dimension
+% corrected the two agree to 4.4e-16.
+cellNorm = vecnorm(a, 2, 1);
+cellNorm(cellNorm == 0) = 1;    % a cell with no signal keeps its zeros
+a = a./cellNorm;
+
+% OMITNAN because an empty cell's column is NaN, and VAR would otherwise
+% return NaN for every frequency, which propagates through A_k into every
+% cell's spectrum. That is how one empty cell in the selection used to turn
+% all 30 synthetic cells in a 30-cell fixture into all zeros -- and
+% invisibly, since max(0, NaN) is 0 in MATLAB rather than NaN.
+sigma = var(a, 0, 2, 'omitnan');   % variance per frequency across cells
 
 synthesized_data = zeros(G, numc);
 
 valid_k = 1:floor((G-1)/2);
 num_to_mod = min(num_CCs_to_modify, length(valid_k));
-parent_idx = randi([1 numc], numc, 1);
+
+% There is no PARENT_IDX any more. It used to be
+% randi([1 numc], numc, 1), so the cell used to convert a synthetic cell
+% back to counts was picked at random and had nothing to do with the cell
+% whose spectrum had been perturbed: on 30 cells only 3 were converted
+% against their own parent and 13 original cells were never used as a
+% parent at all. Column CN below is synthesised from column CN of FT_MTX,
+% so column CN of XRAW is its parent, and CONVERT_TO_RAW_COUNTS now pairs
+% them by position. SCGFT_SYNTHESIZE records meta.parent(row) = j, the same
+% cell it perturbed.
 
 for cn = 1:numc
     X_modified = ft_mtx(:, cn);     % G-by-1 column for this cell
@@ -55,31 +108,43 @@ for cn = 1:numc
 end
 synthesized_data = max(0, synthesized_data);
 
-Y = convert_to_raw_counts(synthesized_data, X, Xn, parent_idx);
+Y = convert_to_raw_counts(synthesized_data, Xraw, Xn);
 
-% if issparse(X)
-%     Y = sparse(cast(full(Y), 'like', X));
-% else
-%     Y = cast(Y, 'like', X);
-% end
+% Hand the counts back in the caller's storage class. This block was
+% commented out, so a sparse single count matrix came back as dense double:
+% +gui/callback_GenerateSyntheticCells assigns the result into sub_sce.X and
+% merges it with the rest of the dataset, so on a real gene panel that is a
+% large dense block against a sparse one. XRAW rather than X, because X is
+% the normalised matrix by this point -- which is what made the original
+% block wrong as well as inert.
+if wasSparse
+    Y = sparse(cast(Y, 'like', Xraw));
+else
+    Y = cast(Y, 'like', Xraw);
+end
 end
 
 
-function raw_synth = convert_to_raw_counts(synth_norm, raw_orig, norm_orig, parent_idx)
+function raw_synth = convert_to_raw_counts(synth_norm, raw_orig, norm_orig)
 % Convert synthesized normalized data back to raw counts
 % Uses relative change rate between synthesized and original normalized data
-% All matrices are gene-by-cell (G x num_cells)
+% All matrices are gene-by-cell (G x num_cells), and column I of each is the
+% same cell: synthetic cell I is synthesised from original cell I, so they
+% are paired by position rather than through a separate index.
+%
+% The conversion is exact when nothing was modified -- an untouched spectrum
+% gives synth_norm == norm_orig, hence a relative change of 1 and the
+% parent's counts back unchanged -- which is the invariant to hold on to.
 
     num_synth = size(synth_norm, 2);
     num_genes = size(synth_norm, 1);
     raw_synth = zeros(num_genes, num_synth);
 
     for i = 1:num_synth
-        orig_idx = parent_idx(i);
-
-        % Get original normalized and raw values for the parent cell
-        orig_norm = norm_orig(:, orig_idx);   % G-by-1
-        orig_raw  = raw_orig(:, orig_idx);    % G-by-1
+        % Original normalized and raw values for this cell's parent, which
+        % is this same column.
+        orig_norm = norm_orig(:, i);   % G-by-1
+        orig_raw  = raw_orig(:, i);    % G-by-1
 
         % Calculate relative change; avoid division by zero
         orig_norm_safe = orig_norm;

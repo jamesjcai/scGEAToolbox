@@ -3,10 +3,11 @@ function [c] = i_getrandcolormap
 folder = fileparts(mfilename('fullpath'));
 % a = strfind(folder, filesep);
 % folder = extractBefore(folder, a(end)+1);
-wrkpth = fullfile(folder, '..', 'external', 'ml_cbrewer');
-
 if ~(ismcc || isdeployed)
-    addpath(wrkpth);
+    % Every cbrewer call below is evaluated eagerly into CO, so the path
+    % entry is only needed for the duration of this function.
+    cbrewercleanup = pkg.i_addpathtemp( ...
+        fullfile(fileparts(folder), 'external', 'ml_cbrewer'));   %#ok<NASGU>
 end
 n = 10;
 CT = cbrewer('seq', 'Blues', n);

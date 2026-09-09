@@ -708,7 +708,7 @@
 	[
 		{"name":"X", "kind":"required", "type":["numeric"]},
 		{"name":"ndim", "kind":"optional", "type":["numeric","choices={2,3}"]},
-		{"name":"vnum", "kind":"optional", "type":["numeric","scalar"]}
+		{"name":"nneighbors", "kind":"optional", "type":["numeric","scalar"]}
 	]
 },
 "run.ml_PHATE":

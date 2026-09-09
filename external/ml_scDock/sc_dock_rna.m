@@ -40,7 +40,7 @@ function result = sc_dock_rna(X, g, varargin)
 %
 % DEPENDENCIES (scGEAToolbox_dev):
 %   sc_qcfilter, sc_norm, sc_hvg, pkg.e_randPCA,
-%   run.ml_Harmony2, sc_umap, sc_cluster_s, sc_celltypeanno
+%   run.ml_Harmony, sc_umap, sc_cluster_s, sc_celltypeanno
 %
 % See also: SC_DOCK_CCC, SC_DOCK_VINA, SC_DOCK
 
@@ -143,7 +143,7 @@ pca_scores = pca_scores(:, 1:n_pcs);
 % -------------------------------------------------------------------------
 if ~isempty(batch_id) && strcmp(opt.batch_method, 'harmony')
     fprintf('[sc_dock_rna] Step 5/7: Harmony batch correction...\n');
-    pca_scores = run.ml_Harmony2(pca_scores, batch_id);
+    pca_scores = run.ml_Harmony(pca_scores, batch_id);
 else
     fprintf('[sc_dock_rna] Step 5/7: Skipping batch correction.\n');
 end

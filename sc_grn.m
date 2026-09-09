@@ -25,6 +25,11 @@ function A = sc_grn(X, type, varargin)
 %   'tn' is panel-scale (restrict X to a curated module, <= ~20 genes).
 %   See ten.tngrn for the full edge table and virtual-knockout options.
 %
+%   X is expected to be already normalised and transformed, as it is on
+%   both in-tree paths: +gui/callback_BuildGeneNetwork runs gui.i_transformx
+%   first, and +cli/cmd_grn normalises before calling. No branch normalises
+%   for you.
+%
 %   All methods except 'tn' are implemented in the +net/ package.
 %   See also: net.pcrnet, net.genie3, net.xicornet, net.grnformer, ten.tngrn
 
@@ -53,7 +58,15 @@ switch type
     case "pcrnet_denoised"
         A = net.pcrnet_denoised(X);
     case "genie3"
-        A = net.genie3(X, [], true);
+        % donorm = false. This passed TRUE, so this one branch out of ten
+        % ran sc_norm(X, 'type', 'libsize') on its input while the other
+        % nine took X as supplied. Callers hand over data they have
+        % already normalised and transformed -- +gui/callback_BuildGeneNetwork
+        % runs gui.i_transformx before calling, and +cli/cmd_grn normalises
+        % up front -- so this library-size-normalised an already log1p'd
+        % matrix, which is not a meaningful operation on either scale, and
+        % it did so only when the user picked GENIE3 from the menu.
+        A = net.genie3(X, [], false);
     case "pearson"
         A = net.pearsonnet(X);
     case "xicor"

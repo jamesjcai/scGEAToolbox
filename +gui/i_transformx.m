@@ -41,8 +41,15 @@ listitems = {'(a): Library Size Normalization', ...
 '(j): SCTransform (R/Seurat, vst v2)', ...
 '(k): SCTransform (native MATLAB)'};
 if gui.i_isuifig(parentfig)
+    % ALLOWMULTI false. It defaults to true in GUI.MYLISTDLG, so this
+    % branch let the user pick several methods while the LISTDLG branch
+    % below passes 'SelectionMode', 'single'. The switch beneath can only
+    % honour one: MATLAB compares a switch expression to each case with
+    % ISEQUAL, so a two-element INDX matches nothing, no branch runs, and X
+    % comes back untransformed with no indication that the selection was
+    % ignored.
     [indx, tf] = gui.myListdlg(parentfig, listitems, ...
-        'Select Method', listitems(methodid));
+        'Select Method', listitems(methodid), false);
 else
     [indx, tf] = listdlg('PromptString', {'Select Method'}, ...
         'SelectionMode', 'single', ...
@@ -77,6 +84,11 @@ if tf == 1
                 X = sc_transform(X, 'type', 'SCTransform');
             case 11
                 X = sc_transform(X, 'type', 'SCTransformMATLAB');
+            otherwise
+                gui.myWaitbar(parentfig, fw);
+                error('gui:i_transformx:unknownMethod', ...
+                    ['Method index %s does not name one of the %d ', ...
+                    'transforms.'], mat2str(indx), numel(listitems));
         end
     catch ME
         gui.myWaitbar(parentfig, fw);
@@ -84,6 +96,16 @@ if tf == 1
         rethrow(ME)
     end
     gui.myWaitbar(parentfig, fw);
+else
+    % Cancelled. X = [] is how this function signals that, and it is what
+    % every caller tests: callback_CompareGeneNetwork:29,
+    % callback_BuildGeneNetwork:25 and callback_Dotplot:18 all do
+    % `if isempty(Xt), return; end`. There was no else here at all, so a
+    % cancelled method dialog returned X exactly as passed in -- raw
+    % untransformed counts -- and the analysis ran on them as though the
+    % user had chosen a transform. The first dialog in this function
+    % already sets X = [] on Cancel; this is the same contract.
+    X = [];
 end
 
 end

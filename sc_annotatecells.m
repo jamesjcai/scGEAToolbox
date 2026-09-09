@@ -81,7 +81,8 @@ arguments
     sce (1,1) SingleCellExperiment
     options.Method (1,1) string {mustBeMember(options.Method, ...
         ["markers", "llm", "scimilarity", "panhumanpy", "consensus"])} = "markers"
-    options.Methods (1,:) string = ["markers", "llm"]
+    options.Methods (1,:) string {mustBeMember(options.Methods, ...
+        ["markers", "llm", "scimilarity", "panhumanpy"])} = ["markers", "llm"]
     options.Species (1,1) string = "human"
     options.Tissue (1,1) string = ""
     options.ModelDir (1,1) string = ""
@@ -138,9 +139,11 @@ end
 % =========================================================================
 function [labels, T] = i_runone(sce, method, options)
 % One method, normalised to per-cell labels plus the common table.
-labels = strings(0, 1);
-T = i_emptytable();
-
+%
+% There are no LABELS/T defaults before the switch any more: every case
+% assigns both and the OTHERWISE errors, so the defaults were only ever
+% reachable by an unrecognised method name -- which is exactly the silent
+% empty result that made a broken consensus look unanimous.
 switch method
     case "markers"
         i_requireclusters(sce, method);
@@ -174,6 +177,13 @@ switch method
         wk = i_workdir(options.WorkDir);
         labels = string(run.py_panhumanpy(sce, wk, true));
         T = i_celltable(method, labels);
+    otherwise
+        % LABELS used to be preset empty above and this switch had no
+        % OTHERWISE, so an unrecognised name returned no labels, which
+        % i_consensus read as a method that had declined to answer.
+        error('sc_annotatecells:UnknownMethod', ...
+            ['Unknown method "%s". Use "markers", "llm", "scimilarity" ', ...
+            'or "panhumanpy".'], method);
 end
 
 if ~isempty(labels) && numel(labels) ~= sce.NumCells
@@ -205,6 +215,15 @@ for m = 1:numel(options.Methods)
     end
     [lab, ~] = i_runone(sce, options.Methods(m), options);
     if isempty(lab)
+        % Not silently. The per-cell backends return empty on failure
+        % rather than raising -- run.py_panhumanpy and run.py_scimilarity
+        % both preset celltypes = [] and only fill it when the Python side
+        % exits cleanly -- so without this the caller cannot tell a
+        % unanimous two-method consensus from one method that never ran.
+        warning('sc_annotatecells:methodProducedNoLabels', ...
+            ['Method "%s" returned no labels, so it casts no vote. The ', ...
+            'Confidence column counts it as a method that did not ', ...
+            'agree.'], options.Methods(m));
         votes(:, m) = "";
         continue
     end
@@ -265,18 +284,26 @@ function [best, conf] = i_agree(v)
 %
 % Its "no answers" sentinel is "Unknown"; the toolbox's word for an unlabelled
 % cell is "undetermined", so that one value is translated.
+%
+% The denominator is the number of methods ASKED FOR, which is numel(v).
+% LLM.I_VOTELABELS strips blank answers before dividing -- right for
+% repeated model answers, where a blank reply is not a vote to count against
+% anything -- but here a blank means one of the requested methods produced
+% nothing at all. Dividing by the methods that answered made a
+% single-answer consensus look unanimous: with Methods of two, one of them
+% silently returning empty gave Confidence 1.00, where the help says 1.00
+% is agreement and 0.50 is outright disagreement, and describes the column
+% as the "share of methods agreeing".
+nRequested = numel(v);
 [best, conf, n] = llm.i_votelabels(v);
 if n == 0
     best = "undetermined";
+elseif n < nRequested
+    % conf is topCount/n; rescale to topCount/nRequested.
+    conf = conf*n/nRequested;
 end
 end
 
-
-function T = i_emptytable()
-T = table('Size', [0, 5], ...
-    'VariableTypes', {'string', 'string', 'string', 'double', 'double'}, ...
-    'VariableNames', {'Method', 'Cluster', 'CellType', 'NumCells', 'Confidence'});
-end
 
 
 function T = i_clustertable(method, cL, cLtx, c, conf)

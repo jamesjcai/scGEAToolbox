@@ -1,5 +1,19 @@
 function [t] = ml_TSCAN(X, varargin)
-% TSCAN - pseudotime analysis
+%ML_TSCAN  Pseudotime ordering by TSCAN (Ji & Ji, NAR 2016).
+%
+%   t = RUN.ML_TSCAN(X) returns the pseudotime of every cell, scaled to
+%   [0, 1] along the main path of the minimum spanning tree over cluster
+%   centres. X is genes-by-cells. Cells in clusters that do not lie on that
+%   path get NaN: the method orders cells along one backbone, and a cell on
+%   a side branch has no position on it.
+%
+%   T IS INDEXED BY CELL, matching PKG.I_PSEUDOTIME_BY_SPLINEFIT, the other
+%   method SC_TRAJECTORY offers. It used to return the output of
+%   [~, t] = sortrows(...), which is a sort index -- "which cell comes
+%   k-th" -- not "cell k's pseudotime". CLI.CMD_TRAJECTORY writes that
+%   column straight into a table beside the cell ids and stores it as the
+%   'pseudotime' cell attribute, so every cell was being labelled with an
+%   unrelated cell's index.
 
 % ref: https://academic.oup.com/nar/article/44/13/e117/2457590
 % load example_data\example10xdata.mat
@@ -29,7 +43,12 @@ if do_geneculst
     % will be used for subsequent MST construction.
     n = round(0.05*size(X, 1));
     Y = pdist(X);
-    Z = linkage(Y);
+    % 'complete' is what the paragraph above specifies and what TSCAN uses.
+    % LINKAGE with no method is SINGLE linkage, which chains: it produces
+    % one giant gene cluster plus a spray of singletons, so the averaging
+    % below collapses most of the data into a single near-meaningless row
+    % and the PCA that follows runs on the leftovers.
+    Z = linkage(Y, 'complete');
     clu = cluster(Z, 'maxclust', n);
     % X = grpstats(X, clu, @(x) mean(x, 1));
     X = splitapply(@(x) mean(x, 1), X, clu);
@@ -59,27 +78,13 @@ end
 % res <- suppressWarnings(Mclust(pcareduceres, G = clusternum, modelNames = modelNames)
 % https://www.mathworks.com/help/stats/clustering-using-gaussian-mixture-models.html
 
-warning off
-vaic = zeros(1, 8);
-% vbic=zeros(1,8);
-rng(271)
-for k = 1:8
-    try
-        % gm=fitgmdist(X,k+1,'CovarianceType','full');
-        gm = fitgmdist(X, k+1, 'RegularizationValue', 0.1);
-        % vbic(k)=gm.BIC;
-        vaic(k) = gm.AIC;
-    catch
-        % vbic(k)=nan;
-        vaic(k) = nan;
-    end
-end
-[~, idx1] = min(vaic);
-% [~,idx2]=min(vbic);
-% clunum=min([idx1 idx1])+1;
-clunum = idx1 + 1;
-% clunum=fun_num_cluster(X');
-warning on
+% RNG(271) is global state: leaving it set changes every later random draw
+% in the session. ONCLEANUP puts the caller's stream back, including if
+% anything below throws.
+rngState = rng(271);
+restoreRng = onCleanup(@() rng(rngState));
+
+clunum = i_selectclunum(X);
 
 
 % Use the same regularization as the AIC selection loop above; refitting
@@ -102,30 +107,67 @@ D = distances(T);
 clupath = shortestpath(T, i(1), j(1));
 
 %%
-clupath = [clupath, clupath(1)];
+% Order the cells of each cluster on the path along the direction the path
+% travels through that cluster.
+%
+% The path used to be closed back to its own start, clupath(end+1) =
+% clupath(1), so that the loop -- which reads clupath(k) and clupath(k+1)
+% -- would give the terminal cluster a turn as k. It did, but with
+% clupath(k+1) then being the ROOT, so the direction vector for that
+% cluster pointed back down the trajectory and every cell in the final
+% stretch came out in reverse. The terminal cluster now takes its direction
+% from its predecessor, which is the same forward direction.
+numSeg = numel(clupath);
 tt = nan(size(X, 1), 2);
-for k = 1:length(clupath) - 1
+for k = 1:numSeg
     i = clupath(k);
-    j = clupath(k+1);
+    if k < numSeg
+        difvec = clucenter(clupath(k+1), 1:3) - clucenter(i, 1:3);
+    else
+        difvec = clucenter(i, 1:3) - clucenter(clupath(k-1), 1:3);
+    end
+
     idx = clusterid == i;
+    if ~any(idx), continue; end
 
-    c1 = clucenter(i, 1:3);
-    c2 = clucenter(j, 1:3);
-
-    x1 = X(idx, 1:3);
-    tt(idx, 1) = k;
-
-    difvec = c2 - c1;
     difv = difvec / norm(difvec);
-    [~, idxv] = sort(difv*x1');
-    tt(idx, 2) = idxv;
+    projection = difv*X(idx, 1:3).';
 
-    %     x1=x1(idx,:);
-    %     for k=1:size(x1,1)
-    %         text(x1(k,1),x1(k,2),sprintf('%d',k));
-    %     end
+    % The rank of each cell, not the sort index. SORT returns idxv with
+    % idxv(r) = the cell of rank r; assigning that straight back labels
+    % each cell with the identity of a different one -- the inverse
+    % permutation. For projections [0.5 0.1 0.9 0.3] the old line stored
+    % [2 4 1 3] where the ranks are [3 1 4 2].
+    [~, ord] = sort(projection);
+    withinRank = zeros(size(ord));
+    withinRank(ord) = 1:numel(ord);
+
+    tt(idx, 1) = k;
+    tt(idx, 2) = withinRank;
 end
-[~, t] = sortrows(tt, [1, 2]);
+
+% Cells in clusters off the main path have no position on it. They used to
+% keep the NaN they were preallocated with and then be swept to the end by
+% SORTROWS, which put them at the highest pseudotime of all rather than
+% reporting them as unplaced -- so a user looking for late-trajectory genes
+% got the side branch.
+onPath = ~isnan(tt(:, 1));
+if ~all(onPath)
+    warning('ml_TSCAN:cellsOffMainPath', ...
+        ['%d of %d cells lie in clusters off the main path and have no ', ...
+        'pseudotime; they are returned as NaN.'], ...
+        nnz(~onPath), numel(onPath));
+end
+
+t = nan(size(X, 1), 1);
+placed = find(onPath);
+[~, order] = sortrows(tt(placed, :), [1, 2]);
+ordered = placed(order);
+if numel(ordered) > 1
+    t(ordered) = (0:numel(ordered)-1).'/(numel(ordered) - 1);
+elseif isscalar(ordered)
+    t(ordered) = 0;
+end
 
 if plotit
     subplot(2, 2, 2)
@@ -152,6 +194,33 @@ if plotit
     title('Cell clusters')
 end
 
+end
+
+
+function clunum = i_selectclunum(X)
+% Choose the number of mixture components by AIC over 2..9.
+%
+% Fitting eight mixtures produces a stream of convergence warnings that are
+% expected and that the caller cannot act on, so they are silenced -- but
+% only around this sweep. The original silenced them with a bare
+% "warning off" in the main body and re-enabled with "warning on", which
+% both left them off if anything in between threw, and would have swallowed
+% the off-main-path warning further down. ONCLEANUP restores the caller's
+% exact warning state on every path out.
+warnState = warning('off', 'all');
+restoreWarn = onCleanup(@() warning(warnState));
+
+vaic = zeros(1, 8);
+for k = 1:8
+    try
+        gm = fitgmdist(X, k+1, 'RegularizationValue', 0.1);
+        vaic(k) = gm.AIC;
+    catch
+        vaic(k) = nan;
+    end
+end
+[~, idx1] = min(vaic);
+clunum = idx1 + 1;
 end
 
 %{

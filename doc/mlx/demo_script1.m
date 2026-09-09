@@ -43,6 +43,8 @@ Yo=run.ml_MAGIC(Y);
 figure; imagesc([Xo(1:100,1:500) Yo(1:100,1:500)]); title('MAGIC Imputated'); colorbar; xline(500,'y-');
 %% Show HCP normalized data
 
+% run.ml_HCP has been retired to unused/+run: it addpath'd external/ml_HCP,
+% which is not in the repository, so the call errored on the first line.
 %[Xm,Ym]=run.ml_HCP(X,Y);
 %figure; imagesc([Xm(1:100,1:500) Ym(1:100,1:500)]); title('HCP Normalized'); colorbar; xline(500,'y-');
 %% Show data with ComBat batch correction

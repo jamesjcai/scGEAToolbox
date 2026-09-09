@@ -46,7 +46,13 @@ function camera3dmp4(~, ~)
             b1 = sprintf('%s_%s', prefix, b1);
             fname = fullfile(a1, b1);
         end
-        warning off
+        % Capture and restore rather than a bare off/on pair: the pair leaves
+        % warnings disabled for the rest of the session if anything between the
+        % two lines throws, and its 'on' re-enables warnings the caller may have
+        % silenced deliberately instead of restoring what they had.
+        warnState = warning();
+        restoreWarn = onCleanup(@() warning(warnState));
+        warning('off', 'all');
 
         if flatview
             ax = [-20, 50; -110, 65; -190, 80; -290, 60; -380, 40];
@@ -59,7 +65,6 @@ function camera3dmp4(~, ~)
             % video export is optional; restore view and continue if codec missing
         end
         view(caz,cel);
-        warning on
         pause(1);
         winopen(tempdir);
         pause(1);

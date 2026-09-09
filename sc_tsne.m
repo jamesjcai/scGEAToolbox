@@ -15,10 +15,6 @@ if nargin < 4, dolog1p = true; end
 % if nargin<5, bygene=false; end   % when BYGENE=true, the matrix X will be transposed and the output will be tSNE for genes rather than cells.
 % if nargin<6, genelist=[]; end
 
-pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, 'external', 'ml_PHATE');
-if ~(ismcc || isdeployed), addpath(pth); end
-
 % if bygene, X=X.'; end
 if donorm
     X = sc_norm(X);

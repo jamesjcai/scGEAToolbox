@@ -21,9 +21,11 @@ if nargin < 4, bygene = false; end
 if nargin < 5, genelist = []; end
 
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'external', 'ml_PHATE');
 if ~(ismcc || isdeployed)
-    addpath(pth);
+    % phate and its helpers (svdpca, randPCA, knee_pt, ...) come off the
+    % path again when this function returns.
+    phatecleanup = pkg.i_addpathtemp( ...
+        fullfile(fileparts(pw1), 'external', 'ml_PHATE'));   %#ok<NASGU>
 end
 % gene_names=cellstr(gl123);
 % PHATE on data (rows: samples, columns: features)
@@ -45,6 +47,17 @@ data = data';
 % data = log(data+1);
 data = sqrt(data);
 
+
+% The bundled external/ml_PHATE/randPCA.m does a bare "warning off" at
+% line 103 with nothing to undo it, so one PHATE run left warnings
+% disabled for the rest of the MATLAB session -- silencing every later
+% warning the user relies on. The same defect in external/ml_SinNLRR was
+% fixed this way in 0827873 and in external/ml_MAGIC alongside this
+% change; +pkg/e_randPCA.m, the in-toolbox copy of that very file, has the
+% offending line commented out already. Restoring here rather than editing
+% the third-party file keeps the fix in code we own.
+warnState = warning();
+restoreWarn = onCleanup(@() warning(warnState));
 
 s = phate(data, 't', 20, 'ndim', ndim, 'k', 10, 'npca', min([100, size(X,2)]));
 % s = phate(data, 'ndim', ndim);

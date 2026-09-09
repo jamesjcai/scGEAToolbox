@@ -50,11 +50,16 @@ switch answer
         end
         if isequal(fname, 0), return; end
         tabfile = fullfile(pathname, fname);
-        warning off
+        % Capture and restore rather than a bare off/on pair: the pair leaves
+        % warnings disabled for the rest of the session if anything between the
+        % two lines throws, and its 'on' re-enables warnings the caller may have
+        % silenced deliberately instead of restoring what they had.
+        warnState = warning();
+        restoreWarn = onCleanup(@() warning(warnState));
+        warning('off', 'all');
         fw = gui.myWaitbar(FigureHandle);
         tab = readtable(tabfile,'FileType','text', ...
             'Delimiter','\t','ReadVariableNames',false);
-        warning on
     otherwise
         return;
 end

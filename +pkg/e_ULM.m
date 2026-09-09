@@ -86,8 +86,17 @@ for regIdx = 1:nRegulators
 
     targets = regulons(regIdx).targets;
 
-    % Remove invalid targets
-    targets = targets(targets >= 1 & targets <= nGenes);
+    % Remove invalid targets. The mask is kept, because the weight vector
+    % has to be subset by the same mask a few lines below. That used to be
+    % done by position instead -- weights = weights(1:length(targets)) --
+    % which only made the two lengths agree: every target surviving after a
+    % dropped one was scored with its neighbour's weight, and the weight of
+    % the last kept target was thrown away. With signed MOR weights (which
+    % SC_PATHWAYACTIVITY supplies, see the comment further down) one stale
+    % index was enough to invert the sign of a whole regulon's activity.
+    % LOADREGULONSFROMTABLE at the bottom of this file already masks both.
+    keepTarget = targets >= 1 & targets <= nGenes;
+    targets = targets(keepTarget);
 
     % Check minimum targets requirement
     if length(targets) < p.Results.minTargets
@@ -103,8 +112,18 @@ for regIdx = 1:nRegulators
 
     % Get weights if available
     if isfield(regulons, 'weights') && ~isempty(regulons(regIdx).weights)
-        weights = regulons(regIdx).weights;
-        weights = weights(1:length(targets)); % Ensure same length as targets
+        weights = regulons(regIdx).weights(:);
+        if numel(weights) == numel(keepTarget)
+            % One weight per supplied target: drop the same ones.
+            weights = weights(keepTarget);
+        elseif numel(weights) ~= numel(targets)
+            % Neither the supplied nor the surviving count. Say so rather
+            % than truncate to length and score the wrong pairs.
+            error('pkg:e_ULM:weightLengthMismatch', ...
+                ['Regulator %s supplies %d weights for %d targets. Give ', ...
+                'one weight per target so the two stay in correspondence.'], ...
+                regulatorNames{regIdx}, numel(weights), numel(keepTarget));
+        end
     else
         weights = ones(length(targets), 1);
     end
@@ -165,8 +184,16 @@ function [activityScores, pValues] = fitULM(targetExpression, weights)
 
 [nTargets, nSamples] = size(targetExpression);
 
-% Normalize weights
-weights = weights / sum(weights);
+% Normalize weights by the L1 norm, not by the signed sum. For a regulon
+% carrying both activating and repressing targets sum(weights) can be
+% small, zero or negative, which rescales the activity arbitrarily, flips
+% its sign, or makes it Inf/NaN. SC_TFACTIVITY reaches this with signed
+% weights whenever the caller supplies a table containing mor < 0, which
+% is exactly what SC_PATHWAYACTIVITY does.
+wsum = sum(abs(weights));
+if wsum > 0
+    weights = weights / wsum;
+end
 weights = weights(:); % Ensure column vector
 
 activityScores = zeros(1, nSamples);

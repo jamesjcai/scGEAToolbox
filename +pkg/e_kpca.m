@@ -1,5 +1,19 @@
 function [coeff, score, latent] = e_kpca(X, k, sgm, isds)
-
+%E_KPCA  Kernel PCA.
+%
+%   [coeff, score, latent] = PKG.E_KPCA(X, k, sgm, isds)
+%
+%   SCORE is the embedding of X -- that is the output to plot or to feed to
+%   another method. COEFF holds the projection coefficients, for mapping
+%   NEW data into the same space, and LATENT the eigenvalues.
+%
+%   COEFF IS NOT AN EMBEDDING. EIGS returns eigenvectors with unit-norm
+%   columns, and SCORE = Kc*coeff = coeff*latent, so coeff(:, j) is
+%   score(:, j) divided by its own eigenvalue: taking coeff gives every
+%   component equal weight and discards the spectrum. RUN.ML_METAVIZ took
+%   output 1 at three call sites and stored it as an embedding, which is
+%   the same mistake PKG.E_RANDMDS made by dropping its singular values.
+%
 % how to use coeff of kpca:
 % 	[coeff] = pkg.e_kpca(XTaining);
 %   Ktest = constructKernel(XTest)

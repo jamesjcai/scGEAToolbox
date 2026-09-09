@@ -1,13 +1,13 @@
 function [T] = r_DESeq2(X, Y, genelist, wkdir)
 
-if nargin < 4, wkdir = tempdir; end
+if nargin < 4, wkdir = pkg.i_tempdirfile(); end
 if nargin < 3, genelist = (1:size(X, 1))'; end
 T = [];
 isdebug = false;
 oldpth = pwd();
 cleanupObj = onCleanup(@() cd(oldpth));
 [isok, msg, codepth] = commoncheck_R('R_DESeq2');
-if ~isok, error(msg); end
+if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 if issparse(X), X = full(X); end
@@ -22,7 +22,8 @@ pct_2 = sum(Y > 0, 2) ./ size(Y, 2);
 %    pct_1, pct_2, p_val_adj);
 
 tmpfilelist = {'input.mat', 'output.csv'};
-if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
+pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
+% run cannot leave a previous run's output to be picked up as this one's
 
 if issparse(X), X = full(X); end
 if issparse(Y), Y = full(Y); end
@@ -36,7 +37,11 @@ end
 codefullpath = fullfile(codepth,'script.R');
 pkg.i_runrcode(codefullpath, Rpath);
 
-if ~exist('output.csv', 'file'), return; end
+if ~exist('output.csv', 'file')
+    error('run.r_DESeq2:noOutput', ...
+        ['R finished but did not write output.csv to %s. The R console ', ...
+         'output above should say why.'], pwd);
+end
 T = readtable('output.csv', 'TreatAsMissing', 'NA', ...
     'VariableNamingRule', 'modify');
 T.Var1 = genelist(T.Var1);

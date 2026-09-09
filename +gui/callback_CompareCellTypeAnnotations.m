@@ -62,7 +62,17 @@ function in_plotpanels(sce, names, labels, parentfig)
 % collides. Past in_maxlegendtypes() types a legend is taller than the panel,
 % so it is dropped and the type count in the title carries what is left.
 
-if size(sce.s, 1) ~= sce.NumCells || size(sce.s, 2) < 2
+% PKG.E_HASEMBEDDING first. The shape tests alone could not fire: the
+% SingleCellExperiment constructor fills S with randn(nCells, 3) when the
+% caller supplies none, so size(sce.s, 1) == sce.NumCells and
+% size(sce.s, 2) == 3 hold on an object that has never been embedded. This
+% view then drew one panel per annotation over random Gaussian
+% coordinates, under the heading "One embedding panel per annotation",
+% while the warning it had ready -- "The cells have no 2-D embedding to
+% plot on" -- went unshown. The shape tests are kept as a guard against a
+% malformed S.
+if ~pkg.e_hasembedding(sce) || size(sce.s, 1) ~= sce.NumCells || ...
+        size(sce.s, 2) < 2
     gui.myWarndlg(parentfig, ['The cells have no 2-D embedding to plot on. ', ...
         'Run an embedding first, or use the table view.']);
     return;

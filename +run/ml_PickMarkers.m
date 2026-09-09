@@ -3,13 +3,19 @@ function [gene_idxv, T] = ml_PickMarkers(X, genelist, c, topn, plotit)
 
 % This is a support function for SC_PICKMARKERS
 
+% It scores each gene by sum_j |mean_i - mean_j| over the group means of
+% the matrix it is handed, and ranks within a group on that alone. That
+% is an absolute difference in whatever units X carries, so X must
+% already be normalised and variance-stabilised or the ranking follows
+% abundance and sequencing depth rather than specificity. SC_PICKMARKERS
+% does log1p(sc_norm(X)) before calling; a direct caller must too.
+
 if nargin < 5, plotit = false; end
 if nargin < 4, topn = 10; end
 
 %% new data visualization
 numC = length(unique(c));
 % gene_idxv = [];
-cluster_order = [];
 
 [No_gene] = size(X, 1);
 % calculat mean of gene expression
@@ -17,15 +23,34 @@ cluster_order = [];
 gene_DE_score = zeros(No_gene, numC);
 
 % gene_value_idx = zeros(No_gene,1);
+cluster_order = zeros(numel(c), 1);
+pos = 1;
 for i = 1:numC
     % gene_mean(:,i) = mean(X(:,c==i),2);
-    cluster_order = [cluster_order; find(c == i)];
+    idx = find(c == i);
+    cluster_order(pos:pos+numel(idx)-1) = idx;
+    pos = pos + numel(idx);
 end
+cluster_order = cluster_order(1:pos-1);
 if issparse(X)
     X = full(X);
 end
 % gene_mean = grpstats(X', c, @mean)';
-gene_mean = splitapply(@mean, X', c)';
+% MEAN(x, 1), not MEAN(x). SPLITAPPLY hands the function the rows of X'
+% belonging to one group, and bare MEAN reduces along the first
+% non-singleton dimension -- so a group of one cell arrives as a
+% 1-by-nGenes row and comes back as a scalar, the mean of that cell
+% across all genes. SPLITAPPLY then cannot concatenate a 1-by-1 with the
+% 1-by-nGenes results of the other groups and throws
+% MATLAB:catenate:dimensionMismatch. One-cell clusters are routine for
+% graph and dbscan clustering, and for --label-by celltype where a type
+% has a single cell. The grpstats line this replaced did not have the
+% problem.
+%
+% The silent variant is worse: if *every* group is a singleton, nothing
+% throws here at all -- gene_mean comes back 1-by-numC instead of
+% nGenes-by-numC, and the shapes only collide further down.
+gene_mean = splitapply(@(x) mean(x, 1), X', c)';
 
 [~, gene_value_idx] = max(gene_mean, [], 2);
 
@@ -37,8 +62,6 @@ end
 
 %%
 % topn markers for each cluster based on DE score
-gclusters = [];
-gscore = [];
 gene_idxv = nan(numC*topn, 1);
 gclusters = nan(numC*topn, 1);
 gscore = nan(numC*topn, 1);
@@ -103,9 +126,9 @@ if plotit
             lgd{i} = vv;
         end
     end
-    No_cells_inC = [];
+    No_cells_inC = zeros(numC, 1);
     for i = 1:numC
-        No_cells_inC = [No_cells_inC; length(find(c == i))];
+        No_cells_inC(i) = sum(c == i);
     end
     xtkval = cumsum(No_cells_inC);
     xtkval1 = zeros(size(xtkval));

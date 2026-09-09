@@ -7,9 +7,6 @@ pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1,  '..', 'external', 'fun_MPPC');
 if ~(ismcc || isdeployed), addpath(pth); end
 
-pth = fullfile(pw1,  '..', 'external', 'ml_umap45');
-if ~(ismcc || isdeployed), addpath(pth); end
-
 n = size(s, 1);
 mass = 1 / n * ones(1, n);
 y0 = [];
@@ -34,11 +31,16 @@ normalize_data = 1;
 pause_bool = 0;
 
 % tic;
-warning off
+% Capture and restore rather than a bare off/on pair: the pair leaves
+% warnings disabled for the rest of the session if anything between the
+% two lines throws, and its 'on' re-enables warnings the caller may have
+% silenced deliberately instead of restoring what they had.
+warnState = warning();
+restoreWarn = onCleanup(@() warning(warnState));
+warning('off', 'all');
 [yfinal, ~, I, ~] = mppc(y0, cut_indices0, s, mass, lambda1, lambda2, tol, rho, ...
 max_m, max_avg_turn, normalize_data, pause_bool, false);
 % toc;
-warning on
 
 
 t = (I + randn(size(I)))';

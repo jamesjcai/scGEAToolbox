@@ -99,7 +99,16 @@ end
 Q = qtm.mpsqmi(mps, d);                          % [N x N] bits
 
 if opts.EdgesOnly
-    A = Q; Tedges = table(); return
+    % Back to input gene order. Q is indexed by chain position, because
+    % step 2 permuted the gene columns with ORDIDX so that correlated
+    % genes sit adjacent on the 1-D MPS. A caller holding the gene list it
+    % passed in has no way to know that, and every one of them matches A
+    % to that list by position -- sc_grn -> sc_grnview(A, glist) in
+    % +gui/callback_BuildGeneNetwork.m:41, for instance -- so returning
+    % chain order labelled every edge with the wrong pair of genes.
+    A = i_toinputorder(Q, ordidx);
+    Tedges = table();
+    return
 end
 
 % ---- 5. empirical permutation null -------------------------------------
@@ -113,6 +122,11 @@ A   = zeros(N);
 A(sig) = Q(sig) .* sgn(sig);
 A = (A + A.') / 2;                               % symmetric (direction needs clamping)
 
+% Chain order -> input gene order, as above. TEDGES below is built before
+% this and carries GENES(si), i.e. the permuted names, so its rows were
+% always labelled correctly; only A was not.
+A = i_toinputorder(A, ordidx);
+
 [si, ti] = find(triu(sig, 1));
 lin = sub2ind([N N], si, ti);
 Tedges = table(genes(si), genes(ti), Q(lin), pR(lin), pL(lin), sgn(lin), ...
@@ -123,6 +137,16 @@ end % tngrn
 % ========================================================================
 % Local helpers
 % ========================================================================
+
+function Ain = i_toinputorder(Achain, ordidx)
+% Undo the MPS chain permutation on a square adjacency.
+%
+%   Row/column k of ACHAIN is gene ORDIDX(k) of the input, so gene
+%   ORDIDX(k) of the output has to take row/column k of the input, which is
+%   what indexed assignment on both subscripts does.
+Ain = zeros(size(Achain), 'like', Achain);
+Ain(ordidx, ordidx) = Achain;
+end
 
 function V = i_discretize(X, d, method)
 % Per-gene discretization to codes 1..d. GMM branch mirrors Sanz Larrarte:

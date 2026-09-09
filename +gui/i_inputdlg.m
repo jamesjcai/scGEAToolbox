@@ -13,8 +13,18 @@ gui.i_inputdlg('prompt', 'dlgtitle', 'definput', f)
      dialogHeight = 100 + 90; % Adjust height based on the number of inputs
 
     pos = gui.i_centerdlgpos(parentfig, [dialogWidth, dialogHeight]);
+    % WindowStyle='modal' is intentionally omitted: deleting a modal uifigure
+    % hands focus back to the MATLAB desktop rather than to parentfig, which
+    % drops the caller's window behind other windows and makes it look as if
+    % the main figure vanished.  uiwait(fig) below still blocks the calling
+    % code, so the dialog is functionally modal.  Same reasoning as in
+    % gui.myListdlg.
     fig = uifigure('Position', pos, ...
-        'WindowStyle', 'modal', 'Visible', 'off', Name="", Icon="");
+        'Visible', 'off', Name="", Icon="");
+    % Route the window's X button through cancelFcn so the dialog is never
+    % closed by the default closereq, which falls back to close('force') --
+    % and closes every open figure -- whenever gcbf is empty.
+    fig.CloseRequestFcn = @(~,~) cancelFcn();
 
 if ~isMATLABReleaseOlderThan("R2025a")
         try
@@ -62,6 +72,10 @@ if pkg.i_isvalid(fig) % If the dialog was not closed by user
 else
     answer = {};
 end
+
+% Bring the caller's window back up: closing a dialog leaves the focus with
+% whichever window Windows picks next, which is often not parentfig.
+gui.i_raisefig(parentfig);
 
 function cancelFcn()
         uiresume(fig);

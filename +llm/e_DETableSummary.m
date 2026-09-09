@@ -29,7 +29,13 @@ if ~isfolder(wrkdir)
 end
 
 
-warning off
+% Capture and restore rather than a bare off/on pair: the pair leaves
+% warnings disabled for the rest of the session if anything between the
+% two lines throws, and its 'on' re-enables warnings the caller may have
+% silenced deliberately instead of restoring what they had.
+warnState = warning();
+restoreWarn = onCleanup(@() warning(warnState));
+warning('off', 'all');
 s_up = '';
 s_dn = '';
 if ~isempty(TbpUpEnrichr) || ~isempty(TmfUpEnrichr)
@@ -66,7 +72,6 @@ if ~isempty(TbpDnEnrichr) || ~isempty(TmfDnEnrichr)
     T.Genes = C_new;
     s_dn = jsonencode(table2struct(T));
 end
-warning on
 
 if isempty(s_up) && isempty(s_dn), return; end
 

@@ -62,16 +62,19 @@ end
 
 
 fw = gui.myWaitbar(FigureHandle);
-[M, C] = pkg.e_cellscorecorrmat(sce.X, sce.g, gsets, 2, FigureHandle);
+[M, ~] = pkg.e_cellscorecorrmat(sce.X, sce.g, gsets, 2, FigureHandle);
 labels = strrep(string(T.ScoreType),'_','\_');
 
-% if docluster
-t = clusterdata(C', maxclust=5);
-[~,idx]=sort(t);
-M2=M(idx,idx);
-labels2=labels(idx);
-% end
-% assignin("base","C",C);
+% Order on the matrix being displayed. This used to be
+% clusterdata(C', maxclust=5): Euclidean distance and single linkage on
+% the raw, unstandardised cell scores, which sorts programs by their
+% score LEVEL -- exactly what a rank correlation is invariant to. Two
+% programs with rho = 1 on different scales are adjacent in M and far
+% apart under that metric, so the second heatmap's "clusters" were not
+% the correlations it was painting.
+idx = pkg.e_corrmatorder(M);
+M2 = M(idx, idx);
+labels2 = labels(idx);
 gui.myWaitbar(FigureHandle,fw);
 
 
@@ -79,7 +82,10 @@ figure;
 isupper = logical(triu(ones(size(M)),0));
 M(isupper) = NaN;
 h = heatmap(M,'MissingDataColor','w');
+% Both axes. Only the rows were named, so reading which pair a cell
+% belongs to meant counting columns.
 h.YDisplayLabels = labels;
+h.XDisplayLabels = labels;
 colormap(h, 'parula');
 title(h,'Gene programs in original order');
 % h.Colormap = flipud(h.Colormap);
@@ -91,6 +97,7 @@ isupper = logical(triu(ones(size(M2)),0));
 M2(isupper) = NaN;
 h2 = heatmap(M2,'MissingDataColor','w');
 h2.YDisplayLabels = labels2;
+h2.XDisplayLabels = labels2;
 colormap(h2, 'parula');
 title(h2,'Gene programs are reordered to show any clusters');
 
@@ -102,37 +109,37 @@ defaultscorefilename = 'cellscorecorrmat.xlsx';
 defaultscorefile = fullfile(pw1, '..', 'assets', 'CellScores', defaultscorefilename);
 preftagname =  'scorcorrmatfile';
 
+% GETPREF already falls back to the bundled file, so there is no
+% first-run case to handle. There used to be an `if ~ispref(...)` branch
+% here whose body was entirely commented out: on a machine where the
+% preference did not exist it fell through with DONE still false, and
+% the caller returned at its `if ~done` line. Nothing anywhere in the
+% toolbox writes that preference except the 'Use another' case below,
+% which sits in the branch that requires it to already exist -- so on
+% every fresh install this menu item dismissed its dialog and did
+% nothing at all, forever, with no message.
 scorefile = getpref('scgeatoolbox', preftagname, defaultscorefile);
-if ~ispref('scgeatoolbox', preftagname)
-    % if ~strcmp('Yes', gui.myQuestdlg(parentfig, 'Locate cellscorecorrmat.xlsx?')), return; end
-    % [file, path] = uigetfile(defaultscorefilename, 'Select File');
-    % if isequal(file, 0), return; end
-    % scorefile = fullfile(path, file);
-    % setpref('scgeatoolbox', preftagname, scorefile);
-    % gui.myHelpdlg(parentfig, defaultscorefilename + " is located successfully.");
-else
-    % scorefile = getpref('scgeatoolbox', preftagname);
-    answer1 = gui.myQuestdlg(FigureHandle, sprintf('%s', scorefile), ...
-        'Selected File', ...
-        {'Use this', 'Use another', 'Cancel'}, 'Use this');
-    if isempty(answer1), return; end
-    switch answer1
-        case 'Use this'
+
+answer1 = gui.myQuestdlg(FigureHandle, sprintf('%s', scorefile), ...
+    'Selected File', ...
+    {'Use this', 'Use another', 'Cancel'}, 'Use this');
+if isempty(answer1), return; end
+switch answer1
+    case 'Use this'
+        done = true;
+    case 'Cancel'
+        return;
+    case 'Use another'
+        absolutePath = pkg.i_normalizepath(defaultscorefile);
+        [file, path] = uigetfile(defaultscorefilename, ...
+            'Select File', absolutePath);
+        if isequal(file, 0), return; end
+        scorefile = fullfile(path, file);
+        if isfile(scorefile)
+            setpref('scgeatoolbox', preftagname, scorefile);
+            gui.myHelpdlg(FigureHandle, defaultscorefilename + " is located successfully.");
             done = true;
-        case 'Cancel'
-            return;
-        case 'Use another'
-            absolutePath = pkg.i_normalizepath(defaultscorefile);
-            [file, path] = uigetfile(defaultscorefilename, ...
-                'Select File', absolutePath);
-            if isequal(file, 0), return; end
-            scorefile = fullfile(path, file);
-            if isfile(scorefile)
-                setpref('scgeatoolbox', preftagname, scorefile);
-                gui.myHelpdlg(FigureHandle, defaultscorefilename + " is located successfully.");
-                done = true;
-            end
-    end
+        end
 end
 
 end

@@ -12,10 +12,13 @@ function [xi, p] = e_xicor(x, y, varargin)
 %   'y'              Dependent variable. Numeric 1D array.
 %
 %
-%   Name-value arguments:
+%   Optional third argument:
 %
-%   'symmetric'      If true xi is computed as (r(x,y)+r(y,x))/2.
+%   symmetric        If true xi is computed as (r(x,y)+r(y,x))/2. Passed
+%                    positionally, e.g. pkg.e_xicor(x, y, true).
 %                    Default: false.
+%
+%   Name-value arguments:
 %
 %   'p_val_method'   Method to be used to compute the p-value.
 %                    Options: 'theoretical' or 'permutation'.
@@ -71,9 +74,15 @@ end
 parser = inputParser;
 addRequired(parser, 'x');
 addRequired(parser, 'y');
+% SYMMETRIC stays positional because +net/xicornet.m passes it that way,
+% and the help below now says so. P_VAL_METHOD and N_PERM become real
+% name-value arguments: the help has always described all three as
+% name-value, but they were addOptional, so e_xicor(x, y, 'p_val_method',
+% 'permutation') -- the documented call -- set SYMMETRIC to the char vector
+% 'p_val_method' and died on "symmetric must be true or false".
 addOptional(parser, 'symmetric', false);
-addOptional(parser, 'p_val_method', 'theoretical');
-addOptional(parser, 'n_perm', 1000);
+addParameter(parser, 'p_val_method', 'theoretical');
+addParameter(parser, 'n_perm', 1000);
 parse(parser,x,y,varargin{:});
 x = parser.Results.x;
 y = parser.Results.y;
@@ -171,17 +180,43 @@ if length(unique(y)) == n
     r = nan;
     l = nan;
 else
-    % Get r (yj<=yi) and l (yj>=yi)
-    l = n - r + 1;
-
-    y_unique = unique(y);
-    idx_tie = find(groupcounts(y)>1);
-
-    for i = 1:numel(idx_tie)
-        tie_mask = (y == y_unique(idx_tie(i)));
-        r(tie_mask) = max(r(tie_mask))*ones(1,sum(tie_mask));
-        l(tie_mask) = max(l(tie_mask))*ones(1,sum(tie_mask));
-    end
+    % Tie-corrected ranks, taken straight from the definition
+    % (Chatterjee 2021): r_i = #{j : y_j <= y_i} and
+    % l_i = #{j : y_j >= y_i}.
+    %
+    % This replaces a loop that found its tied groups with
+    %
+    %     idx_tie = find(groupcounts(y) > 1);
+    %
+    % GROUPCOUNTS on a ROW vector treats the whole row as ONE group and
+    % returns a scalar 1, so find(... > 1) was empty and the loop never
+    % executed -- leaving r as the plain 1:n rank and l as n - r + 1,
+    % neither of which is the tie-corrected count. Every in-toolbox
+    % caller passes rows: +net/xicornet.m slices X(k, :) out of a
+    % genes-by-cells matrix.
+    %
+    % It matters most on exactly the data this toolbox handles, where
+    % ties are the rule. Measured on Poisson counts with 5 distinct
+    % values in 200 cells, against the definition computed directly:
+    %
+    %     definition   row input   column input
+    %      0.005183     0.121053     0.005183
+    %     -0.005571     0.113161    -0.005571
+    %     -0.027100     0.162763    -0.027100
+    %      0.092203     0.174230     0.092203
+    %
+    % The column path was already right, so the two orientations
+    % disagreed by more than twentyfold. Worse, the bias has a sign:
+    % for independent variables the definition scatters around zero
+    % while the row path returned 0.11 to 0.17 every time, so
+    % sc_grn(X, 'xicor') read a dependence into every gene pair.
+    % Untied data was unaffected, which is the other branch above.
+    [~, ~, grp] = unique(y(:));
+    counts = accumarray(grp, 1);
+    leq = cumsum(counts);              % #{y <= each distinct value}
+    geq = n - [0; leq(1:end-1)];       % #{y >= each distinct value}
+    r = reshape(leq(grp), 1, []);
+    l = reshape(geq(grp), 1, []);
 
     % Compute correlation
     xi = 1 - n*sum(abs(diff(r)))/(2*sum((n - l) .* l));

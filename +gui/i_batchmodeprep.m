@@ -1,7 +1,22 @@
 function [done, CellTypeList, i1, i2, cL1, cL2,...
       outdir] = i_batchmodeprep(sce, prefixtag, ...
-      wrkdir, parentfig)
+      wrkdir, parentfig, infixes)
+%I_BATCHMODEPREP Pick the groups and cell types for a batch run.
+%   INFIXES is an optional cell array of strings inserted between
+%   PREFIXTAG and the group names, for a callback that writes more than
+%   one workbook per cell type. The default {''} gives
+%   <prefixtag>_<g1>_vs_<g2>_<celltype>.xlsx, which is what
+%   callback_DEGene2GroupsBatch, callback_DVGene2GroupsBatch and
+%   callback_DPGene2GroupsBatch write.
+%
+%   It exists because the overwrite check below could not fire for
+%   gui.callback_DEVP2GroupsBatch, which writes <prefixtag>_DE_...,
+%   _DV_... and _DP_... -- names the probe never constructed. That
+%   callback therefore got the benign "Result files will be saved in ...
+%   Continue?" prompt even when the folder was full of results from a
+%   previous run that were about to be written over.
 
+if nargin<5, infixes = {''}; end
 if nargin<4, parentfig = []; end
 if nargin<3, wrkdir = []; end
 if ~isempty(parentfig)
@@ -53,24 +68,47 @@ else
     if ~isfolder(outdir), return; end
 end
 
-needoverwritten=false;
-for k=1:length(CellTypeList)
-    outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
-        prefixtag, ...
-        matlab.lang.makeValidName(string(cL1)), ...
-        matlab.lang.makeValidName(string(cL2)), ...
-        matlab.lang.makeValidName(string(CellTypeList{k})));
-    filesaved = fullfile(outdir, outfile);
-    if exist(filesaved,'file')
-        needoverwritten=true;
+existing = strings(0, 1);
+for j = 1:numel(infixes)
+    for k = 1:length(CellTypeList)
+        outfile = sprintf('%s%s_%s_vs_%s_%s.xlsx', ...
+            prefixtag, infixes{j}, ...
+            matlab.lang.makeValidName(string(cL1)), ...
+            matlab.lang.makeValidName(string(cL2)), ...
+            matlab.lang.makeValidName(string(CellTypeList{k})));
+        filesaved = fullfile(outdir, outfile);
+        if isfile(filesaved)
+            existing(end+1, 1) = string(filesaved); %#ok<AGROW>
+        end
     end
 end
-if needoverwritten
-    answer=gui.myQuestdlg(parentfig, sprintf('Overwrite existing result file(s) in %s?', outdir),'',[],[],'warning');
+
+if ~isempty(existing)
+    answer = gui.myQuestdlg(parentfig, sprintf( ...
+        ['%d existing result file(s) in %s will be replaced. ' ...
+        'Overwrite?'], numel(existing), outdir), '', [], [], 'warning');
 else
     answer=gui.myQuestdlg(parentfig, sprintf('Result files will be save in %s. Continue?', outdir), '');
 end
 if ~strcmp(answer,'Yes'), return; end
+
+% Replace, not merge. WRITETABLE writes into an existing workbook rather
+% than rewriting it: sheets the new run does not regenerate survive from
+% the old one, and a sheet that this time holds fewer rows keeps the tail
+% of the previous run's rows below the new ones. Measured on a two-run
+% fixture, a sheet written [1 2 3] and then [9 10] read back as
+% [9 10 3]. So one workbook could hold two runs, mixed, inside a single
+% sheet. Deleting up front is what answering Yes above means.
+for k = 1:numel(existing)
+    try
+        delete(existing(k));
+    catch ME
+        gui.myErrordlg(parentfig, sprintf( ...
+            'Could not remove %s: %s', existing(k), ME.message));
+        return;
+    end
+end
+
 done = true;
 
 end

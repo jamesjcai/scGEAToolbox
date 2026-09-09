@@ -17,6 +17,11 @@ if nargin < 3, predefinedlist = []; end
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 gsorted = natsort(sce.g);
 
+% Save and restore the caller's random stream. Seeding the random gene draw is
+% fine; leaving the session parked on that seed is not -- it then
+% governs every later tsne, umap and clustering call in the session.
+rngState = rng();
+restoreRng = onCleanup(@() rng(rngState));
 rng("shuffle");
 n = length(gsorted);
 if isempty(predefinedlist)

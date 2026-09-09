@@ -5,7 +5,10 @@ function [c] = sc_cluster_x(X, k, varargin)
 
 p = inputParser;
 defaultType = 'sc3';
-validTypes = {'sc3', 'simlr', 'soptsc', 'sinnlrr', 'specter'};
+% 'specter' was removed: run.ml_Specter split 160 cells 12/148 where the
+% truth was 80/80 -- ARI 0.014 on data plain k-means clusters perfectly,
+% identically across six seeds. It is retired to unused/.
+validTypes = {'sc3', 'simlr', 'soptsc', 'sinnlrr'};
 checkType = @(x) any(validatestring(x, validTypes));
 
 checkK = @(x) (x > 0) && isnumeric(x) && isscalar(x);
@@ -38,7 +41,5 @@ switch p.Results.type
     case 'sinnlrr'
         % disp('To specify k, use RUN_SINNLRR(X,k).');
         [c] = run.ml_SinNLRR(X, k);
-    case 'specter'
-        [c] = run.ml_Specter(X, k);
 end
 end

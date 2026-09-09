@@ -9,9 +9,12 @@ preftagname = 'externalwrkpath';
 if isempty(wrkdir), return; end
 
 prefixtag = 'DEVP';
+% The three infixes this callback writes. Without them the overwrite
+% check in i_batchmodeprep probes DEVP_<g1>_vs_<g2>_<ct>.xlsx, which this
+% callback never writes, so it could not fire.
 [done, CellTypeList, i1, i2, cL1, cL2, ...
 outdir] = gui.i_batchmodeprep(sce, prefixtag, ...
-            wrkdir, FigureHandle);
+            wrkdir, FigureHandle, {'_DE', '_DV', '_DP'});
 if ~done, return; end
 
 answer = gui.myQuestdlg(FigureHandle, "Set DE gene filter parameters?", ...
@@ -141,9 +144,11 @@ for k=1:length(CellTypeList)
         % output, 7,550 of 7,550 - because sc_dvg returns the full ranked
         % table and nothing here ever filtered it. DiffDist > 0 additionally
         % drops the spline-boundary genes whose distance was discarded.
-        % e_fdr_bh returns h (logical) FIRST and adjusted p FOURTH -
-        % taking output 1 as a q-value silently inverts the test.
-        [~, ~, ~, dvq] = pkg.e_fdr_bh(T.pval, 0.05, 'pdep', 'no');
+        % PKG.E_FDR has one output, so the trap that this comment used
+        % to warn about -- E_FDR_BH returns h first and the adjusted p
+        % fourth, and taking output 1 as a q-value silently inverts the
+        % test -- cannot be sprung.
+        dvq = pkg.e_fdr(T.pval);
         isok = T.DiffDist > 0 & dvq(:) <= 0.05;
         fprintf(['\nDV genes with BH q <= %.3f and a usable spline ' ...
             'distance are retained: %d of %d.\n'], 0.05, sum(isok), height(T));

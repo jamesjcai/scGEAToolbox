@@ -80,11 +80,14 @@ for k = 1:ng
 end
 
 % Adjust p-values for multiple comparisons
-if exist('mafdr.m', 'file')
-    p_val_adj = mafdr(p_val, 'BHFDR', true);
-else
-    [~, ~, ~, p_val_adj] = pkg.e_fdr_bh(p_val);
-end
+% PKG.E_FDR replaces the two-branch block that used to sit here. Its MAFDR
+% branch and its PKG.E_FDR_BH branch are the same algorithm on clean input
+% -- they agree to 2e-16 -- but they disagree whenever the p-values carry
+% NaN, which is what RANKSUM returns for a gene with no counts in either
+% group and what a per-cell-type run produces in bulk. One drops those from
+% the family, the other counts them, so the same command gave a different
+% answer depending on whether the Bioinformatics Toolbox was installed.
+p_val_adj = pkg.e_fdr(p_val);
 
 if guiwaitbar
     gui.myWaitbar(parentfig, fw);

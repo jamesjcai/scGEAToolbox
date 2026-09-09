@@ -40,19 +40,40 @@ switch answer2
        return;
 end
 
-extprogname = 'R_SeuratSctransform';
-preftagname = 'externalwrkpath';
-[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
-if isempty(wkdir), return; end
-% [ok] = gui.i_confirmscript('Run Seurat sctransform to obtain normalized expression matrix?', ...
-%    'R_SeuratSctransform','r');
-% if ~ok, return; end
+% Native MATLAB by default. SC_SCTRANSFORMV2 reproduces Seurat's v2 residuals
+% to a per-gene correlation of 0.999996 and runs about ten times faster, so
+% R is offered only when it is already configured.
+useR = false;
+hasR = ispref('scgeatoolbox', 'rexecutablepath') && ...
+    ~isempty(getpref('scgeatoolbox', 'rexecutablepath', []));
+if hasR
+    backend = gui.myQuestdlg(FigureHandle, 'Choose SCTransform backend:', ...
+        '', {'MATLAB (native)', 'R (Seurat)'}, 'MATLAB (native)');
+    if isempty(backend), return; end
+    useR = strcmp(backend, 'R (Seurat)');
+end
+
+if useR
+    extprogname = 'R_SeuratSctransform';
+    preftagname = 'externalwrkpath';
+    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
+    if isempty(wkdir), return; end
+end
 
 fw = gui.myWaitbar(FigureHandle);
 try
-    [X, scale_X] = run.r_SeuratSctransform(sce.X, sce.g, wkdir);
+    if useR
+        [X, scale_X] = run.r_SeuratSctransform(sce.X, sce.g, wkdir);
+    else
+        % scale_X is the Pearson residual matrix, which is what downstream
+        % PCA and clustering use. X is the corrected counts on the log1p
+        % scale, matching Seurat's SCT "data" slot, so that whatever
+        % replaces SCE.X stays non-negative and count-like.
+        [scale_X, ~, Xcorrected] = sc_sctransformv2(sce.X);
+        X = log1p(Xcorrected);
+    end
 catch ME
-    gui.myWaitbar(FigureHandle, fw);
+    gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end

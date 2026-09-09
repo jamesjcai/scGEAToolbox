@@ -62,6 +62,11 @@ end
 
 d = datetime('today');
 seed = year(d) * 10000 + month(d) * 100 + day(d);
+% Save and restore the caller's random stream. Seeding the picture-of-the-day pick is
+% fine; leaving the session parked on that seed is not -- it then
+% governs every later tsne, umap and clustering call in the session.
+rngState = rng();
+restoreRng = onCleanup(@() rng(rngState));
 rng(seed);
 idx = randi(numel(a));
 splashpng = fullfile(splashdir, a(idx).name);

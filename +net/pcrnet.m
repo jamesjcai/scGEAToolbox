@@ -64,7 +64,13 @@ idx_all = 1:n;
 
 if UseParallel
     B = A(:, 1:end-1);
-    warning off
+    % Capture and restore rather than a bare off/on pair: the pair leaves
+    % warnings disabled for the rest of the session if anything between the
+    % two lines throws, and its 'on' re-enables warnings the caller may have
+    % silenced deliberately instead of restoring what they had.
+    warnState = warning();
+    restoreWarn = onCleanup(@() warning(warnState));
+    warning('off', 'all');
     parfor k = 1:n
         y = X(:, k);
         cols = [idx_all(1:k-1), idx_all(k+1:end)];
@@ -79,7 +85,6 @@ if UseParallel
         Beta = sum(y .* (score ./ nrm2));
         B(k, :) = coeff * Beta';
     end
-    warning on
     for k = 1:n
         A(k, A(k, :) == 1) = B(k, :);
     end

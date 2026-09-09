@@ -36,11 +36,25 @@ app.AssignCellTypefromCellAttributeTable.Separator = 'on';
 
 % Children is stored in reverse of display order, so build the desired
 % top-to-bottom order and assign its flip.
+% CompareCellTypeAnnotationsMenu is baked into the .mlapp, but an app
+% regenerated from an older appModel.mat will not have it. Children must be a
+% permutation of the existing children - naming one that is absent errors, and
+% omitting one that is present errors too - so the item is included only when
+% the property is actually there.
+hascompare = isprop(app, 'CompareCellTypeAnnotationsMenu') && ...
+    pkg.i_isvalid(app.CompareCellTypeAnnotationsMenu);
+if hascompare
+    compareitem = app.CompareCellTypeAnnotationsMenu;
+else
+    compareitem = matlab.ui.container.Menu.empty(0, 1);
+end
+
 displayorder = [ ...
     app.AnnotateCellTypesUsingPanglaoDBMenu
     app.AnnotateCellTypesUsingCustomizedMarkersMenu
     choose
     app.AssignCellTypefromCellAttributeTable
+    compareitem
     app.ImportCellAnnotationfromSCEinWorkspaceMenu
     app.ImportCellAnnotationfromSCEDataFileMenu
     app.AnnotateCellTypesforBrushedCellsMenu

@@ -65,7 +65,11 @@ if isempty(obj.s) || forced
 
     if contains(methodtag,'2d') || contains(methodtag,'3d')
         methoddimtag = methodtag;
-    elseif ndim > 3
+    else
+        % Bare method name ('tsne', 'umap', ...): append the dimension so the tag
+        % matches the field names PKG.E_MAKEEMBEDSTRUCT defines. NDIM of 2 or 3
+        % lands on an existing field ("tsne" with NDIM=3 becomes "tsne3d"); a
+        % higher NDIM adds a new one, as before.
         methoddimtag = sprintf('%s%dd',methodtag, ndim);
     end
 

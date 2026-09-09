@@ -213,8 +213,22 @@ function in_callback_Enrichr(~, ~)
                 Tin = Tdn;
         end
 
+        % MIN, and a check for nothing at all. Tin.gene(1:250) threw
+        % "Index exceeds the number of array elements" out of the button
+        % callback whenever the chosen direction held fewer than 250
+        % genes -- routine on a targeted panel or a heavily filtered
+        % object -- with no error dialog and the figure left as it was.
+        % The sibling in_callback_enrichr_fromtable below already guards
+        % the same operation with min(250, height(Tg)).
+        if isempty(Tin) || height(Tin) == 0
+            gui.myHelpdlg(hFig, sprintf( ...
+                'No %s DV genes to test.', lower(answer)));
+            return;
+        end
+        ntop = min(250, height(Tin));
+
         [outgenelist, outbackgroundlist, enrichrtype] = ...
-            gui.gui_prepenrichr(Tin.gene(1:250), Tin.gene,...
+            gui.gui_prepenrichr(Tin.gene(1:ntop), Tin.gene,...
                 sprintf('Run enrichment analysis with %s DV genes?', lower(answer)), ...
                 hFig);
         gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist);
@@ -276,7 +290,20 @@ function txt = in_myupdatefcn3(src, event_obj, g)
 
             x2 = X2(idx, :);
             if ~isempty(sh2) && pkg.i_isvalid(sh2), delete(sh2); end
-            sh1 = plot(hAx2, 1:length(x2), x2, 'Color', lcolor2);
+            % SH2, not SH1. The handle bookkeeping desynchronised here:
+            % SH1 was left pointing at the hAx2 line, so the next click
+            % deleted that instead of the hAx1 line it had just drawn,
+            % and SH2 stayed a deleted handle, making the guard above
+            % permanently false.
+            %
+            % Nothing visibly wrong came of it, because PLOT clears its
+            % axes unless HOLD is on and the HOLD ON at line 153 applies
+            % to hAx0 -- SUBPLOT gives hAx1 and hAx2 fresh axes. So this
+            % is a latent defect, not a wrong picture: measured over
+            % three clicks, both versions leave one line in each axes.
+            % It is fixed because the DELETE calls around it only mean
+            % anything if the handles track the lines they name.
+            sh2 = plot(hAx2, 1:length(x2), x2, 'Color', lcolor2);
             xlim(hAx2,[1 size(X2,2)]);
             title(hAx2, strrep(sprintf('%s',g(idx)),'_','\_'));
             [titxt] = gui.i_getsubtitle(x2, cL2{1});
@@ -413,10 +440,24 @@ function in_callback_ChangeAlphaValue(~, ~)
     end
 
 function in_callback_gsettest_fromtable(~, figtab)
-    % DiffDist is signed (group 1 more variable = positive) and sc_dvg
-    % returns every gene surviving QC, so the ranking is complete.
-    gui.i_rungsettest(string(T.gene), T.DiffDist, figtab, ...
-        [outfile, '_GeneSet'], 'DiffDist');
+    % DIFFDIST alone is not signed, whatever this comment used to say.
+    % SC_DVG's splinefit branch -- the only one this callback can reach
+    % -- sets DiffDist = vecnorm(v1 - v2, 2, 2), a norm and so
+    % non-negative, and keeps the direction separately in
+    % DiffSign = sign(vecnorm(v1) - vecnorm(v2)).
+    %
+    % GUI.I_RUNGSETTEST wants a statistic where larger means "more up",
+    % and runs SC_GSETTEST with Direction "both" on it. Handed the
+    % folded magnitude, a set that is uniformly more variable in group 2
+    % scores exactly like one more variable in group 1. Measured on 400
+    % genes with 20 planted in each direction: under DiffDist the two
+    % blocks ranked at medians 22 and 18 of 400 -- indistinguishable --
+    % and under the signed product at 10 and 390.
+    %
+    % SC_DVG returns every gene surviving QC, so the ranking is still
+    % complete, which is what a competitive test needs.
+    gui.i_rungsettest(string(T.gene), T.DiffDist .* T.DiffSign, figtab, ...
+        [outfile, '_GeneSet'], 'DiffDist signed by DiffSign');
 end
 
 function in_callback_enrichr_fromtable(~, figtab)

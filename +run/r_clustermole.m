@@ -39,9 +39,15 @@ if issparse(X)
         disp('Using sparse input--longer running time is expected.');
     end
 end
-warning off
+% ONCLEANUP rather than a bare "warning off" ... "warning on" pair. The
+% pair leaves warnings off for the rest of the session if anything between
+% the two lines throws, and "warning on" re-enables warnings the caller had
+% deliberately turned off rather than restoring what they had.
+warnState = warning();
+restoreWarn = onCleanup(@() warning(warnState));
+warning('off', 'all')
 X = sc_norm(X, "type", "deseq");
-warning on
+% (warning state is restored by restoreWarn on every path out)
 % genelist=upper(genelist);
 
 

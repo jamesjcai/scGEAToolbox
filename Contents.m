@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.4.3 03-Sep-2026
+% Version 26.5.0 07-Sep-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -15,6 +15,7 @@
 %   sc_deg                    - SC_DEG - DEG analysis using Mann–Whitney U test or t-test
 %   sc_dpg                    - SC_DPG - Differential Program (DP) analysis between two groups of cells
 %   sc_dvg                    - SC_DVG - Differential variability (DV) analysis between two groups
+%   sc_fgsea                  - SC_FGSEA  Preranked gene set enrichment against Enrichr libraries.
 %   sc_filterc                - sc_filterc is a function.
 %   sc_filterg                - cutoff < 1:  interpreted as minimum non-zero fraction (dropout-rate mode)
 %   sc_genestat               - SC_GENESTAT  Compute per-gene statistics and optionally filter invalid values
@@ -27,7 +28,10 @@
 %   sc_hvg                    - Identify HVGs
 %   sc_ifft                   - scGFT — Synthetic Cell Generation
 %   sc_impute                 - Imputation
+%   sc_infercnv               - SC_INFERCNV  Infer large-scale copy number variation from scRNA-seq.
 %   sc_knngraph               - Generate KNN group network from cell embeddings
+%   sc_malignscore            - SC_MALIGNSCORE  Score and label cells as malignant from a CNV profile.
+%   sc_meld                   - SC_MELD Relative likelihood that each cell came from each sample.
 %   sc_mergedata              - sc_mergedata is a function.
 %   sc_mergesces              - Merges two SCE objects
 %   sc_norm                   - sc_norm is a function.
@@ -49,14 +53,16 @@
 %   sc_rmmtcells              - Remove cells with high mtDNA ratio
 %   sc_rmmtgenes              - Remove mt-genes
 %   sc_scattermarker          - SC_SCATTERMARKER(X,genelist,g,s,methodid)
-%   sc_sce2h5ad               - Write SCE to H5AD file
+%   sc_sce2h5ad               - SC_SCE2H5AD Write a SingleCellExperiment to an H5AD file.
 %   sc_sce2rds                - Write SCE to Seurat/RDS file
-%   sc_selectc                - Select cells by library size and number of genes
+%   sc_scrublet               - SC_SCRUBLET Detect doublets by comparison with simulated doublets.
+%   sc_sctransformv2          - SC_SCTRANSFORMV2  Pure-MATLAB port of sctransform::vst(vst.flavor = "v2").
+%   sc_selectc                - SC_SELECTC Select cells by library size and number of genes
 %   sc_selectg                - Select genes by expression levels
 %   sc_simudata               - SC_SIMUDATA  Simulate single-cell RNA-seq count data
 %   sc_snndpc                 - Clustering cell embeddings using SNNDPC - a SNN clustering algorithm
 %   sc_splinefit              - SC_SPLINEFIT identify genes with a profile deviated from normal
-%   sc_splinefit2             - Compare genes' expression profiles with spline fit regression
+%   sc_splinefit2             - SC_SPLINEFIT2  Compare two datasets' gene profiles by spline fit.
 %   sc_stemness               - SC_STEMNESS   Compute stemness score for single-cell data
 %   sc_tfactivity             - SC_TFACTIVITY  Estimate transcription factor (TF) activity per cell.
 %   sc_trajectory             - SC_TRAJECTORY Estimate pseudotime trajectories from single-cell data
@@ -65,4 +71,3 @@
 %   sc_umap                   - UMAP embedding of cells
 %   sc_writefile              - sc_writefile is a function.
 %   scgeatool                 - SCGEATOOL - Launch App Designer GUI
-%   sctransform_v2            - SCTRANSFORM_V2  Pure-MATLAB port of sctransform::vst(vst.flavor = "v2").

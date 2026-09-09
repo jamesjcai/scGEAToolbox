@@ -6,14 +6,17 @@ if nargin < 2 || isempty(ndim), ndim = 2; end
 S = [];
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
-    pth = fullfile(pw1, '..', 'external', 'ml_PHATE'); % for calling randmds.m
-    addpath(pth);
-    pth1 = fullfile(pw1, '..', 'external', 'ml_cbrewer');
-    addpath(pth1);
-    if verLessThan('matlab', '26.1')
-        umapversion = 'ml_umap45';
-        pth1 = fullfile(pw1, '..', 'external', umapversion);
-        addpath(pth1);
+    % svdpca and phate live in external/ml_PHATE.
+    phatecleanup = pkg.i_addpathtemp( ...
+        fullfile(fileparts(pw1), 'external', 'ml_PHATE'));   %#ok<NASGU>
+    if isMATLABReleaseOlderThan('R2026a')
+        % UMAP.m also needs the classes under external/ml_umap45/util
+        % (Args, MatBasics, PopUp, String, ...), so both go on the path.
+        % They are generic enough to shadow other code, so both come off
+        % again when this function returns.
+        umappth = fullfile(fileparts(pw1), 'external', 'ml_umap45');
+        umapcleanup = pkg.i_addpathtemp(umappth, ...
+            fullfile(umappth, 'util'));   %#ok<NASGU>
     end
 end
 
@@ -57,14 +60,23 @@ end
 
 % [y]=pkg.e_isomap(log(sc_norm(X)+1)');
 
+% The SECOND output. PKG.E_KPCA's first output is COEFF, the projection
+% coefficients for mapping new data, not an embedding: EIGS returns
+% unit-norm eigenvectors and score = Kc*coeff = coeff*latent, so taking
+% coeff gives every kernel component equal weight and throws the spectrum
+% away. Its own header describes coeff as something you multiply a kernel
+% by to obtain an embedding.
 if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA1...'); end
-S{end+1} = pkg.e_kpca(DS, ndim, 30, true);
+[~, kpcaScore] = pkg.e_kpca(DS, ndim, 30, true);
+S{end+1} = kpcaScore;
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA2...'); end
-S{end+1} = pkg.e_kpca(DS, ndim, 40, true);
+[~, kpcaScore] = pkg.e_kpca(DS, ndim, 40, true);
+S{end+1} = kpcaScore;
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA3...'); end
-S{end+1} = pkg.e_kpca(DS, ndim, 50, true);
+[~, kpcaScore] = pkg.e_kpca(DS, ndim, 50, true);
+S{end+1} = kpcaScore;
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 1/3...'); end
 S{end+1} = tsne(data, Perplexity = 30, NumDimensions = ndim);
@@ -78,28 +90,41 @@ S{end+1} = tsne(data, Perplexity = 50, NumDimensions = ndim);
 if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 1/3...'); end
 if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 2/3...'); end
 if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 3/3...'); end
-if ~verLessThan('matlab', '26.1')
+if ~isMATLABReleaseOlderThan('R2026a')
     S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=15);
     S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=30);
     S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=50);
 else
-    S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
-        'n_neighbors', 15, 'verbose', 'none');
-    S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
-        'n_neighbors', 30, 'verbose', 'none');
-    S{end+1} = run_umap_lite_super(data, 'n_components', ndim, ...
-        'n_neighbors', 50, 'verbose', 'none');
+    S{end+1} = i_legacyumap(data, ndim, 15);
+    S{end+1} = i_legacyumap(data, ndim, 30);
+    S{end+1} = i_legacyumap(data, ndim, 50);
 end
 
 if dophate
-    if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 1/3...'); end
-    S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 5);
-
-    if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 2/3...'); end
-    S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 15, 'pot_method', 'sqrt');
-
-    if showwaitbar, gui.gui_waitbar_adv(fw, 5/nstep, 'Meta Visualization - PHATE 3/3...'); end
-    S{end+1} = phate(sqrt(Xn), 't', 20, 'ndim', ndim, 'k', 30);
+    % PHATE finishes with metric MDS, and MDSCALE gives up on some inputs
+    % with "Unable to decrease criterion along line search direction". That
+    % killed the whole function, including the dozen embeddings already
+    % computed, and DOPHATE is on by default -- on three of three simulated
+    % datasets RUN.ML_METAVIZ(X) failed outright while RUN.ML_PHATE on the
+    % same counts was fine. A meta-visualisation is a consensus over many
+    % views, so a view that will not converge should drop out of the
+    % consensus rather than end it.
+    phateArgs = {{'t', 20, 'ndim', ndim, 'k', 5}, ...
+        {'t', 20, 'ndim', ndim, 'k', 15, 'pot_method', 'sqrt'}, ...
+        {'t', 20, 'ndim', ndim, 'k', 30}};
+    for phateStep = 1:numel(phateArgs)
+        if showwaitbar
+            gui.gui_waitbar_adv(fw, 5/nstep, sprintf( ...
+                'Meta Visualization - PHATE %d/3...', phateStep));
+        end
+        try
+            S{end+1} = phate(sqrt(Xn), phateArgs{phateStep}{:}); %#ok<AGROW>
+        catch ME
+            warning('ml_metaviz:phateFailed', ...
+                'PHATE view %d of 3 did not converge (%s); it is left out.', ...
+                phateStep, ME.message);
+        end
+    end
 end
 
 if showwaitbar, gui.gui_waitbar_adv(fw, 6/nstep, 'Meta Visualization - METAVIZ'); end
@@ -109,6 +134,17 @@ else
     [Y] = metaviz_tensor(S, ndim);
 end
 if showwaitbar, gui.gui_waitbar_adv(fw); end
+end
+
+function reduction = i_legacyumap(data, ndim, nneighbors)
+% Embed an already normalized/reduced cells-by-features matrix with the
+% bundled external/ml_umap45 package (pre-R2026a fallback only).
+u = UMAP;
+u.n_components = ndim;
+u.n_neighbors = nneighbors;
+u.verbose = false;
+u.setMethod(pkg.i_umapmethod());
+reduction = u.fit_transform(data);
 end
 
 % figure; scatter(Y(:,1),Y(:,2));
@@ -173,7 +209,6 @@ w = zeros(K, n);
 
 %%
 
-N = n * n * K;
 
 mmf = tempname;
 fileID = fopen(mmf, 'w');
@@ -195,11 +230,18 @@ end
 %%
 m.Offset = 0;
 for x = 1:n % n of cells
-    d = reshape(m.Data(x:n:N), [n, K]);
+    % Column x of each n-by-n block, matching the tensor path. This was
+    % reshape(m.Data(x:n:N), [n, K]), and striding by n from x walks ROW x
+    % of a column-major block -- the same wrong slice, for the same
+    % reason. The blocks are laid out column-major, so column x of block k
+    % starts at (x-1)*n + 1 + (n*n)*(k-1), which is exactly the indexing
+    % the combination loop below already uses.
+    d = zeros(n, K, 'single');
+    for k = 1:K
+        s = (x - 1)*n + 1 + (n*n)*(k - 1);
+        d(:, k) = m.Data(s:s + n - 1);
+    end
     S = 1 - squareform(pdist(d', 'cosine'));
-
-    % S1=1-squareform(pdist(squeeze(D(x,:,:))','cosine'));
-    % isequal(S,S1)
 
     [v, ~] = eigs(double(S), 1);
     w(:, x) = abs(v);
@@ -246,8 +288,16 @@ for k = 1:K
 end
 
 %%
+% D(:, x, :), not D(x, :, :). The line above normalises COLUMNS to unit
+% norm, so column x of each slice is cell x's distance profile scaled by
+% one constant, while row x has every entry divided by a different
+% column's norm. Cosine distance ignores a per-vector constant, so the
+% correct slice gives exactly the similarities the raw distances would --
+% checked at 3e-16 -- whereas the row slice differs from them by ~7e-4.
+% The combination loop below already reads D(:, i, k), so the weights were
+% computed on one slicing and applied to another.
 for x = 1:n % n of cells
-    S = 1 - squareform(pdist(squeeze(D(x, :, :))', 'cosine'));
+    S = 1 - squareform(pdist(squeeze(D(:, x, :))', 'cosine'));
     [v, ~] = eigs(double(S), 1);
     w(:, x) = abs(v);
 end

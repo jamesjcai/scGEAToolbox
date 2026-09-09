@@ -27,6 +27,16 @@ end
 %     % X=log10(X+1);
 %     X=X./vecnorm(X);
 % end
+% The bundled external/ml_SinNLRR/SpectralClustering.m line 16 is a bare
+% "warning off" with nothing to undo it, so a single call left warnings
+% disabled for the rest of the MATLAB session. That is not a cosmetic
+% problem: it silences every later warning the user relies on, and it made
+% eleven unrelated tests in this repository's own suite fail, because every
+% test that asserts a warning stopped seeing one. Restoring here rather
+% than editing the third-party file keeps the fix in code we own.
+warnState = warning();
+restoreWarn = onCleanup(@() warning(warnState));
+
 [C] = SinNLRRori(X, k);
 
 

@@ -23,6 +23,11 @@ end
 
 tn = round(sce.NumCells/2);
 if methodoption == 1
+    % Save and restore the caller's random stream. Seeding the subsample is
+    % fine; leaving the session parked on that seed is not -- it then
+    % governs every later tsne, umap and clustering call in the session.
+    rngState = rng();
+    restoreRng = onCleanup(@() rng(rngState));
     rng("shuffle");
     idx = randperm(sce.NumCells);
     ids = idx(1:tn);

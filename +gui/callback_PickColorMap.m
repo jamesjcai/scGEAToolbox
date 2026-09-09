@@ -17,9 +17,12 @@ if nargin < 3 || isempty(showzero), showzero = false; end
 folder = fileparts(mfilename('fullpath'));
     % a = strfind(folder, filesep);
     % folder = extractBefore(folder, a(end)+1);
-wrkpth = fullfile(folder, '..', 'external', 'ml_cbrewer');
-
-if ~(ismcc || isdeployed), addpath(wrkpth); end
+if ~(ismcc || isdeployed)
+    % Every cbrewer call below is evaluated eagerly into CO, so the path
+    % entry is only needed for the duration of this function.
+    cbrewercleanup = pkg.i_addpathtemp( ...
+        fullfile(fileparts(folder), 'external', 'ml_cbrewer'));   %#ok<NASGU>
+end
 CT = cbrewer('seq', 'Blues', max([n, 3]));
 
 cx = autumn(n);

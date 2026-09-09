@@ -94,8 +94,13 @@ pval = chi2cdf(fitratio * df, df, 'upper');
 % OR 1-chi2cdf(fitratio*df,df);
 residualcv2 = log(fitratio); % log(cv2)-log(cv2fit);
 
-% fdr=mafdr(pval,'BHFDR',true);
-[~, ~, ~, fdr] = pkg.e_fdr_bh(pval);
+% PKG.E_FDR rather than PKG.E_FDR_BH's fourth output. A gene with no
+% counts gets a NaN p-value from the fit above, and E_FDR_BH keeps those in
+% the family: on 300 genes of which 10 were all-zero, 290 of the 300
+% adjusted p-values came back above 1, peaking at 1.0345. An adjusted
+% p-value above 1 is not a probability, and everything downstream of this
+% column compares it against a cutoff.
+fdr = pkg.e_fdr(pval);
 
 T = table(g, u, cv2, residualcv2, dropr, fitratio, pval, fdr, removedidx1, removedidx2);
 

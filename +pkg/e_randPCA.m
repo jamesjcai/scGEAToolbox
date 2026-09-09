@@ -42,8 +42,16 @@ function [U, S, V] = e_randPCA(A, k, its, l)
 %   to A; the ref. below describes how the accuracy depends on its and l.
 %
 %
-%   Note: PCA invokes RAND. To obtain repeatable results,
-%         invoke RAND('seed',j) with a fixed integer j before invoking PCA.
+%   Note: PCA invokes RAND from a fixed seed of its own, so its result
+%         is already repeatable and does not depend on the caller's
+%         random stream. It used to say "invoke RAND('seed',j) with a
+%         fixed integer j before invoking PCA", which never worked: the
+%         first thing the randomized branch did was rng('default'),
+%         throwing that seed away. It then returned without restoring
+%         the caller's stream, so every call reset the whole session to
+%         the seed-0 Mersenne Twister state -- and the t-SNE, UMAP and
+%         clustering that ran afterwards silently drew from it instead
+%         of from the user's seed.
 %
 %   Note: PCA currently requires the user to center and normalize the rows
 %         or columns of the input matrix A before invoking PCA (if such
@@ -222,6 +230,12 @@ if (((its + 1) * l >= m / 1.25) || ((its + 1) * l >= n / 1.25))
 end
 
 
+% Everything below draws from the global stream. Save it here, after
+% the direct-SVD early return above (which draws nothing), and put it
+% back on every path out.
+rngState = rng();
+restoreRng = onCleanup(@() rng(rngState));
+
 if (m >= n)
 
     %
@@ -238,8 +252,8 @@ if (m >= n)
         H = A * ((2 * rand(n, l) - ones(n, l)) + 1i * (2 * rand(n, l) - ones(n, l)));
     end
 
-    % rand('twister',rand('twister'));
-    rng('default');
+    % The trailing rand('twister',rand('twister')) reset that used to sit
+    % here was dead -- H above is the only random draw in this branch.
 
     %
     % Initialize F to its final size and fill its leftmost block with H.
@@ -304,8 +318,8 @@ if (m < n)
         H = (((2 * rand(l, m) - ones(l, m)) + 1i * (2 * rand(l, m) - ones(l, m))) * A)';
     end
 
-    % rand('twister',rand('twister'));
-    rng('default');
+    % The trailing rand('twister',rand('twister')) reset that used to sit
+    % here was dead -- H above is the only random draw in this branch.
 
     %
     % Initialize F to its final size and fill its leftmost block with H.

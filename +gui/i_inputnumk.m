@@ -6,8 +6,8 @@ if nargin < 3 || isempty(b), b = 100; end
 if nargin < 2 || isempty(a), a = 1; end
 if nargin < 1, defaultk = 10; end
 if ~isempty(parentfig)
-    figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    gui.i_raisefig(parentfig);
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 k = [];
 prompt = {sprintf('%s (%d..%d):', ...
@@ -30,7 +30,10 @@ if isempty(answer), return; end
 k = round(str2double(cell2mat(answer)));
 if isnan(k) || k < a || k > b
     k = [];
-    errordlg('Invalid number.','','modal');
+    % Route through myErrordlg so a uifigure parent gets an in-figure uialert
+    % instead of a separate modal window that steals the window ordering.
+    gui.myErrordlg(parentfig, ...
+        sprintf('Enter a whole number between %d and %d.', a, b), '', false);
     return;
 end
 end

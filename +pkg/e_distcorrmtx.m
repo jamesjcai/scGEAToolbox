@@ -1,4 +1,19 @@
 function [R] = e_distcorrmtx(X)
+%E_DISTCORRMTX Pairwise distance correlation between the rows of X.
+%   R = pkg.e_distcorrmtx(X) returns an n-by-n symmetric matrix for the
+%   n rows of X, computed the fast way: the doubly-centred distance
+%   matrix of each row is formed once, and every pair is then an inner
+%   product. It agrees with the pairwise pkg.e_distcorr reference in the
+%   comment below to 8e-17.
+%
+%   THE DIAGONAL IS LEFT AT ZERO, not 1. dCor(x, x) is 1 by definition,
+%   so R is an adjacency matrix without self-loops rather than a
+%   correlation matrix -- which is what net.distcorrnet wants. Anything
+%   that treats R(:) as data has to drop the diagonal first: sc_distcorr
+%   regressed dCor on Pearson r without doing so, and the n impossible
+%   (r = 1, dCor = 0) points dominated the fit.
+%
+%   See also NET.DISTCORRNET, PKG.E_DISTCORR, SC_DISTCORR.
 
 [n, m] = size(X);
 m2 = m * m;

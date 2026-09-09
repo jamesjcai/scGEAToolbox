@@ -63,9 +63,16 @@ switch lower(method)
         DiffDist = vecnorm(v1 - v2, 2, 2);
         DiffSign = sign(vecnorm(v1, 2, 2) - vecnorm(v2, 2, 2));
 
-        ddz = zscore(DiffDist);
-        pval = 1 - normcdf(ddz);
-        clear ddz;
+        % DIFFDIST is a norm, so it is non-negative and its null is the
+        % folded half of a symmetric distribution. This used to be
+        % zscore(DiffDist) read against a standard Normal, which is not a
+        % test at all: standardising a statistic by its own mean and SD
+        % makes the p-value a monotone function of the ranking, so the
+        % fraction called significant is fixed by the shape of DIFFDIST
+        % rather than by whether anything differs. On one homogeneous
+        % population split at random it called MORE genes than a real
+        % contrast did.
+        pval = pkg.e_deviationpvalue(DiffDist);
 
         T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s', cL1{1}));
         T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s', cL2{1}));
@@ -98,8 +105,8 @@ switch lower(method)
         DiffDist = T1.residualcv2(idx1) - T2.residualcv2(idx2);
         DiffDistAbs = abs(DiffDist);
         DiffSign = sign(DiffDist);
-        ddz = zscore(DiffDistAbs);
-        pval = 1 - normcdf(ddz);
+        % Same defect, same fix; see the splinefit branch above.
+        pval = pkg.e_deviationpvalue(DiffDistAbs);
 
         T = table(gene, DiffDist, DiffDistAbs, DiffSign, pval);
         T = sortrows(T, 'DiffDistAbs', 'descend');

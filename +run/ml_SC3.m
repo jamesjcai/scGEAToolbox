@@ -35,31 +35,105 @@ Dis = 1 - corr(X, 'type', 'p');
 oldpath = pwd;
 cleanupCwd = onCleanup(@() cd(oldpath));
 pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'external', 'ml_SC3', 'ClusterPack');
+pth = fullfile(fileparts(pw1), 'external', 'ml_SC3', 'ClusterPack');
 if ~(ismcc || isdeployed), addpath(pth); end
+
+% ClusterPack shells out. SGRAPH writes a partgraph<id>.bat beside the
+% graph file and runs it with system(), and that .bat in turn calls
+% pmetis or shmetis by bare name. Both rely on the shell resolving a
+% bare name from the current directory, which Windows does not do when
+% NoDefaultCurrentDirectoryInExePath is set. When it cannot, every
+% partition fails with "sgraph: partitioning not successful due to
+% external error", each of CSPA, HGPA and MCLA returns a single cluster
+% covering every cell, and CLUSTERENSEMBLE picks the best of the three
+% at NMI 0 -- which ML_SC3 then returned as its answer, with no error
+% and no output argument to signal it, on data whose 24 base
+% clusterings had each recovered the truth exactly.
+%
+% Putting the folder on the process PATH makes the .bat and the two
+% executables resolvable by name. Measured on a 120-cell three-group
+% fixture: before, one cluster of 120; after, three of 40/40/40, with
+% cspa and mcla at NMI 0.983.
+oldEnvPath = getenv('PATH');
+cleanupEnv = onCleanup(@() setenv('PATH', oldEnvPath));
+setenv('PATH', [pth, pathsep, oldEnvPath]);
+
 cd(pth);
 cls = [cls1; cls2; cls3];
 c = clusterensemble(cls, optimk);
 c = c(:);
 
-if plotit
-    clusion(Dis, c);
+% Backstop for the case the partitioner still cannot run. One cluster,
+% when every base clustering was asked for OPTIMK and found it, is not
+% an answer -- and it is the shape a caller is least likely to check.
+if optimk > 1 && numel(unique(c)) < 2
+    error('run:ml_SC3:consensusFailed', ...
+        ['The cluster ensemble collapsed to a single cluster while its ', ...
+        '%d base clusterings were each asked for %d. ClusterPack could ', ...
+        'not run its graph partitioner; look for "sgraph: partitioning ', ...
+        'not successful" above, and check that pmetis and shmetis in ', ...
+        '%s are executable.'], size(cls, 1), optimk, pth);
 end
 
+if plotit
+    % CLUSION documents its arguments as a square SIMILARITY matrix and
+    % a cluster label ROW vector, and it checks the second: "if
+    % size(cl,1) ~= 1, disp('clusion-error: clustering must be row
+    % vector'); return". C was forced to a column one line above, so the
+    % check always failed -- plotit printed that third-party line and
+    % drew nothing, while ML_SC3 returned normally, so a caller looking
+    % only for an error saw success. Measured: 0 figures before and
+    % after; passing a row gives 1 figure and 6 handles.
+    %
+    % The first argument was wrong too. DIS at this point is whichever
+    % distance matrix was computed last (Pearson, line 32): 0 on the
+    % diagonal, larger where cells are LESS alike, and above 1 for
+    % anticorrelated pairs. Feeding that to a similarity plot inverts
+    % its block structure. The consensus matrix below is SC3's own
+    % object and the thing CLUSION exists to display.
+    clusion(i_consensusmatrix(cls), reshape(c, 1, []));
+end
+
+end
+
+
+function S = i_consensusmatrix(cls)
+%I_CONSENSUSMATRIX Fraction of the ensemble in which each pair co-clusters.
+%   A similarity in [0, 1] with 1 on the diagonal, over the same
+%   clusterings CLUSTERENSEMBLE was given.
+n = size(cls, 2);
+S = zeros(n);
+for k = 1:size(cls, 1)
+    L = cls(k, :);
+    S = S + double(L == L');
+end
+S = S ./ size(cls, 1);
 end
 
 
 function [cls] = get_clusterarray(Dis, optimk, drange)
 [Vs1] = pca(Dis);
 [Vs2] = transform_Laplacian(Dis, max(drange));
-cls = [];
+
+nD = length(drange);
+cls = zeros(2*nD, size(Dis, 2));
+
 textprogressbar('Calculating cluster array: ');
-for j = 1:length(drange)
-    textprogressbar(100*(j ./ length(drange)));
+% TEXTPROGRESSBAR keeps its carriage-return state in a persistent, and
+% the terminating call below is only reached on success. An interrupted
+% or failed run left that state set, and the next ML_SC3 call in the
+% session then took the TERMINATION branch on its initialising string --
+% after which the first numeric call errored with "The text progress
+% must be initialized with a string", in a different function, on a
+% later call, with nothing pointing at the run that actually broke.
+cleanupBar = onCleanup(@() textprogressbar('', true));
+
+for j = 1:nD
+    textprogressbar(100*(j ./ nD));
     idx = kmeans(Vs1(:, 1:drange(j)), optimk, 'MaxIter', 1e9, 'emptyaction', 'singleton', 'replicate', 5);
-    cls = [cls; idx'];
+    cls(2*j-1, :) = idx';
     idx = kmeans(Vs2(:, 1:drange(j)), optimk, 'MaxIter', 1e9, 'emptyaction', 'singleton', 'replicate', 5);
-    cls = [cls; idx'];
+    cls(2*j, :) = idx';
 end
 textprogressbar('done');
 end
@@ -69,7 +143,17 @@ function drange = get_drange(X)
 % the best clusterings were achieved when d was between 4% and 7% of the number of cells, N (Fig. 1c, Supplementary Fig. 3a and Online Methods).
 n = size(X, 2);
 drge = round(n.*[0.04, 0.07]);
+% 4% of n rounds to 0 below 13 cells, and Vs1(:, 1:0) is empty, so
+% kmeans failed with "Expected X to be nonempty" -- a cryptic way to say
+% "too few cells". PCA of an n-by-n matrix yields at most n-1
+% components and EIGS cannot be asked for n either, so cap there too.
+drge = max(1, min(drge, n - 1));
 drange = drge(1):drge(2);
+% Save and restore the caller's random stream. Seeding the d-range subsample is
+% fine; leaving the session parked on that seed is not -- it then
+% governs every later tsne, umap and clustering call in the session.
+rngState = rng();
+restoreRng = onCleanup(@() rng(rngState));
 rng("shuffle");
 if length(drange) > 15
     dx = drange(randperm(length(drange)));
@@ -127,10 +211,13 @@ end
 end
 
 
-function textprogressbar(c)
+function textprogressbar(c, resetOnly)
 % This function creates a text progress bar. It should be called with a
 % STRING argument to initialize and terminate. Otherwise the number correspoding
 % to progress in % should be supplied.
+%
+% textprogressbar('', true) clears the persistent state without printing,
+% for the error path -- see the onCleanup in GET_CLUSTERARRAY.
 % INPUTS:   C   Either: Text string to initialize or terminate
 %                       Percentage number to show progress
 % OUTPUTS:  N/A
@@ -142,6 +229,12 @@ function textprogressbar(c)
 
 %% Initialization
 persistent strCR; %   Carriage return pesistent variable
+
+if nargin > 1 && resetOnly
+    strCR = [];
+    return
+end
+
 % Vizualization parameters
 strPercentageLength = 10; %   Length of percentage string (must be >5)
 strDotsMaximum = 10; %   The total number of dots in a progress bar

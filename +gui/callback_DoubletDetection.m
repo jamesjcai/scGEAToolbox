@@ -4,12 +4,18 @@ requirerefresh = false;
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-if ~pkg.i_checkpython
-    gui.myWarndlg(FigureHandle, 'Python not installed.');
-    return;
-end
 if ~gui.gui_showrefinfo('Scrublet [PMID:30954476]', FigureHandle)
     return;
+end
+
+% Native MATLAB by default; the Python package is offered only when Python
+% is already configured, since it is no longer needed to run this at all.
+usepy = false;
+if pkg.i_checkpython
+    backend = gui.myQuestdlg(FigureHandle, 'Choose Scrublet backend:', '', ...
+        {'MATLAB (native)', 'Python (scrublet)'}, 'MATLAB (native)');
+    if isempty(backend), return; end
+    usepy = strcmp(backend, 'Python (scrublet)');
 end
 if numel(unique(sce.c_batch_id)) > 1
     if ~strcmp(gui.myQuestdlg(FigureHandle, ...
@@ -23,27 +29,51 @@ if numel(unique(sce.c_batch_id)) > 1
 end
 
 
-extprogname = 'py_scrublet';
-preftagname = 'externalwrkpath';
-[wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
-if isempty(wkdir), return; end
-if ~gui.i_setpyenv([],[],FigureHandle), return; end
-
+if usepy
+    extprogname = 'py_scrublet';
+    preftagname = 'externalwrkpath';
+    [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
+    if isempty(wkdir), return; end
+    if ~gui.i_setpyenv([], [], FigureHandle), return; end
+end
 
 methodtag = 'scrublet';
+info = [];
+fw = gui.myWaitbar(FigureHandle);
 try
-    [isDoublet, doubletscore] = run.py_scrublet_new(sce.X, wkdir);
+    if usepy
+        [isDoublet, doubletscore] = run.py_scrublet_new(sce.X, wkdir);
+    else
+        [isDoublet, doubletscore, info] = sc_scrublet(sce.X);
+    end
     if isempty(isDoublet) || isempty(doubletscore)
+        gui.myWaitbar(FigureHandle, fw, true);
         gui.myErrordlg(FigureHandle, "Running Error.");
         return;
     end
 catch ME
+    gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
+gui.myWaitbar(FigureHandle, fw);
 
-if ~any(isDoublet)
-    gui.myHelpdlg(FigureHandle, 'No doublet detected.');
+% What this run can honestly be reported as. SC_SCRUBLET ends in three
+% different states that all used to arrive here looking alike, and the two
+% it warns about it warns about on the command window, which an App
+% Designer user never sees. PKG.E_DOUBLETCALLSUMMARY tells them apart:
+% "nothing was tested" is not "no doublet detected", and a run in which
+% most simulated doublets are indistinguishable from single cells is not a
+% result to act on.
+S = pkg.e_doubletcallsummary(logical(isDoublet(:)), info);
+
+if S.IsWarning
+    gui.myWarndlg(FigureHandle, S.Message, S.Title);
+else
+    gui.myHelpdlg(FigureHandle, S.Message, S.Title);
+end
+
+if ~S.OfferRemoval
     return;
 end
 

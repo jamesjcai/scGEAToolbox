@@ -30,16 +30,17 @@ if length(var1) ~= length(var2)
     error('Variables must have the same length');
 end
 
-% Create contingency table
-contingency_table = crosstab(var1, var2);
-
-% Ensure we have a 2x2 table (pad with zeros if needed)
-if size(contingency_table, 1) == 1
-    contingency_table = [contingency_table; zeros(1, size(contingency_table, 2))];
-end
-if size(contingency_table, 2) == 1
-    contingency_table = [contingency_table, zeros(size(contingency_table, 1), 1)];
-end
+% Count the four cells directly rather than calling crosstab and padding
+% its result. crosstab only returns rows and columns for levels that
+% actually occur, so a constant variable gave a 1-by-2 (or 2-by-1) table
+% and the padding appended the zero row or column at the END. When the
+% constant value was 1, every count therefore landed in the var1=0 row (or
+% the var2=0 column) and the printed table said the opposite of the truth:
+% for 200 cells with var2 all ones, it showed 200 in the var2=0 column and
+% 0 in var2=1.
+contingency_table = [ ...
+    sum(var1 == 0 & var2 == 0), sum(var1 == 0 & var2 == 1); ...
+    sum(var1 == 1 & var2 == 0), sum(var1 == 1 & var2 == 1)];
 
 % Calculate expected frequencies
 row_totals = sum(contingency_table, 2);
@@ -48,14 +49,33 @@ n = sum(contingency_table(:));
 
 expected_freq = (row_totals * col_totals) / n;
 
-% Calculate chi-squared statistic
-chi2_stat = sum(sum((contingency_table - expected_freq).^2 ./ expected_freq));
-
 % Degrees of freedom for 2x2 table
 df = 1;
 
-% Calculate p-value
-p_value = 1 - chi2cdf(chi2_stat, df);
+% A constant variable leaves a whole row or column of the table empty, so
+% the matching expected frequencies are zero and the statistic is 0/0.
+% That used to reach the verdict block below as NaN, and `if NaN < alpha`
+% is false, so the function printed "FAIL TO REJECT" and "No significant
+% association between variables" -- a confident negative conclusion drawn
+% from an undefined statistic. That text is shown to the user verbatim by
+% +gui/callback_2GeneCooccurrenceTest, which captures it with evalc, and
+% asking about two genes where one is simply not detected in the selected
+% cells is an ordinary thing to do.
+isDegenerate = any(row_totals == 0) || any(col_totals == 0);
+if isDegenerate
+    chi2_stat = NaN;
+    p_value = NaN;
+    warning('pkg:e_chi2binarytest:constantVariable', ...
+        ['At least one variable takes a single value, so the ', ...
+        'contingency table has an empty row or column and the ', ...
+        'chi-squared statistic is undefined. No test was performed.']);
+else
+    % Calculate chi-squared statistic
+    chi2_stat = sum(sum((contingency_table - expected_freq).^2 ./ expected_freq));
+
+    % Calculate p-value
+    p_value = 1 - chi2cdf(chi2_stat, df);
+end
 
 % Display results
 fprintf('\n=== Chi-squared Test for Independence ===\n');
@@ -79,7 +99,12 @@ fprintf('Degrees of freedom: %d\n', df);
 fprintf('P-value: %.6f\n', p_value);
 fprintf('Significance level: %.3f\n', alpha);
 
-if p_value < alpha
+if isnan(p_value)
+    % Never fall through to a verdict on a NaN.
+    fprintf('Result: NO TEST PERFORMED\n');
+    fprintf(['Conclusion: at least one variable is constant, so ', ...
+        'independence cannot be assessed.\n']);
+elseif p_value < alpha
     fprintf('Result: REJECT null hypothesis (p < %.3f)\n', alpha);
     fprintf('Conclusion: Variables are significantly associated\n');
 else
@@ -89,7 +114,7 @@ end
 
 % Check assumptions
 min_expected = min(expected_freq(:));
-if min_expected < 5
+if ~isDegenerate && min_expected < 5
     fprintf('\nWarning: Minimum expected frequency (%.2f) is less than 5.\n', min_expected);
     fprintf('Chi-squared test may not be appropriate. Consider Fisher''s exact test.\n');
 end
@@ -102,6 +127,11 @@ fprintf('=== DEMONSTRATION ===\n');
 
 % Example 1: Independent variables
 fprintf('\nExample 1: Testing independent variables\n');
+% Save and restore the caller's random stream. Seeding this demonstration's data is
+% fine; leaving the session parked on that seed is not -- it then
+% governs every later tsne, umap and clustering call in the session.
+rngState = rng();
+restoreRng = onCleanup(@() rng(rngState));
 rng(42); % For reproducibility
 n = 200;
 var1 = binornd(1, 0.3, n, 1);  % 30% probability of 1

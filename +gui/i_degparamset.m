@@ -14,7 +14,19 @@ defaultset = getpref('scgeatoolbox', preftagname, ...
 {0.05, 1.0, 0.01, 'Adjusted P-value'});
 
 if nogui
-    paramset = {0.05, 1.0, 0.01, 'Adjusted P-value'};
+    % DEFAULTSET, not the literal again. GETPREF above already falls back
+    % to exactly {0.05, 1.0, 0.01, 'Adjusted P-value'} when nothing has
+    % been saved, so returning it is identical on a fresh install and
+    % returns the user's own cutoffs once they have set any.
+    %
+    % Returning the literal made the one option labelled "No, use
+    % previous" -- gui.callback_DEVP2GroupsBatch, the choice a repeat
+    % user picks to avoid retyping -- the single path that guaranteed
+    % the previous values were NOT used. A contrast filtered at
+    % log2FC 0.26 and p_adj 0.05 came back filtered at 1.0 and 0.01, and
+    % the console line from pkg.e_processdetable reported those stricter
+    % numbers as though they had been asked for.
+    paramset = defaultset;
 else
     paramset = [];
     definput = {num2str(defaultset{1}), num2str(defaultset{2}), num2str(defaultset{3})};
