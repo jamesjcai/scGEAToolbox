@@ -52,6 +52,22 @@ if ~isempty(prompt)
     dlgSize(2) = dlgSize(2) + promptHeight + 8;
 end
 
+% Re-entrancy guard. WindowStyle='modal' is deliberately not set (see the
+% note further down), so UIWAIT blocks only the CALLING code - the parent
+% figure stays interactive. Clicking the same toolbar button again therefore
+% re-enters the callback and builds a SECOND copy of this dialog, which is
+% what users see on 'Show Cell States...' and 'Export/Save Data...'.
+% GUI.I_DLGREGISTER raises the dialog that is already up; returning tf=0
+% then makes callers abort on their usual cancel branch.
+if ~isempty(gui.i_dlgregister(parentfig))
+    indx = [];
+    tf = 0;
+    return;
+end
+
+% The delegation below is deliberately not registered here. GUI.MYTABLEDLG
+% shares the same register and records its own dialog, so the check above
+% still catches a second click while a table dialog is up.
 if length(options) > 1e4
     [indx, tf] = gui.myTabledlg(parentfig, options, Title, prefersel, allowmulti);
     return;
@@ -90,6 +106,8 @@ dlgPos = round(gui.i_centerdlgpos(parentfig, dlgSize));
 % so the dialog is functionally modal.
 d = uifigure('Name', Title, 'Position', dlgPos, ...
     'Visible', 'off', 'Resize', allowresize);
+
+gui.i_dlgregister(parentfig, d);
 
 % pos1 = d.Position
 

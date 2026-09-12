@@ -10,6 +10,9 @@ function [needupdate] = callback_InferCNV(src, ~)
 %     malignancy_score  copy-number deviation from the reference cells
 %     malignancy_type   "malignant" / "nonMalignant", when the score splits
 %
+%   On success it also makes malignancy_type the active grouping and
+%   repaints, so the result is on screen rather than only in the list.
+%
 %   See also SC_INFERCNV, SC_MALIGNSCORE, GUI.CALLBACK_CELLCYCLEPOTENCY.
 
 needupdate = false;
@@ -94,9 +97,45 @@ gui.myWaitbar(FigureHandle, fw);
 % ---- Store ----
 sce.setCellAttribute('malignancy_score', score);
 sce.setCellAttribute('malignancy_type', string(label));
+
+% Make the result the active grouping, as GUI.CALLBACK_RUNMONOCLE3 does.
+% Storing an attribute and telling the user to go find it under Ctrl+T
+% leaves the screen looking exactly as it did before the run, which reads
+% as nothing having happened. Nothing is lost: cell type, cluster id and
+% the rest are all still in the Cell State list.
+sce.c = string(label);
 gui.myGuidata(FigureHandle, sce, src);
 needupdate = true;
 
+% Repaint now rather than waiting for a refresh. NEEDUPDATE is the app's
+% signal to re-plot, but the menu that calls this
+% (EstimateMalignancyinferCNVMenuSelected) discards the return value, so
+% without this the new colouring only appears after some unrelated action.
+% APP.C, APP.CL and APP.H are public, and this is the pair of steps
+% in_UpdateMainPlot takes for a categorical variable.
+if isa(src, 'matlab.apps.AppBase')
+    [src.c, src.cL] = findgroups(string(label));
+    if isprop(src, 'h') && pkg.i_isvalid(src.h) && isprop(src.h, 'CData')
+        try
+            set(src.h, 'CData', src.c);
+        catch
+            % Stale or differently shaped plot handle. The stored SCE is
+            % still correct and the next refresh picks it up.
+        end
+    end
+end
+
+% ---- Optional heatmap ----
+answer = gui.myQuestdlg(FigureHandle, ...
+    'Show the CNV heatmap (genes along the genome by cells)?');
+if strcmp(answer, 'Yes')
+    in_cnvheatmap(cnv, T, label, isref, FigureHandle);
+end
+
+% ---- Say what happened and where it went ----
+% Last, deliberately. This used to fire before the heatmap question, and a
+% second dialog arriving right behind it made the one sentence that says
+% where the results are the easiest thing in the run to click past.
 nmal = sum(label == "malignant");
 if info.hasSplit
     verdict = sprintf('%d of %d cells called malignant.', nmal, sce.NumCells);
@@ -108,16 +147,13 @@ else
 end
 gui.myHelpdlg(FigureHandle, sprintf( ...
     ['%s\n\nReference: %d cells from %s (%s).\n\n' ...
-    'malignancy_score and malignancy_type added. To see them, use ' ...
-    'View -> Cell State (Ctrl + T).'], ...
+    'Two cell states were added:\n' ...
+    '    malignancy_score - copy-number deviation from the reference\n' ...
+    '    malignancy_type  - malignant / nonMalignant\n\n' ...
+    'The cells are now coloured by malignancy_type. Both are in the cell ' ...
+    'state list under View -> Cell State (Ctrl + T), along with whatever ' ...
+    'grouping was active before.'], ...
     verdict, nref, clabel, strjoin(cellstr(levels(:).'), ', ')), 'InferCNV');
-
-% ---- Optional heatmap ----
-answer = gui.myQuestdlg(FigureHandle, ...
-    'Show the CNV heatmap (genes along the genome by cells)?');
-if strcmp(answer, 'Yes')
-    in_cnvheatmap(cnv, T, label, isref, FigureHandle);
-end
 
 end
 

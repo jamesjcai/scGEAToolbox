@@ -12,7 +12,7 @@ function [C, W, eigenvalues, H] = ml_SoptSC(X, varargin)
 %
 % USAGE:
 % >> % [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
-% load('example_data/example10xdata.mat');
+% load('example_data/testXgs.mat');
 % [C]=run.ml_soptsc(X);
 % s=sc_tsne(X,3);
 % scatter3(s(:,1),s(:,2),s(:,3),20,C,'filled');

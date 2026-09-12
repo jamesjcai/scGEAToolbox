@@ -9,12 +9,13 @@ if nargin < 4, methodid = 1; end
 if nargin < 3, plotit = false; end
 if nargin < 2 || isempty(k), k = 4; end
 
-if isempty(parentfig)
-    parentfig = figure;
-    ax = gca;
-else
-    ax = findall(parentfig, 'Type', 'axes');
-end
+% The figure is NOT created here. Creating it up front opened an empty
+% window on every PLOTIT=false call, which is the default and how every
+% programmatic caller uses this function: the window appeared, nothing was
+% ever drawn in it, and the function returned at the PLOTIT guard below.
+% It surfaced as a stray blank figure in the middle of a GUI.CALLBACK_INFERCNV
+% run, which calls sc_knngraph(s, 10, false) purely for the adjacency matrix.
+% See the plotting block at the end for where it is made now.
 
 switch methodid
     case 1
@@ -54,6 +55,12 @@ if nargout > 0 || plotit
 end
 
 if ~plotit, return; end
+
+if isempty(parentfig)
+    ax = axes(figure);
+else
+    ax = findall(parentfig, 'Type', 'axes');
+end
 
 hold(ax, "on");
 for i = 1:size(Graph, 2)

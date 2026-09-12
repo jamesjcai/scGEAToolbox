@@ -95,7 +95,13 @@ X = sc_norm(X);
 X = log1p(X);
 
 [score] = i_admdl_calculate(X, genelist, tgsPos, 1, nbin, ctrl);
-if ~isempty(tgsNeg) && any(strlength(tgsNeg) > 0)
+% Apply the negative term only when at least one of its genes is present in
+% the data. A tgsNeg whose genes are all absent is an ordinary situation - a
+% masking enzyme simply not expressed in this tissue - and must leave the
+% positive score untouched. Without this guard the control-gene pool comes
+% back empty and MATCHES errors on it.
+if ~isempty(tgsNeg) && any(strlength(string(tgsNeg)) > 0) && ...
+        any(matches(genelist, tgsNeg, 'IgnoreCase', true))
     [s] = i_admdl_calculate(X, genelist, tgsNeg, -1, nbin, ctrl);
     score = score + s;
 end
@@ -142,6 +148,14 @@ for i = 1:length(tgs)
     ctrl_cell{i} = bin_genes(randsample(numel(bin_genes), k));
 end
 ctrl_use = unique(vertcat(ctrl_cell{:}));
+
+% None of TGS is in the data: there is no signal and no matched background,
+% so the score is undefined rather than zero. VERTCAT of empty cells gives a
+% 0-by-0 double, which MATCHES would reject, so bail before it.
+if isempty(ctrl_use)
+    score = NaN(size(X, 2), 1);
+    return;
+end
 
 ctrl_score = mean(Xsorted(matches(gsorted, ctrl_use, 'IgnoreCase', true), :), 1);
 features_score = mean(Xsorted(idx, :), 1);

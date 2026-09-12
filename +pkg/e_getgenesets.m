@@ -27,7 +27,7 @@ function [setmatrx, setnames, setgenes] = e_getgenesets(option,species,parentfig
 %                       option 2 cannot detect a regulon whose targets move
 %                       in opposite directions.
 %
-% See also: SC_GSETTEST, SC_DPG, PKG.E_ULM, PKG.E_GLYCOGENESETS
+% See also: SC_GSETTEST, SC_DPG, PKG.E_ULM, GLY.GENESETS
 if nargin < 4, confidence = []; end
 if nargin < 3, parentfig = []; end
 if ~isempty(parentfig)
@@ -128,7 +128,7 @@ switch option
             load(glycofile, 'setmatrx', 'setnames', 'setgenes');
         else
             % Fall back to building the collection on the fly.
-            [setmatrx, setnames, setgenes] = pkg.e_glycogenesets();
+            [setmatrx, setnames, setgenes] = gly.genesets();
         end
 end
 end

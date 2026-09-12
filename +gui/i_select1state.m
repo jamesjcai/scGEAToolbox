@@ -82,14 +82,22 @@ if isempty(listitems), return; end
 if tf2 == 1
     clabel = listitems{indx2};
     switch clabel
+        % SCE.X is single SPARSE from R2025a on, so every quantity summed
+        % out of it is sparse too, and STRING() cannot convert a sparse
+        % array: picking Library Size and plotting it crashed in
+        % GUI.I_GSCATTER3 with "Conversion to string from sparse single is
+        % not possible". A per-cell annotation has no reason to be sparse
+        % or single, so these are returned full double, and as columns -
+        % 'Number of Detected Genes' was a 1-by-N row, which SCE.C's length
+        % check waves through and downstream code does not expect.
         case 'Library Size'
-            thisc = sum(sce.X).';
+            thisc = full(double(sum(sce.X, 1)))';
         case 'Number of Detected Genes'
-            thisc = sum(sce.X > 0, 1);
+            thisc = full(double(sum(sce.X > 0, 1)))';
         case 'Mt-reads Ratio'
             i = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
-            lbsz = sum(sce.X, 1);
-            lbsz_mt = sum(sce.X(i, :), 1);
+            lbsz = full(double(sum(sce.X, 1)));
+            lbsz_mt = full(double(sum(sce.X(i, :), 1)));
             thisc = (lbsz_mt ./ lbsz).';
         case 'Cluster ID' % cluster id
             thisc = sce.c_cluster_id;

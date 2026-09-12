@@ -3,7 +3,7 @@ function [C] = ml_SinNLRR(X, k)
 %
 % USAGE:
 % >> % [X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
-% load('example_data/example10xdata.mat');
+% load('example_data/testXgs.mat');
 % [C,s]=run_simlr(X,[],true);
 % figure;
 % scatter(s(:,1),s(:,2),20,C,'filled')

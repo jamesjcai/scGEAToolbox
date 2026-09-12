@@ -176,7 +176,7 @@ switch selecteditem
     case {'Predefined Custom Gene Sets', 'Glycobiology Gene Sets'}
         % if ~gui.gui_showrefinfo('Predefined Cell Score', FigureHandle), return; end
         % Both entries score the same collection: pkg.e_cellscores already
-        % appends pkg.e_glycogenesets to its table, so the glycobiology
+        % appends gly.genesets to its table, so the glycobiology
         % entry is that table filtered to SignatureTag='Glycobiology'.
         [y, ttxt, posg, methodid] = i_scorePredefinedSets(sce, ...
             selecteditem, FigureHandle);
@@ -288,7 +288,7 @@ function [y, ttxt, posg, methodid] = i_scorePredefinedSets(sce, ...
 %                                     scores within them
 %
 %   These used to be two branches with two separate scoring calls, even
-%   though pkg.e_cellscores appends pkg.e_glycogenesets to its own table and
+%   though pkg.e_cellscores appends gly.genesets to its own table and
 %   tags those rows SignatureTag='Glycobiology' - the gene lists and the
 %   resulting scores were identical either way. The glycobiology branch also
 %   lacked this one's guard for signatures with too few expressed genes,

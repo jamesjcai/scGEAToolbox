@@ -28,12 +28,12 @@ catch ME
         'ReadVariableNames', true);
 end
 
-% Append the curated glycobiology gene sets (pkg.e_glycogenesets) so they are
+% Append the curated glycobiology gene sets (gly.genesets) so they are
 % offered alongside the spreadsheet-defined scores, e.g. in the gene-program
 % radar plot. Defensive: if the collection is unavailable, the xlsx-defined
 % scores still work.
 try
-    [~, ~, ~, Tglyco] = pkg.e_glycogenesets();
+    [~, ~, ~, Tglyco] = gly.genesets();
     isnew = ~matches(string(Tglyco.Name), string(T.ScoreType), "IgnoreCase", true);
     Tglyco = Tglyco(isnew, :);
     nglyco = height(Tglyco);

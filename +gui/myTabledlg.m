@@ -3,11 +3,26 @@ function [indx, tf] = myTabledlg(parentfig, options, Title, ...
 if nargin < 5, allowmulti = true; end
 if nargin < 4, prefersel = []; end
 
+% Re-entrancy guard, shared with GUI.MYLISTDLG - see GUI.I_DLGREGISTER.
+% This dialog does set WindowStyle='modal', but not until it is already
+% visible, so there is a window in which the parent is still clickable.
+% More importantly the shared register is what covers the delegation from
+% GUI.MYLISTDLG for lists over 1e4 items: with a register of its own, that
+% path would be unguarded, because the caller finds its own register empty,
+% hands off, and a second click opens a second table dialog.
+if ~isempty(gui.i_dlgregister(parentfig))
+    indx = [];
+    tf = 0;
+    return;
+end
+
 dlgSize = [300, 450];
 dlgPos = gui.i_centerdlgpos(parentfig, dlgSize);
 
 d = uifigure('Name', Title, 'Position', dlgPos, ...
 'WindowStyle', 'normal', 'Visible','off');
+
+gui.i_dlgregister(parentfig, d);
 
 % --- UITable Setup (Replacing Listbox) ---
 % uitable doesn't have a 'Value' property for strings, so we manage indices

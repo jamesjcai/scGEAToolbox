@@ -127,7 +127,7 @@ control, turnover, and glycan recognition.
 ## Provenance and caveats
 
 The collection is defined in
-[`../../+pkg/e_glycogenesets.m`](../../+pkg/e_glycogenesets.m); each module
+[`../../+pkg/genesets.m`](../../+pkg/genesets.m); each module
 carries a `Reference` naming its primary source:
 
 - **KEGG PATHWAY** glycan maps — `hsa00510` (N-glycan), `hsa00512` (mucin
@@ -155,8 +155,8 @@ each list against its cited KEGG/GO/Reactome source.
 
 | File | Purpose |
 |------|---------|
-| [`../../+pkg/e_glycogenesets.m`](../../+pkg/e_glycogenesets.m) | **Source of truth.** Returns the collection as `[setmatrx, setnames, setgenes, T]` — the same native form as `pkg.e_getgenesets`. Optionally exports a GMT file. |
-| [`../../sc_glycostate.m`](../../sc_glycostate.m) | Top-level scoring function. Returns a modules × cells glyco-state matrix. |
+| [`../../+pkg/genesets.m`](../../+pkg/genesets.m) | **Source of truth.** Returns the collection as `[setmatrx, setnames, setgenes, T]` — the same native form as `pkg.e_getgenesets`. Optionally exports a GMT file. |
+| [`../../gly.state.m`](../../gly.state.m) | Top-level scoring function. Returns a modules × cells glyco-state matrix. |
 | [`glycobiology.mat`](glycobiology.mat) | Precomputed `setmatrx` / `setnames` / `setgenes` cache (loaded by `pkg.e_getgenesets`). |
 | [`glycobiology.gmt`](glycobiology.gmt) | Portable MSigDB-style GMT export for use outside MATLAB. |
 
@@ -165,12 +165,12 @@ each list against its cited KEGG/GO/Reactome source.
 ### Programmatic — score every module per cell
 
 ```matlab
-[cs, modules] = sc_glycostate(sce.X, sce.g);   % modules × cells score matrix
+[cs, modules] = gly.state(sce.X, sce.g);   % modules × cells score matrix
 % cluster or embed cells on cs, or attach one module as a cell attribute:
 sce = sce.addcellattr('Sialylation', cs(modules == "Glyco_sialylation", :)');
 ```
 
-`sc_glycostate(X, genelist, methodid, minGenes)`:
+`gly.state(X, genelist, methodid, minGenes)`:
 - `methodid` — scoring method forwarded to `sc_cellscore`: `1` = UCell,
   `2` = AddModuleScore (default), `3` = AUCell.
 - `minGenes` — a module is scored only if at least this many of its genes are
@@ -179,9 +179,9 @@ sce = sce.addcellattr('Sialylation', cs(modules == "Glyco_sialylation", :)');
 ### Programmatic — get the raw collection
 
 ```matlab
-[setmatrx, setnames, setgenes, T] = pkg.e_glycogenesets();   % native form + table
+[setmatrx, setnames, setgenes, T] = gly.genesets();   % native form + table
 [setmatrx, setnames, setgenes]    = pkg.e_getgenesets(4);    % via the standard loader
-pkg.e_glycogenesets("my_glyco.gmt");                          % export a GMT copy
+gly.genesets("my_glyco.gmt");                          % export a GMT copy
 ```
 
 ### GUI
@@ -195,12 +195,12 @@ pickers:
 
 ## Regenerating the cached files
 
-The `.mat` and `.gmt` are snapshots of `pkg.e_glycogenesets()`. After editing the
-gene lists in `+pkg/e_glycogenesets.m`, rebuild them:
+The `.mat` and `.gmt` are snapshots of `gly.genesets()`. After editing the
+gene lists in `+pkg/genesets.m`, rebuild them:
 
 ```matlab
-[setmatrx, setnames, setgenes] = pkg.e_glycogenesets();
+[setmatrx, setnames, setgenes] = gly.genesets();
 save(fullfile('assets','GeneSets','glycobiology.mat'), ...
     'setmatrx', 'setnames', 'setgenes');
-pkg.e_glycogenesets(fullfile('assets','GeneSets','glycobiology.gmt'));
+gly.genesets(fullfile('assets','GeneSets','glycobiology.gmt'));
 ```

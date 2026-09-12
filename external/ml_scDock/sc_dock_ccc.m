@@ -376,7 +376,7 @@ for k = 1:numel(candidates)
 end
 % Last resort: resolve through the toolbox itself, so the lookup does not
 % depend on any one machine's folder layout.
-w = which('sc_glycostate');
+w = which('gly.state');
 if ~isempty(w)
     asset_dir = fullfile(fileparts(w), 'assets', 'Ligand_Receptor');
 else

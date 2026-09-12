@@ -102,14 +102,18 @@ end
     function [thisc, clabel] = i_getidx(indx)
         clabel = listitems{indx};
         switch clabel
+            % Already FULL here, which is why this selector never hit the
+            % sparse STRING() crash; DOUBLE for consistency with the other
+            % two, and the mt ratio's numerator was still sparse. See the
+            % note in GUI.I_SELECT1STATE.
             case 'Library Size'
-                thisc = full(sum(sce.X).');
+                thisc = full(double(sum(sce.X, 1)))';
             case 'Number of Detected Genes'
-                thisc = full(sum(sce.X > 0).');
+                thisc = full(double(sum(sce.X > 0, 1)))';
             case 'Mt-reads Ratio'
                 i = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
-                lbsz = full(sum(sce.X, 1));
-                lbsz_mt = sum(sce.X(i, :), 1);
+                lbsz = full(double(sum(sce.X, 1)));
+                lbsz_mt = full(double(sum(sce.X(i, :), 1)));
                 thisc = (lbsz_mt ./ lbsz).';
             case 'Current Class (C)'
                 thisc = sce.c;

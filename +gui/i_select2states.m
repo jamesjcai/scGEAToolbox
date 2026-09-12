@@ -94,12 +94,15 @@ if tf2 == 1
 function [thisc, clabel] = i_getidx(indx)
         clabel = listitems{indx};
         switch clabel
+            % Full double columns: SCE.X is single sparse from R2025a on,
+            % and STRING() cannot convert a sparse array. See the note in
+            % GUI.I_SELECT1STATE.
             case 'Library Size'
-                thisc = sum(sce.X).';
+                thisc = full(double(sum(sce.X, 1)))';
             case 'Mt-reads Ratio'
                 i = startsWith(sce.g, 'mt-', 'IgnoreCase', true);
-                lbsz = sum(sce.X, 1);
-                lbsz_mt = sum(sce.X(i, :), 1);
+                lbsz = full(double(sum(sce.X, 1)));
+                lbsz_mt = full(double(sum(sce.X(i, :), 1)));
                 thisc = (lbsz_mt ./ lbsz).';
             case 'Current Class (C)'
                 thisc = sce.c;

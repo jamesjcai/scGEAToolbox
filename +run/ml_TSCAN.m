@@ -16,8 +16,8 @@ function [t] = ml_TSCAN(X, varargin)
 %   unrelated cell's index.
 
 % ref: https://academic.oup.com/nar/article/44/13/e117/2457590
-% load example_data\example10xdata.mat
-% [X,genelist]=sc_selectg(X,genelist,7,8);
+% load example_data\testXgs.mat
+% [X,g]=sc_selectg(X,g,7,8);
 % [X]=sc_selectc(X);
 % [t_pseudotime]=sc_tscan(X);
 
