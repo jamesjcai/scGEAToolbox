@@ -5,21 +5,21 @@ SCGEATOOL is a lightweight and blazing fast MATLAB application that provides int
 
 Overview
 --------
-In MATLAB, scgeatool function can be used to start SCGEATOOL to visualize `SCE` class/object. Below are links to several case studies and examples using the scgeatool function to explore scRNA-seq data. All examples are below are publically available through GitHub.
+In MATLAB, the ``scgeatool`` function starts SCGEATOOL on a ``SingleCellExperiment`` (SCE) object. See :ref:`case_studies` for worked examples. All the examples below use data bundled with the toolbox.
 
 |Overview of scgeatool|
 
-.. |Overview of scgeatool| image:: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Images/Tooltips.png
-   :target: https://github.com/jamesjcai/scGEAToolbox/raw/main/resources/Images/Tooltips.png
+.. |Overview of scgeatool| image:: https://github.com/jamesjcai/scGEAToolbox/raw/main/assets/Images/Tooltips.png
+   :target: https://github.com/jamesjcai/scGEAToolbox/raw/main/assets/Images/Tooltips.png
   
 Using SCGEATOOL to explore
 -----------------------------
-For a quick exploratry data analysis using `scgeatool` function
+For a quick exploratory data analysis using `scgeatool` function
 
-.. code-block::
+.. code-block:: matlab
 
   cdgea;
-  load example_data\testXgs.mat
+  load example_data/testXgs.mat
   sce=SingleCellExperiment(X,g,s);
   scgeatool(sce);
   
@@ -27,10 +27,10 @@ where X is the expression matrix, g is the list of genes, and s is the coordinat
 
 You can also load an example SCE (`SingleCellExperiment` object) variable using the following code:
 
-.. code-block::
+.. code-block:: matlab
 
   cdgea;
-  load example_data\testSce.mat
+  load example_data/testSce.mat
   scgeatool(sce);
 
 If everything goes right, you will see the main inferface of SCGEATOOL like this:
@@ -39,18 +39,26 @@ If everything goes right, you will see the main inferface of SCGEATOOL like this
 
 Making scRNA-seq data into `SCE`
 --------------------------------
-`SingleCellExperiment` defines a Single-cell Experiment (SCE) class in order to store scRNAseq data and variables. To make an SCE class, you need two variables: :math:`X` and :math:`g`, which are gene expression matrix and gene list, respectively. 
+`SingleCellExperiment` stores the expression matrix and everything derived from
+it in one object. Only two inputs are required: :math:`X`, the gene expression
+matrix, and :math:`g`, the gene list. An embedding :math:`s` and a grouping
+:math:`c` are optional.
 
-.. code-block::
+.. code-block:: matlab
 
-  cdgea;
-  load example_data\testXgs.mat
-  sce=SingleCellExperiment(X,g,s);
-  scgeatool(sce)
-  
-.. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/Images/scgeatool.png
+  sce = SingleCellExperiment(X, g);          % minimum
+  sce = SingleCellExperiment(X, g, s);       % with a precomputed embedding
+  sce = SingleCellExperiment(X, g, s, c);    % and a grouping
+
+Any of the readers listed in :doc:`function_reference` can supply :math:`X` and
+:math:`g`. If you omit :math:`s`, the constructor fills it with random
+coordinates as a placeholder -- run ``sce.embedcells(...)`` before relying on
+it, and before clustering on it.
+
+
+.. |gui| image:: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/assets/Images/scgeatool.png
    :width: 250
-   :target: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/resources/Images/scgeatool.png
+   :target: https://raw.githubusercontent.com/jamesjcai/scGEAToolbox/main/assets/Images/scgeatool.png
 
 SCGEATOOL standalone for Windows
 --------------------------------

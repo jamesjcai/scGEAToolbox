@@ -6,7 +6,18 @@
 Welcome to scGEAToolbox's documentation!
 ========================================
 
-Single-cell RNA sequencing (scRNA-seq) technology has revolutionized the way research is done in biomedical sciences. It provides an unprecedented level of resolution across individual cells for studying cell heterogeneity and gene expression variability. Analyzing scRNA-seq data is challenging though, due to the sparsity and high dimensionality of the data. scGEAToolbox is a MATLAB toolbox for scRNA-seq data analysis. It contains a comprehensive set of functions for data normalization, feature selection, batch correction, imputation, cell clustering, trajectory/pseudotime analysis, and network construction, which can be combined and integrated to building custom workflow. While most of the functions are implemented in native MATLAB, wrapper functions are provided to allow users to call the “third-party” tools developed in Matlab or other languages. Furthermore, scGEAToolbox is equipped with sophisticated graphical user interfaces (GUIs), making it an easy-to-use application for quick data processing.
+Single-cell RNA sequencing (scRNA-seq) technology has revolutionized the way research is done in biomedical sciences. It provides an unprecedented level of resolution across individual cells for studying cell heterogeneity and gene expression variability. Analyzing scRNA-seq data is challenging though, due to the sparsity and high dimensionality of the data. scGEAToolbox is a MATLAB toolbox for scRNA-seq data analysis. It contains a comprehensive set of functions for quality control, normalization, feature selection, batch correction, imputation, cell clustering, trajectory/pseudotime analysis, cell type annotation, differential expression and variability testing, gene set scoring, and gene regulatory network construction, which can be combined into custom workflows. Most functions are implemented in native MATLAB; wrapper functions let you call third-party tools written in MATLAB, Python or R from the same session. scGEAToolbox is equipped with sophisticated graphical user interfaces (GUIs), making it an easy-to-use application for quick data processing.
+
+Three ways to use it
+--------------------
+
+- **SCGEATOOL**, the App Designer GUI: run ``scgeatool`` in MATLAB. See
+  :doc:`scgeatool`.
+- **The function API**, at the matrix level or through the
+  ``SingleCellExperiment`` class. See :doc:`getting_started` and
+  :doc:`function_reference`.
+- **The** ``scgea`` **command line**, for batch and pipeline work without
+  opening MATLAB. See :doc:`cli`.
 
 Official Websites and Social Networks
 -------------------------------------
@@ -24,8 +35,10 @@ Please, visit the official website |View scGEAToolbox on File Exchange| of scGEA
    quick_installation
    getting_started
    scgeatool
-   code_formulas   
+   cli
+   code_formulas
    case_studies
+   function_reference
 
 .. toctree::
    :maxdepth: 2

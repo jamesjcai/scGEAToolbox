@@ -22,7 +22,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'scGEAToolbox'
-copyright = '2025, James Cai'
+copyright = '2026, James Cai'
 author = 'James Cai'
 
 
@@ -33,8 +33,6 @@ author = 'James Cai'
 # ones.
 extensions = [
     'sphinx_rtd_theme',
-    'sphinx.ext.autodoc',
-    'sphinx_autodoc_typehints'
 ]
 
 # https://github.com/sphinx-contrib/matlabdomain  'sphinxcontrib.matlab', 'sphinx.ext.autodoc'
@@ -58,8 +56,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'sphinx_rtd_theme'
 
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
-html_theme_path = ['_themes']
+# No custom static files or local themes: both '_static' and '_themes' were
+# declared here without existing, which Sphinx warns about on every build.
+# Re-add html_static_path when there is actually something to put in it.
+html_static_path = []

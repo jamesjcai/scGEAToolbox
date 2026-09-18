@@ -22,7 +22,7 @@ Read two scRNA-seq data sets and apply gene selection, normalization, imputation
   [X, genelistx] = sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
   [Y, genelisty] = sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
 
-**Select genes with at least 3 cells having more than 5 reads per cell**
+**Select genes detected in at least 5 cells with 3 or more reads each**
 
 .. code-block:: matlab
 
@@ -215,10 +215,11 @@ Dimensionality reduction and gene-level scatter plots.
 
 .. code-block:: matlab
 
+  % sc_splinefit2 returns T already sorted by T.dd (the change in deviation
+  % between the two data sets), descending, so the top rows are the DD genes.
   T = sc_splinefit2(X, Y, genelistx, genelisty);
-  T = sortrows(T, size(T, 2), 'descend');
-  [~, idx1] = ismember(table2array(T(:,1)), genelistx);
-  [~, idx2] = ismember(table2array(T(:,1)), genelisty);
+  [~, idx1] = ismember(T.genes, genelistx);
+  [~, idx2] = ismember(T.genes, genelisty);
   figure;
   gui.sc_stem3(X(idx1, :), Y(idx2, :), genelistx(idx1), 50);
 
@@ -278,6 +279,9 @@ Cluster cells using SIMLR, SC3, and SoptSC, and compare results.
   load example_data/sc3_results.txt
   c0 = sc3_results;
 
+  % Cal_NMI ships with the bundled SIMLR sources, and it is run.ml_SIMLR
+  % that puts that folder on the path -- so c2 must be computed before
+  % these three lines run.
   Cal_NMI(c0, c1)
   Cal_NMI(c0, c2)
   Cal_NMI(c0, c3)
@@ -351,7 +355,8 @@ Trajectory analysis and single-cell gene regulatory network (scGRN) construction
 
   X50 = X(1:50, :);
   genelist50 = genelist(1:50);
-  A = sc_grn(X50, 'pcnet');
+  A = sc_grn(X50, 'pcrnet');   % other methods: genie3, pearson, mi, xicor,
+                               % distcorr, grnformer, tn -- see sc_grn help
 
   A = A .* (abs(A) > quantile(abs(A(:)), 0.9));
   G = digraph(A, genelist50);
@@ -444,3 +449,126 @@ Differential expression analysis, marker gene identification, and cell type anno
 
   sce = SingleCellExperiment(X, genelist, s_tsne);
   scgeatool(sce);
+
+
+Demo 7: Object-Level Workflow with ``SingleCellExperiment``
+------------------------------------------------------------
+
+Demos 1-6 thread a count matrix through the ``sc_*`` functions. The
+``SingleCellExperiment`` (SCE) class wraps the matrix, the gene list, the
+embedding and every derived annotation in one object, and exposes the same
+steps as methods. This is the workflow the GUI and the CLI both use.
+
+**Build an SCE and run QC**
+
+.. code-block:: matlab
+
+  cdgea;
+  load example_data/testXgs.mat X g
+  sce = SingleCellExperiment(X, g);
+  sce = sce.qcfilter();                 % drop low-quality cells and genes
+
+``SingleCellExperiment`` is a ``handle`` class with a ``Copyable`` mixin, so
+plain assignment aliases the object rather than copying it. Use ``copy`` when
+you want to keep the original::
+
+  sce_raw = copy(sce);
+
+**Embed and cluster**
+
+.. code-block:: matlab
+
+  sce = sce.embedcells('umap', true, true, 2);   % method, forced, usehvgs, ndim
+  sce = sce.clustercells(8, 'kmeans', true);     % k, method, forced
+
+``clustercells`` accepts two families of methods. ``'kmeans'``, ``'kmedoids'``,
+``'spectclust'``, ``'snndpc'`` and ``'mbkmeans'`` run on the embedding, so they
+require that ``embedcells`` has been run first -- an ``s`` you supplied to the
+constructor yourself does not count, because only ``embedcells`` records the
+embedding the method looks for. ``'sc3'``, ``'simlr'``, ``'soptsc'`` and
+``'sinnlrr'`` run on the expression matrix and need no embedding.
+
+Pass ``forced = true`` to recompute a step that has already been run once;
+without it, a step that already has a result returns unchanged.
+
+**Annotate cells**
+
+.. code-block:: matlab
+
+  sce = sce.estimatecellcycle();
+  sce = sce.estimatepotency("mouse");    % or "human", or 1 (human) / 2 (mouse)
+  sce = sce.assigncelltype("mouse");     % PanglaoDB markers
+
+``sc_annotatecells`` is a single front door over every annotation method in the
+toolbox, and records which one produced each label:
+
+.. code-block:: matlab
+
+  [sce, T] = sc_annotatecells(sce, Method="markers", Species="mouse");
+  disp(T)                                % Method, Cluster, CellType, NumCells, Confidence
+
+Other values for ``Method`` are ``"llm"`` (a language model reading each
+cluster's marker genes), ``"scimilarity"`` and ``"panhumanpy"`` (reference-model
+annotation, per cell, no clustering needed), and ``"consensus"`` (run several
+and keep the label they agree on). They are not interchangeable: the first two
+label *clusters* and inherit any clustering error, while the reference models
+label *cells* but need a multi-gigabyte model and a working Python environment.
+
+**Inspect the result**
+
+.. code-block:: matlab
+
+  scgeatool(sce);
+
+
+Demo 8: Differential Expression, Variability and Signature Scoring
+--------------------------------------------------------------------
+
+**Differential expression between two groups of cells**
+
+.. code-block:: matlab
+
+  cdgea;
+  load example_data/testXgs.mat X g
+  A = X(:, 1:300);
+  B = X(:, 301:600);
+
+  T = sc_deg(A, B, g, 1);     % methodid 1 = Mann-Whitney U (default), 2 = t-test
+  T.Properties.VariableNames  % gene, p_val, avg_log2FC, pct_1, pct_2, p_val_adj, ...
+
+  [T, Tup, Tdn] = sc_deg(A, B, g, 1);   % also split into up- and down-regulated
+
+Two further DE methods are available for count data:
+``sc_degnb`` (negative-binomial) and ``sc_degmast`` (the MAST hurdle model).
+
+**Differential variability between two conditions**
+
+``sc_dvg`` operates on two SCE objects rather than on raw matrices:
+
+.. code-block:: matlab
+
+  sce1 = SingleCellExperiment(A, g);
+  sce2 = SingleCellExperiment(B, g);
+  T = sc_dvg(sce1, sce2, {'A'}, {'B'}, 'splinefit');
+
+  % Methods: 'splinefit' (default), 'analytic' (closed-form reference curve,
+  % keeps the genes splinefit drops at the end of the fit), 'brennecke'.
+
+**Cell-level signature scoring**
+
+.. code-block:: matlab
+
+  tcell = ["CD3D" "CD3E" "CD2"];
+  score = sc_cellscore(X, g, tcell);          % methodid 2 = AddModuleScore (default)
+  score = sc_cellscore(X, g, tcell, [], 1);   % 1 = UCell, 3 = AUCell
+
+Only method 2 has a negative-marker term; methods 1 and 3 warn and ignore any
+``tgsNeg`` you pass.
+
+**Gene set enrichment**
+
+.. code-block:: matlab
+
+  T = sc_deg(A, B, g, 1);
+  T = sortrows(T, 'avg_log2FC', 'descend');
+  Tg = sc_fgsea(T.gene, T.avg_log2FC);        % preranked GSEA against Enrichr libraries
