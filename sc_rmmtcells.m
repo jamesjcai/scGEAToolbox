@@ -19,7 +19,7 @@ if sum(idx) > 0
         X = X(:, keptidx);
         %X(:,~keptidx)=[];
         if verbose
-            fprintf('%d cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...
+            fprintf('Removed %s with mt-read ratio >=%f (or %f%%).\n', ...
                 sum(~keptidx), mtratio, mtratio*100);
         end
     else

@@ -1,22 +1,32 @@
-function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir)
+function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir, method, direction)
 % LLM.RUN_DV_ANALYSIS  Cell type-specific DV analysis between two GEO samples.
 %
 %   results = llm.run_dv_analysis(sample_id1, sample_id2)
 %   results = llm.run_dv_analysis(sample_id1, sample_id2, data_dir)
 %   results = llm.run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir)
+%   results = llm.run_dv_analysis(..., out_dir, method)
+%   results = llm.run_dv_analysis(..., out_dir, method, direction)
 %
 %   Loads cleandata.mat for each sample (each file contains a
 %   SingleCellExperiment variable named 'sce') and performs differential
-%   variability (DV) analysis using gui.e_dvanalysis_splinefit for every
-%   cell type shared between the two samples.
+%   variability (DV) analysis with SC_DVG for every cell type shared
+%   between the two samples.
 %
-%   DiffSign interpretation:
-%     > 0  — higher transcriptional variability in sample 1
-%     < 0  — lower transcriptional variability in sample 1
+%   DiffSign interpretation (set by DIRECTION; the JSON summary names it):
+%     'mean' (default)
+%       > 0  — up-regulated: mean expression higher in sample 1 (tested)
+%       < 0  — down-regulated: mean expression lower in sample 1 than in
+%              sample 2 (baseline)
+%     'deviation'
+%       > 0  — higher transcriptional variability in sample 1
+%       < 0  — lower transcriptional variability in sample 1
+%   DiffDist, not DiffSign, carries the size of the variability difference.
 %
 %   If out_dir is provided, results are saved as Excel files
-%   (DV_<id1>_vs_<id2>_<celltype>.xlsx) with sheets: All genes,
-%   Up-regulated, Down-regulated, Note.
+%   (DV_<id1>_vs_<id2>_<celltype>.xlsx; a non-default method adds
+%   _<method> after DV, and direction 'deviation' adds _devsign) with
+%   sheets: All genes, Up-regulated, Down-regulated, Note ('Variability
+%   increasing'/'decreasing' in place of up/down for 'deviation').
 %
 %   Inputs:
 %     sample_id1 - GSM accession of sample 1 (e.g. 'GSM2333580')
@@ -27,6 +37,15 @@ function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir)
 %                  Pass an absolute path when calling from the agent.
 %     out_dir    - folder to write Excel result files (optional).
 %                  If omitted or empty, no files are written.
+%     method     - reference curve each sample is scored against:
+%                  'splinefit' (default) fits a smoothing spline;
+%                  'analytic' uses the closed-form gamma-Poisson curve,
+%                  which is defined at every mean and so discards no genes
+%                  at the ends of the fitted range. Both return the same
+%                  table, so the rest of this function is unaffected.
+%     direction  - how DV genes are split into up and down (see SC_DVG):
+%                  'mean' (default) by mean expression, or 'deviation'
+%                  by deviation from each sample's curve.
 %
 %   Output:
 %     results - struct array with one element per shared cell type:
@@ -34,8 +53,8 @@ function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir)
 %       .n1         - number of cells from sample 1
 %       .n2         - number of cells from sample 2
 %       .T          - full DV table (all genes, sorted by DiffDist descending)
-%       .Tup        - genes with higher variability in sample 1 (DiffSign > 0)
-%       .Tdn        - genes with lower variability in sample 1 (DiffSign < 0)
+%       .Tup        - significant DV genes up in sample 1 (DiffSign > 0)
+%       .Tdn        - significant DV genes down in sample 1 (DiffSign < 0)
 %
 %   Example (from agent via evaluate_matlab_code):
 %     results = llm.run_dv_analysis('GSM2333580', 'GSM2333581', ...
@@ -43,6 +62,12 @@ function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir)
 
 if nargin < 3 || isempty(data_dir), data_dir = 'data'; end
 if nargin < 4, out_dir = []; end
+if nargin < 5 || isempty(method), method = 'splinefit'; end
+method = validatestring(method, {'splinefit', 'analytic'}, ...
+    mfilename, 'method', 5);
+if nargin < 6 || isempty(direction), direction = 'mean'; end
+direction = validatestring(direction, {'mean', 'deviation'}, ...
+    mfilename, 'direction', 6);
 
 max_cells = 2000;   % subsample per cell type for speed
 
@@ -130,7 +155,7 @@ for k = 1:numel(shared_ct)
     T = [];
     try
         T = sc_dvg(sce1_ct, sce2_ct, ...
-            {char(sample_id1)}, {char(sample_id2)}, 'splinefit');
+            {char(sample_id1)}, {char(sample_id2)}, method, direction);
     catch ME
         fprintf('FAILED: %s\n', ME.message);
         skipped{end+1} = struct('cell_type', char(ct), 'n1', n1, 'n2', n2, ...
@@ -139,9 +164,9 @@ for k = 1:numel(shared_ct)
     end
 
     % Label columns (adds sample-specific headers and note fields)
-    [T, Tnt] = pkg.in_DVTableProcess(T, {char(sample_id1)}, {char(sample_id2)});
+    [T, Tnt] = pkg.in_DVTableProcess(T, {char(sample_id1)}, {char(sample_id2)}, direction);
 
-    % Split into significant up (higher variability in sample 1) and down (pval < 0.05)
+    % Split significant genes (pval < 0.05) into up (DiffSign > 0, sample 1) and down
     Tup = T(T.DiffSign > 0 & T.pval < 0.05, :);
     Tdn = T(T.DiffSign < 0 & T.pval < 0.05, :);
 
@@ -157,15 +182,30 @@ for k = 1:numel(shared_ct)
 
     % Save Excel file if out_dir provided
     if ~isempty(out_dir)
-        outfile = sprintf('DV_%s_vs_%s_%s.xlsx', ...
+        % A non-default curve is named in the file, so that a second
+        % run does not overwrite the first. The default keeps the name
+        % it has always written, which callers look for.
+        methodinfix = '';
+        if ~strcmp(method, 'splinefit')
+            methodinfix = ['_', method];
+        end
+        uplabel = 'Up-regulated (p<0.05)';
+        dnlabel = 'Down-regulated (p<0.05)';
+        if strcmp(direction, 'deviation')
+            methodinfix = [methodinfix, '_devsign'];
+            % 31 characters, Excel's sheet-name limit.
+            uplabel = 'Variability increasing (p<0.05)';
+            dnlabel = 'Variability decreasing (p<0.05)';
+        end
+        outfile = sprintf('DV%s_%s_vs_%s_%s.xlsx', methodinfix, ...
             matlab.lang.makeValidName(sample_id1), ...
             matlab.lang.makeValidName(sample_id2), ...
             matlab.lang.makeValidName(string(ct)));
         filesaved = fullfile(out_dir, outfile);
         try
             writetable(T,   filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
-            writetable(Tup, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Up-regulated (p<0.05)');
-            writetable(Tdn, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Down-regulated (p<0.05)');
+            writetable(Tup, filesaved, 'FileType', 'spreadsheet', 'Sheet', uplabel);
+            writetable(Tdn, filesaved, 'FileType', 'spreadsheet', 'Sheet', dnlabel);
             writetable(Tnt, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'Note');
             fprintf('  Saved: %s\n', filesaved);
         catch ME
@@ -178,13 +218,14 @@ fprintf('\nDV analysis complete: %d cell type(s) analysed, %d skipped.\n', ...
     numel(results), numel(skipped));
 
 % ---- Print JSON summary for agent consumption -----------------------
-i_print_json_summary(results, skipped, sample_id1, sample_id2);
+i_print_json_summary(results, skipped, sample_id1, sample_id2, method, direction);
 end
 
 
 % ---- Helper: print JSON summary of top DV genes ---------------------
-function i_print_json_summary(results, skipped, sample_id1, sample_id2, top_n)
-if nargin < 5, top_n = 20; end
+function i_print_json_summary(results, skipped, sample_id1, sample_id2, ...
+        method, direction, top_n)
+if nargin < 7, top_n = 20; end
 
 cell_types = {};
 for k = 1:numel(results)
@@ -216,6 +257,8 @@ end
 summary = struct( ...
     'sample1',           char(sample_id1), ...
     'sample2',           char(sample_id2), ...
+    'method',            char(method), ...
+    'direction',         char(direction), ...
     'cell_types',        {cell_types}, ...
     'skipped',           {skipped}, ...
     'no_results_reason', no_results_reason);

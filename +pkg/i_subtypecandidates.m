@@ -1,13 +1,15 @@
-function [ctypelist, matched, primarytypes] = i_subtypecandidates(sce)
+function [ctypelist, matched, primarytypes, resolved] = i_subtypecandidates(sce)
 %I_SUBTYPECANDIDATES Primary cell types in a dataset that have subtype markers.
 %
-%   [ctypelist, matched, primarytypes] = pkg.i_subtypecandidates(sce)
+%   [ctypelist, matched, primarytypes, resolved] = pkg.i_subtypecandidates(sce)
 %
 % Outputs:
-%   ctypelist    - the primary types present in sce.c_cell_type_tx, as named by
-%                  the marker table; empty when the data has none of them
+%   ctypelist    - the primary types present in sce.c_cell_type_tx that still
+%                  have cells to subdivide; empty when the data has none
 %   matched      - per cell, the primary type its label belongs to, "" for none
 %   primarytypes - every primary type the marker table knows about
+%   resolved     - per cell, true when the label already names its subtype and
+%                  a subtype run would therefore leave it alone
 %
 % One answer for both the menu and the dialog: GUI.I_UPDATEANNOTATEMENU asks
 % whether there is anything to annotate before enabling the menu item, and
@@ -15,11 +17,19 @@ function [ctypelist, matched, primarytypes] = i_subtypecandidates(sce)
 % The marker table's cell type column is cached because the menu asks every
 % time the Annotate menu is opened.
 %
-% see also: pkg.i_matchprimarytype, gui.callback_SubtypeAnnotation,
-%           gui.i_updateannotatemenu
+% RESOLVED is why CTYPELIST is not simply the distinct values of MATCHED. A
+% dataset annotated only as "Plasma cells" reaches the primary type "B cells"
+% through PKG.I_SUBTYPEOVERLAP, but every one of those cells already carries
+% its subtype and SC_CSUBTYPEANNO would refuse the run. Offering "B cells"
+% there would be a menu item that can only fail, so a primary counts as a
+% candidate only while it still has an unresolved cell.
+%
+% see also: pkg.i_matchprimarytype, pkg.i_subtypeoverlap,
+%           gui.callback_SubtypeAnnotation, gui.i_updateannotatemenu
 
 ctypelist = strings(0, 1);
 matched = strings(0, 1);
+resolved = false(0, 1);
 primarytypes = in_primarytypes();
 
 if nargin < 1 || isempty(sce) || ~isa(sce, 'SingleCellExperiment'), return; end
@@ -27,7 +37,14 @@ if sce.NumCells == 0 || isempty(sce.c_cell_type_tx), return; end
 if isempty(primarytypes), return; end
 
 matched = pkg.i_matchprimarytype(sce.c_cell_type_tx, primarytypes);
-ctypelist = unique(matched(strlength(matched) > 0));
+
+% Already subtyped counts only against the primary the label itself names:
+% "Plasma cells" is a resolved B cell, and says nothing about the T cells in
+% the same dataset.
+[oprimary, ~, isoverlap] = pkg.i_subtypeoverlap(sce.c_cell_type_tx);
+resolved = isoverlap & oprimary == matched;
+
+ctypelist = unique(matched(strlength(matched) > 0 & ~resolved));
 end
 
 function primarytypes = in_primarytypes()

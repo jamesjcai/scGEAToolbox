@@ -50,7 +50,8 @@ end
 
 if ~isempty(nrows) && height(t) ~= nrows
     gui.myErrordlg(parentfig, sprintf( ...
-        'The table has %d rows; %d cells are expected.', height(t), nrows));
+        'The table has %s; %s expected.', pkg.i_plural(height(t), 'row'), ...
+        pkg.i_plural(nrows, 'cell') + " " + in_isare(nrows)));
     t = [];
     return;
 end
@@ -73,4 +74,15 @@ warnstate = warning('off', 'MATLAB:table:ModifiedAndSavedVarnames');
 cleanupObj = onCleanup(@() warning(warnstate));
 
 t = readtable(filename, opts);
+end
+
+function [s] = in_isare(n)
+% A table with a single row is an ordinary mistake to make, so "1 cell is
+% expected" has to read properly next to "42 cells are expected".
+
+if n == 1
+    s = "is";
+else
+    s = "are";
+end
 end

@@ -171,7 +171,7 @@ function in_HighlightSelectedGenes(~,~,typeid)
                     gsorted = T.(T.Properties.VariableNames{1});
 
                    if gui.i_isuifig(parentfig)
-                        [indx2, tf2] = gui.myListdlg(parentfig, gsorted, 'Select genes:');
+                        [indx2, tf2] = gui.myListdlg(hFig, gsorted, 'Select genes:');
                     else
                         [indx2, tf2] = listdlg('PromptString', ...
                             'Select genes:', ...
@@ -205,10 +205,10 @@ function in_HighlightSelectedGenes(~,~,typeid)
 function ExportGeneNames(~, ~)
         ptsSelected = logical(h.BrushData.');
         if ~any(ptsSelected)
-            gui.myWarndlg(parentfig, "No gene is selected.");
+            gui.myWarndlg(hFig, "No gene is selected.");
             return;
         end
-        fprintf('%d genes are selected.\n', sum(ptsSelected));
+        fprintf('%s selected.\n', pkg.i_plural(sum(ptsSelected), 'gene'));
 
         gselected=gsorted(ptsSelected);
         [yes,idx]=ismember(gselected,T.gene);
@@ -230,7 +230,7 @@ function EnrichrHVGs(~, ~)
             gui.myWarndlg(hFig, "No gene is selected.");
             return;
         end
-        fprintf('%d genes are selected.\n', sum(ptsSelected));
+        fprintf('%s selected.\n', pkg.i_plural(sum(ptsSelected), 'gene'));
 
         gselected=gsorted(ptsSelected);
         [yes,idx]=ismember(gselected,T.gene);

@@ -1,9 +1,13 @@
 function [done] = callback_HarmonyR(src, ~)
 %CALLBACK_HARMONYR Batch integration with Harmony, R backend.
-%   Offers the R package when R is configured, and the native MATLAB
-%   implementation otherwise, so this menu entry works without R installed.
+%   Runs the R package, falling back to the native MATLAB implementation
+%   when R is not configured.
 %
-%   See also GUI.CALLBACK_HARMONY, RUN.R_HARMONY, RUN.ML_HARMONY.
+%   The backend question used to be asked here. It moved to
+%   GUI.CALLBACK_HARMONYANY, the single menu entry that now reaches all
+%   three backends, so reaching this file means R was already chosen.
+%
+%   See also GUI.CALLBACK_HARMONYANY, GUI.CALLBACK_HARMONY, RUN.R_HARMONY.
 
 done = false;
 
@@ -17,14 +21,6 @@ end
 hasR = ispref('scgeatoolbox', 'rexecutablepath') && ...
     ~isempty(getpref('scgeatoolbox', 'rexecutablepath', []));
 if ~hasR
-    done = gui.callback_Harmony(src);
-    return;
-end
-
-backend = gui.myQuestdlg(FigureHandle, 'Choose Harmony backend:', '', ...
-    {'R (harmony package)', 'MATLAB (native)'}, 'R (harmony package)');
-if isempty(backend), return; end
-if strcmp(backend, 'MATLAB (native)')
     done = gui.callback_Harmony(src);
     return;
 end

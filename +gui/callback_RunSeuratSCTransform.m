@@ -1,44 +1,20 @@
 function [needupdate] = callback_RunSeuratSCTransform(src,~)
-needupdate=false;
+%CALLBACK_RUNSEURATSCTRANSFORM Run SCTransform v2 and hand back the result.
+%
+%   SCE.X holds raw counts, and every analysis normalizes on its own terms
+%   when it needs to (GUI.I_TRANSFORMX). So the two matrices this produces
+%   are saved or sent to the workspace rather than written back into the
+%   object: X is the corrected counts on the log1p scale, matching Seurat's
+%   SCT "data" slot, and scale_X is the Pearson residual matrix, which is
+%   what downstream PCA and clustering use.
+%
+%   NEEDUPDATE is always false - nothing here changes SCE - and is returned
+%   only so the signature matches the other GUI.CALLBACK_* functions.
+%
+%   See also GUI.I_TRANSFORMX, SC_SCTRANSFORMV2.
+
+needupdate = false;
 [FigureHandle, sce] = gui.gui_getfigsce(src);
-
-answer2 = gui.myQuestdlg(FigureHandle, ...
-'Perform SCTransform or load saved transformed X?', ...
-'', {'Perform Transform', 'Load Saved', 'Cancel'}, 'Draw Curve');
-switch answer2
-    case 'Perform Transform'
-
-    case 'Load Saved'
-        if gui.i_isuifig(FigureHandle)
-            [file, path] = uigetfile(FigureHandle, '*.mat', ...
-                'Select a MAT-file to Load');
-        else
-            [file, path] = uigetfile('*.mat', ...
-                'Select a MAT-file to Load');
-        end
-        if isequal(file, 0)
-            disp('User canceled the file selection.');
-            return;
-        end
-
-        fullFileName = fullfile(path, file);
-        loadedData = load(fullFileName);
-        if isfield(loadedData, 'X')
-            X = loadedData.X;
-        else
-            gui.myErrordlg(FigureHandle, 'Not a valid .mat file.','');
-            return;
-        end
-        if strcmp('Yes', gui.myQuestdlg(FigureHandle,'Transformed X has been loaded. Use it to update SCE.X?'))
-           needupdate = true;
-           sce.X = X;
-           gui.myGuidata(FigureHandle, sce, src);
-           gui.myHelpdlg(FigureHandle, 'SCE.X has been updated.');
-        end
-       return;
-    otherwise
-       return;
-end
 
 % Native MATLAB by default. SC_SCTRANSFORMV2 reproduces Seurat's v2 residuals
 % to a per-gene correlation of 0.999996 and runs about ten times faster, so
@@ -65,10 +41,6 @@ try
     if useR
         [X, scale_X] = run.r_SeuratSctransform(sce.X, sce.g, wkdir);
     else
-        % scale_X is the Pearson residual matrix, which is what downstream
-        % PCA and clustering use. X is the corrected counts on the log1p
-        % scale, matching Seurat's SCT "data" slot, so that whatever
-        % replaces SCE.X stays non-negative and count-like.
         [scale_X, ~, Xcorrected] = sc_sctransformv2(sce.X);
         X = log1p(Xcorrected);
     end
@@ -79,43 +51,35 @@ catch ME
 end
 gui.myWaitbar(FigureHandle, fw);
 
-if ~isempty(X)
-    if isequal(size(X), size(sce.X))
-        answer = gui.myQuestdlg(FigureHandle, 'Update current SCE.X with transformed X or save transformed X','', ...
-            {'Update','Save'}, 'Update');
-        switch answer
-            case 'Update'
-               needupdate = true;
-               sce.X = X;
-               gui.myGuidata(FigureHandle, sce, src);
-               gui.myHelpdlg(FigureHandle, 'SCE.X has been updated.');
-            case 'Export'
-                labels = {'Save transformed X to variable named:'};
-                vars = {'X','scale_X'};
-                values = {X, scale_X};
-                export2wsdlg(labels,vars,values,...
-                        'Save Data to Workspace');
-            case 'Save'
-                % if gui.i_isuifig(FigureHandle)
-                %     [file, path] = uiputfile(FigureHandle, '*.mat', 'Save as');
-                % else
-                    [file, path] = uiputfile('*.mat', 'Save as', ...
-                        'sctransformed_X.mat');
-                %end
-                if isequal(file, 0) || isequal(path, 0)
-                    disp('User canceled the file selection.');
-                    return;
-                end
-                fullFileName = fullfile(path, file);
-                save(fullFileName, 'X', 'scale_X');
-                disp(['Variables saved to ', fullFileName]);
-                gui.myHelpdlg(FigureHandle, sprintf('Transformed X is saved in %s.', fullFileName));
-            otherwise
-                gui.myErrordlg(FigureHandle, 'Invalid selection.');
-        end
-    end
-else
+if isempty(X)
     gui.myErrordlg(FigureHandle, "Seurat/sctransform runtime error.");
+    return;
+end
+
+answer = gui.myQuestdlg(FigureHandle, ...
+    ['Transformed matrices are ready. SCE.X keeps the raw counts, ' ...
+    'so save them to a file or send them to the workspace.'], '', ...
+    {'Save to File', 'Send to Workspace', 'Cancel'}, 'Save to File');
+switch answer
+    case 'Save to File'
+        [file, path] = uiputfile('*.mat', 'Save as', 'sctransformed_X.mat');
+        if isequal(file, 0) || isequal(path, 0)
+            disp('User canceled the file selection.');
+            return;
+        end
+        fullFileName = fullfile(path, file);
+        save(fullFileName, 'X', 'scale_X');
+        disp(['Variables saved to ', fullFileName]);
+        gui.myHelpdlg(FigureHandle, ...
+            sprintf('Transformed X is saved in %s.', fullFileName));
+    case 'Send to Workspace'
+        labels = {'Corrected counts, log1p scale:', 'Pearson residuals:'};
+        vars = {'X', 'scale_X'};
+        values = {X, scale_X};
+        export2wsdlg(labels, vars, values, 'Save Data to Workspace');
+    otherwise
+        % Cancel, or the dialog was dismissed.
+        return;
 end
 
 end

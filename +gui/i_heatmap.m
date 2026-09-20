@@ -36,23 +36,19 @@ end
 
 hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
-h = imagesc(Y);
-set(gca, 'XTick', a-b);
-set(gca, 'XTickLabel', gui.i_escapeunderscore(cL));
-% set(gca,'XTickLabelRotation',0);
-set(gca, 'YTick', 1:length(glist));
-set(gca, 'YTickLabel', glist);
-set(gca, 'TickLength', [0, 0]);
-% colormap(flipud(bone));
-box on
 
-szc = cumsum(szgn);
-for kx = 1:length(szc)
-    xline(szc(kx)+0.5, 'y-');
-end
-
+% The first draw goes through IN_DRAWMAP like every later one, so the map
+% the user is handed and the map a button leaves behind cannot drift apart.
+% That is how the group separators came to be lost: the lines were drawn
+% once, here, and every redraw below emptied the axes without knowing to
+% put them back. H has to exist for the DELETE at the top of IN_DRAWMAP;
+% an empty handle array deletes to nothing.
+h = gobjects(0);
+fliped = false;
+in_drawmap();
 
 hx.addCustomButton('off', @in_callback_renamecat, 'edit.jpg', 'Rename groups...');
+hx.addCustomButton('off', @in_callback_sortgroups, 'reorder.jpg', 'Sort groups...');
 hx.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
 hx.addCustomButton('off', @in_callback_flipxy, 'mat-wrap-text.jpg', 'Flip XY');
 hx.addCustomButton('on', @in_callback_summarymap, 'HDF_object01.gif', 'Summary map...');
@@ -62,12 +58,16 @@ hx.addCustomButton('off', @in_callback_changenorm, 'mw-pickaxe-mining.jpg', 'Cha
 hx.addCustomButton('off', @in_callback_dotplotx, 'icon-mat-blur-linear-10.gif', 'Dot plot...');
 
 hx.show(parentfig);
-fliped = false;
 
 MX = glist;
 
 c = c(cidx);
 Z = zeros(length(glist), length(cL));
+
+% Where each column block sits now, in terms of the groups GUI.I_REORDER-
+% GROUPS handed over. IN_CALLBACK_SORTGROUPS permutes the display and
+% keeps this in step, so "Unsorted" has an order to go back to.
+ordnow = (1:length(cL)).';
 
 % for k = 1:length(cL)
 %     Z(:, k) = mean(Y(:, c == k), 2);
@@ -86,53 +86,94 @@ Z = zeros(length(glist), length(cL));
 % h2.ColorLimits=[min(Z(:)), max(Z(:))];
 
 function in_callback_changenorm(~, ~)
-        [methodid, dim] = gui.i_selnormmethod(parentfig);
+        % HFIG, not PARENTFIG: the button is on the heatmap figure, and
+        % every other callback here parents its dialogs to HFIG.
+        % GUI.I_SELNORMMETHOD calls FIGURE() on what it is given, so
+        % PARENTFIG raised the main scgeatool window over the heatmap the
+        % user had just clicked in, and centred the dialog there.
+        [methodid, dim] = gui.i_selnormmethod(hFig);
+
+        % Cancelling either dialog leaves both empty, and the SWITCH
+        % METHODID in GUI.I_NORM4HEATMAP threw on the empty rather than
+        % the heatmap being left as it was. The call at the top of the
+        % file already returns on this; this one redrew.
+        if isempty(dim) || isempty(methodid), return; end
 
         [Y] = gui.i_norm4heatmap(Yori, dim, methodid);
         % Y = log1p(Y);
-        delete(h);
-        h = imagesc(Y);
-        set(gca, 'XTick', a-b);
-        set(gca, 'XTickLabel', gui.i_escapeunderscore(cL));
-        set(gca, 'YTick', 1:length(glist));
-        set(gca, 'YTickLabel', glist);
-        set(gca, 'TickLength', [0, 0]);
-        % colormap(flipud(bone));
-        box on
+        % Through IN_DRAWMAP rather than drawing here. This drew the map
+        % the upright way round whatever FLIPED said, so renormalizing a
+        % flipped map quietly un-flipped it while the button still thought
+        % it was flipped, and it lost the group separators the same way
+        % the flip did.
+        in_drawmap();
     end
 
 function in_callback_flipxy(~, ~)
-        % delete(h);
+        % This used to transpose the image and move the ticks, and draw no
+        % group separators. IMAGESC empties the axes it draws into, so the
+        % yellow lines marking where one group ends and the next begins
+        % went with the old image and never came back: one click and the
+        % map had no boundaries on it for the rest of its life, in either
+        % orientation. IN_DRAWMAP draws the map whole, lines included.
         fliped = ~fliped;
-        if fliped
-            h = imagesc(Y');
-            set(gca, 'YTick', a-b);
-            set(gca, 'YTickLabel', gui.i_escapeunderscore(cL));
-            % set(gca,'YTickLabelRotation',90);
-            set(gca, 'XTick', 1:length(glist));
-            set(gca, 'XTickLabel', glist);
-            set(gca, 'XTickLabelRotation', 90);
-            set(gca, 'TickLength', [0, 0]);
-        else
-            h = imagesc(Y);
-            set(gca, 'XTick', a-b);
-            set(gca, 'XTickLabel', gui.i_escapeunderscore(cL));
-            % set(gca,'XTickLabelRotation',0);
-            set(gca, 'YTick', 1:length(glist));
-            set(gca, 'YTickLabel', glist);
-            set(gca, 'TickLength', [0, 0]);
+        in_drawmap();
+    end
+
+function in_callback_sortgroups(~, ~)
+        % Reorder the column blocks. Only the order changes: the values,
+        % the genes and the normalization all stay where they are, so this
+        % never has to recompute anything.
+        %
+        % The permutation is worked out against the order on screen and
+        % applied to it, rather than rebuilt from the original each time,
+        % which is what lets a sort compose with a rename.
+        sortby = gui.i_askgrouporder(hFig);
+        if sortby == "", return; end
+
+        [newc, p, neworder] = gui.i_grouporderperm(c, cL, ordnow, sortby);
+        if isequal(p, (1:numel(cL)).'), return; end
+
+        c = newc;
+        cL = cL(p);
+        ordnow = ordnow(p);
+        Yori = Yori(:, neworder);
+        Y = Y(:, neworder);
+
+        szgn = splitapply(@numel, c, c);
+        a = zeros(1, max(c));
+        b = zeros(1, max(c));
+        for kg = 1:max(c)
+            a(kg) = sum(c <= kg);
+            b(kg) = round(sum(c == kg)./2);
         end
+        in_drawmap();
+    end
+
+function in_drawmap()
+        % The one place the map is drawn, so the first draw and every
+        % redraw agree. GUI.I_DRAWGROUPMAP does the work and says why it
+        % is one function rather than a branch in each callback.
+        drawspec = struct( ...
+            'Y',      Y, ...
+            'cL',     {cL}, ...
+            'glist',  {glist}, ...
+            'a',      a, ...
+            'b',      b, ...
+            'szgn',   szgn, ...
+            'fliped', fliped);
+        h = gui.i_drawgroupmap(gca, h, drawspec);
     end
 
 function in_callback_renamecat(~, ~)
-        tg = gui.i_inputgenelist(string(cL), true, parentfig);
+        tg = gui.i_inputgenelist(string(cL), true, hFig);
         if isempty(tg), return; end
         if length(tg) == length(cL)
             set(gca, 'XTick', a-b);
             set(gca, 'XTickLabel', tg(:))
             cL = tg;
         else
-            gui.myErrordlg(parentfig, 'Wrong input.');
+            gui.myErrordlg(hFig, 'Wrong input.');
         end
     end
 
@@ -172,7 +213,7 @@ function in_callback_exporttable(~, ~, T, needwait, defname)
             end
             drawnow;
             if needwait
-                gui.myHelpdlg(parentfig, ...
+                gui.myHelpdlg(hFig, ...
                     sprintf('Result has been saved in %s', filename));
             end
         end
@@ -237,7 +278,7 @@ function in_callback_dotplotx(~, ~)
         try
             gui.i_dotplot(sce.X, sce.g, c, cL, MX);
         catch ME
-            gui.myErrordlg(parentfig, ME.message, ME.identifier);
+            gui.myErrordlg(hFig, ME.message, ME.identifier);
         end
     end
 

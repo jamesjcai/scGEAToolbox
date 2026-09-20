@@ -1,5 +1,38 @@
-conda install conda-forge::hnswlib
+hnswlib on Windows
+------------------
 
-Zarr-Python
-2.15.0 -> 3.0.4
-zarr.core.Array -> zarr.Array
+SCimilarity's annotation/labelled_kNN.bin is an upstream hnswlib index, and
+only upstream hnswlib reads it. PyPI has no Windows wheel for hnswlib, so:
+
+    python install_hnswlib_win.py
+
+fetches the conda-forge build of upstream hnswlib into this interpreter. No
+conda installation is needed; require.py calls it automatically. Inside a
+conda environment the equivalent is:
+
+    conda install conda-forge::hnswlib
+
+Do NOT install chroma-hnswlib. It is the only prebuilt Windows package using
+the hnswlib import name, but it is a fork with a different file format -- it
+stores one float per element between the level-0 block and the link lists, so
+it reads an upstream index four bytes per element out of step and reports
+"Index seems to be corrupted or unsupported".
+
+The other route is to let pip compile hnswlib, which needs a C++ toolchain:
+
+    winget install Microsoft.VisualStudio.2022.BuildTools --override ^
+        "--wait --quiet --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+    pip install hnswlib
+
+
+Other notes
+-----------
+
+scimilarity pins zarr<3, which would downgrade zarr for everything else
+sharing the interpreter. Nothing on the annotation path imports zarr (it is
+used only by the training data models), so require.py installs scimilarity
+with --no-deps and names its real dependencies itself.
+
+tiledb-vector-search ships its own tiledb.dll in tiledb/vector_search/lib but
+never puts that folder on the DLL search path. CellAnnotation imports it even
+on the hnswlib path, so _scimilarity_env.py registers the folder first.

@@ -1,9 +1,9 @@
 function [ptsSelected] = i_select1classcells(sce, askunselect, parentfig)
 if nargin < 2, askunselect = true; end
 if nargin < 3, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 ptsSelected = [];
 

@@ -1,6 +1,18 @@
-function [T, Tnt] = in_DVTableProcess(T, ~, ~)
+function [T, Tnt] = in_DVTableProcess(T, ~, ~, direction)
+% DIRECTION is the SC_DVG option that produced DiffSign ('mean', the
+% default, or 'deviation'); it only changes how the Note describes DiffSign.
+
+if nargin < 4 || isempty(direction), direction = 'mean'; end
 
 if nargout>1
+    switch direction
+        case 'deviation'
+            signText = ['Sign of difference in deviation from curve ' ...
+                '(+1: more variable in sample 1)'];
+        otherwise
+            signText = ['Sign of difference in mean expression ' ...
+                '(+1: up-regulated, higher mean in sample 1)'];
+    end
 
     Item = T.Properties.VariableNames';
     % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
@@ -22,7 +34,7 @@ if nargout>1
         'log CV in sample 2'; 'dropout rate in sample 2';...
         'distance to curve 2'; 'p-value of distance in sample 2';...
         'FDR of distance in sample 2'; 'Difference in distances';...
-        'Sign of difference';'p-value of DV test'};
+        signText; 'p-value of DV test'};
 
     if length(Item) == length(Description)
         Tnt = table(Item, Description);

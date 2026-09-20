@@ -2,9 +2,9 @@ function callback_ShowClustersPop(src, ~)
 
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
-if ~isempty(FigureHandle)
+if ~isempty(FigureHandle) && pkg.i_isvalid(FigureHandle) && FigureHandle.Visible == "on"
     figure(FigureHandle);
-    cleanupObj = onCleanup(@() figure(FigureHandle));
+    cleanupObj = onCleanup(@() gui.i_raisefig(FigureHandle));
 end
 
 answer = gui.myQuestdlg(FigureHandle, ['Select a grouping variable and ' ...
@@ -77,8 +77,8 @@ try
                 set(ax{nf, k}, 'YTick', []);
                 b = cL{idxx(kk)};
                 title(ax{nf, k}, strrep(b, '_', "\_"));
-                a = sprintf('%d cells (%.2f%%)', ...
-                    cmx(idxx(kk)), ...
+                a = sprintf('%s (%.2f%%)', ...
+                    pkg.i_plural(cmx(idxx(kk)), 'cell'), ...
                     100*cmx(idxx(kk))/length(c));
                 fprintf('%s in %s\n', a, b);
                 subtitle(ax{nf, k}, a);

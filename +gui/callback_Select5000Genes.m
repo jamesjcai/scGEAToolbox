@@ -99,20 +99,20 @@ c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
     idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as') | contains(sce.g, '-DT') | contains(sce.g, '-dt');
-    sce.X(idx, :) = [];
-    sce.g(idx) = [];
+    sce = sce.selectgenesbyindex(~idx);
     a2 = length(sce.g);
-    fprintf('%d genes with name contains ''orf'' or ''-AS'' are found and removed.\n',a1-a2);
+    fprintf('Found and removed %s whose name contains ''orf'' or ''-AS''.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
 end
 
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
     idx = startsWith(sce.g, 'LINC');
-    sce.X(idx, :) = [];
-    sce.g(idx) = [];
+    sce = sce.selectgenesbyindex(~idx);
     a2 = length(sce.g);
-    fprintf('%d genes with name starts with ''LINC'' are found and removed.\n',a1-a2);
+    fprintf('Found and removed %s whose name starts with ''LINC''.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
 end
 
 c = c + 1;
@@ -125,11 +125,11 @@ end
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
-    idx = find(~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]")));
-    sce.X(idx, :) = [];
-    sce.g(idx) = [];
+    idx = ~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]"));
+    sce = sce.selectgenesbyindex(~idx);
     a2 = length(sce.g);
-    fprintf('%d genes with name starts with ''Gm'' are found and removed.\n',a1-a2);
+    fprintf('Found and removed %s whose name starts with ''Gm''.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
 end
 
 
@@ -137,10 +137,10 @@ c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a1 = length(sce.g);
     idx = endsWith(sce.g, 'Rik');
-    sce.X(idx, :) = [];
-    sce.g(idx) = [];
+    sce = sce.selectgenesbyindex(~idx);
     a2 = length(sce.g);
-    fprintf('%d genes with name ends with ''Rik'' are found and removed.\n',a1-a2);
+    fprintf('Found and removed %s whose name ends with ''Rik''.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
 end
 
 c = c + 1;
@@ -159,10 +159,10 @@ if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     ApprovedSymbol = string(T.GeneName);
     [idx] = ismember(upper(sce.g), upper(ApprovedSymbol));
     a1 = length(sce.g);
-    sce.X(~idx, :) = [];
-    sce.g(~idx) = [];
+    sce = sce.selectgenesbyindex(idx);
     a2 = length(sce.g);
-    fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
+    fprintf('Found and removed %s without an approved symbol.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
     % requirerefresh = true;
 end
 
@@ -189,8 +189,7 @@ try
         gui.myErrordlg(FigureHandle, 'Runtime error.');
         return;
     end
-    sce.X = sce.X(idx, :);
-    sce.g = sce.g(idx);
+    sce = sce.selectgenesbyindex(idx);
  catch ME
      gui.myWaitbar(FigureHandle, fw,true);
      gui.myWarndlg(FigureHandle, ME.message, ME.identifier);

@@ -98,7 +98,7 @@ function in_callback_SaveAdj(~, ~)
             msgfig = export2wsdlg(labels, vars, values);
             waitfor(msgfig);
         else
-            gui.myErrordlg(parentfig, 'This function is not available for standalone application.');
+            gui.myErrordlg(hFig, 'This function is not available for standalone application.');
         end
     end
 
@@ -210,7 +210,7 @@ function in_callback_ChangeCutoff(~, ~)
             '0.65', '0.70', '0.75', '0.80', '0.85', ...
             '0.90', '0.95 (show 5% of edges)'};
         if gui.i_isuifig(parentfig)
-            [indx, tf] = gui.myListdlg(parentfig, list, '');
+            [indx, tf] = gui.myListdlg(hFig, list, '');
         else
             [indx, tf] = listdlg('ListString', list, ...
                 'SelectionMode', 'single', 'ListSize', [220, 300]);

@@ -109,7 +109,10 @@ function in_PickPlotMarker(~, ~)
         s1 = 10 * randi(10);
         s2 = 50 * randi(10);
         for tabidx=1:n
-            if h0{tabidx}.Marker == '.'
+            % strcmp, not ==: a marker set through
+            % GUI.CALLBACK_PICKMARKERTYPE can read back under its long
+            % name ('square'), which == against '.' turns into an array.
+            if strcmp(h0{tabidx}.Marker, '.')
                 h0{tabidx}.Marker = 'o';
                 h0{tabidx}.SizeData = s1;
             else
@@ -178,7 +181,7 @@ function in_addlocfitx(~, ~)
             end
         end
         [Y_fit] = pkg.e_locfit(Y, thisx(:));
-        answer = gui.myQuestdlg(parentfig, 'ZScore transform data?','');
+        answer = gui.myQuestdlg(hFig, 'ZScore transform data?','');
         switch answer
             case 'Yes'
                 zs = true;

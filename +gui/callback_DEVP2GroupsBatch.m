@@ -27,13 +27,29 @@ else
 end
 if isempty(paramset), return; end
 
+% How the DV phase splits up from down. The file names stay DEVP_DV_...
+% either way; the Note sheet records which was used.
+direction = gui.i_dvdirection(FigureHandle);
+if isempty(direction), return; end
+
+% MSigDB collections for the DP phase; needed here to size the progress bar.
+ctag = {"H", "C2", "C5", "C6", "C7"}';
+
+% One progress bar for the whole run. Each phase used to compute its own
+% (k-0.5)/nCellTypes, so the bar started over for DE, DV and each of the
+% five DP collections and ran backwards seven times in one run.
+nCellType = length(CellTypeList);
+nStepTotal = nCellType*(2 + numel(ctag));
+iStep = 0;
+
 % ------------------------------------------ DE
 fw = gui.myWaitbar(FigureHandle);
 for k=1:length(CellTypeList)
 
+    iStep = iStep + 1;
     gui.myWaitbar(FigureHandle, fw, false, '', ...
         sprintf('DE - Processing %s ...', CellTypeList{k}), ...
-        (k-0.5)/length(CellTypeList));
+        (iStep - 0.5)/nStepTotal);
 
     outfile = sprintf('%s_DE_%s_vs_%s_%s.xlsx', ...
         prefixtag, ...
@@ -72,7 +88,8 @@ for k=1:length(CellTypeList)
         %     Tnt = table(Item);
         % end
 
-        [Tup, Tdn] = pkg.e_processdetable(T, paramset, FigureHandle);
+        [Tup, Tdn, ~, usedset] = pkg.e_processdetable(T, paramset, FigureHandle);
+        Tnt = pkg.i_decutoffnote(Tnt, usedset);
         try
             gui.e_tupdn2xlsx(Tup, Tdn, T, filesaved);
             writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
@@ -94,9 +111,10 @@ end
 % ------------------------------------------ DV
 %   fw = gui.myWaitbar(FigureHandle);
 for k=1:length(CellTypeList)
+    iStep = iStep + 1;
     gui.myWaitbar(FigureHandle, fw, false, '', ...
         sprintf('DV - Processing %s ...', CellTypeList{k}), ...
-        (k-0.5)/length(CellTypeList));
+        (iStep - 0.5)/nStepTotal);
     idx = sce.c_cell_type_tx == CellTypeList{k};
     sce1=copy(sce);
     sce1 = sce1.selectcells(i1&idx); % OK
@@ -129,7 +147,7 @@ for k=1:length(CellTypeList)
     end
     if notok, continue; end
 
-    [T] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit');
+    [T] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit', direction);
 
     outfile = sprintf('%s_DV_%s_vs_%s_%s.xlsx', ...
         prefixtag,...
@@ -155,7 +173,7 @@ for k=1:length(CellTypeList)
         Tup = T(T.DiffSign > 0 & isok, :);
         Tdn = T(T.DiffSign < 0 & isok, :);
 
-        [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2);
+        [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2, direction);
 
         % Item = T.Properties.VariableNames';
         % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
@@ -189,7 +207,6 @@ end
 % gui.myWaitbar(FigureHandle, fw);
 
 % ----------------------------- DP
-ctag = {"H", "C2", "C5", "C6", "C7"}';
 ccat = {"H: Hallmark gene sets (broadly defined, high-quality gene signatures representing specific biological states or processes)", ...
 "C2: Curated gene sets (pathways from KEGG, Reactome, BioCarta, and literature)",...
 "C5: Gene Ontology (GO) gene sets (BP: biological process, CC: cellular component, MF: molecular function)",...
@@ -208,9 +225,10 @@ for c = 1:length(ctag)
 
 %       fw = gui.myWaitbar(FigureHandle);
     for k=1:length(CellTypeList)
+        iStep = iStep + 1;
         gui.myWaitbar(FigureHandle, fw, false, '', ...
-            sprintf('DP - Processing %s ...', CellTypeList{k}), ...
-            (k-0.5)/length(CellTypeList));
+            sprintf('DP (%s) - Processing %s ...', ctag{c}, CellTypeList{k}), ...
+            (iStep - 0.5)/nStepTotal);
 
         outfile = sprintf('%s_DP_%s_vs_%s_%s.xlsx', ...
             prefixtag, ...

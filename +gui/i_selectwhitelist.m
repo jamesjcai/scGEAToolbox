@@ -1,9 +1,9 @@
 function [whitelist] = i_selectwhitelist(sce, parentfig)
 
 if nargin<2, parentfig=[]; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 answer = gui.myQuestdlg(parentfig, 'Genes in whitelist will not be removed. Select whitelist genes?', ...

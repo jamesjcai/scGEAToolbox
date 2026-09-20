@@ -236,11 +236,11 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                         a1 = length(sce.g);
                         idx = contains(sce.g, 'orf') | contains(sce.g, '-AS') | contains(sce.g, '-as');
                         if any(idx)
-                            sce.X(idx, :) = [];
-                            sce.g(idx) = [];
+                            sce = sce.selectgenesbyindex(~idx);
                         end
                         a2 = length(sce.g);
-                        fprintf('%d genes with name contains ''orf'' or ''-AS'' are found and removed.\n',a1-a2);
+                        fprintf('Found and removed %s whose name contains ''orf'' or ''-AS''.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
                     end
 
                     c = c + 1;
@@ -248,23 +248,23 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                         a1 = length(sce.g);
                         idx = startsWith(sce.g, 'LINC');
                         if any(idx)
-                            sce.X(idx, :) = [];
-                            sce.g(idx) = [];
+                            sce = sce.selectgenesbyindex(~idx);
                         end
                         a2 = length(sce.g);
-                        fprintf('%d genes with name starts with ''LINC'' are found and removed.\n',a1-a2);
+                        fprintf('Found and removed %s whose name starts with ''LINC''.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
                     end
 
                     c = c + 1;
                     if strcmpi(answer3{c},'Yes') || strcmpi(answer3{c},'Y')
                         a1 = length(sce.g);
-                        idx = find(~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]")));
+                        idx = ~cellfun(@isempty, regexp(sce.g,"Gm[0-9][0-9][0-9]"));
                         if any(idx)
-                            sce.X(idx, :) = [];
-                            sce.g(idx) = [];
+                            sce = sce.selectgenesbyindex(~idx);
                         end
                         a2 = length(sce.g);
-                        fprintf('%d genes with name starts with ''Gm'' are found and removed.\n',a1-a2);
+                        fprintf('Found and removed %s whose name starts with ''Gm''.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
                     end
 
                     c = c + 1;
@@ -272,11 +272,11 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                         a1 = length(sce.g);
                         idx = endsWith(sce.g, 'Rik');
                         if any(idx)
-                            sce.X(idx, :) = [];
-                            sce.g(idx) = [];
+                            sce = sce.selectgenesbyindex(~idx);
                         end
                         a2 = length(sce.g);
-                        fprintf('%d genes with name ends with ''Rik'' are found and removed.\n',a1-a2);
+                        fprintf('Found and removed %s whose name ends with ''Rik''.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
                     end
 
                 case 'Manually Select'
@@ -294,13 +294,15 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                     if isempty(answer1), return; end
                     if strcmp(answer1, 'Selected')
                         fw = gui.myWaitbar(FigureHandle);
-                        sce.X(idx, :) = [];
-                        sce.g(idx) = [];
+                        % IDX is subscripts from ISMEMBER, not a mask, so
+                        % the complement has to be built rather than negated.
+                        drop = false(sce.NumGenes, 1);
+                        drop(idx) = true;
+                        sce = sce.selectgenesbyindex(~drop);
                         gui.myWaitbar(FigureHandle, fw);
                     elseif strcmp(answer1, 'Unselected')
                         fw = gui.myWaitbar(FigureHandle);
-                        sce.X = sce.X(idx, :);
-                        sce.g = sce.g(idx);
+                        sce = sce.selectgenesbyindex(idx);
                         gui.myWaitbar(FigureHandle, fw);
                     else
                         return;
@@ -326,12 +328,13 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             ApprovedSymbol = string(T.GeneName);
             [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
             if any(idx)
-                answer = gui.myQuestdlg(FigureHandle, sprintf('Remove %d genes lacking approved symbols?', sum(idx)));
+                answer = gui.myQuestdlg(FigureHandle, sprintf( ...
+                    'Remove %s lacking approved symbols?', ...
+                    pkg.i_plural(sum(idx), 'gene')));
                 switch answer
                     case 'Yes'
                         fw = gui.myWaitbar(FigureHandle);
-                        sce.X(idx, :) = [];
-                        sce.g(idx) = [];
+                        sce = sce.selectgenesbyindex(~idx);
                         gui.myWaitbar(FigureHandle, fw);
                     otherwise
                         % requirerefresh = false;
@@ -359,8 +362,7 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             sce = sce.rmribosomalgenes;
             [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
             if any(idx)
-                sce.X(idx, :) = [];
-                sce.g(idx) = [];
+                sce = sce.selectgenesbyindex(~idx);
             end
         case '------------------------------------------------'
             % requirerefresh = false;
@@ -380,7 +382,8 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                 disp('All cells express MALAT1.');
                 needremove = false;
             else
-                fprintf('\n%d cells lacking MALAT1 exprssion.\n', sum(idx));
+                fprintf('\n%s lacking MALAT1 expression.\n', ...
+                    pkg.i_plural(sum(idx), 'cell'));
                 needremove = true;
                 idx = ~idx;
             end
@@ -449,7 +452,8 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
 if needremove
         if issparse(idx), idx = full(idx); end
         if ~isempty(idx) && any(~idx)
-            answer = gui.myQuestdlg(FigureHandle, sprintf('Remove or highlight %d cells?', sum(~idx)), ...
+            answer = gui.myQuestdlg(FigureHandle, sprintf( ...
+            'Remove or highlight %s?', pkg.i_plural(sum(~idx), 'cell')), ...
                 '', {'Remove', 'Highlight', 'Cancel'}, 'Remove');
             switch answer
                 case 'Remove'

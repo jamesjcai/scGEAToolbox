@@ -7,9 +7,9 @@ if nargin < 1
         "Gene4"; "Gene5"; "Gene6"; ...
         "Gene7"; "Gene8"; "Gene9"; "Gene10"];
 end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 s = sprintf('%s\n', glist0);
 s = s(1:end-1);

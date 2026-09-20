@@ -47,8 +47,8 @@ if bestscore >= autoscore
 else
     items = cell(height(ranked), 1);
     for k = 1:height(ranked)
-        items{k} = sprintf('%s (%d types): %s', ranked.Name(k), ...
-            ranked.NumTypes(k), ranked.Examples(k));
+        items{k} = sprintf('%s (%s): %s', ranked.Name(k), ...
+            pkg.i_plural(ranked.NumTypes(k), 'type'), ranked.Examples(k));
     end
     prompt = 'Select the column containing cell types:';
     if gui.i_isuifig(parentfig)

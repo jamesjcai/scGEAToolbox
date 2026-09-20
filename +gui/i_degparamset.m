@@ -2,9 +2,9 @@ function [paramset] = i_degparamset(nogui, parentfig)
 
 if nargin<2, parentfig = []; end
 if nargin<1, nogui=false; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 % preftagname ='scimilmodelpath'
@@ -69,6 +69,26 @@ else
             paramset = [];
             return;
     end
-    paramset = {mindiffpct, minabsolfc, apvaluecut, sortbywhat};
+    % 'Automatic' lets PKG.E_PROCESSDETABLE relax the cutoffs above when
+    % neither list would reach 20 genes. Older saved sets have no fifth
+    % element, which means 'Fixed'.
+    defaultmode = 'Fixed';
+    if numel(defaultset) >= 5 && ~isempty(defaultset{5})
+        defaultmode = defaultset{5};
+    end
+    answer = gui.myQuestdlg(parentfig, ...
+        ['Apply these cutoffs as fixed, or adjust them automatically ' ...
+        'so that at least one of the up- and down-regulated lists has ' ...
+        '20 genes? Automatic only ever relaxes the cutoffs entered.'], ...
+        'Cutoff Mode', {'Fixed', 'Automatic'}, defaultmode);
+    switch answer
+        case {'Fixed', 'Automatic'}
+            cutoffmode = answer;
+        otherwise
+            % User cancelled; return empty so callers abort.
+            paramset = [];
+            return;
+    end
+    paramset = {mindiffpct, minabsolfc, apvaluecut, sortbywhat, cutoffmode};
     setpref('scgeatoolbox', preftagname, paramset);
 end

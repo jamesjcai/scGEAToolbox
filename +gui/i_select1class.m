@@ -8,9 +8,9 @@ if nargin < 3 || isempty(promptstr)
     promptstr = 'Select grouping variable:';
 end
 if nargin < 2 || isempty(allowsingle), allowsingle = true; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 thisc = [];
 clabel = '';
@@ -53,6 +53,14 @@ end
 
 if tf2 == 1
     clabel = listitems{indx2};
+    % The divider is an ordinary listbox item -- a uilistbox cannot disable
+    % one -- so picking it has to be refused here. Treated as cancelling:
+    % THISC stays empty and the caller's usual guard returns.
+    if strcmp(clabel, i_classlistdivider())
+        clabel = '';
+        if ~isempty(parentfig), figure(parentfig); end
+        return;
+    end
     switch clabel
         case 'Current Class (C)'
             thisc = sce.c;
@@ -66,6 +74,11 @@ if tf2 == 1
             thisc = sce.c_cell_cycle_tx;
         case 'Workspace Variable...'
             thisc = i_pickvariable;
+        otherwise
+            % A named cell attribute. I_CLASSLISTITEMS only lists one whose
+            % name is not already taken by a case above, so reaching here
+            % means the name is the attribute's.
+            thisc = sce.getCellAttribute(clabel);
     end
 else
     figure(parentfig);

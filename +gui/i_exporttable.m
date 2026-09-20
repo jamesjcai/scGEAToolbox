@@ -7,9 +7,9 @@ if nargin < 5 || isempty(outtype), outtype = []; end
 if nargin < 4 || isempty(deffilename), deffilename = []; end
 if nargin < 3 || isempty(TName), TName = 'T'; end
 if nargin < 2 || isempty(needwait), needwait = true; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 filename = [];
 

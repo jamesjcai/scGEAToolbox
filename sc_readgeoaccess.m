@@ -18,24 +18,25 @@ if nargin<2, readspatialdata = false; end
 
 sce = [];
 
+% Read the machine-readable SOFT record rather than the rendered HTML page,
+% which NCBI serves behind a CAPTCHA for automated clients.
 try
-    url = sprintf('https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=%s', acc);
-    a = webread(url);
-    b = strsplit(a, '\n');
+    [b, url] = pkg.i_geosoftrecord(acc);
 catch ME
+    if startsWith(ME.identifier, "pkg:i_geosoftrecord")
+        rethrow(ME);
+    end
     warning(ME.message);
     return;
 end
 
-speciestag = '';
-try
-speciestag = pkg.i_extractHTMLText(b(1+find(contains(b, 'Organism'),1)));
-catch
-    % speciestag stays empty if Organism row not present; downstream tolerates this
-end
+speciestag = char(pkg.i_geosoftfield(b, "organism"));
+c = i_supplfiles(b);
 
-c = string(b(contains(b, acc)))';
-c = c(contains(c, 'ftp'));
+if isempty(c)
+    error(['No supplementary files are listed for %s. Only accessions ' ...
+        'with processed data files attached can be imported.'], acc);
+end
 
 if ~(isscalar(c) || length(c) >= 3)
     disp(url)
@@ -211,15 +212,7 @@ function f = i_setupfile(c)
 % https://www.ncbi.nlm.nih.gov/geo/info/geo_paccess.html#FTP
     try
         tmpd = tempdir;
-        [x] = regexp(c(1), '<a href="ftp://(.*)">(ftp', 'match');
-        x = string(textscan(x, '<a href="ftp://%s'));
-        x = append("https://", extractBefore(x, strlength(x)-5));
-        if ~(ismcc || isdeployed)
-            %#exclude urldecode
-            x = urldecode(x);
-        else
-            x = pkg.i_urldecoding(x);
-        end
+        x = c(1);
         fprintf('Downloading %s\n', x)
         files = gunzip(x, tmpd);
         f = files{1};
@@ -239,18 +232,22 @@ end
 function f = i_setupfile2(c)
     try
         tmpd = tempname;
-        [x] = regexp(c(1), '<a href="ftp://(.*)">(ftp', 'match');
-        x = string(textscan(x, '<a href="ftp://%s'));
-        x = append("https://", extractBefore(x, strlength(x)-5));
-        if ~(ismcc || isdeployed)
-            %#exclude urldecode
-            x = urldecode(x);
-        else
-            x = pkg.i_urldecoding(x);
-        end
+        x = c(1);
         fprintf('Downloading %s\n', x)
         f = websave(tmpd, x);
     catch
         f = [];
     end
+end
+
+
+function urls = i_supplfiles(b)
+% Return the supplementary file URLs listed in a SOFT record, as HTTPS.
+    b = b(startsWith(b, "!") & contains(b, "supplementary_file", ...
+        'IgnoreCase', true));
+    urls = strtrim(extractAfter(b, "="));
+    urls = urls(startsWith(urls, ["ftp://", "http://", "https://"]));
+    urls = replace(urls, "ftp://ftp.ncbi.nlm.nih.gov", ...
+        "https://ftp.ncbi.nlm.nih.gov");
+    urls = replace(urls, " ", "%20");
 end

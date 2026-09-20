@@ -57,9 +57,12 @@ wgene = string(upper(Tw.Var1));
 
 [validG, idx1, idx2] = intersect(genelist, wgene);
 
+% Normalize on the full matrix, then subset. Library size has to mean the
+% cell's total counts; summing only the matched marker genes makes the
+% scale factor depend on which markers happened to intersect genelist.
+X = sc_norm(X);
 genelist = genelist(idx1);
-X = sc_norm(X(idx1, :));
-X = log1p(X);
+X = log1p(X(idx1, :));
 
 wvalu = wvalu(idx2);
 wgene = wgene(idx2);

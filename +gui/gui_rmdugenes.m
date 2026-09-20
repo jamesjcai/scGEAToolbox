@@ -1,9 +1,9 @@
 function [needupdate, sce] = gui_rmdugenes(sce, parentfig)
 
 if nargin<2, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 needupdate = false;
 hasDuplicates = numel(unique(sce.g)) < numel(sce.g);

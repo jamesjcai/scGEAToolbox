@@ -55,8 +55,7 @@ switch type
         gui.myWaitbar(FigureHandle, fw);
 end
 
-sce.g = sce.g(idx);
-sce.X = sce.X(idx, :);
+sce = sce.selectgenesbyindex(idx);
 gui.myGuidata(FigureHandle, sce, src);
 requirerefresh = true;
 end

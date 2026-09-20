@@ -1,10 +1,10 @@
 function [speciestag] = i_selectspecies(n, shorttag, parentfig, preferredspecies)
 if nargin < 3, parentfig = []; end
 if nargin < 2, shorttag = false; end
-if nargin < 1, n = 2; end
-if ~isempty(parentfig)
+if nargin < 1 || isempty(n), n = 2; end
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 if ~ispref('scgeatoolbox', 'preferredspecies')
@@ -14,12 +14,21 @@ if nargin < 4 || isempty(preferredspecies)
     preferredspecies = getpref('scgeatoolbox', 'preferredspecies', 'human');
 end
 
-if n == 3
-    answer = gui.myQuestdlg(parentfig, 'Which species?', ...
-        'Select Species',{'Human', 'Mouse', 'Zebrafish'}, capitalizeFirst(preferredspecies));
-elseif n == 2
-    answer = gui.myQuestdlg(parentfig, 'Which species?', ...
-        'Select Species',{'Human', 'Mouse'}, capitalizeFirst(preferredspecies));
+switch n
+    case 3
+        answer = gui.myQuestdlg(parentfig, 'Which species?', ...
+            'Select Species',{'Human', 'Mouse', 'Zebrafish'}, capitalizeFirst(preferredspecies));
+    case 2
+        answer = gui.myQuestdlg(parentfig, 'Which species?', ...
+            'Select Species',{'Human', 'Mouse'}, capitalizeFirst(preferredspecies));
+    otherwise
+        % Without this the next line read an ANSWER that was never
+        % assigned, and the error named that variable rather than the bad
+        % argument eight lines earlier.
+        error('gui:i_selectspecies:badSpeciesCount', ...
+            ['N must be 2, for human and mouse, or 3, which adds ', ...
+            'zebrafish. Note PARENTFIG is the third argument: ', ...
+            'gui.i_selectspecies(2, false, parentfig).']);
 end
 speciestag = '';
 if isempty(answer), return; end

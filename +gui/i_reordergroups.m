@@ -3,9 +3,9 @@ function [c, cL, noanswer, newidx] = i_reordergroups(thisc, preorderedcL, ...
 
 if nargin < 3, parentfig = []; end
 if nargin < 2, preorderedcL = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 noanswer = true;
 [c, cL] = findgroups(string(thisc));

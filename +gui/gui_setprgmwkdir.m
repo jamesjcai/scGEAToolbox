@@ -6,7 +6,14 @@ wrkdir = '';
 if ~gui.i_setwrkdir(preftagname, parentfig), return; end
 s = getpref('scgeatoolbox', preftagname, []);
 if isempty(s)
-    error('Working path has not been set up.');
+    % GUI.I_SETWRKDIR said it was set up and it is not. Every caller here
+    % tests `if isempty(wkdir), return; end`, so hand back empty rather
+    % than throwing: an ERROR out of a menu callback reaches the user as an
+    % unhandled red stack trace with nothing to act on.
+    gui.myErrordlg(parentfig, ['The working folder preference is empty. ' ...
+        'Set it with Setup > Set Working Folder, then try again.'], ...
+        'gui:gui_setprgmwkdir:noWorkingPath');
+    return;
 end
 s1 = sprintf('%s_workingfolder', extprogname);
 wrkdir = fullfile(s, s1);
@@ -47,7 +54,7 @@ files = files(~[files.isdir]); % Remove directories from the list
 
 % Check if there are any files
 if ~isempty(files)
-    fprintf('Found %d files in %s\n', length(files), wkdir);
+    fprintf('Found %s in %s\n', pkg.i_plural(length(files), 'file'), wkdir);
 
     % Delete all files
     for i = 1:length(files)

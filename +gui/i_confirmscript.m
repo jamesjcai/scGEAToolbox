@@ -4,9 +4,9 @@ if nargin<4, parentfig = []; end
 if nargin < 1, qtxt = 'Run pseudotime analysis (Monocle)?'; end
 if nargin < 2, stxt = 'R_monocle'; end
 if nargin < 3, langtag = 'R'; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 t = false;

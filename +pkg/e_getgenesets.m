@@ -26,19 +26,37 @@ function [setmatrx, setnames, setgenes] = e_getgenesets(option,species,parentfig
 %                       (SC_GSETTEST Method="ulm", PKG.E_ULM); the unsigned
 %                       option 2 cannot detect a regulon whose targets move
 %                       in opposite directions.
+%     6 / 'GlycoEnzOnto' - GlycoEnzOnto glycosylation pathways. Alongside
+%                       option 4 rather than instead of it: option 4 is a
+%                       small curated set of functional modules, this is the
+%                       ontology's own pathway decomposition, which is finer
+%                       and differently drawn. See GLY.ENZONTO for what each
+%                       is for.
 %
-% See also: SC_GSETTEST, SC_DPG, PKG.E_ULM, GLY.GENESETS
+% See also: SC_GSETTEST, SC_DPG, PKG.E_ULM, GLY.GENESETS, GLY.ENZONTO
+% OPTION is settled first because everything below reads it. It used to be
+% defaulted three lines after its first use, so the documented no-argument
+% call - which SC_DPG makes whenever it is given fewer than six arguments -
+% died on an undefined variable instead of loading MSigDB.
+if nargin < 1 || isempty(option), option = 1; end
+% The switch below mixes numeric and char cases, and MATLAB cannot compare a
+% string against a double case value: it raises
+% MATLAB:string:ComparisonNotDefined from inside the switch rather than
+% matching or falling through. So e_getgenesets("TF") failed with an error
+% about comparison while e_getgenesets('TF') worked, for every named option.
+if isstring(option) && isscalar(option)
+    option = char(option);
+end
 if nargin < 4, confidence = []; end
 if nargin < 3, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 if nargin<2, species=[]; end
 if isempty(species) && ~isequal(option, 1) && ~isequal(option, 'MSIGDB') && ~isequal(option, 'MSigDB Molecular Signatures')
     species = 'human';
 end
-if nargin<1 || isempty(option), option = 1; end
 
 conflevels = i_normalizeconfidence(confidence);
 if ~isempty(conflevels) && ~i_isdorotheaoption(option)
@@ -130,6 +148,20 @@ switch option
             % Fall back to building the collection on the fly.
             [setmatrx, setnames, setgenes] = gly.genesets();
         end
+    case {6,'GlycoEnzOnto','GlycoEnzOnto Pathways'}
+        % Leaf terms only, which is GLY.ENZONTO's own default. The
+        % aggregates are unions of their children, so including them would
+        % test the same genes twice and pay for it in the multiple-testing
+        % correction, which is not what a competitive gene-set test wants.
+        [setmatrx, setnames, setgenes] = gly.enzonto();
+    otherwise
+        % Previously an unknown option returned three empty outputs, and
+        % every caller here treats empty as "the user cancelled" - so a
+        % mistyped option looked exactly like a cancelled dialog.
+        error("pkg:e_getgenesets:UnknownOption", ...
+            "Unknown gene set option '%s'. Valid options are 1/'MSIGDB', " + ...
+            "2/'TF', 3/'Predefined', 4/'Glycobiology', 5/'TFsigned' and " + ...
+            "6/'GlycoEnzOnto'.", string(option));
 end
 end
 

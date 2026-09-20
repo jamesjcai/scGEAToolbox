@@ -24,16 +24,23 @@ function [primary, ismatched] = i_matchprimarytype(labels, primarytypes)
 %
 %   1. the same name, once case, punctuation and a trailing cluster index are
 %      normalized away
-%   2. a known synonym of the primary type ("Tregs", "CTL", "T lymphocyte")
-%   3. the primary type appearing as whole words inside the label, so
+%   2. a name PKG.I_SUBTYPEOVERLAP recognizes as a subtype of the primary,
+%      which is how "Plasma cells" reaches "B cells" and "Interneurons"
+%      reaches "Neurons"
+%   3. a known synonym of the primary type ("Tregs", "CTL", "T lymphocyte")
+%   4. the primary type appearing as whole words inside the label, so
 %      "CD8+ T cells" matches "T cells" while "Mast cells" does not
-%   4. the label opening with the primary type's first word and closing with
+%   5. the label opening with the primary type's first word and closing with
 %      its last, which is the "T memory cells" shape
 %
 % Nothing matches on a shared head noun alone: "Natural killer cells" is not
 % "T cells", however PanglaoDB happens to file its subtypes.
 %
-% see also: pkg.i_normalizetypename, sc_csubtypeanno,
+% Rule 2 only says which primary a label belongs to. Whether that label is one
+% to leave alone - because it already names its subtype - is a separate
+% question, and PKG.I_SUBTYPEOVERLAP is what answers it.
+%
+% see also: pkg.i_typekey, pkg.i_subtypeoverlap, sc_csubtypeanno,
 %           gui.callback_SubtypeAnnotation
 
 % string() before (:), not after: 'T cells' as a char row vector would
@@ -50,13 +57,18 @@ if isempty(labels) || isempty(primarytypes), return; end
 % One key per distinct label: annotations repeat over thousands of cells and
 % the work below is per distinct name, not per cell.
 [ulabels, ~, back] = unique(labels(:));
-ukeys = in_key(ulabels);
-pkeys = in_key(primarytypes);
+ukeys = pkg.i_typekey(ulabels);
+pkeys = pkg.i_typekey(primarytypes);
+
+% The primary each label reaches by already naming one of its subtypes, as a
+% key, "" for the labels that name no subtype. Looked up for every distinct
+% label at once rather than once per rule test.
+okeys = pkg.i_typekey(pkg.i_subtypeoverlap(ulabels));
 
 uprimary = strings(size(ulabels));
 for k = 1:numel(ukeys)
     if strlength(ukeys(k)) == 0, continue; end
-    hit = in_findprimary(ukeys(k), pkeys);
+    hit = in_findprimary(ukeys(k), pkeys, okeys(k));
     if hit > 0
         uprimary(k) = primarytypes(hit);
     end
@@ -66,7 +78,7 @@ primary(:) = uprimary(back);
 ismatched = strlength(primary) > 0;
 end
 
-function idx = in_findprimary(labelkey, pkeys)
+function idx = in_findprimary(labelkey, pkeys, overlapkey)
 % First primary type the label reaches, 0 for none. The rules are tried in
 % order of how specific they are, so a label that names one type outright is
 % never claimed by another type's looser rule.
@@ -76,6 +88,15 @@ idx = 0;
 hit = find(pkeys == labelkey, 1);
 if ~isempty(hit), idx = hit; return; end
 
+% A curated equivalence between the two PanglaoDB tables beats every rule
+% below, which are all guesses from the shape of the name. It is also the only
+% one that reaches a primary the name shares no word with: "Plasma cells" is a
+% B cell, and nothing in the string says so.
+if strlength(overlapkey) > 0
+    hit = find(pkeys == overlapkey, 1);
+    if ~isempty(hit), idx = hit; return; end
+end
+
 hit = find(arrayfun(@(p) ismember(labelkey, in_synonyms(p)), pkeys), 1);
 if ~isempty(hit), idx = hit; return; end
 
@@ -84,18 +105,6 @@ if ~isempty(hit), idx = hit; return; end
 
 hit = find(arrayfun(@(p) in_bracketsword(labelkey, p), pkeys), 1);
 if ~isempty(hit), idx = hit; return; end
-end
-
-function key = in_key(s)
-% Normalized comparison key: lowercase, punctuation to spaces, the cluster
-% index SCE.ASSIGNCELLTYPE appends dropped, and the last word singularized so
-% "T cells" and "T cell" are one key.
-
-key = pkg.i_normalizetypename(s);
-key = regexprep(key, '\s+\d+$', '');            % 'T cells_{3}' -> 't cells'
-key = regexprep(key, '(\w)s$', '$1');           % 't cells' -> 't cell'
-key = regexprep(key, '\<lymphocyte$', 'cell');  % 'B lymphocytes' -> 'b cell'
-key = strtrim(key);
 end
 
 function tf = in_containswords(labelkey, pkey)

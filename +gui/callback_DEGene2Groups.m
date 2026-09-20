@@ -1,9 +1,9 @@
 function callback_DEGene2Groups(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
-if ~isempty(FigureHandle)
+if ~isempty(FigureHandle) && pkg.i_isvalid(FigureHandle) && FigureHandle.Visible == "on"
     figure(FigureHandle);
-    cleanupObj = onCleanup(@() figure(FigureHandle));
+    cleanupObj = onCleanup(@() gui.i_raisefig(FigureHandle));
 end
 
 extprogname = 'scgeatool_DEAnalysis';
@@ -37,7 +37,10 @@ outfile = sprintf('%s_vs_%s_DE_results', ...
 filesaved = fullfile(outdir, [outfile, '.xlsx']);
 
 [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1), sum(i2));
-[Tup, Tdn] = pkg.e_processdetable(T, paramset, FigureHandle);
+% USEDSET, not PARAMSET, from here on: with 'Automatic' cutoffs the two
+% differ, and the volcano plot must label what was actually applied.
+[Tup, Tdn, ~, usedset] = pkg.e_processdetable(T, paramset, FigureHandle);
+Tnt = pkg.i_decutoffnote(Tnt, usedset);
 
 gui.myWaitbar(FigureHandle, fw, false, '', 'Saving DE results...', 0.85);
 try
@@ -170,12 +173,19 @@ function hFig = e_volcano(T, Tup, Tdn, parentfig)
         sprintf('Up-regulated (%d)', height(Tup))},'Location', ...
         'bestoutside');
     try
-        mindiffpct = paramset{1};
-        minabsolfc = paramset{2};
-        apvaluecut = paramset{3};
+        mindiffpct = usedset{1};
+        minabsolfc = usedset{2};
+        apvaluecut = usedset{3};
 
         Text_below_legend = sprintf('Dropout Diff. > %d%%\nLog2(FC) > %.2f\nAdj. P-Value < %g', ...
             100*mindiffpct, minabsolfc, apvaluecut);
+        if isfinite(usedset{6})
+            Text_below_legend = sprintf('%s\nRaw P-Value <= %g', ...
+                Text_below_legend, usedset{6});
+        end
+        if strcmp(usedset{5}, 'Automatic')
+            Text_below_legend = sprintf('%s\n(automatic cutoffs)', Text_below_legend);
+        end
         txt = text(ax, 0, 0, Text_below_legend, ...
             'HorizontalAlignment', 'center', ...
             'VerticalAlignment', 'top', ...

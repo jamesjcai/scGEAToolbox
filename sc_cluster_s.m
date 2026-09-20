@@ -47,7 +47,13 @@ switch p.Results.type
         % 20 out of 20 with five restarts. The gain holds at every
         % separation tried, and five restarts cost 0.09 s against 0.03 s
         % on a 20000-cell 3-D embedding, so there is nothing to trade.
-        c_clustid = kmeans(s, k, 'Replicates', numrep);
+        % The default MaxIter of 100 is too few for large t-SNE embeddings
+        % (dense, curved clusters keep shifting a few points per pass): a
+        % replicate stopped there is unconverged, and KMEANS warns
+        % stats:kmeans:FailedToConvergeRep. Iterations stop once
+        % assignments no longer change, so the higher cap costs nothing
+        % when the default would have sufficed.
+        c_clustid = kmeans(s, k, 'Replicates', numrep, 'MaxIter', 1000);
     case 'kmedoids'
         % Deliberately not replicated. KMEDOIDS seeds with a k-means++
         % build and reaches the same answer from one seeding as from five

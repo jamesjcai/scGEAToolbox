@@ -5,9 +5,9 @@ function [glist] = i_selectngenes(sce, predefinedlist, parentfig)
 if nargin < 2, predefinedlist = []; end
 if nargin < 3, parentfig = []; end
 
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 % internal function used by callback_BuildGeneNetwork

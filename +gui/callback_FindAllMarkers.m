@@ -61,8 +61,7 @@ if strcmp(answer, 'Yes')
     idx = ismember(upper(sce.g), upper(markergenes));
     if sum(idx) > 2000
         fprintf('Size of input matrix: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
-        sce.X = sce.X(idx, :);
-        sce.g = sce.g(idx);
+        sce = sce.selectgenesbyindex(idx);
         sce = sce.qcfilter; % OK
         fprintf('Size of filtered matrix: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
     else
@@ -77,7 +76,7 @@ else
     return;
 end
 
-[thisc, ~] = gui.i_select1class(sce,[],[],[],FigureHandle);
+[thisc, clabel] = gui.i_select1class(sce,[],[],[],FigureHandle);
 if isempty(thisc), return; end
 if isscalar(unique(thisc))
     gui.myWarndlg(FigureHandle, "All cells are in the same group.");
@@ -85,6 +84,26 @@ if isscalar(unique(thisc))
 end
 % [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
 % if noanswer, return; end
+
+% Which cell types go on the heatmap. Every level of the grouping variable
+% used to go on it, and an annotation with thirty types -- or with a
+% handful of cells sitting in a type nobody asked about -- gave a heatmap
+% too dense to read, with ten marker genes picked per type either way.
+% The order the list is offered in is the user's: a long annotation is
+% easiest to work through by size, a familiar one alphabetically.
+[picked, levels] = gui.i_selectgroupsubset(thisc, clabel, FigureHandle, "ask");
+if isempty(picked), return; end
+if numel(levels) < 2
+    gui.myWarndlg(FigureHandle, "Select at least two cell types.");
+    return;
+end
+if ~all(picked)
+    numlevels = numel(unique(string(thisc)));
+    sce = sce.selectcells(picked);
+    thisc = thisc(picked);
+    fprintf('%d of %d groups kept (%d of %d cells).\n', ...
+        numel(levels), numlevels, sce.NumCells, numel(picked));
+end
 
 [c] = findgroups(thisc);
 answer = gui.myQuestdlg(FigureHandle, 'Generate marker gene heatmap', ...
@@ -118,8 +137,7 @@ sce = sce.rmribosomalgenes;
 sce = sce.rmlncrnagenes;
 [idx] = ~ismember(upper(sce.g), upper(ApprovedSymbol));
 if any(idx)
-    sce.X(idx, :) = [];
-    sce.g(idx) = [];
+    sce = sce.selectgenesbyindex(~idx);
 end
 
 fprintf('Size of matrix used for search: %d genes x %d cells\n', ...

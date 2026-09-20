@@ -1,3 +1,4 @@
+import _scimilarity_env  # noqa: F401  (tiledb DLL search path, cp1252-safe stdout)
 import pandas as pd
 from scipy.sparse import csr_matrix
 import h5py

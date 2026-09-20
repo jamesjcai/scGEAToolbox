@@ -49,7 +49,8 @@ for k=1:length(CellTypeList)
     if ~isempty(T)
         [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1&idx), sum(i2&idx));
 
-        [Tup, Tdn] = pkg.e_processdetable(T, paramset, FigureHandle);
+        [Tup, Tdn, ~, usedset] = pkg.e_processdetable(T, paramset, FigureHandle);
+        Tnt = pkg.i_decutoffnote(Tnt, usedset);
         try
             writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All_genes');
             writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');

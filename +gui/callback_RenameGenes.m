@@ -26,7 +26,8 @@ if ~all(y)
 end
 sce.g(idx) = renamedglist;
 requirerefresh = true;
-gui.myHelpdlg(FigureHandle, sprintf('Renamed %d genes.', length(glist)), '');
+gui.myHelpdlg(FigureHandle, sprintf('Renamed %s.', ...
+    pkg.i_plural(length(glist), 'gene')), '');
 
 gui.myGuidata(FigureHandle, sce, src);
 end

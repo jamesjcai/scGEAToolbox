@@ -1,9 +1,10 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.5.0 11-Sep-2026
+% Version 26.5.2 20-Sep-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
 %   online_landing            - online_landing is a script.
+%   sc_analyticfit            - SC_ANALYTICFIT  Closed-form replacement for the Spline-DV 3-D spline curve.
 %   sc_annotatecells          - SC_ANNOTATECELLS Assign cell types by any available method, through one call.
 %   sc_causalcccnet           - SC_CAUSALCCCNET  Local approximation of a causalCCC/MIIC network.
 %   sc_cellcyclescore         - Score cell cycle phases

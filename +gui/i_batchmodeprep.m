@@ -19,9 +19,9 @@ function [done, CellTypeList, i1, i2, cL1, cL2,...
 if nargin<5, infixes = {''}; end
 if nargin<4, parentfig = []; end
 if nargin<3, wrkdir = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 done = false;

@@ -36,9 +36,9 @@ items {mustBeValidItemList}
 preselected_items {mustBeValidItemList} = []
 parentfig = []   % allow [] or matlab.ui.Figure
 end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
     %if length(items) > 1e4

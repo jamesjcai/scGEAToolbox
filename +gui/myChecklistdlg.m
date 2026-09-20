@@ -133,7 +133,8 @@ end
 % Nested callback functions
 function updateSelectionCount()
 selectedCount = sum(cellfun(@(x) x.Value, checkboxes));
-selectionInfo.Text = sprintf('Selected: %d items', selectedCount);
+selectionInfo.Text = sprintf('Selected: %s', ...
+    pkg.i_plural(selectedCount, 'item'));
 end
 
 function selectAllCallback(~, ~)

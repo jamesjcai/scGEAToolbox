@@ -14,9 +14,9 @@ if nargin < 2, parentfig = []; end
 if nargin < 1
     selpath = uigetdir;
 end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 if isempty(selpath) || isequal(selpath, 0), return; end
 if ~isfolder(selpath), return; end
@@ -70,7 +70,7 @@ for k = 1:length(selectedfiles)
     end
 
     [done, outfile] = llm.e_DPTableSummary(Tup, Tdn, wordfilename, selpath);
-    if done, pkg.i_openoutputfile(outfile); end
+    % if done, pkg.i_openoutputfile(outfile); end
 end
 
 gui.myWaitbar(parentfig, fw);

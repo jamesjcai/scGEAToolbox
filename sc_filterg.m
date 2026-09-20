@@ -19,13 +19,14 @@ else
     [u] = sum(X, 2);
     i = u >= cutoff;
     if verbose
-        fprintf('Discard genes with poor expression values (with less than %d reads among all cells).\n', ...
-            cutoff);
+        fprintf(['Discarding genes with poor expression values ' ...
+            '(fewer than %s among all cells).\n'], ...
+            pkg.i_plural(cutoff, 'read'));
     end
 end
 % We discard cells with poor gene expression values (more than 90% zeros in all cells)
 % As the default, we filter all the genes with less than 5 reads among 99% of the samples
 X = X(i, :);
 if ~isempty(genelist), genelist = genelist(i); end
-if verbose, fprintf('%d genes removed.\n', sum(~i)); end
+if verbose, fprintf('%s removed.\n', pkg.i_plural(sum(~i), 'gene')); end
 end

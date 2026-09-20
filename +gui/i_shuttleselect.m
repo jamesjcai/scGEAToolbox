@@ -125,11 +125,13 @@ function updateCounters()
 numVisible = height(tAvail.Data);
 numTotalAvail = numel(availItems);
 if isempty(efSearch.Value)
-    lblAvailCount.Text = sprintf('%d items available', numTotalAvail);
+    lblAvailCount.Text = sprintf('%s available', ...
+        pkg.i_plural(numTotalAvail, 'item'));
 else
-    lblAvailCount.Text = sprintf('Found %d of %d items', numVisible, numTotalAvail);
+    lblAvailCount.Text = sprintf('Found %d of %s', numVisible, ...
+        pkg.i_plural(numTotalAvail, 'item'));
 end
-lblSelCount.Text = sprintf('%d items selected', numel(selItems));
+lblSelCount.Text = sprintf('%s selected', pkg.i_plural(numel(selItems), 'item'));
 end
 
 function refreshUI()

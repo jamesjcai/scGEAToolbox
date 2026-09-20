@@ -27,14 +27,12 @@ if usedefaultdb
     speciestag = gui.i_selectspecies(2, false, FigureHandle, speciestag);
     if isempty(speciestag), return; end
 else
-    [Tm, Tw] = pkg.i_markerlist2weight(sce, FigureHandle);
-    if isempty(Tm) || isempty(Tw)
-        return;
-    end
-    wvalu = Tw.Var2;
-    wgene = string(Tw.Var1);
-    celltypev = string(Tm.Var1);
-    markergenev = string(Tm.Var2);
+    % The same getter the brush tool uses, so a list used in one is what the
+    % other opens on. It also warns about markers this dataset does not
+    % have, which the editor this replaces did not.
+    Tm = gui.i_getcustommarkers(FigureHandle, sce);
+    if isempty(Tm), return; end
+    [wvalu, wgene, celltypev, markergenev] = pkg.i_markerweights(Tm);
 end
 
 [manuallyselect, bestonly] = gui.i_annotemanner(FigureHandle);

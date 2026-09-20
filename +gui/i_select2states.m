@@ -3,9 +3,9 @@ function [thisc1, clabel1, thisc2, clabel2] = i_select2states(sce, ...
 
 if nargin<3, parentfig=[]; end
 if nargin<2, allowsingle = false; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 thisc1 = [];

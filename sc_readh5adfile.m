@@ -5,11 +5,13 @@ function [X, g, b, batchid, celltype, filenm] = sc_readh5adfile(filenm)
 % http://scipy-lectures.org/advanced/scipy_sparse/csc_matrix.html
 % https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/h5_matrices
 %
-% Handles /X stored either as a sparse CSR group (data/indices/indptr, the
-% common layout) OR as a dense 2-D dataset (as written by AnnData when X is a
+% Handles /X stored either as a sparse group (data/indices/indptr, in CSR or
+% CSC layout) OR as a dense 2-D dataset (as written by AnnData when X is a
 % plain ndarray). Gene/barcode names are read from whatever dataset the AnnData
 % "_index" attribute points to, so non-standard index names (e.g. /var/gene,
-% /obs/cell instead of /var/_index) are handled as well.
+% /obs/cell instead of /var/_index) are handled as well. Batch and cell type
+% columns are matched against obs ignoring case and separators, so "CellType",
+% "cell_type" and "cell type" are all recognized.
 
 X = [];
 g = [];
@@ -30,14 +32,16 @@ groupNames = strtrim(string(char(hinfo.Groups.Name)));
 XisSparse = any(groupNames == "/X");
 
 if XisSparse
-    % ---- /X is a sparse CSR group: data / indices / indptr ----------------
+    % ---- /X is a sparse group: data / indices / indptr --------------------
     idx = find(groupNames == "/X");
 
     data = pkg.e_guessh5field(filenm, {'/X/'}, {'data'}, true);
     shapeGroupIdx = idx;  % default: read shape from /X
     rawIdx = [];
     rawXIdx = [];
-    if isequal(data(1:5), round(data(1:5)))
+    sparsePath = '/X';    % group whose encoding-type describes the arrays
+    probe = data(1:min(5, numel(data)));
+    if isequal(probe, round(probe))
         indices = pkg.e_guessh5field(filenm, {'/X/'}, {'indices'}, true);
         indptr = pkg.e_guessh5field(filenm, {'/X/'}, {'indptr'}, true);
     else
@@ -47,6 +51,7 @@ if XisSparse
             data = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'data'}, true);
             indices = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indices'}, true);
             indptr = pkg.e_guessh5field(filenm, {'/raw/X/'}, {'indptr'}, true);
+            sparsePath = '/raw/X';
             % Update shape group to /raw/X if it exists
             rawIdx = find(strcmp(strtrim(string(char(hinfo.Groups.Name))), "/raw"));
             if ~isempty(rawIdx)
@@ -75,17 +80,12 @@ if XisSparse
     end
     shape = double(grpAttrs(idx2).Value);
 
-    % reconstruct genes-by-cells sparse matrix from CSR (rows = cells)
-    if ~isMATLABReleaseOlderThan('R2025a')
-        X = spalloc(shape(2), shape(1), length(data), 'single');
-    else
-        X = spalloc(shape(2), shape(1), length(data));
+    % reconstruct genes-by-cells sparse matrix from the CSR/CSC arrays
+    if isMATLABReleaseOlderThan('R2025a')
+        data = double(data);   % single-valued sparse needs R2025a or newer
     end
-    for k = 1:length(indptr) - 1
-        ix = indptr(k) + 1:indptr(k+1);
-        y = indices(ix) + 1;
-        X(y, k) = data(ix);
-    end
+    X = buildSparseFromCS(data, indices, indptr, shape(1), shape(2), ...
+        readEncodingType(filenm, sparsePath));
 else
     % ---- /X is a dense 2-D dataset ---------------------------------------
     % MATLAB reverses HDF5 dimension order, so h5read of an (n_obs x n_vars)
@@ -128,16 +128,19 @@ if isempty(b)
 end
 if isempty(b), warning('Barcode is not assigned.'); end
 
-try
-    batchid = readObsColumn(filenm, 'BatchID');
-catch
-    % BatchID is optional metadata; absence is not an error
-end
+% Both are optional metadata and stay empty when absent. The obs table is
+% decoded once by PKG.I_READH5ADOBS, and PKG.I_H5ADOBSROLES says which of
+% its columns these two outputs come from - the same answer
+% PKG.I_ADDH5ADOBSATTRIBS uses to leave them out of the cell attributes, so
+% a column cannot land on the object twice under two spellings.
+[obsNames, obsValues] = pkg.i_readh5adobs(filenm);
+roles = pkg.i_h5adobsroles(obsNames);
 
-try
-    celltype = readObsColumn(filenm, 'CellType');
-catch
-    % CellType is optional metadata; absence is not an error
+if roles.batch > 0
+    batchid = obsValues{roles.batch};
+end
+if roles.celltype > 0
+    celltype = obsValues{roles.celltype};
 end
 
 g = deblank(string(g));
@@ -171,49 +174,55 @@ function names = readDataFrameIndex(h5file, groupPath)
 end
 
 
-function values = readObsColumn(h5file, colname)
-% READOBSCOLUMN Extract a column from AnnData .h5ad obs table.
-%   values = READOBSCOLUMN(h5file, colname)
-%   h5file : path to .h5ad file
-%   colname: string, name of the obs column (e.g. 'celltype')
-%
-%   Returns either a string array or categorical array.
+function enc = readEncodingType(h5file, groupPath)
+% READENCODINGTYPE Read the AnnData "encoding-type" attribute of a group.
+%   Returns an empty string when the attribute is absent, as in files written
+%   by pre-0.8 AnnData or by h5sparse. Callers must cope with that.
 
-    obsPath = ['/obs/' colname];
-
+    enc = "";
     try
-        % Case 1: column stored directly (string array, numeric, etc.)
-        values = h5read(h5file, obsPath);
-        % Convert to MATLAB string if it's char data
-        if ischar(values)
-            values = string(values);
-        elseif iscellstr(values)
-            values = string(values);
-        elseif isstring(values)
-            % good -- do nothing
-        end
-        return
+        enc = lower(strtrim(string(h5readatt(h5file, groupPath, 'encoding-type'))));
     catch
-        % If direct read fails, probably categorical
+        % Attribute is absent; the caller infers the layout from indptr instead
+    end
+end
+
+
+function X = buildSparseFromCS(data, indices, indptr, nCells, nGenes, encoding)
+% BUILDSPARSEFROMCS Build a genes-by-cells matrix from CSR or CSC arrays.
+%   AnnData stores /X as an (n_obs x n_vars) cells-by-genes matrix, in either
+%   CSR or CSC layout. scGEAToolbox works with genes-by-cells, so both layouts
+%   are transposed here on the way in.
+%
+%   The layout is taken from the length of indptr, which is n_obs+1 for CSR and
+%   n_vars+1 for CSC. That is decisive except for a square matrix, where the
+%   "encoding-type" attribute settles it instead.
+
+    nPtr = numel(indptr) - 1;
+    if nCells ~= nGenes
+        isCSC = (nPtr == nGenes);
+    else
+        isCSC = (encoding == "csc_matrix");
     end
 
-    % Case 2: categorical (codes + categories)
-    codesPath = [obsPath '/codes'];
-    catsPath  = [obsPath '/categories'];
+    if nPtr ~= nCells && nPtr ~= nGenes
+        error('sc_readh5adfile:BadIndptr', ...
+            ['indptr has %d entries, matching neither the %d cells nor the ' ...
+            '%d genes given by the shape attribute. Check that the file is ' ...
+            'complete and stores /X as a CSR or CSC matrix.'], ...
+            nPtr, nCells, nGenes);
+    end
 
-    try
-        codes = h5read(h5file, codesPath);
-        cats  = h5read(h5file, catsPath);
+    % Expand indptr into one major-axis subscript per stored value. AnnData
+    % indices are 0-based, so the minor axis shifts up by one.
+    major = repelem((1:nPtr)', double(diff(double(indptr(:)))));
+    minor = double(indices(:))+1;
 
-        % Convert categories to string
-        if ischar(cats) || iscellstr(cats)
-            cats = string(cats);
-        end
-
-        % AnnData categorical codes are 0-based, MATLAB is 1-based
-        values = categorical(codes + 1, 1:numel(cats), cats);
-        return
-    catch
-        values = string.empty;  % column not found in either format
+    if isCSC
+        % Major axis runs over genes, indices point at cells
+        X = sparse(major, minor, data(:), nGenes, nCells);
+    else
+        % Major axis runs over cells, indices point at genes
+        X = sparse(minor, major, data(:), nGenes, nCells);
     end
 end

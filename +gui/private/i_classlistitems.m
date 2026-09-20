@@ -42,6 +42,40 @@ if any(v)
     listitems = [listitems, 'Workspace Variable...'];
 end
 
+% Named cell attributes, when they are labels rather than measurements, go
+% last and under a divider. An imported Seurat or RDS object puts every
+% meta.data column it does not recognize into LIST_CELL_ATTRIBUTES, so this
+% is where a categorical annotation ends up when it is not one of the
+% fields above, and the two groups are worth telling apart on sight.
+%
+% The resolvers read these back by name through SCE.GETCELLATTRIBUTE, so an
+% attribute sharing a name with an item already listed is skipped: it could
+% never be reached past the switch that matches the built-in first.
+attribitems = i_attributeitems(sce, listitems, allowsingle);
+if ~isempty(attribitems)
+    listitems = [listitems, {i_classlistdivider()}, attribitems];
+end
+
+end
+
+
+function items = i_attributeitems(sce, taken, allowsingle)
+% The names of every cell attribute that qualifies as a grouping variable,
+% in the order they are stored. LIST_CELL_ATTRIBUTES is a flat
+% {name1, value1, name2, value2, ...} cell.
+items = {};
+names = sce.list_cell_attributes(1:2:end);
+for k = 1:numel(names)
+    name = char(string(names{k}));
+    if isempty(name) || any(strcmp(name, taken)) || any(strcmp(name, items))
+        continue;
+    end
+    if 2*k > numel(sce.list_cell_attributes), continue; end   % name with no value
+    if ~pkg.i_isgroupingvar(sce.list_cell_attributes{2*k}, sce.NumCells, allowsingle)
+        continue;
+    end
+    items = [items, {name}]; %#ok<AGROW>
+end
 end
 
 

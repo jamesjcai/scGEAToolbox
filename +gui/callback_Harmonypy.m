@@ -1,10 +1,13 @@
 function [done] = callback_Harmonypy(src, ~)
 %CALLBACK_HARMONYPY Batch integration with Harmony, Python backend.
-%   Offers harmonypy when Python is configured, and the native MATLAB
-%   implementation otherwise, so this menu entry works without Python
-%   installed.
+%   Runs harmonypy, falling back to the native MATLAB implementation when
+%   Python is not configured.
 %
-%   See also GUI.CALLBACK_HARMONY, RUN.PY_HARMONYPY, RUN.ML_HARMONY.
+%   The backend question used to be asked here. It moved to
+%   GUI.CALLBACK_HARMONYANY, the single menu entry that now reaches all
+%   three backends, so reaching this file means Python was already chosen.
+%
+%   See also GUI.CALLBACK_HARMONYANY, GUI.CALLBACK_HARMONY, RUN.PY_HARMONYPY.
 
 done = false;
 
@@ -16,14 +19,6 @@ if numel(unique(sce.c_batch_id)) < 2
 end
 
 if ~pkg.i_checkpython
-    done = gui.callback_Harmony(src);
-    return;
-end
-
-backend = gui.myQuestdlg(FigureHandle, 'Choose Harmony backend:', '', ...
-    {'Python (harmonypy)', 'MATLAB (native)'}, 'Python (harmonypy)');
-if isempty(backend), return; end
-if strcmp(backend, 'MATLAB (native)')
     done = gui.callback_Harmony(src);
     return;
 end

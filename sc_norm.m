@@ -9,9 +9,14 @@ addRequired(p, 'X', @isnumeric);
 addOptional(p, 'type', defaultType, checkType);
 parse(p, X, varargin{:});
 
-sx = sum(X);
-if (max(sx) - min(sx)) < 0.001
-    warning('Input X may have already been normalized.');
+% Near-identical library sizes across cells suggest X was normalized
+% already. Guard the degenerate cases that also give a zero spread but say
+% nothing about normalization: a single cell, and an all-zero submatrix
+% (e.g. a gene subset with no counts in the selected cells).
+sx = sum(X, 1, 'omitnan');
+if numel(sx) > 1 && max(sx) > 0 && (max(sx)-min(sx))/max(sx) < 1e-6
+    warning('sc_norm:AlreadyNormalized', ...
+        'Input X may have already been normalized.');
 end
 
 switch p.Results.type

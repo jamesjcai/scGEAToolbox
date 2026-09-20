@@ -10,12 +10,38 @@ preftagname = 'externalwrkpath';
 [wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wrkdir), return; end
 
-prefixtag = 'DV';
+% Both curve methods return the same columns, so the loop below and
+% PKG.IN_DVTABLEPROCESS take either unchanged. Brennecke is not offered
+% here: it returns a different table and the batch output would not match
+% the other sheets. PREFIXTAG carries the choice into the file names, so an
+% analytic run does not silently overwrite a splinefit one -- it is also
+% what GUI.I_BATCHMODEPREP probes with when it warns about overwriting.
+optSpline = 'Splinefit Method [PMID:40113778]';
+optAnalytic = 'Analytic Curve (closed-form Spline-DV)';
+answermethod = gui.myQuestdlg(FigureHandle, ...
+    'Which DV detecting method to use?', 'DV in Batch Mode', ...
+    {optSpline, optAnalytic}, optSpline);
+switch answermethod
+    case optSpline
+        dvmethod = 'splinefit';
+        prefixtag = 'DV';
+    case optAnalytic
+        dvmethod = 'analytic';
+        prefixtag = 'DVanalytic';
+    otherwise
+        return;   % dismissed
+end
+
+% The direction goes into PREFIXTAG for the same reason the method does:
+% DVdevsign_... and DV_... are different answers and must not collide.
+[direction, dirlabels] = gui.i_dvdirection(FigureHandle);
+if isempty(direction), return; end
+prefixtag = [prefixtag, erase(dirlabels.FileTag, '_')];
 
 a=sce.NumGenes;
 [sce] = gui.i_selectinfogenes(sce, [], FigureHandle);
 b=sce.NumGenes;
-fprintf('%d genes removed.\n', a-b);
+fprintf('%s removed.\n', pkg.i_plural(a-b, 'gene'));
 
 [done, CellTypeList, i1, i2, cL1, cL2, ...
 outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir, FigureHandle);
@@ -47,7 +73,7 @@ for k=1:length(CellTypeList)
         continue;
     end
 
-    [T] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit');
+    [T] = sc_dvg(sce1, sce2, cL1, cL2, dvmethod, direction);
 
     outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
         prefixtag,...
@@ -58,7 +84,8 @@ for k=1:length(CellTypeList)
 
         % Same cutoff as callback_DEVP2GroupsBatch. sc_dvg returns every
         % gene ranked and applies no threshold, so splitting on DiffSign
-        % alone reported the entire gene set as up- or down-variable.
+        % alone reported the entire gene set as up- or down-regulated.
+        % DiffSign is group 1 vs group 2, in mean or deviation per DIRECTION.
         dvq = pkg.e_fdr(T.pval);
         isok = T.DiffDist > 0 & dvq(:) <= 0.05;
         fprintf(['\nDV genes with BH q <= %.3f and a usable spline ' ...
@@ -66,7 +93,7 @@ for k=1:length(CellTypeList)
         Tup = T(T.DiffSign > 0 & isok, :);
         Tdn = T(T.DiffSign < 0 & isok, :);
 
-        [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2);
+        [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2, direction);
 
         % Item = T.Properties.VariableNames';
         % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
@@ -92,8 +119,8 @@ for k=1:length(CellTypeList)
 
         try
             writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'All genes');
-            writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', 'Up-regulated');
-            writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', 'Down-regulated');
+            writetable(Tup, filesaved, "FileType", "spreadsheet", 'Sheet', dirlabels.Up);
+            writetable(Tdn, filesaved, "FileType", "spreadsheet", 'Sheet', dirlabels.Dn);
             writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
         catch ME
             warning(ME.message);

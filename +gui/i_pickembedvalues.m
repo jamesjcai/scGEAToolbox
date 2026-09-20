@@ -2,9 +2,9 @@ function [s] = i_pickembedvalues(sce, ndim, parentfig)
 if nargin<2, ndim=[]; end
 if nargin<3, parentfig=[]; end
 
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 

@@ -23,7 +23,7 @@ idx = sum(X, 2) == 0;
 if any(idx)
    genelist(idx) = [];
    X(idx, :) = [];
-   warning('Empty genes are removed.');
+   disp('Empty genes are removed.');
 end
 
 m = size(X, 2);

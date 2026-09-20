@@ -24,9 +24,9 @@ if nargin<4, parentfig = []; end
 ylab      = i_field(labelinfo, 'ylabel', 'Score');
 xlab      = i_field(labelinfo, 'xlabel', 'Cell group');
 methodtxt = i_field(labelinfo, 'method', '');
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 tabnamelist = string(tabnamelist);
 

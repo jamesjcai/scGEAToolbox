@@ -34,9 +34,9 @@ splashpng = fullfile(mfolder, '..','assets', 'Images','splash_folder', pngfilena
     % end
 if nargin<1, parentfig=[]; end
 
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 iconfile = fullfile(mfolder, '..','assets', 'Images', 'icon_16.png');

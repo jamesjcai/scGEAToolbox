@@ -31,8 +31,7 @@ if strlength(mustkeep) > 0
     rm(g == mustkeep) = false;
 end
 if any(rm)
-    sce.X(rm, :) = [];
-    sce.g(rm) = [];
+    sce = sce.selectgenesbyindex(~rm);
 end
 
 T_hvg = sc_splinefit(sce.X, sce.g);
@@ -42,6 +41,5 @@ if strlength(mustkeep) > 0 && ~ismember(mustkeep, glist)
 end
 [~, hidx] = ismember(glist, sce.g);
 hidx = hidx(hidx > 0);
-sce.X = sce.X(hidx, :);
-sce.g = sce.g(hidx);
+sce = sce.selectgenesbyindex(hidx);
 end

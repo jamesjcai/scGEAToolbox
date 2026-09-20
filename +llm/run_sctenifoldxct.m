@@ -109,8 +109,8 @@ n1 = sum(ct == celltype1);
 n2 = sum(ct == celltype2);
 results.n1 = n1;
 results.n2 = n2;
-fprintf('%s: %d cells\n', celltype1, n1);
-fprintf('%s: %d cells\n', celltype2, n2);
+fprintf('%s: %s\n', celltype1, pkg.i_plural(n1, 'cell'));
+fprintf('%s: %s\n', celltype2, pkg.i_plural(n2, 'cell'));
 
 % Subsample cell types that exceed the cap
 sce = i_subsample_celltypes(sce, ct, celltype1, celltype2, max_cells);

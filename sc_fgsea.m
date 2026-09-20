@@ -138,8 +138,8 @@ end
 T = sortrows(T, ["FDR", "PValue"]);
 
 if opts.Verbose
-    fprintf("sc_fgsea: %d sets enriched at FDR<=%g\n", height(T), ...
-        opts.FDRCutoff);
+    fprintf("sc_fgsea: %s enriched at FDR<=%g\n", ...
+        pkg.i_plural(height(T), 'set'), opts.FDRCutoff);
 end
 
 if nargout > 1

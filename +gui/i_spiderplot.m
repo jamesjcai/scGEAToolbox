@@ -86,7 +86,7 @@ function i_reordersamples(~, ~)
 function i_editgrpnames(~, ~)
 
         if gui.i_isuifig(parentfig)
-            [indxx, tfx] = gui.myListdlg(parentfig, string(cL), 'Select group name');
+            [indxx, tfx] = gui.myListdlg(hFig, string(cL), 'Select group name');
         else
             [indxx, tfx] = listdlg('PromptString', ...
                 {'Select group name'}, ...
@@ -97,7 +97,7 @@ function i_editgrpnames(~, ~)
         if tfx == 1
             i = ismember(c, indxx);
             if gui.i_isuifig(parentfig)
-                newctype = gui.myInputdlg({'New cell type'}, 'Rename', cL(c(i)), parentfig);
+                newctype = gui.myInputdlg({'New cell type'}, 'Rename', cL(c(i)), hFig);
             else
                 newctype = inputdlg('New cell type', 'Rename', [1, 50], cL(c(i)));
             end

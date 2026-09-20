@@ -3,9 +3,16 @@ function [pt]=gui_3dcamera(tb, prefix, flatview, parentfig)
 if nargin < 4, parentfig = []; end
 if nargin < 3, flatview = false; end
 if nargin < 2, prefix = ''; end
-if ~isempty(parentfig)
+% Raising is about keeping focus on a window the user is already looking
+% at. FIGURE() also forces Visible on, so doing it to a hidden figure
+% shows it: GUI.MYFIGURE builds its toolbar before the plot is drawn, and
+% this popped that half-built figure up as an empty window that vanished
+% again when SHOW finally positioned it. Only raise what is already up.
+% == "on" rather than strcmp: Visible is a matlab.lang.OnOffSwitchState,
+% which strcmp never matches against a char.
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 if nargin < 1
     hFig = gcf;

@@ -6,9 +6,9 @@ if nargin < 3, nocustome = false; end
 if nargin < 4, noattrib = true; end
 if nargin < 5, continuousonly = false; end
 if nargin < 6, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 if continuousonly

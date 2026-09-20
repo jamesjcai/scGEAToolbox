@@ -16,27 +16,12 @@ answer = gui.myQuestdlg(FigureHandle, sprintf(...
      'https://miic.curie.fr/causalCCC.php. Continue?']));
 if ~strcmp(answer, 'Yes'), return; end
 
-if ~isempty(sce.c_cell_type_tx) && numel(unique(sce.c_cell_type_tx)) > 1
-    groupBy = "celltype";
-    labels = string(sce.c_cell_type_tx);
-elseif ~isempty(sce.c_cluster_id) && numel(unique(sce.c_cluster_id)) > 1
-    answer = gui.myQuestdlg(FigureHandle, sprintf(...
-        ['Cell type (C_CELL_TYPE_TX) is undefined.\nWould you like to use ', ...
-         'cluster id (C_CLUSTER_ID) to define cell groups?']));
-    if ~strcmp(answer, 'Yes'), return; end
-    groupBy = "cluster";
-    labels = "Group" + string(sce.c_cluster_id);
-else
-    gui.myWarndlg(FigureHandle, ...
-        'Need at least 2 cell groups (SCE.C_CELL_TYPE_TX or SCE.C_CLUSTER_ID).');
-    return;
-end
-
-cL = unique(labels, 'stable');
-if numel(cL) < 2
-    gui.myWarndlg(FigureHandle, 'Need at least 2 cell groups.');
-    return;
-end
+% Cell type when it is there, cluster id when it is not, a warning when
+% neither can supply two groups - see GUI.I_GETCELLGROUPS, which raises the
+% dialogs and returns empty once the user has been told.
+[labels, groupBy] = gui.i_getcellgroups(sce, FigureHandle);
+if isempty(labels), return; end
+cL = unique(labels(labels ~= ""), 'stable');
 
 senders = i_selectonegroup(cL, 'Select the SENDER cell group:', FigureHandle);
 if isempty(senders), return; end

@@ -39,9 +39,9 @@ if nargin < 3 || isempty(promptstr)
     promptstr = 'Select one or more grouping variables:';
 end
 if nargin < 2 || isempty(allowsingle), allowsingle = true; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 % Above this many groups the violin/heatmap views stop being readable, so
@@ -87,6 +87,13 @@ end
 % List order, deduplicated: the same two variables must give the same
 % composite however the user happened to click them.
 indx2 = sort(unique(indx2(:))).';
+
+% The divider is an ordinary listbox item -- a uilistbox cannot disable one
+% -- so a rubber-band selection can take it in along with real variables.
+% Drop it rather than crossing by it; picking it alone leaves nothing, and
+% returns as cancelling does.
+indx2(strcmp(listitems(indx2), i_classlistdivider())) = [];
+
 k = numel(indx2);
 if k == 0, return; end
 
@@ -143,6 +150,9 @@ end
                     c = evalin('base', wsvars(wi).name);
                     thislabel = wsvars(wi).name;
                 end
+            otherwise
+                % A named cell attribute; see I_CLASSLISTITEMS.
+                c = sce.getCellAttribute(thislabel);
         end
     end
 

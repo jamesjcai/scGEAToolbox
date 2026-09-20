@@ -50,9 +50,9 @@ end
 ok = isfinite(stats) & strlength(genes) > 0;
 if sum(ok) < 10
     gui.myErrordlg(parentfig, sprintf( ...
-        ['Only %d genes have a usable statistic. A competitive gene-set ' ...
+        ['Only %s a usable statistic. A competitive gene-set ' ...
         'test needs the whole measured gene list, not a filtered subset.'], ...
-        sum(ok)));
+        in_havestat(sum(ok))));
     return;
 end
 genes = genes(ok);
@@ -127,4 +127,17 @@ views(1) = struct('Name', sprintf('All sets (%d)', height(T)), 'Table', T);
 views(2) = struct('Name', sprintf('FDR<0.05 (%d)', nsig), ...
     'Table', T(T.FDR < 0.05, :));
 gui.TableViewerApp(views, parentfig, defname);
+end
+
+function [s] = in_havestat(n)
+% "1 gene has" / "7 genes have". The verb has to agree with the count as well
+% as the noun does, and sum(ok) here is a handful by definition - the branch
+% only runs when it is under ten.
+
+s = pkg.i_plural(n, 'gene');
+if n == 1
+    s = s + " has";
+else
+    s = s + " have";
+end
 end

@@ -7,9 +7,9 @@ narginchk(2,3);
 if nargin < 3
     [parentfig] = gui.gui_getfigsce(src);
 end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 x = pyenv;

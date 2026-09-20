@@ -13,8 +13,11 @@ function results = run_dp_analysis(sample_id1, sample_id2, data_dir, out_dir, ge
 %   the two samples.
 %
 %   The non-interactive gene-set collections supported here are:
-%     2 / 'TF'          - DoRothEA TF target programs
-%     3 / 'Predefined'  - scGEAToolbox predefined marker programs
+%     2 / 'TF'           - DoRothEA TF target programs
+%     3 / 'Predefined'   - scGEAToolbox predefined marker programs
+%     4 / 'Glycobiology' - curated glycobiology modules
+%     5 / 'TFsigned'     - DoRothEA TF targets, signed
+%     6 / 'GlycoEnzOnto' - GlycoEnzOnto glycosylation pathways
 %
 %   MSigDB option 1 is intentionally rejected here because pkg.e_getgenesets(1)
 %   opens an interactive selector dialog, which is not suitable for agent use.
@@ -75,8 +78,9 @@ if isempty(setmatrx) || isempty(setnames) || isempty(setgenes)
     error('llm:run_dp_analysis:noGeneSets', ...
         'No gene sets were loaded for option "%s".', string(gene_set_option));
 end
-fprintf('Gene set collection "%s": %d programs across %d genes\n', ...
-    string(gene_set_option), numel(setnames), numel(setgenes));
+fprintf('Gene set collection "%s": %s across %s\n', ...
+    string(gene_set_option), pkg.i_plural(numel(setnames), 'program'), ...
+    pkg.i_plural(numel(setgenes), 'gene'));
 
 % ---- Align to common gene set ---------------------------------------
 [common_genes, idx1, idx2] = intersect(sce1.g, sce2.g, 'stable');

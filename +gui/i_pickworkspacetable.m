@@ -85,7 +85,8 @@ for k = 1:numel(names)
     if strlength(collist) > 60
         collist = extractBefore(collist, 58) + '...';
     end
-    items{k} = sprintf('%s  -  %d rows: %s', names{k}, nrowof(k), collist);
+    items{k} = sprintf('%s  -  %s: %s', names{k}, ...
+        pkg.i_plural(nrowof(k), 'row'), collist);
 end
 
 if gui.i_isuifig(parentfig)

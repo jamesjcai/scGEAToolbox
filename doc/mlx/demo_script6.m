@@ -45,15 +45,14 @@ view([-31.03 77.60])
 %% Determine cell type for each cluster using marker genes (collected by PanglaoDB)
 
 Tct = run.ml_alona(X, genelist, cluster_kmedoids, 'species', 'mouse');
-%% Another demo with example data of mouse pancreatic islet cells
+%% Another demo with example data of mouse pancreas cells
 
-load example_data/celltypeexplorer_demo_data.mat
-gui.sc_celltypeexplorer(X, genelist, s_tsne, "species", "mouse");
+load example_data/new_example_sce.mat sce
+gui.sc_celltypeexplorer(sce.X, sce.g, sce.s, "species", "mouse");
 pause(3)
 %% Use the SCGEATOOL interactive tool
 % 
 
-sce = SingleCellExperiment(X, genelist, s_tsne);
 scgeatool(sce);
 %% 
 % 

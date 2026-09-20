@@ -1,8 +1,8 @@
 function [selecteditem, speciesid] = i_selgenesetcollection(parentfig)
 if nargin<1, parentfig=[]; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 speciesid = [];

@@ -55,8 +55,7 @@ function callback_DPGene2Groups(src, ~)
     [~, ix, iy] = intersect(upper(setgenes), upper(sce.g));
     setgenes = setgenes(ix);
     setmatrx = setmatrx(:,ix);
-    sce.X = sce.X(iy,:);
-    sce.g = sce.g(iy);
+    sce = sce.selectgenesbyindex(iy);
     
     gui.myWaitbar(FigureHandle, fw, false, '', 'Saving DP results...', 0.70);
     

@@ -3,10 +3,17 @@ function [fw] = myWaitbar(parentfig, fw, witherror, mesg, newmesg, f)
 
 if nargin < 6, f = []; end
 if nargin < 5, newmesg = ''; end
-if nargin < 4 || isempty(mesg), mesg = 'Processing your data...'; end
+if nargin < 4, mesg = ''; end
 if nargin < 3 || isempty(witherror), witherror = false; end
 if nargin < 1, parentfig = []; end
 
+% The two defaults for MESG belong to different calls: 'Processing your
+% data...' when the dialog is created, 'Finishing' when it is closed.
+% Filling in the first one unconditionally here left MESG non-empty on the
+% closing call, so 'Finishing' was never shown.
+if isempty(mesg) && (nargin < 2 || isempty(fw))
+    mesg = 'Processing your data...';
+end
 
 if ~gui.i_isuifig(parentfig)
         if nargin < 2 || isempty(fw)
@@ -40,7 +47,7 @@ if ~gui.i_isuifig(parentfig)
             fw = waitbar(f, fw, newmesg);
         elseif pkg.i_isvalid(fw) && strcmp(fw.Tag, 'TMWWaitbar')
             if ~witherror
-                if nargin < 3 || isempty(mesg), mesg = 'Finishing'; end
+                if isempty(mesg), mesg = 'Finishing'; end
                 toc;
                 fw = waitbar(1, fw, mesg);
                 pause(1);
@@ -76,7 +83,7 @@ if ~gui.i_isuifig(parentfig)
             fw.Value = f;
         elseif pkg.i_isvalid(fw) && isa(fw, 'matlab.ui.dialog.ProgressDialog')
             if ~witherror
-                if nargin < 3 || isempty(mesg), mesg = 'Finishing'; end
+                if isempty(mesg), mesg = 'Finishing'; end
                 toc;
                 fw.Value = 1;
                 fw.Message = mesg;

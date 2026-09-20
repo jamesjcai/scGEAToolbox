@@ -3,8 +3,19 @@ function [Y] = i_norm4heatmap(Y, dim, methodid, doclip)
 % Y - gene-by-cell matrix
 % dim = 2 - by row
 if nargin < 4, doclip = true; end
-if nargin < 3, methodid = 1; end
-if nargin < 2, dim = 2; end
+if nargin < 3 || isempty(methodid), methodid = 1; end
+if nargin < 2 || isempty(dim), dim = 2; end
+
+% One method at a time. A multi-select dialog upstream used to hand this a
+% two-element METHODID, and all the SWITCH below could say about it was
+% "SWITCH expression must be a scalar or a character vector", which names
+% neither the dialog nor the argument.
+if ~isscalar(methodid)
+    error('gui:i_norm4heatmap:notScalar', ...
+        ['METHODID must be a single method, not %d of them. ', ...
+        'Select one entry in the normalization method dialog.'], ...
+        numel(methodid));
+end
 
 % listitems = {'zscore std', ...
 %     'zscore robust', ...
@@ -57,6 +68,10 @@ switch methodid
         Y = normalize(Y, dim, 'center', 'scale');
     case 14
         Y = normalize(Y, dim, 'medianiqr');
+    otherwise
+        error('gui:i_norm4heatmap:badMethod', ...
+            ['Unknown normalization method %s. ', ...
+            'Expected an integer from 1 to 14.'], mat2str(methodid));
 end
 
 

@@ -3,9 +3,9 @@ if nargin<3, parentfig = []; end
 if nargin < 2 || isempty(spciestag)
     spciestag = gui.i_selectspecies(2, false, parentfig);
 end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 if isempty(spciestag), return; end
 
@@ -67,10 +67,10 @@ if strcmpi(answer{4},'Yes') || strcmpi(answer{4},'Y')
     ApprovedSymbol = string(T.GeneName);
     [idx0] = ismember(upper(sce.g), upper(ApprovedSymbol));
     a1 = length(sce.g);
-    sce.X(~idx0, :) = [];
-    sce.g(~idx0) = [];
+    sce = sce.selectgenesbyindex(idx0);
     a2 = length(sce.g);
-    fprintf('%d genes without approved symbols are found and removed.\n',a1-a2);
+    fprintf('Found and removed %s without an approved symbol.\n', ...
+        pkg.i_plural(a1-a2, 'gene'));
 end
 gui.myWaitbar(parentfig, fw);
 

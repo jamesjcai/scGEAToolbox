@@ -1,9 +1,9 @@
 function callback_CellScoreCorrMatrix(src, ~)
 
 [FigureHandle, sce_ori] = gui.gui_getfigsce(src);
-if ~isempty(FigureHandle)
+if ~isempty(FigureHandle) && pkg.i_isvalid(FigureHandle) && FigureHandle.Visible == "on"
     figure(FigureHandle);
-    cleanupObj = onCleanup(@() figure(FigureHandle));
+    cleanupObj = onCleanup(@() gui.i_raisefig(FigureHandle));
 end
 sce = copy(sce_ori);
 

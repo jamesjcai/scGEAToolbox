@@ -222,7 +222,7 @@ end
             warning("No gene is selected.");
             return;
         end
-        fprintf('%d genes are selected.\n', sum(ptsSelected));
+        fprintf('%s selected.\n', pkg.i_plural(sum(ptsSelected), 'gene'));
 
         gselected = g(ptsSelected);
         [yes, idx] = ismember(gselected, T.genes);
@@ -245,7 +245,7 @@ end
             warning("No gene is selected.");
             return;
         end
-        fprintf('%d genes are selected.\n', sum(ptsSelected));
+        fprintf('%s selected.\n', pkg.i_plural(sum(ptsSelected), 'gene'));
 
         gselected = g(ptsSelected);
         [yes, idx] = ismember(gselected, T.genes);

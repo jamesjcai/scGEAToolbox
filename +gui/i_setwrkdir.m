@@ -4,13 +4,23 @@ function [done] = i_setwrkdir(preftagname, parentfig)
 
 if nargin<2, parentfig = []; end
 if nargin < 1, preftagname = 'externalwrkpath'; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 [done] = false;
 
-if ~ispref('scgeatoolbox', preftagname)
+% ISPREF alone is not the question: the preference can exist and hold an
+% empty value, which every caller then treats as "set up" and fails on.
+% GUI.GUI_SETPRGMWKDIR errored outright in that state, so a stale empty
+% preference took out every external tool that needs a working folder --
+% Memento, CellBender, Monocle3, copykat, SCEVAN, DecontX, Seurat -- with
+% no way to reach the dialog that would fix it. An empty value means not
+% set up, and gets the same prompt as no value at all.
+issetup = ispref('scgeatoolbox', preftagname) && ...
+    ~isempty(getpref('scgeatoolbox', preftagname, []));
+
+if ~issetup
     answer = gui.myQuestdlg(parentfig, ['Working directory has ' ...
         'not been set up. Locate a folder?']);
     if ~strcmp(answer, 'Yes'), return; end

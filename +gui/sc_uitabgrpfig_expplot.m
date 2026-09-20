@@ -2,9 +2,9 @@ function sc_uitabgrpfig_expplot(y, glist, s, parentfig, cazcel)
 
 if nargin < 5, cazcel = []; end
 if nargin < 4, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 % if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
 %     p = parentfig.Position;

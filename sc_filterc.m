@@ -9,6 +9,9 @@ end
 keptidx = s >= cutoff;
 X = X(:, keptidx);
 
-if verbose, fprintf('%d samples (cells) removed.\n', sum(~keptidx)); end
+if verbose
+    fprintf('%s removed.\n', ...
+        pkg.i_plural(sum(~keptidx), 'cell'));
+end
 
 end

@@ -1,9 +1,9 @@
 function [nsubsmpl, csubsmpl, savegrn] = i_tenifoldnetpara(parentfig)
 
 if nargin<1, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 %   addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
 %   addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);

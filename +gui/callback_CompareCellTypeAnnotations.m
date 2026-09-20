@@ -6,13 +6,13 @@ function callback_CompareCellTypeAnnotations(src, ~)
 %   annotated more than once carries a history. Keeping it is only half the
 %   job: this is how it gets looked at.
 %
-%   Three views, because the useful question differs. The plots answer "where
+%   Four views, because the useful question differs. The plots answer "where
 %   do these disagree" spatially; the table answers "what did each method call
-%   THIS cell"; the cross-tabulation answers "which types got split or merged",
-%   which neither of the other two shows.
+%   THIS cell"; the cross-tabulation and the flow diagram both answer "which
+%   types got split or merged", the first exactly and the second at a glance.
 %
 %   See also PKG.I_CELLTYPEHISTORY, PKG.I_STASHCELLTYPEHISTORY,
-%   GUI.I_ADDCOMPAREANNOTMENU.
+%   GUI.I_UPDATEANNOTATEMENU.
 
 [parentfig, sce] = gui.gui_getfigsce(src);
 if isempty(sce) || sce.NumCells == 0, return; end
@@ -27,13 +27,14 @@ if numel(names) < 2
 end
 
 viewitems = { ...
-    'Side-by-side plots on the cell embedding', ...
+    'Side-by-side plots on the cell embedding (linked by brushing)', ...
     'Table with one row per cell', ...
-    'Cross-tabulate two annotations (what got split or merged)'};
+    'Cross-tabulate two annotations (what got split or merged)', ...
+    'Sankey flow diagram between two annotations'};
 prompt = sprintf(['This dataset carries %d cell type annotations. ', ...
     'How should they be shown?'], numel(names));
 [indx, tf] = gui.myListdlg(parentfig, viewitems, 'Cell Type Annotations', ...
-    viewitems{1}, false, true, [480, 180], prompt);
+    viewitems{1}, false, true, [480, 200], prompt);
 if tf ~= 1 || isempty(indx), return; end
 
 switch indx
@@ -43,88 +44,63 @@ switch indx
         in_showtable(sce, names, labels, parentfig);
     case 3
         in_crosstab(names, labels, parentfig);
+    case 4
+        in_sankey(names, labels, parentfig);
 end
+end
+
+
+function pick = in_picktwo(names, parentfig, prompt)
+% The two views that compare a PAIR share this picker, so they cannot drift
+% into disagreeing about what "exactly two" means or in which order.
+pick = [];
+[indx, tf] = gui.myListdlg(parentfig, cellstr(names), 'Select two', ...
+    [], true, true, [420, 260], prompt);
+if tf ~= 1 || numel(indx) ~= 2
+    if tf == 1
+        gui.myWarndlg(parentfig, sprintf(['Select exactly two ', ...
+            'annotations; %d were selected.'], numel(indx)));
+    end
+    return;
+end
+pick = indx;
+end
+
+
+function in_sankey(names, labels, parentfig)
+% Ribbons from each type in the first annotation to each type in the second.
+pick = in_picktwo(names, parentfig, ['Select exactly two annotations. The ', ...
+    'flow runs from the first to the second.']);
+if isempty(pick), return; end
+
+gui.i_alluvialview(labels{pick(1)}, labels{pick(2)}, names(pick(1)), ...
+    names(pick(2)), parentfig, 'Cell Type Annotation Flow');
 end
 
 
 function in_plotpanels(sce, names, labels, parentfig)
-% One embedding panel per annotation, on a shared set of axes limits.
+% One embedding panel per annotation, drawn by the Multi-Grouping View.
 %
-% A shared limit is what makes the panels comparable: with each panel free to
-% autoscale, the same cell sits at a different place in each one and the eye
-% cannot follow it.
+% GUI.I_MULTIGROUPVIEW is the same figure that Group > Multi-Grouping View
+% opens, handed this dataset's annotation history instead of a picker's
+% selection. Writing a second panel drawer here was the mistake: what this
+% view is for is finding the cells two annotations disagree about, and the
+% Multi-Grouping View already links the panels by brush, so brushing a
+% suspicious blob in one panel lights up the same cells in every other. That
+% is the question, answered directly. The camera is linked too, so a 3-D
+% embedding stays comparable while it is rotated.
 %
-% GSCATTER rather than GUI.I_GSCATTER3, which maps the labels through
-% findgroups and so cannot label a legend with the type names. An earlier
-% version wrote the names at each group's centroid instead, which reads well
-% for well-separated groups and turns to overlapping mush as soon as two types
-% share a blob - exactly the case this view exists to show. A legend never
-% collides. Past in_maxlegendtypes() types a legend is taller than the panel,
-% so it is dropped and the type count in the title carries what is left.
+% What is given up is the per-panel legend: I_GSCATTER3 draws one SCATTER
+% object coloured by group index, and a legend cannot be built from that. The
+% toolbar's "Show group labels" button covers it by writing each type's name
+% at its centroid, and hovering names the type under the cursor.
 
-% PKG.E_HASEMBEDDING first. The shape tests alone could not fire: the
-% SingleCellExperiment constructor fills S with randn(nCells, 3) when the
-% caller supplies none, so size(sce.s, 1) == sce.NumCells and
-% size(sce.s, 2) == 3 hold on an object that has never been embedded. This
-% view then drew one panel per annotation over random Gaussian
-% coordinates, under the heading "One embedding panel per annotation",
-% while the warning it had ready -- "The cells have no 2-D embedding to
-% plot on" -- went unshown. The shape tests are kept as a guard against a
-% malformed S.
-if ~pkg.e_hasembedding(sce) || size(sce.s, 1) ~= sce.NumCells || ...
-        size(sce.s, 2) < 2
-    gui.myWarndlg(parentfig, ['The cells have no 2-D embedding to plot on. ', ...
-        'Run an embedding first, or use the table view.']);
-    return;
+ntypes = cellfun(@(lbl) numel(unique(lbl)), labels);
+titles = names(:) + " (" + pkg.i_plural(ntypes(:), 'type') + ")";
+gui.i_multigroupview(sce, labels, titles, parentfig, ...
+    'Cell Type Annotations');
 end
 
-n = numel(names);
-ncol = ceil(sqrt(n));
-nrow = ceil(n/ncol);
-f = figure('Name', 'Cell Type Annotations', 'NumberTitle', 'off');
-tl = tiledlayout(f, nrow, ncol, 'TileSpacing', 'compact', 'Padding', 'compact');
-
-s = sce.s;
-xl = [min(s(:,1)), max(s(:,1))];
-yl = [min(s(:,2)), max(s(:,2))];
-pad = 0.03*[-1 1];
-xl = xl + pad*diff(xl);
-yl = yl + pad*diff(yl);
-
-for k = 1:n
-    ax = nexttile(tl);
-    lbl = labels{k};
-    ntypes = numel(unique(lbl));
-    gscatter(ax, s(:,1), s(:,2), lbl, [], '.', 8);
-    if ntypes <= in_maxlegendtypes()
-        lg = legend(ax, 'Location', 'eastoutside');
-        lg.Interpreter = 'none';
-        lg.FontSize = 7;
-        lg.Box = 'off';
-    else
-        legend(ax, 'off');
-    end
-    title(ax, sprintf('%s  (%d %s)', names(k), ntypes, ...
-        in_plural('type', ntypes)), 'Interpreter', 'none');
-    xlim(ax, xl); ylim(ax, yl);
-    ax.XTick = []; ax.YTick = [];
-    xlabel(ax, ''); ylabel(ax, '');
-end
-end
-
-
-function n = in_maxlegendtypes()
-n = 14;
-end
-
-
-function s = in_plural(word, n)
-if n == 1
-    s = word;
-else
-    s = [word 's'];
-end
-end
 
 function in_showtable(sce, names, labels, parentfig)
 % One row per cell, one column per annotation, cell barcode first.
@@ -150,16 +126,9 @@ end
 function in_crosstab(names, labels, parentfig)
 % Cross-tabulate two annotations: rows one, columns the other, counts inside.
 
-[indx, tf] = gui.myListdlg(parentfig, cellstr(names), 'Cross-tabulate', ...
-    [], true, true, [420, 260], ['Select exactly two annotations. Rows will ', ...
-    'be the first, columns the second.']);
-if tf ~= 1 || numel(indx) ~= 2
-    if tf == 1
-        gui.myWarndlg(parentfig, sprintf(['Select exactly two annotations ', ...
-            'to cross-tabulate; %d were selected.'], numel(indx)));
-    end
-    return;
-end
+indx = in_picktwo(names, parentfig, ['Select exactly two annotations. Rows ', ...
+    'will be the first, columns the second.']);
+if isempty(indx), return; end
 
 a = labels{indx(1)};
 b = labels{indx(2)};
@@ -175,17 +144,43 @@ gui.TableViewerApp(t, parentfig, 'CellTypeCrosstab');
 % Exact-label agreement is only meaningful when the two annotations share a
 % vocabulary, which two different methods often do not, so say which it is
 % rather than reporting a number that looks worse than the result is.
+%
+% The adjusted Rand index is reported either way, and is the number to read
+% when the vocabularies differ: it scores the two groupings on which cells
+% they put together, never on what those groups are called.
+ari = pkg.i_adjustedrandindex(a, b);
 shared = intersect(la, lb);
 if isempty(shared)
-    msg = sprintf(['"%s" and "%s" share no label names, so only the ', ...
-        'cross-tabulation is meaningful - a per-cell agreement rate would ', ...
-        'read as 0%% however well the groupings line up.'], ...
-        names(indx(1)), names(indx(2)));
+    msg = sprintf(['"%s" and "%s" share no label names, so a per-cell ', ...
+        'agreement rate would read as 0%% however well the groupings line ', ...
+        'up. Adjusted Rand index: %.3f (%s).'], ...
+        names(indx(1)), names(indx(2)), ari, in_arireading(ari));
 else
     msg = sprintf(['"%s" and "%s" give the same label to %.1f%% of cells ', ...
-        '(%d of %d), over %d shared label name(s).'], ...
+        '(%d of %d), over %d shared label name(s). Adjusted Rand index: ', ...
+        '%.3f (%s).'], ...
         names(indx(1)), names(indx(2)), 100*mean(a == b), sum(a == b), ...
-        numel(a), numel(shared));
+        numel(a), numel(shared), ari, in_arireading(ari));
 end
 gui.myHelpdlg(parentfig, msg);
+end
+
+
+function s = in_arireading(ari)
+% A word for the number, because ARI has no intuitive scale: it is not a
+% percentage, and the reference point that matters is 0 = chance, not 0 =
+% no overlap. The bands are a reading aid, not a test.
+if isnan(ari)
+    s = 'not defined for fewer than two cells';
+elseif ari >= 0.9
+    s = '1 = same partition';
+elseif ari >= 0.6
+    s = 'largely the same partition, some types split or merged';
+elseif ari >= 0.3
+    s = 'partly overlapping partitions';
+elseif ari > 0.05
+    s = 'little more than chance agreement';
+else
+    s = '0 = chance agreement';
+end
 end

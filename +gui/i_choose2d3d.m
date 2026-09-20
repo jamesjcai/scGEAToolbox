@@ -1,9 +1,9 @@
 function [ndim] = i_choose2d3d(parentfig)
 
 if nargin<1, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 ndim = [];
 answer3 = gui.myQuestdlg(parentfig, '3D or 2D?', '', ...

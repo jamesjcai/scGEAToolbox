@@ -2,9 +2,9 @@ function [continue_to_try, prepare_input_only] = i_memorychecked(ram_needed, par
 
 if nargin < 2, parentfig = []; end
 if nargin < 1, ram_needed = 32; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 continue_to_try = false;

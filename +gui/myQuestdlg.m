@@ -42,9 +42,14 @@ if nargin < 3, title = ''; end
 if nargin < 2, message = 'Selection'; end
 if nargin < 1, parentfig = []; end
 
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    % The restore on the way out goes through GUI.I_RAISEFIG rather than a
+    % bare FIGURE(): the handle can be gone by the time the cleanup runs --
+    % a callback that closes the main window while the dialog is up -- and a
+    % destructor that throws surfaces as a warning the user cannot act on.
+    % It also raises a uifigure properly, which FIGURE() does not.
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 if isempty(parentfig) || ~gui.i_isuifig(parentfig)

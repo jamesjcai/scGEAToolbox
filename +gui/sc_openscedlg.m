@@ -1,8 +1,8 @@
 function [sce, filename] = sc_openscedlg(~, ~, parentfig)
 if nargin<3, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 sce = [];
@@ -212,7 +212,13 @@ setpref('scgeatoolbox', preftagname, indx);
                     sce = sce.appendmetainfo(metainfo);
                     if ~isempty(b), sce.c_cell_id = b; end
                     if ~isempty(bid), sce.c_batch_id = bid; end
-                    if ~isempty(cty), sce.c_cell_type_tx = string(cty); end
+                    % Cells the file leaves unlabeled arrive as <undefined>
+                    if ~isempty(cty)
+                        sce.c_cell_type_tx = fillmissing(string(cty), ...
+                            'constant', "undetermined");
+                    end
+                    % Keep the obs columns the reader did not consume
+                    sce = pkg.i_addh5adobsattribs(sce, filename);
                     gui.myWaitbar(parentfig, fw);
                 else
                     gui.myWaitbar(parentfig, fw, true);

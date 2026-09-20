@@ -1,0 +1,7 @@
+Dendritic cells
+
+cDC1                            Xcr1, Clec9a, Batf3
+cDC2                            Cd209a, Mgl2, Sirpa, Itgam
+pDC                             Siglech, Bst2, Ccr9
+mregDC                       Ccr7, Fscn1, Cd80, Cd86
+moDC                           Cd14, Fcgr1, Mafb, Zbtb46, Flt3

@@ -1,13 +1,44 @@
-function [sce, needupdate] = sc_cellattribeditor(sce, addnew, parentfig)
+function [sce, needupdate] = sc_cellattribeditor(sce, mode, parentfig)
+%SC_CELLATTRIBEDITOR Add, edit or delete a cell attribute.
+%
+%   [sce, needupdate] = gui.sc_cellattribeditor(sce, mode, parentfig)
+%
+%   MODE is 'add', 'edit' or 'delete'. The logical the two older call sites
+%   pass still works: TRUE is 'add' and FALSE is 'edit'.
+%
+%   Only the attributes in SCE.LIST_CELL_ATTRIBUTES can be deleted. Cell Type,
+%   Cluster ID, Batch ID, Cell ID and Cell Cycle Phase are properties of the
+%   SingleCellExperiment rather than entries in that list, so there is nothing
+%   to remove - they are cleared by editing them, not deleted.
+%
+%   See also gui.callback_ViewCellAttributeTable,
+%   gui.callback_AssignCellTypeFromAttrib, SingleCellExperiment.
+
 if nargin<3, parentfig = []; end
-if nargin<2, addnew = false; end
-if ~isempty(parentfig)
+if nargin<2, mode = false; end
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 needupdate = false;
 
+% The two in-tree call sites pass a logical; anything else names the mode.
+if islogical(mode) || isnumeric(mode)
+    if mode
+        mode = 'add';
+    else
+        mode = 'edit';
+    end
+end
+mode = validatestring(lower(char(mode)), {'add', 'edit', 'delete'}, ...
+    'sc_cellattribeditor', 'mode', 2);
+
+if strcmp(mode, 'delete')
+    [sce, needupdate] = in_deleteattribs(sce, parentfig);
+    return;
+end
+addnew = strcmp(mode, 'add');
 
 if ~addnew    % edit
     baselistitems = {'Cell Cycle Phase', ...
@@ -606,4 +637,76 @@ else
 end
 
 trimmed_text = char(lines);      % Convert back to char array
+end
+
+function [sce, needupdate] = in_deleteattribs(sce, parentfig)
+%IN_DELETEATTRIBS Remove one or more entries from SCE.LIST_CELL_ATTRIBUTES.
+%
+% Deleting is not undoable from here, and an attribute can hold an annotation
+% that took a long run to produce - the 'old_cell_type_N' stashes especially -
+% so the names are repeated back before anything is removed.
+
+needupdate = false;
+
+names = string(sce.list_cell_attributes(1:2:end));
+names = names(strlength(strtrim(names)) > 0);
+if isempty(names)
+    gui.myHelpdlg(parentfig, ['This dataset has no deletable cell ' ...
+        'attributes. Cell Type, Cluster ID, Batch ID, Cell ID and Cell ' ...
+        'Cycle Phase are part of the SingleCellExperiment itself, not ' ...
+        'entries in its attribute list, so they can be edited but not ' ...
+        'deleted.']);
+    return;
+end
+
+% How many distinct values each one holds: enough to tell an annotation from
+% a leftover scratch column without opening the table.
+items = strings(size(names));
+for k = 1:numel(names)
+    v = sce.getCellAttribute(char(names(k)));
+    items(k) = sprintf('%s   (%d distinct value(s))', names(k), ...
+        numel(unique(in_asstring(v))));
+end
+
+prompt = ['Select the cell attribute(s) to delete. This cannot be undone ' ...
+    'from this dialog. An ''old_cell_type_N'' attribute holds the cell type ' ...
+    'labels from before an annotation run.'];
+if gui.i_isuifig(parentfig)
+    [indx, tf] = gui.myListdlg(parentfig, cellstr(items), ...
+        'Delete Cell Attributes', [], true, true, [420, 300], prompt);
+else
+    [indx, tf] = listdlg('PromptString', {prompt}, ...
+        'SelectionMode', 'multiple', 'ListString', cellstr(items), ...
+        'ListSize', [420, 300]);
+end
+if tf ~= 1 || isempty(indx), return; end
+
+chosen = names(indx);
+answer = gui.myQuestdlg(parentfig, sprintf(['Delete %d cell attribute(s)?' ...
+    newline newline '%s' newline newline 'This cannot be undone.'], ...
+    numel(chosen), strjoin("    " + chosen, newline)), ...
+    'Delete Cell Attributes', {'Delete', 'Cancel'}, 'Cancel', 'warning');
+if ~strcmp(answer, 'Delete'), return; end
+
+for k = 1:numel(chosen)
+    sce.removeCellAttribute(char(chosen(k)));
+end
+needupdate = true;
+
+gui.myHelpdlg(parentfig, sprintf('%d cell attribute(s) deleted: %s.', ...
+    numel(chosen), strjoin(chosen, ', ')));
+end
+
+function s = in_asstring(v)
+% Counting distinct values must not throw on the shapes an attribute can take:
+% a sparse numeric column, a cellstr, a categorical.
+if isnumeric(v) || islogical(v)
+    s = string(full(double(v(:))));
+    return;
+end
+try
+    s = string(v(:));
+catch
+    s = strings(0, 1);
+end
 end

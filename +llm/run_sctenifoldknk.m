@@ -119,7 +119,8 @@ for k = 1:numel(cell_types)
         continue;
     end
 
-    fprintf('\nscTenifoldKnk (lite) for "%s": %d cells, KO=%s ...\n', ct_k, n, kogene);
+    fprintf('\nscTenifoldKnk (lite) for "%s": %s, KO=%s ...\n', ...
+        ct_k, pkg.i_plural(n, 'cell'), kogene);
     i_log(out_dir, sprintf('BEGIN "%s": n=%d kogene=%s', ct_k, n, kogene));
 
     cell_idx = find(mask);

@@ -21,7 +21,10 @@ if ownsWaitbar
 else
     gui.myWaitbar(parentfig, fw, false, '', 'Exporting PowerPoint...', 0.995);
 end
-OUTppt = [tempname, '.pptx'];
+% Same path as GUI.I_EXPORT2PPTX: a named per-process folder and a
+% timestamped file, so the deck can be named in the fallback message
+% below when the shell declines to open it.
+[~, OUTppt] = pkg.i_tempdirfile('scgeatool_pptx', 'pptx');
 ppt = Presentation(OUTppt, pth);
 open(ppt);
 for k = 1:length(images)
@@ -35,7 +38,11 @@ close(ppt);
 if ownsWaitbar
     gui.gui_waitbar(fw);
 end
-pkg.i_openoutputfile(OUTppt);
+if ~pkg.i_openoutputfile(OUTppt)
+    gui.myHelpdlg(parentfig, sprintf( ...
+        ['The presentation could not be opened here. ', ...
+        'It has been saved as\n\n%s'], OUTppt));
+end
 % catch ME
 %     gui.gui_waitbar(fw, true);
 %     errordlg(ME.message);

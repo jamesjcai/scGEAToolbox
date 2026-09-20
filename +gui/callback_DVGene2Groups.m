@@ -18,7 +18,7 @@ if isempty(wrkdir), return; end
 a=sce.NumGenes;
 [sce] = gui.i_selectinfogenes(sce, [], FigureHandle);
 b=sce.NumGenes;
-fprintf('%d genes removed.\n', a-b);
+fprintf('%s removed.\n', pkg.i_plural(a-b, 'gene'));
 
 [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, FigureHandle);
 if isscalar(i1) || isscalar(i2), return; end
@@ -62,26 +62,35 @@ sce2 = sce2.qcfilter; % OK
     % assignin('base', "cL1", cL1);
     % assignin('base', "cL2", cL2);
 
-a = 'Splinefit Method [PMID:40113778]';
-b = 'Brennecke et al. (2013) [PMID:24056876]';
+optSpline = 'Splinefit Method [PMID:40113778]';
+optAnalytic = 'Analytic Curve (closed-form Spline-DV)';
+optBrennecke = 'Brennecke et al. (2013) [PMID:24056876]';
 
-            % answerx = gui.myQuestdlg(FigureHandle, ...
-            %     'Which HVG detecting method to use?', '', ...
-            %     {a, b}, a);
-answerx = a;
+answerx = gui.myQuestdlg(FigureHandle, ...
+    'Which DV detecting method to use?', 'DV Analysis', ...
+    {optSpline, optAnalytic, optBrennecke}, optSpline);
+if isempty(answerx), return; end
+
+[direction, dirlabels] = gui.i_dvdirection(FigureHandle);
+if isempty(direction), return; end
 
 fw = gui.myWaitbar(FigureHandle, [], false, 'Computing DV results...');
 cleanupObj = onCleanup(@() i_closewaitbar(fw)); 
 
 try
     switch answerx
-        case a
+        case optSpline
             [T, X1, X2, g, xyz1, xyz2, ...
                 px1, py1, pz1, ...
-                px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit');
+                px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit', direction);
             methodtag = 'splinefit';
-        case b
-            T = sc_dvg(sce1, sce2, cL1, cL2, 'brennecke');
+        case optAnalytic
+            [T, X1, X2, g, xyz1, xyz2, ...
+                px1, py1, pz1, ...
+                px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'analytic', direction);
+            methodtag = 'analytic';
+        case optBrennecke
+            T = sc_dvg(sce1, sce2, cL1, cL2, 'brennecke', direction);
             methodtag = 'brennecke';
         otherwise
             return;
@@ -92,10 +101,10 @@ catch ME
     return;
 end
 
-outfile = sprintf('%s_vs_%s_DV_%s_results', ...
+outfile = sprintf('%s_vs_%s_DV_%s%s_results', ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
-        methodtag);
+        methodtag, dirlabels.FileTag);
 filesaved = fullfile(wrkdir, [outfile, '.xlsx']);
 
 drawnow;
@@ -120,8 +129,8 @@ enrichrAction = struct('Text', 'Enrichr Analysis', ...
 gsetAction = struct('Text', 'Gene-Set Test', ...
     'Tooltip', 'Competitive gene-set test over the full ranked DV gene list', ...
     'Callback', @in_callback_gsettest_fromtable);
-% Only the splinefit method returns the xyz fit data the plot needs.
-if strcmp(methodtag, 'splinefit')
+% Only the curve-based methods return the xyz fit data the plot needs.
+if ismember(methodtag, {'splinefit', 'analytic'})
     plotAction(1) = struct('Text', 'Open Plot', ...
         'Tooltip', 'Open the interactive DV scatter plot', ...
         'Callback', @in_callback_openDVplot);
@@ -201,16 +210,21 @@ function in_callback_Enrichr(~, ~)
         answer = gui.myQuestdlg(hFig, 'Enrichr test with top DV genes. Continue?','');
         if ~strcmp(answer,'Yes'), return; end
         answer = gui.myQuestdlg(hFig, 'Select type of DV genes.','',...
-            {'Mixed','Varibility increasing','Varibility decreasing'},'Mixed');
+            {'Mixed', dirlabels.Up, dirlabels.Dn}, 'Mixed');
+        % DiffSign follows the direction chosen for this run; > 0 always
+        % means group 1.
         switch answer
             case 'Mixed'
                Tin = T;
-            case 'Varibility increasing'
+            case dirlabels.Up
                 Tup = T(T.DiffSign > 0, :);
                 Tin = Tup;
-            case 'Varibility decreasing'
+            case dirlabels.Dn
                 Tdn = T(T.DiffSign < 0, :);
                 Tin = Tdn;
+            otherwise
+                % Dismissed.
+                return;
         end
 
         % MIN, and a check for nothing at all. Tin.gene(1:250) threw
@@ -357,7 +371,7 @@ function in_callback_HighlightSelectedGenes(~, ~, typeid)
                 gsorted = T.(T.Properties.VariableNames{1});
        end
         if gui.i_isuifig(FigureHandle)
-            [indx2, tf2] = gui.myListdlg(FigureHandle, gsorted, ...
+            [indx2, tf2] = gui.myListdlg(hFig, gsorted, ...
                 'Select a gene:');
         else
             [indx2, tf2] = listdlg('PromptString', ...
@@ -405,11 +419,11 @@ function in_callback_HighlightSelectedGenes(~, ~, typeid)
     end
 
 function in_callback_EnrichrHVGs(~, ~)
-        k = gui.i_inputnumk(200, 1, 2000, 'Select top n genes', FigureHandle);
+        k = gui.i_inputnumk(200, 1, 2000, 'Select top n genes', hFig);
         if ~isempty(k)
             gsorted = T.(T.Properties.VariableNames{1});
             gselected = gsorted(1:k);
-            fprintf('%d genes are selected.\n', length(gselected));
+            fprintf('%s selected.\n', pkg.i_plural(length(gselected), 'gene'));
             gui.i_enrichtest(gselected, gsorted, k);
         end
     end
@@ -443,8 +457,10 @@ function in_callback_gsettest_fromtable(~, figtab)
     % DIFFDIST alone is not signed, whatever this comment used to say.
     % SC_DVG's splinefit branch -- the only one this callback can reach
     % -- sets DiffDist = vecnorm(v1 - v2, 2, 2), a norm and so
-    % non-negative, and keeps the direction separately in
-    % DiffSign = sign(vecnorm(v1) - vecnorm(v2)).
+    % non-negative, and keeps the direction separately in DiffSign --
+    % group 1 minus group 2, in mean or in deviation depending on the
+    % DIRECTION chosen for this run. The signed product puts large-DV
+    % genes that are up in group 1 at the top and down at the bottom.
     %
     % GUI.I_RUNGSETTEST wants a statistic where larger means "more up",
     % and runs SC_GSETTEST with Direction "both" on it. Handed the
@@ -457,7 +473,7 @@ function in_callback_gsettest_fromtable(~, figtab)
     % SC_DVG returns every gene surviving QC, so the ranking is still
     % complete, which is what a competitive test needs.
     gui.i_rungsettest(string(T.gene), T.DiffDist .* T.DiffSign, figtab, ...
-        [outfile, '_GeneSet'], 'DiffDist signed by DiffSign');
+        [outfile, '_GeneSet'], sprintf('DiffDist signed by DiffSign (%s)', direction));
 end
 
 function in_callback_enrichr_fromtable(~, figtab)
@@ -466,8 +482,8 @@ function in_callback_enrichr_fromtable(~, figtab)
     suffixes = ["GO_BP", "GO_MF", "KEGG", "Reactome"];
     groups = { ...
         T,                      "Mix"; ...
-        T(T.DiffSign > 0, :),   "VInc"; ...
-        T(T.DiffSign < 0, :),   "VDec"};
+        T(T.DiffSign > 0, :),   string(dirlabels.UpTag); ...
+        T(T.DiffSign < 0, :),   string(dirlabels.DnTag)};
 
     fw2 = gui.myWaitbar(figtab, [], false, 'Running Enrichr analysis...');
     try

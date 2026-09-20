@@ -1,9 +1,22 @@
-function callback_Brush4Markers(src, event)
-if nargin<2, event=[]; end
+function callback_Brush4Markers(src, ~)
+%CALLBACK_BRUSH4MARKERS Find the genes that mark the brushed cells out.
+%
+%   gui.callback_Brush4Markers(src)
+%
+%   src can be the scgeatool app or a component of a plain figure.
+%
+%   The cell selection is resolved before anything else is asked. The
+%   method question used to come first, so a user who had brushed nothing
+%   -- the usual way to arrive here, by clicking the toolbar button or the
+%   Annotate menu item before picking up the brush -- chose between lasso
+%   and logistic regression, and only then was told there was no selection.
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 if ~gui.i_installed('stats', FigureHandle), return; end
+
+ptsSelected = i_getcellselection(FigureHandle, sce);
+if isempty(ptsSelected), return; end
 
     switch gui.myQuestdlg(FigureHandle, 'Select method:','',...
             {'Lasso Regression','Logistic Regression 🐢 '}, ...
@@ -15,45 +28,56 @@ if ~gui.i_installed('stats', FigureHandle), return; end
         otherwise
             return;
     end
-i_Brush4TopMarkers(src, event, sce, uselasso);
+i_Brush4TopMarkers(FigureHandle, sce, ptsSelected, uselasso);
 end
 
 
-function i_Brush4TopMarkers(src, ~, sce, uselasso)
-[FigureHandle] = gui.gui_getfigsce(src);
+function ptsSelected = i_getcellselection(FigureHandle, sce)
+%I_GETCELLSELECTION Cells to contrast against the rest, or [] to abort.
 
-if nargin < 3
-    uselasso = true;
-end
+ptsSelected = [];
 
 axesh = FigureHandle.findobj('type', 'Axes');
-[axx, bxx] = view(axesh);
-
-% [axx, bxx] = view(findall(FigureHandle,'type','axes'));
-
-assert(isequal(axesh.findobj('type', 'Scatter'), ...
-FigureHandle.findobj('type', 'Scatter')))
-% axesh.Children(1)
-% isequal(axesh.findobj('type','Scatter'),axesh.Children(2))
+if ~isscalar(axesh)
+    gui.myWarndlg(FigureHandle, 'No plot available.');
+    return;
+end
 h = axesh.findobj('type', 'Scatter');
-ptsSelected = logical(h.BrushData.');
+if ~isscalar(h)
+    gui.myWarndlg(FigureHandle, 'No plot available.');
+    return;
+end
+assert(isequal(h, FigureHandle.findobj('type', 'Scatter')))
 
+brushed = logical(h.BrushData.');
 
-if ~any(ptsSelected)
-    answer=gui.myQuestdlg(FigureHandle, 'No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
+if ~any(brushed)
+    answer = gui.myQuestdlg(FigureHandle, 'No cells are brushed/selected. You can select cells by a grouping variable. Continue?','');
     if ~strcmp(answer,'Yes'), return; end
     [ptsSelected] = gui.i_select1classcells(sce, false, FigureHandle);
     if isempty(ptsSelected), return; end
     if all(ptsSelected)
         gui.myWarndlg(FigureHandle, "All cells are in the same group.");
+        ptsSelected = [];
         return;
     end
 else
-    % assignin('base', 'ptsSelected', ptsSelected);
-    [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce);
-    if ~letdoit, return; end
+    % FigureHandle, so an expanded selection is highlighted here too.
+    [ptsSelected, letdoit] = gui.i_expandbrushed(brushed, sce, FigureHandle);
+    if ~letdoit, ptsSelected = []; end
 end
 
+end
+
+
+function i_Brush4TopMarkers(FigureHandle, sce, ptsSelected, uselasso)
+
+if nargin < 4
+    uselasso = true;
+end
+
+axesh = FigureHandle.findobj('type', 'Axes');
+[axx, bxx] = view(axesh);
 
 [numfig] = gui.i_inputnumg(500);
 if isempty(numfig), return; end

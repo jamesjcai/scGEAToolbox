@@ -62,8 +62,8 @@ if sum(idx) > 0
         %Xobj.data=Xobj.data(:,keptidx);
         Xobj.data(:, ~keptidx) = [];
         if verbose
-            fprintf('%d cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...
-                sum(~keptidx), mtratio, mtratio*100);
+            fprintf('Removed %s with mt-read ratio >=%f (or %f%%).\n', ...
+                pkg.i_plural(sum(~keptidx), 'cell'), mtratio, mtratio*100);
         end
     else
         fprintf('No cells with mt-read ratio >=%f (or %f%%) are removed.\n', ...

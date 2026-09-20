@@ -25,8 +25,11 @@ For each cell type with significant results:
 - Overall biological theme of the differential expression in this cell type.
 
 **For DV analyses:**
-- Top genes with increased transcriptional variability in sample 1
-  (DiffSign > 0) and decreased variability (DiffSign < 0) and their known roles.
+- Top DV genes (ranked by DiffDist, the size of the variability change),
+  split by DiffSign, and their known roles. What DiffSign means is given by
+  the summary's "direction" field: "mean" (default) -- DiffSign > 0 is
+  up-regulated, mean expression higher in sample 1; "deviation" --
+  DiffSign > 0 is more variable in sample 1. Word the up/down lists to match.
 - What does increased/decreased variability in this cell type suggest about
   cell state heterogeneity or plasticity in the compared conditions?
 - Note: DV captures variability *not* detected by mean-level DE — highlight this.

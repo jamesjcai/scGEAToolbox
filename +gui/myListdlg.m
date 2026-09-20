@@ -1,5 +1,5 @@
 function [indx, tf] = myListdlg(parentfig, options, Title, ...
-    prefersel, allowmulti, allowresize, dlgSize, prompt)
+    prefersel, allowmulti, allowresize, dlgSize, prompt, modal, ctxitems)
 %MYLISTDLG Pick from a list, in a dialog centered on parentfig.
 %
 %   [indx, tf] = gui.myListdlg(parentfig, options, Title)
@@ -20,6 +20,26 @@ function [indx, tf] = myListdlg(parentfig, options, Title, ...
 %   prompt      instruction shown as a wrapped label above the list, where
 %               there is room for a full sentence. '' for none, which is the
 %               default and leaves the layout exactly as it was.
+%   modal       block input to the parent window while the dialog is up
+%               (default true). UIWAIT alone blocks only the calling code,
+%               so without this the parent stays clickable and a second
+%               click on the same button re-enters the callback. Pass false
+%               for a dialog that must leave the parent usable.
+%   ctxitems    right-click actions on the list, a struct array with fields
+%               Label and Callback ([] for none, the default, which adds no
+%               context menu at all). Both are called with the indices the
+%               action applies to: the whole selection when the pointer is
+%               over one of the selected rows, otherwise the pointed-at row
+%               alone, which is also selected on the way so that the action
+%               always matches what is highlighted. Right-clicking a list
+%               does not move the selection by itself, which is why this is
+%               done here rather than left to the caller. Label is text, or
+%               a function handle of those indices returning text, so an
+%               entry can name its target ("View GSE12345 on the GEO
+%               website"); returning "" hides the entry. Callback gets the
+%               same indices when the entry is picked. Ignored on the
+%               MYTABLEDLG path below, which is taken when there are more
+%               than 1e4 options.
 %
 %   indx is the index/indices of the chosen items, tf is 1 when OK was
 %   pressed and 0 when the dialog was cancelled or closed.
@@ -29,6 +49,8 @@ function [indx, tf] = myListdlg(parentfig, options, Title, ...
 %
 %   See also gui.myQuestdlg, gui.myInputdlg, gui.i_centerdlgpos.
 
+if nargin < 10, ctxitems = []; end
+if nargin < 9 || isempty(modal), modal = true; end
 if nargin < 8 || isempty(prompt), prompt = ''; end
 if nargin < 7 || isempty(dlgSize)
     dlgSize = [300, 450]; % [Width, Height]
@@ -52,11 +74,13 @@ if ~isempty(prompt)
     dlgSize(2) = dlgSize(2) + promptHeight + 8;
 end
 
-% Re-entrancy guard. WindowStyle='modal' is deliberately not set (see the
-% note further down), so UIWAIT blocks only the CALLING code - the parent
-% figure stays interactive. Clicking the same toolbar button again therefore
-% re-enters the callback and builds a SECOND copy of this dialog, which is
-% what users see on 'Show Cell States...' and 'Export/Save Data...'.
+% Re-entrancy guard. It still earns its place now these dialogs are modal:
+% modality is switched on only once the dialog is on screen (see the note
+% further down), so there is a window in which the parent is clickable,
+% and a caller passing modal=false has no protection at all. Before that,
+% with UIWAIT blocking only the CALLING code, clicking the same toolbar
+% button built a SECOND copy of this dialog, which is what users saw on
+% 'Show Cell States...' and 'Export/Save Data...'.
 % GUI.I_DLGREGISTER raises the dialog that is already up; returning tf=0
 % then makes callers abort on their usual cancel branch.
 if ~isempty(gui.i_dlgregister(parentfig))
@@ -73,17 +97,26 @@ if length(options) > 1e4
     return;
 end
 
-if ~isempty(parentfig)
+% Only a window the user can see is worth focusing or raising. A hidden
+% parent gets nothing: FIGURE() would show it, which is how a half-built
+% GUI.MYFIGURE used to flash up empty, and FOCUS() only warns that it
+% cannot focus an invisible figure.
+%
+% The restore on the way out goes through GUI.I_RAISEFIG, which ignores a
+% handle that has since been deleted: the parent can be closed by a callback
+% while the dialog is up, and a destructor that throws surfaces as a warning
+% the user cannot act on.
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     if isa(parentfig, 'matlab.ui.Figure')
         try
             focus(parentfig);
-            cleanupObj = onCleanup(@() focus(parentfig));
+            cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
         catch
             % focus() may not exist on older MATLAB; parent is brought up implicitly
         end
     else
         figure(parentfig);
-        cleanupObj = onCleanup(@() figure(parentfig));
+        cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
     end
 end
 
@@ -98,12 +131,17 @@ dlgPos = round(gui.i_centerdlgpos(parentfig, dlgSize));
 % parentfig.WindowStyle = 'alwaysontop';
 % disp('alwaysontop')
 
-% WindowStyle='modal' is intentionally omitted: on multi-monitor setups
-% where the secondary monitor has a different DPI, MATLAB's modal centering
-% logic uses an internal coordinate space that differs from MonitorPositions,
-% causing the dialog to be re-centered onto the primary monitor regardless
-% of the Position we set.  uiwait(d) below still blocks the calling code,
-% so the dialog is functionally modal.
+% WindowStyle='modal' is off by default: on multi-monitor setups where the
+% secondary monitor has a different DPI, MATLAB's modal centering logic uses
+% an internal coordinate space that differs from MonitorPositions, causing
+% the dialog to be re-centered onto the primary monitor regardless of the
+% Position we set.  uiwait(d) below still blocks the calling code, so the
+% dialog is functionally modal even without it.
+%
+% Modality is therefore switched on further down, AFTER the dialog is on
+% screen, which is what GUI.MYTABLEDLG already does for the same reason:
+% the re-centering happens when a figure that is not yet realized is made
+% modal, so placing it first and blocking afterwards keeps both.
 d = uifigure('Name', Title, 'Position', dlgPos, ...
     'Visible', 'off', 'Resize', allowresize);
 
@@ -144,6 +182,19 @@ else
         'MultiSelect', multitag);
 end
 
+% Right-click actions, when the caller asked for any. The entries are made
+% empty and filled on the way open, because which row the pointer is over is
+% only knowable then.
+if ~isempty(ctxitems)
+    cm = uicontextmenu(d);
+    ctxhandles = gobjects(numel(ctxitems), 1);
+    for k = 1:numel(ctxitems)
+        ctxhandles(k) = uimenu(cm);
+    end
+    cm.ContextMenuOpeningFcn = @(~, event) fillContextMenu(lb, ctxhandles, ctxitems, event);
+    lb.ContextMenu = cm;
+end
+
 d.KeyPressFcn = @(src, event) jumpToFirstMatch(lb, event);
 
 % Use UserData to track whether OK was confirmed
@@ -179,6 +230,18 @@ end
 % assert(equal(pos1, pos2))
 
 d.Visible = 'on';
+if modal
+    % Block the parent only now the dialog is placed and on screen. The
+    % gap where the parent is still clickable is the one GUI.I_DLGREGISTER
+    % covers, which is why that guard stays even though these are modal.
+    d.WindowStyle = 'modal';
+    drawnow;
+    % Belt and braces against the re-centering described above: put it back
+    % where i_centerdlgpos asked for. A no-op when nothing moved it.
+    if ~isequal(round(d.Position), round(dlgPos))
+        d.Position = dlgPos;
+    end
+end
 
 % Set focus on the listbox for user interaction
 %
@@ -225,6 +288,60 @@ end
 function okCallback(d)
 d.UserData = true;
 uiresume(d);
+end
+
+function fillContextMenu(lb, handles, ctxitems, event)
+% Aim every entry at the rows the action should apply to.
+%   EVENT.INTERACTIONINFORMATION.ITEM is the index under the pointer, and []
+%   when the click lands in the empty space below the last item - in which
+%   case there is nothing to act on and every entry hides itself.
+%
+%   Right-clicking a uilistbox does not move the selection, so the pointer
+%   and the highlight can disagree. That is resolved the way a file manager
+%   does: point inside the selection and the action takes the whole of it,
+%   point outside and it takes that row alone and selects it, so what runs
+%   is always what is highlighted.
+
+idx = [];
+try
+    info = event.InteractionInformation;
+    if ~isempty(info) && isprop(info, 'Item')
+        idx = info.Item;
+    end
+catch
+    % A release that does not report what was under the pointer leaves IDX
+    % empty, which hides the entries below
+end
+
+if isempty(idx)
+    set(handles, 'Visible', 'off');
+    return;
+end
+
+[~, sel] = ismember(string(lb.Value), string(lb.Items));
+sel = sel(sel > 0);
+if ismember(idx, sel)
+    target = reshape(sort(sel), 1, []);   % list order, not click order
+else
+    target = idx;
+    lb.Value = lb.Items(idx);
+end
+
+for k = 1:numel(handles)
+    label = ctxitems(k).Label;
+    if isa(label, 'function_handle')
+        label = label(target);
+    end
+    label = string(label);
+    if strlength(label) == 0
+        handles(k).Visible = 'off';
+        continue;
+    end
+    fcn = ctxitems(k).Callback;
+    handles(k).Text = char(label);
+    handles(k).MenuSelectedFcn = @(~,~) fcn(target);
+    handles(k).Visible = 'on';
+end
 end
 
 function jumpToFirstMatch(lb, event)

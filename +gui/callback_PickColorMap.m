@@ -77,6 +77,11 @@ if showzero
         cm(1, :) = [.8, .8, .8];
         colormap(FigureHandle, cm);
     end
+
+% Record it on the SCE so the choice survives a save and reload. This sits
+% after the showzero tweak so what is stored is what is on screen, and it
+% covers both entry points - the menu's picker and the button's step.
+gui.i_storedisplay(src);
 end
 
 

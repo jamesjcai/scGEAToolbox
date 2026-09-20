@@ -156,7 +156,8 @@ end
 X = X(keep, :);
 T = T(keep, :);
 if opts.Verbose
-    fprintf('  %d genes pass the expression filter.\n', height(T));
+    fprintf('  %s passed the expression filter.\n', ...
+        pkg.i_plural(height(T), 'gene'));
 end
 
 % ---- Library-size normalisation ----
@@ -220,7 +221,7 @@ end
 if opts.Verbose
     fprintf('  done: cnv is %d genes by %d cells', size(cnv, 1), size(cnv, 2));
     if ~isempty(seg)
-        fprintf(', in %d segments', height(seg.table));
+        fprintf(', in %s', pkg.i_plural(height(seg.table), 'segment'));
     end
     fprintf('.\n');
 end

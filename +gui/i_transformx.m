@@ -7,9 +7,9 @@ if nargin < 1
     X = nbinrnd(20, 0.98, 1000, 200);
     disp('Using simulated X.');
 end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 if donorm
     defaultans = 'Yes';

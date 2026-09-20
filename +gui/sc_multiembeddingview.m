@@ -1,8 +1,8 @@
 function sc_multiembeddingview(sce, embeddingtags, parentfig)
 
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 if isempty(embeddingtags)
     embeddingtags = fieldnames(sce.struct_cell_embeddings);

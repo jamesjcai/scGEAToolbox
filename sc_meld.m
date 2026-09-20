@@ -70,13 +70,45 @@ function [likelihood, T, info] = sc_meld(X, sampleid, opts)
 %                  of no effect every column sits at its sample's share of
 %                  the cells.
 %     T          - the same values as a table, one column per sample level.
-%     info       - struct with the graph (W), the Laplacian (L) and its
-%                  largest eigenvalue (lmax), the unnormalised
+%     info       - struct with the graph (W) and its Laplacian (L), both
+%                  nCells-by-nCells - this is a cell-cell similarity
+%                  graph, one node per column of X; no gene-gene network
+%                  is built anywhere in this function. Also the largest
+%                  eigenvalue of L (lmax), the unnormalised
 %                  densities, the sample levels, the parameters used, and
 %                  nullSd: the spread of the likelihood around its null value
 %                  under shuffled labels. A cell is only interesting when it
 %                  sits several nullSd away from its sample's share of the
 %                  cells; the filter alone moves cells around by that much.
+%
+%   NOTE on SAMPLE ORDER: there is no control group here and no direction.
+%   Reordering the levels of SAMPLEID permutes the columns of LIKELIHOOD
+%   and changes nothing else - on a 300 against 80 split the swapped run
+%   matched bit for bit, not merely to tolerance. Three things make that
+%   hold: the graph is built from X alone and never sees a label, the
+%   filter acts on each sample's column independently, and the row
+%   normalisation that turns densities into likelihoods does not care
+%   about column order. Unequal sample sizes do not break it either,
+%   because the indicator is divided by each sample's cell count before
+%   filtering; without that line a condition with twice the cells would
+%   look twice as likely everywhere, and the comparison really would
+%   depend on which sample you called which.
+%
+%   So with two samples the columns are exact complements, and which one
+%   is "the perturbation score" is a question about the figure rather than
+%   about the method. GUI.CALLBACK_MELDPERTURBATIONSCORE asks which group
+%   is the control for that reason alone: it plots one column, and without
+%   an answer the sign of the effect would be whatever the level names
+%   happened to sort to.
+%
+%   What is NOT interchangeable is which cells go in. Restricting to two
+%   of three conditions and pooling the other two into one are different
+%   analyses, because both the graph and the indicator change. Only the
+%   naming is free.
+%
+%   NULLSD is the exception, being measured by shuffling labels: it moves
+%   with the RNG rather than with the sample order, so fix the seed before
+%   comparing two runs.
 %
 %   NOTE on FILTER: with lambda scaled to [0, 1] by the largest eigenvalue,
 %   "laplacian" applies 1/(1 + (Beta*|lambda - Offset|)^Order) and "heat"

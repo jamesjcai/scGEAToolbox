@@ -168,13 +168,13 @@ function i_testdata(~, ~)
 
 function i_viewgenenames(~, ~)
         if isempty(posg)
-            gui.myHelpdlg(parentfig, ['The gene set is empty. This score ' ...
+            gui.myHelpdlg(hFig, ['The gene set is empty. This score ' ...
                 'may not be associated with any gene set.']);
         else
             % idx=matches(sce.g,posg,'IgnoreCase',true);
             % gg=sce.g(idx);
             if gui.i_isuifig(parentfig)
-                gui.myInputdlg({ttxt}, '', {char(posg)}, parentfig);
+                gui.myInputdlg({ttxt}, '', {char(posg)}, hFig);
             else
                 inputdlg(ttxt, '', [15, 80], {char(posg)});
             end

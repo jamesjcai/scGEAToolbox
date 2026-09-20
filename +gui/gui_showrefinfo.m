@@ -2,9 +2,9 @@ function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
 % see also: gui.gui_uishowrefinfo
 
 if nargin<2, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 y=false;

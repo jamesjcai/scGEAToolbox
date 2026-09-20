@@ -57,9 +57,13 @@ def main():
         doc_id = ids[i] if i < len(ids) else ""
         studies.append({
             "id":             m.get("id", doc_id),
+            # Sample records carry the series they belong to; studies do not
+            "parent_study":   m.get("ParentStudy", ""),
             "title":          m.get("Title", ""),
             "summary":        (m.get("Summary") or (docs[i] if i < len(docs) else ""))[:500],
-            "samples":        m.get("GSMList", m.get("Samples", "")),
+            # Samples before GSMList: Samples is comma-joined accessions,
+            # GSMList is a Python list repr ("['GSM123']"), brackets included
+            "samples":        m.get("Samples") or m.get("GSMList", ""),
             "organism":       m.get("Organism", ""),
             "overall_design": (m.get("OverallDesign") or "")[:300],
         })

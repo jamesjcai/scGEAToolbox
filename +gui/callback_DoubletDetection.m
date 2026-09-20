@@ -92,7 +92,7 @@ if sce.NumCells == length(doubletscore)
     % preview. A traditional figure parent gets a questdlg of its own instead,
     % which stacks above the plot and leaves it visible while deciding.
     answer = gui.myQuestdlg(tmpf_doubletdetection, ...
-        sprintf("Remove %d doublets?", sum(isDoublet)));
+        sprintf("Remove %s?", pkg.i_plural(sum(isDoublet), 'doublet')));
 
     % Close the preview whatever the answer, so declining does not leave an
     % orphan figure behind, and so the message below is not covered by it.

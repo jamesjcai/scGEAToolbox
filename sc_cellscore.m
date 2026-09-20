@@ -125,10 +125,20 @@ gsorted = genelist(I);
 Xsorted = X(I, :);
 
 % Equal-frequency bins over sorted mean expression (Seurat cut_number).
+%
+% MAX(1, ...) because ROUND(bin_size*i) is 0 for the first bins whenever
+% there are fewer genes than bins: with 10 genes and nbin 24 the bin size is
+% 0.42 and the very first iteration indexed data_avg(0). That is a legal
+% input - a small panel, or a matrix subset to a handful of genes - and it
+% crashed with "Array indices must be positive integers" from three frames
+% down. For any matrix with at least nbin genes ROUND(bin_size*i) is already
+% 1 or more, so this clamp changes nothing for existing callers; below that
+% the leading bins collapse onto the lowest-expressed gene, which is the
+% sensible degenerate behaviour.
 assigned_bin = zeros(cluster_length, 1);
 bin_size = cluster_length / nbin;
 for i = 1:nbin
-    bin_match = data_avg <= data_avg(round(bin_size*i));
+    bin_match = data_avg <= data_avg(max(1, round(bin_size*i)));
     pos_avail = (assigned_bin == 0);
     assigned_bin(pos_avail & bin_match) = i;
 end

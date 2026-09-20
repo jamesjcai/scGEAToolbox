@@ -140,7 +140,7 @@ hx.show(parentfig);
 
 
 function in_callback_savetable(~, ~)
-        answer = gui.myQuestdlg(parentfig, 'Export & save data to:', '', ...
+        answer = gui.myQuestdlg(hFig, 'Export & save data to:', '', ...
             {'Workspace', 'TXT/CSV file', 'Excel file'}, 'Workspace');
         if ~isempty(answer)
             GroupList = repmat(string(cL), length(tgene), 1);
@@ -202,14 +202,14 @@ function in_callback_resizedot(~, ~)
     end
 
 function i_renamecat(~, ~)
-        tg = gui.i_inputgenelist(string(cL), true, parentfig);
+        tg = gui.i_inputgenelist(string(cL), true, hFig);
         if isempty(tg), return; end
         if length(tg) == length(cL)
             set(gca, 'XTick', 0:length(cL));
             set(gca, 'XTickLabel', [{''}; tg(:); {''}])
             cL = tg;
         else
-            gui.myErrordlg(parentfig, 'Wrong input.');
+            gui.myErrordlg(hFig, 'Wrong input.');
         end
     end
 

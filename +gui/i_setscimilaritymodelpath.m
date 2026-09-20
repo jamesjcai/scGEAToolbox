@@ -4,9 +4,9 @@ if nargin<3, parentfig = []; end
 if ~isempty(src)
     [parentfig] = gui.gui_getfigsce(src);
 end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 selectedDir = '';
 preftagname = 'scimilmodelpath';

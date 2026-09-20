@@ -89,7 +89,9 @@ fprintf('Applying QC filter (sample 2)...\n');
 sce2 = sce2.qcfilterwhitelist(1000, 0.15, 15, 500, []);
 X1_all = sce1.X;
 X2_all = sce2.X;
-fprintf('After QC: %d cells (sample 1), %d cells (sample 2)\n', sce1.NumCells, sce2.NumCells);
+fprintf('After QC: %s (sample 1), %s (sample 2)\n', ...
+    pkg.i_plural(sce1.NumCells, 'cell'), ...
+    pkg.i_plural(sce2.NumCells, 'cell'));
 
 % ---- Identify shared cell types -------------------------------------
 ct1 = sce1.c_cell_type_tx;

@@ -3,9 +3,9 @@ function i_pickcolormap(~, ~, ~, setzerocolor, parentfig)
 if nargin < 5, parentfig = []; end
 if nargin < 4, setzerocolor = false; end
 if nargin < 3, c = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 a = colormap;
 if all(a(1, :) == [0.8 0.8 0.8])

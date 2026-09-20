@@ -101,8 +101,9 @@ for regIdx = 1:nRegulators
     % Check minimum targets requirement
     if length(targets) < p.Results.minTargets
         if p.Results.verbose
-            fprintf('    Skipping regulator %s: only %d targets (min: %d)\n', ...
-                regulatorNames{regIdx}, length(targets), p.Results.minTargets);
+            fprintf('    Skipping regulator %s: only %s (min: %d)\n', ...
+                regulatorNames{regIdx}, ...
+                pkg.i_plural(length(targets), 'target'), p.Results.minTargets);
         end
         validRegulators(regIdx) = false;
         continue;

@@ -4,9 +4,9 @@ function [hFig] = i_heatscatterfig(sce, cs, posg, csname, parentfig)
 
 if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(csname), csname = "CellScore"; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 hx=gui.myFigure(parentfig);
@@ -40,7 +40,7 @@ function in_callback_viewgenenames(~, ~)
         gg = sce.g(idx);
 
         if gui.i_isuifig(parentfig)
-            answer = gui.myInputdlg({csname}, '', {char(gg)}, parentfig);
+            answer = gui.myInputdlg({csname}, '', {char(gg)}, hFig);
         else
             answer = inputdlg(csname, '', [15, 80], {char(gg)});
         end
@@ -56,7 +56,7 @@ function in_callback_geneheatmapx(~, ~)
         [passed] = i_checkposg;
         if ~passed, return; end
 
-        [thisc] = gui.i_select1class(sce,[],[],[],parentfig);
+        [thisc] = gui.i_select1class(sce,[],[],[],hFig);
         if ~isempty(thisc)
             gui.i_geneheatmap(sce, thisc, posg, parentfig);
         end
@@ -65,21 +65,21 @@ function in_callback_geneheatmapx(~, ~)
 function in_callback_genedotplot(~, ~)
         [passed] = in_callback_checkposg;
         if ~passed, return; end
-        [thisc] = gui.i_select1class(sce,[],[],[],parentfig);
+        [thisc] = gui.i_select1class(sce,[],[],[],hFig);
         if isempty(thisc), return; end
         [c, cL] = findgroups(string(thisc));
         idx = matches(posg, sce.g, 'IgnoreCase', true);
         if any(idx)
             gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx));
         else
-            gui.myHelpdlg(parentfig, 'No genes in this data set.');
+            gui.myHelpdlg(hFig, 'No genes in this data set.');
         end
     end
 
 function [passed] = in_callback_checkposg
         if isempty(posg)
             passed = false;
-            gui.myHelpdlg(parentfig, ...
+            gui.myHelpdlg(hFig, ...
                 ['The gene set is empty. This score may not' ...
                 ' be associated with any gene set.']);
         else

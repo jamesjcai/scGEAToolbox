@@ -1,8 +1,8 @@
 function [methodid, dim] = i_selnormmethod(parentfig)
 if nargin<1, parentfig = []; end
-if ~isempty(parentfig)
+if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
-    cleanupObj = onCleanup(@() figure(parentfig));
+    cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
 methodid = [];
@@ -36,8 +36,13 @@ listitems = {'zscore std', ...
 'center scale', ...
 'medianiqr'};
 if gui.i_isuifig(parentfig)
+    % allowmulti=false, explicitly. MYLISTDLG defaults it to TRUE, which
+    % gave this dialog a multi-select listbox: ctrl-clicking a second
+    % method returned a two-element INDX, and the SWITCH METHODID in
+    % GUI.I_NORM4HEATMAP then threw 'SWITCH expression must be a scalar
+    % or a character vector'. Only one method applies at a time.
     [indx, tf] = gui.myListdlg(parentfig, listitems, ...
-        'Select Method', listitems(methodid));
+        'Select Method', listitems(methodid), false);
 else
     [indx, tf] = listdlg('PromptString', {'Select Method'}, ...
         'SelectionMode', 'single', ...

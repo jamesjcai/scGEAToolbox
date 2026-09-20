@@ -22,7 +22,7 @@ result_1d = memento.binary_test_1d(
 # result_1d.query('de_coef > 0').sort_values('de_pval').head(10)
 # result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').head(10)
 
-result_1d.query('de_coef > 0').sort_values('de_pval').to_csv('output.csv', sep='\t', index=False)
+result_1d.sort_values('dv_pval').to_csv('output.csv', sep='\t', index=False)
 
 #result_1d.query('dv_coef > 0 & de_coef > 0').sort_values('dv_pval').to_csv('dvoutput.txt', sep='\t', index=False)
 

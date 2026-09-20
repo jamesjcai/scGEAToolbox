@@ -14,6 +14,11 @@ classdef SingleCellExperiment < handle & matlab.mixin.Copyable
         metadata string
         struct_cell_embeddings = pkg.e_makeembedstruct;
         struct_cell_clusterings = pkg.e_makecluststruct;
+        % Marker, size and colormap of the main scatter, so a look chosen
+        % in the GUI survives a save and reload. Empty fields mean never
+        % set, and the app then draws with its own defaults - which is
+        % what an SCE saved before this property existed loads with.
+        struct_display = pkg.e_makedisplaystruct;
         % Additional assays measured on THESE cells: CITE-seq ADT, scATAC
         % peaks, and so on. One field per modality; see setModality for the
         % shape of each. A plain struct() default rather than a pkg.e_make*
@@ -441,6 +446,53 @@ methods
             min_cellnum, nonzero_cutoff);
         obj.X = tmpX;
         obj.g = tmpg;
+        obj = i_filterGeneAttributes(obj, idx);
+    end
+
+    function obj = selectgenesbyindex(obj, idx)
+        % SELECTGENESBYINDEX Keep the genes at IDX, with everything indexed alongside them.
+        %
+        %   sce = sce.selectgenesbyindex(idx)
+        %
+        %   IDX is a logical mask over the gene axis, or a vector of
+        %   subscripts, which may reorder and may repeat.
+        %
+        %   Two things this settles that a hand-written pair of assignments
+        %   does not. SET.G validates the incoming list against size(X,1)
+        %   and there is no SET.X, so the matrix has to be assigned first or
+        %   the shortened list is checked against the old matrix and throws.
+        %   And LIST_GENE_ATTRIBUTES is indexed by row exactly as G is, so
+        %   it has to travel with them or every annotation set through
+        %   SETGENEATTRIBUTE silently misaligns - a flat unvalidated list
+        %   whose filtering fails quietly, as SETFEATUREANNOTATION notes.
+        %
+        %   SELECTGENES and SELECTKEEPGENES choose genes by a detection
+        %   threshold. This is the one to reach for when the caller has
+        %   already worked out which genes it wants.
+        %
+        % See also SELECTGENES, SELECTKEEPGENES, SELECTCELLS, SETGENEATTRIBUTE.
+        if islogical(idx)
+            if numel(idx) ~= numgenes(obj)
+                error('SingleCellExperiment:GeneIndexLength', ...
+                    ['A logical gene mask has %d elements but the ' ...
+                    'matrix has %d genes.'], numel(idx), numgenes(obj));
+            end
+        elseif isnumeric(idx)
+            if ~isempty(idx) && (min(idx) < 1 || max(idx) > numgenes(obj) ...
+                    || any(idx ~= fix(idx)))
+                error('SingleCellExperiment:GeneIndexRange', ...
+                    'Gene subscripts must be whole numbers in 1..%d.', ...
+                    numgenes(obj));
+            end
+        else
+            error('SingleCellExperiment:GeneIndexClass', ...
+                'IDX must be a logical mask or numeric subscripts, not %s.', ...
+                class(idx));
+        end
+
+        % X first - see the note above.
+        obj.X = obj.X(idx, :);
+        obj.g = obj.g(idx);
         obj = i_filterGeneAttributes(obj, idx);
     end
 

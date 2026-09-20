@@ -31,9 +31,7 @@ for k = 1:length(keptidxv)
 end
 
 [keptmask] = ismember(sce.g, keptg);
-sce.X = sce.X(keptmask, :);
-sce.g = sce.g(keptmask);
-sce = i_filterGeneAttributes(sce, keptmask);
+sce = sce.selectgenesbyindex(keptmask);
 % Default methodid renames duplicates rather than dropping them, so the
 % gene count - and therefore the gene attributes - are unchanged here.
 [sce.X, sce.g] = sc_rmdugenes(sce.X, sce.g);
@@ -45,12 +43,13 @@ if ~isempty(whitelist)
     [found, idxx] = ismember(whitelist, sce.g);
 
     if any(found)
+        % IDXX is subscripts from ISMEMBER, so the complement is built
+        % rather than negated. SELECTGENESBYINDEX carries the gene
+        % attributes across, which used to need the separate call below.
         idxx = idxx(found);
         keepmask = true(sce.NumGenes, 1);
         keepmask(idxx) = false;
-        sce.X(idxx, :) = [];
-        sce.g(idxx) = [];
-        sce = i_filterGeneAttributes(sce, keepmask);
+        sce = sce.selectgenesbyindex(keepmask);
     end
     sce.X = [sce.X; Xresv];
     sce.g = [sce.g; whitelist(:)];
