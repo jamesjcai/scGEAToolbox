@@ -17,6 +17,13 @@ if isTAMU
         logFcn(sprintf("%s: received %d chars.", passName, strlength(txt)));
         return;
     catch ME
+        % For TAMU the "chat" is a plain struct (I_MAKECHAT), which
+        % GENERATE cannot take: the fallback could only replace the real
+        % error with "Undefined function 'generate'".
+        if isstruct(chat)
+            logFcn(sprintf("%s direct HTTP failed: %s", passName, ME.message));
+            rethrow(ME);
+        end
         logFcn(sprintf("%s direct HTTP failed (%s) — falling back to openAIChat.", ...
             passName, ME.message));
     end

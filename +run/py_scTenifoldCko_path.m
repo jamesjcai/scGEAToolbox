@@ -1,8 +1,9 @@
 function [T] = py_scTenifoldCko_path(sce_ori, celltype1, celltype2, targetg, ...
                                 targetpathid, wkdir, ...
-                                isdebug, prepare_input_only)
+                                isdebug, prepare_input_only, parentfig)
 
 T = [];
+if nargin < 9, parentfig = []; end
 if nargin < 8, prepare_input_only = false; end
 if nargin < 7, isdebug = true; end
 if nargin < 6, wkdir = []; end
@@ -44,57 +45,26 @@ pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
 
 in_prepareX12intact(sce);
 
-fw = gui.gui_waitbar([], [], 'Step 2 of 4: Building S1 networks...');
-    % try
-        in_prepareA12intact(sce);
-    % catch ME
-    %     if pkg.i_isvalid(fw)
-    %         gui.gui_waitbar(fw, [], 'Building S1 networks is incomplete');
-    %     end
-    %     errordlg(ME.message);
-    %     return;
-    % end
-gui.gui_waitbar(fw, [], 'Building S1 networks is complete');
-
-fw = gui.gui_waitbar([], [], 'Step 3 of 4: Building S2 networks...');
-    % try
-    %     in_prepareA(sce2, 2);
-    % catch ME
-    %     if pkg.i_isvalid(fw)
-    %         gui.gui_waitbar(fw, [], 'Building S2 network is incomplete');
-    %     end
-    %     errordlg(ME.message);
-    %     return;
-    % end
-pause(3);
-gui.gui_waitbar(fw, [], 'Building S2 network is complete');
-
-fw = gui.gui_waitbar([], [], 'Step 4 of 4: Running scTenifoldXct.py...');
+% One progress bar for the whole run, on the app window. It used to be
+% three unparented bars in a row (one of them just a PAUSE(3)), and a
+% failure left the last one open under the error dialog: the cleanup
+% closes it on every exit, and errors now go to the caller, which reports
+% them once.
+fw = gui.myWaitbar(parentfig, [], [], 'Step 1 of 2: Building networks...');
+closeFw = onCleanup(@() gui.myWaitbar(parentfig, fw, true));
+in_prepareA12intact(sce);
 
 codefullpath = fullfile(codepth,'script_path.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 
 if ~prepare_input_only
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 2: Running scTenifoldCko.py...');
     cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
     disp(cmdlinestr)
-    try
-        [status] = system(cmdlinestr, '-echo');
-        % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
-    catch ME
-        if pkg.i_isvalid(fw)
-            gui.gui_waitbar(fw, [], 'Running scTenifoldCko.py is incomplete.');
-        end
-        errordlg(ME.message);
-        return;
-    end
+    % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
+    [status] = system(cmdlinestr, '-echo');
 end
-if pkg.i_isvalid(fw)
-        if prepare_input_only
-            gui.gui_waitbar(fw, [], 'Input preparation is complete.');
-        else
-            gui.gui_waitbar(fw, [], 'Running scTenifoldCko_path.py is complete.');
-        end
-    end
+gui.myWaitbar(parentfig, fw);
 
 if ~prepare_input_only
 
@@ -110,10 +80,6 @@ if ~prepare_input_only
     end
     end
 
-    % if status == 0 && exist('output.txt', 'file')
-    %     T = readtable('output.txt');
-    %     iscomplete = true;
-    % end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 
@@ -131,7 +97,6 @@ function in_prepareX12intact(sce)
             sce.c_batch_id = sce.c_cell_type_tx;
             sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
             sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
-            % sce=sce.qcfilter;
             if issparse(sce.X)
                 X = single(full(sce.X));
             else

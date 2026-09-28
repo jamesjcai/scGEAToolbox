@@ -1,13 +1,25 @@
-function i_bindviolinplot(d, c, colorit, grouporder)
+function i_bindviolinplot(d, c, colorit, grouporder, ax)
 import gui.Violin
 import gui.i_violinplot_base
 
 if ~isstring(c)
     c = string(c);
 end
+if nargin < 5, ax = []; end
 if nargin < 4, grouporder = []; end
 if nargin < 3 || isempty(colorit), colorit = false; end
 if issparse(d), d = full(d); end
+
+% gui.Violin draws into the current axes, so make AX current first. This sets
+% the current figure without raising it, unlike axes(AX). A button callback
+% cannot rely on gca: after a dialog closes it can be another window's.
+if isempty(ax)
+    ax = gca;
+else
+    fig = ancestor(ax, 'figure');
+    set(groot, 'CurrentFigure', fig);
+    fig.CurrentAxes = ax;
+end
 
 if ~colorit
     if isempty(grouporder)
@@ -29,7 +41,6 @@ else
             'GroupOrder', grouporder);
     end
 end
-% xtickangle(-45);
-box on
-grid on
+box(ax, 'on');
+grid(ax, 'on');
 end

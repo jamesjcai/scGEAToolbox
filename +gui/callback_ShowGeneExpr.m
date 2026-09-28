@@ -2,12 +2,9 @@ function callback_ShowGeneExpr(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-% sce2 = pkg.upgradeSCE(sce)
-
 [axx, bxx] = view(findall(FigureHandle,'type','axes'));
 [glist] = gui.i_selectngenes(sce, [], FigureHandle);
 if isempty(glist)
-    % gui.myHelpdlg(FigureHandle, 'No genes is selected or found.');
     return;
 end
 
@@ -26,6 +23,13 @@ end
     for k = 1:n
         y{k} = Xt(sce.g == glist(k), :);
     end    
-    gui.sc_uitabgrpfig_expplot(y, glist, sce.s, FigureHandle, [axx, bxx]);
+    try
+        gui.sc_uitabgrpfig_expplot(y, glist, sce.s, FigureHandle, [axx, bxx]);
+    catch ME
+        % The bar is modal on the app; a failed plot used to leave it up.
+        gui.myWaitbar(FigureHandle, fw, true);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+        return;
+    end
     gui.myWaitbar(FigureHandle, fw);
 end

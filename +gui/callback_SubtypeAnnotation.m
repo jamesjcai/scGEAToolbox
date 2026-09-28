@@ -6,7 +6,7 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, usecustom)
 %
 % With the bundled subtype markers (the default), this offers the primary cell
 % types that both the data and assets/PanglaoDB/cellsubtypes.xlsx know about,
-% then hands each to SC_CSUBTYPEANNO, which isolates those cells, re-embeds and
+% then hands each to SC_CSUBTYPEANNO, which isolates those cells and
 % re-clusters them on their own, scores the new clusters against the subtype
 % markers, and merges the subtype labels back.
 %
@@ -29,7 +29,7 @@ function [requirerefresh] = callback_SubtypeAnnotation(src, usecustom)
 requirerefresh = false;
 
 % The second argument used to be the menu event, which is ignored. Only a
-% logical scalar means "use customized markers"; anything else is an event.
+% logical scalar means "use custom markers"; anything else is an event.
 if nargin < 2 || ~(islogical(usecustom) && isscalar(usecustom))
     usecustom = false;
 end
@@ -71,7 +71,7 @@ switch answer
         formatid = 0;
 end
 
-% Re-embedding and re-clustering a subset takes a while, and doing it for
+% Re-clustering a subset takes a while, and doing it for
 % several types in a row takes several times as long.
 % The species decides which primary marker file SC_CSUBTYPEANNO appends
 % from, and its SPECIESTAG argument used to be ignored. Guessing from the
@@ -125,29 +125,30 @@ if isempty(candidates)
     gui.myErrordlg(FigureHandle, sprintf(['None of the %d cell type label(s) ' ...
         'in your data is a cell type that cellsubtypes.xlsx has subtype ' ...
         'markers for. Supported: %s. Use "Annotate Cell Subtypes Using ' ...
-        'Customized Marker Genes..." to subdivide any other cell type.'], ...
+        'Custom Markers..." to subdivide any other cell type.'], ...
         numel(unique(labels)), strjoin(primarytypes, ', ')));
     return;
 end
 
 % Say how many cells each choice covers, and under how many different labels:
 % the count is what tells the user that "T cells" here also takes in the cells
-% annotated as "CD8+ T cells". Cells that already carry a subtype are counted
-% apart, because SC_CSUBTYPEANNO leaves them where they are and a single total
-% would promise to re-annotate cells it will not touch.
+% annotated as "CD8+ T cells". Cells whose label already names a subtype are
+% counted within that total and flagged separately, because for them the run
+% replaces a subtype call rather than making a first one - "T memory cells"
+% comes back as "T cells (Memory)", scored against the subtype markers.
 items = strings(size(candidates));
 for k = 1:numel(candidates)
     isk = matched == candidates(k);
     items(k) = sprintf('%s (%s, %s)', candidates(k), ...
-        pkg.i_plural(sum(isk & ~resolved), 'cell'), ...
-        pkg.i_plural(numel(unique(labels(isk & ~resolved))), 'label'));
+        pkg.i_plural(sum(isk), 'cell'), ...
+        pkg.i_plural(numel(unique(labels(isk))), 'label'));
     if any(isk & resolved)
-        items(k) = items(k) + sprintf(' - %d more already subtyped', ...
-            sum(isk & resolved));
+        items(k) = items(k) + sprintf(' - %s already named a subtype', ...
+            pkg.i_plural(sum(isk & resolved), 'cell'));
     end
 end
 
-prompt = ['Cells of the selected type are isolated, re-embedded and ' ...
+prompt = ['Cells of the selected type are isolated and ' ...
     're-clustered on their own before their subtypes are annotated.'];
 if gui.i_isuifig(FigureHandle)
     [indx2, tf2] = gui.myListdlg(FigureHandle, cellstr(items), ...
@@ -183,7 +184,7 @@ items = arrayfun(@(k) sprintf('%s (%s)', ulabels(k), ...
     'UniformOutput', false);
 
 prompt = ['Select the cell type(s) to subdivide. Those cells are pooled, ' ...
-    'isolated, re-embedded and re-clustered on their own, and each new ' ...
+    'isolated and re-clustered on their own, and each new ' ...
     'cluster is labelled by its best match among the subtype markers you ' ...
     'supply next.'];
 if gui.i_isuifig(FigureHandle)
@@ -203,7 +204,7 @@ Tsub = gui.i_getcustomsubtypemarkers(FigureHandle, sce, targetname);
 if isempty(Tsub), return; end
 
 gui.i_warnmissingmarkers(FigureHandle, sce, Tsub, ...
-    'Customized Subtype Markers');
+    'Custom Subtype Markers');
 
 ctypelist = targetname;
 selections = {ismember(labels, picked)};

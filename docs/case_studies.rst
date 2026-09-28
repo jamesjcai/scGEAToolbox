@@ -120,7 +120,7 @@ Identify highly variable genes (HVGs) and differentially deviated (DD) genes usi
   % Show data points and the spline-fit curve
   dofit = true;
   showdata = true;
-  gui.i_hvgsplinefitplot(X, genelist, dofit, showdata);
+  gui.i_hvgcurveplot(X, genelist, dofit, showdata, [], "splinefit");
 
 **Analysis of differentially deviated (DD) genes with data X and Y**
 
@@ -132,10 +132,10 @@ Identify highly variable genes (HVGs) and differentially deviated (DD) genes usi
   [Y, genelisty] = sc_selectg(Y, genelisty, 3, 1);
 
   % Spline-fit plots for each data set
-  gui.i_hvgsplinefitplot(X, genelistx, true, true);
+  gui.i_hvgcurveplot(X, genelistx, true, true, [], "splinefit");
   title('Data 1')
 
-  gui.i_hvgsplinefitplot(Y, genelisty, true, true);
+  gui.i_hvgcurveplot(Y, genelisty, true, true, [], "splinefit");
   title('Data 2')
 
   % Fit X and Y separately and obtain DD value of each gene
@@ -209,7 +209,7 @@ Dimensionality reduction and gene-level scatter plots.
 
   % 3D scatter plot with spline fit
   figure;
-  gui.i_hvgsplinefitplot(X, genelistx, true, true);
+  gui.i_hvgcurveplot(X, genelistx, true, true, [], "splinefit");
 
 **Feature selection: top 50 DD genes**
 

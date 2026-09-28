@@ -30,7 +30,6 @@ txa.Layout.Row = 2;
 txa.Layout.Column = [1 3];
 txa.Value = compose(definput);
 
-% txa.Position(4)=txa.Position(4)*2;
 if nargout>0
     oktext = "OK";
 else
@@ -41,7 +40,6 @@ btn = uibutton(g,"Text",oktext);
 btn.Layout.Row = 3;
 btn.Layout.Column = 2 + (nargout==0);
 btn.ButtonPushedFcn = @(src,event) textEntered(src,event,btn);
-% btn.Position(3) = 50;
 
 if nargout > 0
     btn2 = uibutton(g,"Text","Cancel");

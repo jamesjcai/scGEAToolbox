@@ -12,16 +12,6 @@ if isempty(selpath) || isequal(selpath, 0), return; end
 if ~isfolder(selpath), return; end
 
 
-% usegemini = false;
-% try
-%     preftagname = 'llmodelprovider';
-%     s = getpref('scgeatoolbox', preftagname);
-%     if contains(upper(s),'GEMINI')
-%         usegemini = true;
-%     end
-% catch
-% end
-
 
 files = dir(fullfile(selpath, '*DE_*.xlsx'));
 fileNames1 = string({files(~[files.isdir]).name});
@@ -38,7 +28,7 @@ end
 
 if gui.i_isuifig(parentfig)
     [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
-            'Select Excel Files:', listItems);
+            'Select Excel Files:', listItems, true);
 else
     [selectedIndex, ok] = listdlg('PromptString', 'Select Excel Files:', ...
                           'SelectionMode', 'multiple', ...
@@ -54,6 +44,9 @@ else
 end
 
 fw = gui.myWaitbar(parentfig);
+closeFw = onCleanup(@() gui.myWaitbar(parentfig, fw, true));
+nwritten = 0;
+failed = strings(0, 1);
 
 for k = 1:length(selectedfiles)
     gui.myWaitbar(parentfig, fw, false, '', ...
@@ -63,61 +56,26 @@ for k = 1:length(selectedfiles)
     % [TbpUpEnrichr, TmfUpEnrichr, ...
     %     TbpDnEnrichr, TmfDnEnrichr] = in_gettables(infile);
 
-    [TbpUpEnrichr, TmfUpEnrichr, ...
-        TbpDnEnrichr, TmfDnEnrichr] = pkg.in_XLSX2DETable(infile);
-    % assignin("base","TbpUp",TbpUp);
-    % assignin("base","TmfUp",TmfUp);
-    % assignin("base","TbpDn",TbpDn);
-    % assignin("base","TmfDn",TmfDn);
-
     [~, wordfilename] = fileparts(selectedfiles(k));
-
-    % if ~usegemini
-        [done, outfile] = llm.e_DETableSummary(TbpUpEnrichr, ...
+    % Per file: an unreadable workbook or a failed LLM call used to stop
+    % the loop with the bar open, and a silent failure told no one.
+    try
+        [TbpUpEnrichr, TmfUpEnrichr, ...
+            TbpDnEnrichr, TmfDnEnrichr] = pkg.in_XLSX2DETable(infile);
+        done = llm.e_DETableSummary(TbpUpEnrichr, ...
             TmfUpEnrichr, TbpDnEnrichr, ...
             TmfDnEnrichr, wordfilename, selpath);
-    % else
-    %    [done, outfile] = llm.e_EnrichrTabSummary(TbpUpEnrichr, ...
-    %        TmfUpEnrichr, TbpDnEnrichr, ...
-    %        TmfDnEnrichr, wordfilename);
-    % end
-
-    % files = dir(fullfile(selpath, '*_DP_*.xlsx'));
-    % fileNames = string({files(~[files.isdir]).name});
-    % doc = Document(outfile, 'docx');
-    % open(doc);
-    % para = Paragraph("AI generated text");
-    % append(doc, para);
-    % close(doc);
-    % if done, pkg.i_openoutputfile(outfile); end
+    catch ME
+        fprintf('Report for %s failed: %s\n', selectedfiles(k), ME.message);
+        done = false;
+    end
+    if done
+        nwritten = nwritten + 1;
+    else
+        failed(end+1) = selectedfiles(k); %#ok<AGROW>
+    end
 end
 gui.myWaitbar(parentfig, fw);
+gui.i_reportllmword(parentfig, nwritten, failed, selpath);
 
-% function [TbpUp, TmfUp, TbpDn, TmfDn] = in_gettables(excelfile)
-%     TbpUp = [];
-%     TmfUp = [];
-%     TbpDn = [];
-%     TmfDn = [];
-%     sheetList = sheetnames(excelfile);
-%
-%     sheetToRead = 'Up_250_GO_BP';
-%     if any(strcmp(sheetList, sheetToRead))
-%         TbpUp = readtable(excelfile, 'Sheet', sheetToRead);
-%     end
-%
-%     sheetToRead = 'Up_250_GO_MF';
-%     if any(strcmp(sheetList, sheetToRead))
-%         TmfUp = readtable(excelfile, 'Sheet', sheetToRead);
-%     end
-%
-%     sheetToRead = 'Dn_250_GO_BP';
-%     if any(strcmp(sheetList, sheetToRead))
-%         TbpDn = readtable(excelfile, 'Sheet', sheetToRead);
-%     end
-%
-%     sheetToRead = 'Dn_250_GO_MF';
-%     if any(strcmp(sheetList, sheetToRead))
-%         TmfDn = readtable(excelfile, 'Sheet', sheetToRead);
-%     end
-% end
 end

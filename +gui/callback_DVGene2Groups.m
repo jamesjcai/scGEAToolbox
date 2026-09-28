@@ -57,11 +57,6 @@ sce2 = sce2.qcfilter; % OK
         return;
     end
 
-    % assignin('base', "sce1", sce1);
-    % assignin('base', "sce2", sce2);
-    % assignin('base', "cL1", cL1);
-    % assignin('base', "cL2", cL2);
-
 optSpline = 'Splinefit Method [PMID:40113778]';
 optAnalytic = 'Analytic Curve (closed-form Spline-DV)';
 optBrennecke = 'Brennecke et al. (2013) [PMID:24056876]';
@@ -74,6 +69,15 @@ if isempty(answerx), return; end
 [direction, dirlabels] = gui.i_dvdirection(FigureHandle);
 if isempty(direction), return; end
 
+switch answerx
+    case optBrennecke
+        dvmethod = 'brennecke';
+    otherwise
+        dvmethod = 'splinefit';
+end
+[numPerm, permTag] = gui.i_dvpermutations(FigureHandle, dvmethod);
+if isempty(numPerm), return; end
+
 fw = gui.myWaitbar(FigureHandle, [], false, 'Computing DV results...');
 cleanupObj = onCleanup(@() i_closewaitbar(fw)); 
 
@@ -82,12 +86,14 @@ try
         case optSpline
             [T, X1, X2, g, xyz1, xyz2, ...
                 px1, py1, pz1, ...
-                px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit', direction);
+                px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit', direction, ...
+                NumPermutations=numPerm);
             methodtag = 'splinefit';
         case optAnalytic
             [T, X1, X2, g, xyz1, xyz2, ...
                 px1, py1, pz1, ...
-                px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'analytic', direction);
+                px2, py2, pz2] = sc_dvg(sce1, sce2, cL1, cL2, 'analytic', direction, ...
+                NumPermutations=numPerm);
             methodtag = 'analytic';
         case optBrennecke
             T = sc_dvg(sce1, sce2, cL1, cL2, 'brennecke', direction);
@@ -101,10 +107,10 @@ catch ME
     return;
 end
 
-outfile = sprintf('%s_vs_%s_DV_%s%s_results', ...
+outfile = sprintf('%s_vs_%s_DV_%s%s%s_results', ...
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)), ...
-        methodtag, dirlabels.FileTag);
+        methodtag, dirlabels.FileTag, permTag);
 filesaved = fullfile(wrkdir, [outfile, '.xlsx']);
 
 drawnow;
@@ -144,6 +150,12 @@ end
 
 
 function in_callback_openDVplot(~, ~)
+        % In the table's place on screen, with a Back button to it, rather
+        % than a third window over the app and the table.
+        gui.i_openinstead(figtab, @in_drawDVplot);
+    end
+
+function in_drawDVplot()
         hx = gui.myFigure(figtab, true);
         hFig = hx.FigHandle;
         hFig.Position(3) = hFig.Position(3)*1.8;
@@ -154,6 +166,7 @@ function in_callback_openDVplot(~, ~)
         hx.addCustomButton('on', @in_callback_EnrichrHVGs, 'plotpicker-andrewsplot.gif', 'Select top n genes to perform web-based enrichment analysis...');
         hx.addCustomButton('off', @in_callback_Enrichr, 'plotpicker-andrewsplot.gif', 'Enrichr test...');
         hx.addCustomButton('off', @in_callback_genecards, 'www.jpg', 'GeneCards...');
+        hx.addCustomButton('off', @in_callback_proteinstructure, 'hexagon_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Protein Structure...');
         hx.addCustomButton('on', @in_callback_ChangeAlphaValue, 'plotpicker-rose.gif', 'Change MarkerFaceAlpha value');
         hx.addCustomButton('off', @in_callback_changeMarkerSize, 'icon-mat-text-fields-10.gif', 'ChangeFontSize');
 
@@ -245,13 +258,17 @@ function in_callback_Enrichr(~, ~)
             gui.gui_prepenrichr(Tin.gene(1:ntop), Tin.gene,...
                 sprintf('Run enrichment analysis with %s DV genes?', lower(answer)), ...
                 hFig);
-        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, outbackgroundlist);
+        if isempty(outgenelist), return; end   % cancelled
+        gui.i_openinstead(hFig, @() gui.callback_RunEnrichr(src, [], ...
+            outgenelist, enrichrtype, outbackgroundlist));
 
     end
 
 function in_callback_viewTable(~, ~)
         if ~isempty(figtab) && pkg.i_isvalid(figtab)
-            gui.i_bringtofront(figtab);
+            % The plot opened in the table's place, which is hidden, not
+            % gone; closing the plot brings it back.
+            close(hFig);
         else
             figtab = gui.TableViewerApp(T, hx.FigHandle, outfile);
         end
@@ -260,10 +277,6 @@ function in_callback_viewTable(~, ~)
 function txt = in_myupdatefcn3(src, event_obj, g)
         if isequal(get(src, 'Parent'), hAx0)
             subplot(hAx0);
-            % dtp = findobj(h1, 'Type', 'datatip');
-            % if ~isempty(dtp), delete(dtp); end
-            % dtp = findobj(h2, 'Type', 'datatip');
-            % if ~isempty(dtp), delete(dtp); end
             idx = event_obj.DataIndex;
             if idx > length(g)*2
                 txt = num2str(event_obj.Position(2));
@@ -274,12 +287,6 @@ function txt = in_myupdatefcn3(src, event_obj, g)
             end
 
             x_cleanfigspace(false);
-
-            % if ~isempty(h3), delete(h3); end
-            % if ~isempty(h3a), delete(h3a); end
-            % if ~isempty(h3b), delete(h3b); end
-            % if ~isempty(h4), delete(h4); end
-            % if ~isempty(h5), delete(h5); end
 
                 h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
                     [py1(idx), py2(idx)], ...
@@ -354,16 +361,6 @@ function in_callback_HighlightSelectedGenes(~, ~, typeid)
 
        x_cleanfigspace(true);
 
-       % dtp = findobj(h1, 'Type', 'datatip');
-       % if ~isempty(dtp), delete(dtp); end
-       % dtp = findobj(h2, 'Type', 'datatip');
-       % if ~isempty(dtp), delete(dtp); end
-       % if ~isempty(h3), delete(h3); end
-       % if ~isempty(h3a), delete(h3a); end
-       % if ~isempty(h3b), delete(h3b); end
-       % if ~isempty(h4), delete(h4); end
-       % if ~isempty(h5), delete(h5); end
-
        switch typeid
            case 1
                 gsorted = natsort(g);
@@ -372,7 +369,7 @@ function in_callback_HighlightSelectedGenes(~, ~, typeid)
        end
         if gui.i_isuifig(FigureHandle)
             [indx2, tf2] = gui.myListdlg(hFig, gsorted, ...
-                'Select a gene:');
+                'Select a gene:', [], false);
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 'Select a gene:', ...
@@ -391,9 +388,6 @@ function in_callback_HighlightSelectedGenes(~, ~, typeid)
         datatip(h2, 'DataIndex', idx);
 
         x_cleanfigspace(false);
-        % if ~isempty(h3), delete(h3); end
-        % if ~isempty(h4), delete(h4); end
-        % if ~isempty(h5), delete(h5); end
 
          % h3 = plot3(hAx0, [px1(idx) px2(idx)], ...
          %     [py1(idx), py2(idx)], ...
@@ -401,16 +395,11 @@ function in_callback_HighlightSelectedGenes(~, ~, typeid)
 
          [nearidx] = dsearchn(xyz1, [px1(idx) py1(idx) pz1(idx)]);
 
-         % assignin('base',"xyz1",xyz1);
-         % h4 = arrow3(xyz1(nearidx, :), [px1(idx), py1(idx), pz1(idx)]);
-
         h4 = plot3(hAx0, [px1(idx) xyz1(nearidx, 1)], ...
             [py1(idx), xyz1(nearidx, 2)], ...
             [pz1(idx), xyz1(nearidx, 3)],'-','LineWidth',2,'Color',lcolor1);
 
          [nearidx] = dsearchn(xyz2, [px2(idx) py2(idx) pz2(idx)]);
-
-         % h5 = arrow3(xyz2(nearidx, :), [px2(idx), py2(idx), pz2(idx)]);
 
          h5 = plot3(hAx0, [px2(idx) xyz2(nearidx, 1)], ...
              [py2(idx), xyz2(nearidx, 2)], ...
@@ -422,7 +411,7 @@ function in_callback_EnrichrHVGs(~, ~)
         k = gui.i_inputnumk(200, 1, 2000, 'Select top n genes', hFig);
         if ~isempty(k)
             gsorted = T.(T.Properties.VariableNames{1});
-            gselected = gsorted(1:k);
+            gselected = gsorted(1:min(k, numel(gsorted)));
             fprintf('%s selected.\n', pkg.i_plural(length(gselected), 'gene'));
             gui.i_enrichtest(gselected, gsorted, k);
         end
@@ -430,6 +419,10 @@ function in_callback_EnrichrHVGs(~, ~)
 
 function in_callback_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g(idx)),'-new');
+    end
+
+function in_callback_proteinstructure(~, ~)
+        gui.i_viewprotein(g(idx), ParentFig=hFig);
     end
 
 function in_callback_changeMarkerSize(~, ~)
@@ -455,8 +448,8 @@ function in_callback_ChangeAlphaValue(~, ~)
 
 function in_callback_gsettest_fromtable(~, figtab)
     % DIFFDIST alone is not signed, whatever this comment used to say.
-    % SC_DVG's splinefit branch -- the only one this callback can reach
-    % -- sets DiffDist = vecnorm(v1 - v2, 2, 2), a norm and so
+    % SC_DVG's splinefit and analytic branches set
+    % DiffDist = vecnorm(v1 - v2, 2, 2), a norm and so
     % non-negative, and keeps the direction separately in DiffSign --
     % group 1 minus group 2, in mean or in deviation depending on the
     % DIRECTION chosen for this run. The signed product puts large-DV
@@ -472,8 +465,22 @@ function in_callback_gsettest_fromtable(~, figtab)
     %
     % SC_DVG returns every gene surviving QC, so the ranking is still
     % complete, which is what a competitive test needs.
-    gui.i_rungsettest(string(T.gene), T.DiffDist .* T.DiffSign, figtab, ...
-        [outfile, '_GeneSet'], sprintf('DiffDist signed by DiffSign (%s)', direction));
+    %
+    % The Brennecke branch reaches this too (it has no plot, but gets this
+    % button), and there DiffDist is already SIGNED -- the residual CV^2
+    % difference -- with the magnitude in DiffDistAbs. Multiplying that by
+    % DiffSign gave |DiffDist| under 'deviation' (every gene "more
+    % variable in group 1") and, under 'mean', flipped the sign of 5250 of
+    % 7171 genes on the example data. The magnitude is what gets signed.
+    if ismember('DiffDistAbs', T.Properties.VariableNames)
+        magnitude = T.DiffDistAbs;
+    else
+        magnitude = T.DiffDist;
+    end
+    stat = magnitude .* T.DiffSign;
+    statlabel = sprintf('DV magnitude signed by DiffSign (%s)', direction);
+    gui.i_openinstead(figtab, @() gui.i_rungsettest(string(T.gene), stat, ...
+        figtab, [outfile, '_GeneSet'], statlabel));
 end
 
 function in_callback_enrichr_fromtable(~, figtab)

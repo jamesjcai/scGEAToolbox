@@ -128,9 +128,6 @@ dlgPos = round(gui.i_centerdlgpos(parentfig, dlgSize));
 %    d = uifigure('Name', Title, 'Position', dlgPos, ...
 %        'WindowStyle', 'modal');
 
-% parentfig.WindowStyle = 'alwaysontop';
-% disp('alwaysontop')
-
 % WindowStyle='modal' is off by default: on multi-monitor setups where the
 % secondary monitor has a different DPI, MATLAB's modal centering logic uses
 % an internal coordinate space that differs from MonitorPositions, causing
@@ -146,8 +143,6 @@ d = uifigure('Name', Title, 'Position', dlgPos, ...
     'Visible', 'off', 'Resize', allowresize);
 
 gui.i_dlgregister(parentfig, d);
-
-% pos1 = d.Position
 
 if allowmulti
     multitag = 'on';
@@ -215,19 +210,10 @@ if ~isMATLABReleaseOlderThan('R2025a')
     end
 end
 
-% d.UserData.LastState = "normal";
 if ~allowresize
     d.AutoResizeChildren = 'off';
     d.SizeChangedFcn = @(src,~) enforceNormalState(src);
 end
-
-% parentfig.WindowStyle = 'normal';
-
-% drawnow;
-% pause(0.7);
-
-% pos2 = d.Position
-% assert(equal(pos1, pos2))
 
 d.Visible = 'on';
 if modal
@@ -277,7 +263,6 @@ disp(selectedItems);
 end
 
 function enforceNormalState(fig)
-% disp('If user tries to minimize, restore immediately');
 
 if fig.WindowState == "minimized"
     drawnow limitrate

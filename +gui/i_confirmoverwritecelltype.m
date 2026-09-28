@@ -5,7 +5,8 @@ function tf = i_confirmoverwritecelltype(FigureHandle, sce)
 % reference-model callbacks (GUI.CALLBACK_RUNSCIMILARITY,
 % GUI.CALLBACK_RUNPANHUMANPY), marker-gene annotation
 % (GUI.CALLBACK_DETERMINECELLTYPECLUSTERS),
-% GUI.CALLBACK_ASSIGNCELLTYPEFROMATTRIB and GUI.SC_CELLATTRIBEDITOR -
+% GUI.CALLBACK_ASSIGNCELLTYPEFROMATTRIB, GUI.SC_CELLATTRIBEDITOR and the
+% import of an annotation from another SCE (GUI.CALLBACK_MERGECELLSUBTYPES) -
 % stashes the current labels into a new 'old_cell_type_N' cell attribute
 % (see PKG.I_STASHCELLTYPEHISTORY) before overwriting, so this is about the
 % active c_cell_type_tx changing, not about data loss.

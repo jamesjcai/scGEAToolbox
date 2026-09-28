@@ -117,6 +117,7 @@ end
 
 % ---- DP per cell type -----------------------------------------------
 ri = 0;
+skipped = {};   % cell types not analysed, with the reason -- once dropped silently
 for k = 1:numel(shared_ct)
     ct = shared_ct(k);
     mask1 = ct1 == ct;
@@ -127,6 +128,8 @@ for k = 1:numel(shared_ct)
     if n1 < 500 || n2 < 500
         fprintf('Skipping "%s": fewer than 500 cells (%d in sample1, %d in sample2).\n', ...
             ct, n1, n2);
+        skipped{end+1} = struct('cell_type', char(ct), 'n1', n1, 'n2', n2, ...
+            'reason', sprintf('insufficient_cells (need >=500 each; have %d vs %d)', n1, n2)); %#ok<AGROW>
         continue;
     end
 
@@ -150,6 +153,8 @@ for k = 1:numel(shared_ct)
             setmatrx, setnames, setgenes);
     catch ME
         fprintf('FAILED: %s\n', ME.message);
+        skipped{end+1} = struct('cell_type', char(ct), 'n1', n1, 'n2', n2, ...
+            'reason', sprintf('analysis_error: %s', ME.message)); %#ok<AGROW>
         continue;
     end
 
@@ -188,7 +193,7 @@ end
 fprintf('\nDP analysis complete: %d cell type(s) analysed.\n', numel(results));
 
 % ---- Print JSON summary for agent consumption -----------------------
-i_print_json_summary(results, sample_id1, sample_id2, gene_set_option);
+i_print_json_summary(results, sample_id1, sample_id2, gene_set_option, skipped);
 end
 
 
@@ -203,8 +208,8 @@ end
 
 
 % ---- Helper: print JSON summary of top differential programs --------
-function i_print_json_summary(results, sample_id1, sample_id2, gene_set_option, top_n)
-if nargin < 5, top_n = 20; end
+function i_print_json_summary(results, sample_id1, sample_id2, gene_set_option, skipped, top_n)
+if nargin < 6, top_n = 20; end
 
 cell_types = {};
 for k = 1:numel(results)
@@ -223,11 +228,31 @@ for k = 1:numel(results)
         'top_dn',    {top_dn}); %#ok<AGROW>
 end
 
+% STATUS and REASON are the fields GEOcellar's analysis node reads
+% (_check_empty_results: status == "no_results"), as run_de_analysis and
+% the scTenifoldNet/Knk runners emit them. Without them an analysis whose
+% every cell type was skipped counted as a produced result.
+if ~isempty(cell_types)
+    status = 'completed';
+    reason = '';
+elseif ~isempty(skipped)
+    status = 'no_results';
+    reason = sprintf(['All %d shared cell type(s) were skipped. DP requires ' ...
+        '>=500 cells per cell type in each sample. See skipped[] for the ' ...
+        'counts and reasons.'], numel(skipped));
+else
+    status = 'no_results';
+    reason = 'No shared annotated cell types found between the two samples.';
+end
+
 summary = struct( ...
+    'status',           status, ...
+    'reason',           reason, ...
     'sample1',          char(sample_id1), ...
     'sample2',          char(sample_id2), ...
     'gene_set_option',  char(string(gene_set_option)), ...
-    'cell_types',       {cell_types});
+    'cell_types',       {cell_types}, ...
+    'skipped',          {skipped});
 
 fprintf('\n%%DP_JSON_SUMMARY_BEGIN%%\n%s\n%%DP_JSON_SUMMARY_END%%\n', ...
     jsonencode(summary, 'PrettyPrint', true));
@@ -251,20 +276,6 @@ end
 
 % ---- Helper: locate and load cleandata.mat --------------------------
 function sce = i_load_sce(sample_id, data_dir)
-hits = dir(fullfile(data_dir, '*', sample_id, 'cleandata.mat'));
-if isempty(hits)
-    flat = fullfile(data_dir, sample_id, 'cleandata.mat');
-    if isfile(flat)
-        mat_path = flat;
-    else
-        error('llm:run_dp_analysis:fileNotFound', ...
-            'Cannot find cleandata.mat for sample "%s" under "%s".', ...
-            sample_id, data_dir);
-    end
-else
-    mat_path = fullfile(hits(1).folder, hits(1).name);
-end
-fprintf('Loading %s\n', mat_path);
-s = load(mat_path, 'sce');
-sce = s.sce;
+% The shared loader. This file carried its own copy of it.
+sce = llm.i_load_sce(sample_id, data_dir);
 end

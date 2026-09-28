@@ -52,11 +52,6 @@ y = pPos(2) + (pPos(4)-h)/2;
 x = max(mon(1)+margin, min(x, mon(1)+mon(3)-w-margin));
 y = max(mon(2)+margin, min(y, mon(2)+mon(4)-h-margin));
 
-% fprintf('[i_centerdlgpos] pPos=[%g %g %g %g] WindowState=%s useMouse=%d mon=[%g %g %g %g] pos=[%g %g %g %g]\n', ...
-%     pPos(1), pPos(2), pPos(3), pPos(4), ...
-%     parentfig.WindowState, useMouseFallback, ...
-%     mon(1), mon(2), mon(3), mon(4), x, y, w, h);
-
 pos = round([x, y, w, h]);
 end
 

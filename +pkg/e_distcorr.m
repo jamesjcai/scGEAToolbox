@@ -20,24 +20,9 @@ end
 
 a = xpdist2(x);
 A = a - mean(a) - mean(a, 2) + mean(a(:));
-% mcol = mean(a);
-% mrow = mean(a,2);
-% ajbar = ones(size(mrow))*mcol;
-% akbar = mrow*ones(size(mcol));
-% abar = mean(mcol)*ones(size(a));
-% A = a - ajbar - akbar + abar;
 
 b = xpdist2(y);
 B = b - mean(b) - mean(b, 2) + mean(b(:));
-
-% mrow = mean(b,2);
-
-% mcol = mean(b);
-% mrow = mean(b,2);
-% bjbar = ones(size(mrow))*mcol;
-% bkbar = mrow*ones(size(mcol));
-% bbar = mean(mcol)*ones(size(b));
-% B = b - bjbar - bkbar + bbar;
 
 % Calculate squared sample distance covariance and variances
 dcov = sum(sum(A.*B)) / (size(x, 1)^2);

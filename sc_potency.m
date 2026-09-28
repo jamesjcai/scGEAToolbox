@@ -33,7 +33,6 @@ if ~exist(dbfile1, 'file')
     if ~exist(fileparts(dbfile1), 'dir')
         mkdir(fileparts(dbfile1));
     end
-    % disp('Downloading ...... stringdb_human.mat')
     url = 'https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/stringdb_human.mat';
     % outfilename =
     websave(dbfile1, url);
@@ -42,7 +41,6 @@ if ~exist(dbfile2, 'file')
     if ~exist(fileparts(dbfile2), 'dir')
         mkdir(fileparts(dbfile2));
     end
-    % disp('Downloading ...... stringdb_mouse.mat')
     url = 'https://github.com/jamesjcai/jamesjcai.github.io/raw/master/data/stringdb_mouse.mat';
     % outfilename =
     websave(dbfile2, url);

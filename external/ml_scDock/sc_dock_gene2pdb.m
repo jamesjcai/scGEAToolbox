@@ -29,7 +29,8 @@ function proteins = sc_dock_gene2pdb(T_interactions, varargin)
 %
 % OUTPUT:
 %   proteins - string array of unique PDB IDs (or PDB.chain strings when
-%              use_chain=true), ready to pass to sc_dock_vina.
+%              use_chain=true), ready to pass to sc_dock_vina. Ordered by
+%              the rank of each receptor's first row in T_interactions.
 %              Genes with no PDB match are silently skipped with a warning.
 %
 % EXAMPLE:
@@ -53,7 +54,9 @@ if ~ismember('receptor', T_interactions.Properties.VariableNames)
 end
 
 top_n     = min(opt.top_n, height(T_interactions));
-rec_genes = unique(T_interactions.receptor(1:top_n));
+% 'stable' keeps rank order: a receptor is placed by its best-ranked
+% interaction, so a caller that docks only the first few gets the top hits.
+rec_genes = unique(T_interactions.receptor(1:top_n), 'stable');
 
 % Load reference table
 ref_map = i_load_ref(opt.ref_file);
@@ -95,7 +98,9 @@ for i = 1:numel(rec_genes)
     end
 end
 
-proteins = unique(proteins);
+% 'stable' again: a sorted list ordered the structures by PDB ID, so a cap
+% such as the pipeline's maxProteins kept the alphabetically first IDs.
+proteins = unique(proteins, 'stable');
 
 if ~isempty(no_match)
     warning('sc_dock_gene2pdb:NoMatch', ...

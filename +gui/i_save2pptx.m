@@ -11,13 +11,12 @@ if ~hasReportGen
 end
 
 import mlreportgen.ppt.*;
-% try
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
 ownsWaitbar = nargin < 3 || isempty(fw);
 if ownsWaitbar
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar([]);
 else
     gui.myWaitbar(parentfig, fw, false, '', 'Exporting PowerPoint...', 0.995);
 end
@@ -29,24 +28,17 @@ ppt = Presentation(OUTppt, pth);
 open(ppt);
 for k = 1:length(images)
         slide3 = add(ppt, 'Content Only');
-        % slide3 = add(ppt,'Small Title and Content');
-        % replace(slide3,'Title',glist(k));
         replace(slide3, 'Content', Picture(images{k}));
     end
-    % pictureSlide = add(ppt,'Title and Picture',2);
 close(ppt);
 if ownsWaitbar
-    gui.gui_waitbar(fw);
+    gui.myWaitbar([], fw);
 end
 if ~pkg.i_openoutputfile(OUTppt)
     gui.myHelpdlg(parentfig, sprintf( ...
         ['The presentation could not be opened here. ', ...
         'It has been saved as\n\n%s'], OUTppt));
 end
-% catch ME
-%     gui.gui_waitbar(fw, true);
-%     errordlg(ME.message);
-% end
 
 if rmthem
     len = length(images);

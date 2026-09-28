@@ -31,6 +31,9 @@ if isempty(paramset), return; end
 % either way; the Note sheet records which was used.
 direction = gui.i_dvdirection(FigureHandle);
 if isempty(direction), return; end
+% Likewise the DV p-value source: the Note sheet says which was used.
+numPerm = gui.i_dvpermutations(FigureHandle, 'splinefit');
+if isempty(numPerm), return; end
 
 % MSigDB collections for the DP phase; needed here to size the progress bar.
 ctag = {"H", "C2", "C5", "C6", "C7"}';
@@ -44,6 +47,8 @@ iStep = 0;
 
 % ------------------------------------------ DE
 fw = gui.myWaitbar(FigureHandle);
+% Closed on every exit: a failure inside the loop below left it open.
+closeFw = onCleanup(@() gui.myWaitbar(FigureHandle, fw, true));
 for k=1:length(CellTypeList)
 
     iStep = iStep + 1;
@@ -71,23 +76,6 @@ for k=1:length(CellTypeList)
     if ~isempty(T)
         [T, Tnt] = pkg.in_DETableProcess(T, cL1, cL2, sum(i1&idx), sum(i2&idx));
 
-        % Item = T.Properties.VariableNames';
-        % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
-        % Description = {'gene name';'p-value';...
-        %     'log2 fold change between average expression';...
-        %     'absolute value of log2 fold change';...
-        %     'average expression in sample 1';...
-        %     'average expression in sample 2';...
-        %     'percentage of cells expressing the gene in sample 1';...
-        %     'percentage of cells expressing the gene in sample 2';...
-        %     'adjusted p-value'; 'test statistic'; ...
-        %      sprintf('%d',sum(i1&idx)); sprintf('%d',sum(i2&idx))};
-        % if length(Item) == length(Description)
-        %     Tnt = table(Item, Description);
-        % else
-        %     Tnt = table(Item);
-        % end
-
         [Tup, Tdn, ~, usedset] = pkg.e_processdetable(T, paramset, FigureHandle);
         Tnt = pkg.i_decutoffnote(Tnt, usedset);
         try
@@ -98,13 +86,6 @@ for k=1:length(CellTypeList)
             warning(ME.message);
         end
     end
-
-    % try
-    %     [done] = llm.e_DETableSummarizer(Tbp1,Tmf1,Tbp2,Tmf2, ...
-    %         sprintf('DE_%s', CellTypeList{k}));
-    % catch
-    %
-    % end
 
 end
 %   gui.myWaitbar(FigureHandle, fw);
@@ -147,7 +128,7 @@ for k=1:length(CellTypeList)
     end
     if notok, continue; end
 
-    [T] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit', direction);
+    [T] = sc_dvg(sce1, sce2, cL1, cL2, 'splinefit', direction, NumPermutations=numPerm);
 
     outfile = sprintf('%s_DV_%s_vs_%s_%s.xlsx', ...
         prefixtag,...
@@ -173,28 +154,7 @@ for k=1:length(CellTypeList)
         Tup = T(T.DiffSign > 0 & isok, :);
         Tdn = T(T.DiffSign < 0 & isok, :);
 
-        [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2, direction);
-
-        % Item = T.Properties.VariableNames';
-        % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
-        %
-        % Description = {'gene name';'log mean in sample 1';...
-        %     'log CV in sample 1'; 'dropout rate in sample 1';...
-        %     'distance to curve 1';'p-value of distance in sample 1';...
-        %     'FDR of distance in sample 1';'log mean in sample 2';...
-        %     'log CV in sample 2'; 'dropout rate in sample 2';...
-        %     'distance to curve 2'; 'p-value of distance in sample 2';...
-        %     'FDR of distance in sample 2'; 'Difference in distances';...
-        %     'Sign of difference';'p-value of DV test';...
-        %     sprintf('%d',sce1.NumCells); sprintf('%d',sce2.NumCells)};
-        % if length(Item) == length(Description)
-        %     Tnt = table(Item, Description);
-        % else
-        %     assignin("base","Item", Item);
-        %     assignin("base","Description", Description);
-        %     Tnt = table(Item);
-        %     warning('Variables must have the same number of rows.');
-        % end
+        [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2, direction, numPerm);
 
         try
             gui.e_tupdn2xlsx(Tup,Tdn,T,filesaved);
@@ -204,7 +164,6 @@ for k=1:length(CellTypeList)
             warning(ME.message);
         end
 end
-% gui.myWaitbar(FigureHandle, fw);
 
 % ----------------------------- DP
 ccat = {"H: Hallmark gene sets (broadly defined, high-quality gene signatures representing specific biological states or processes)", ...
@@ -223,7 +182,6 @@ for c = 1:length(ctag)
                     sprintf('msigdb_%s.mat', ctag{c}));
     load(dbfile,'setmatrx','setnames','setgenes');
 
-%       fw = gui.myWaitbar(FigureHandle);
     for k=1:length(CellTypeList)
         iStep = iStep + 1;
         gui.myWaitbar(FigureHandle, fw, false, '', ...
@@ -259,7 +217,6 @@ for c = 1:length(ctag)
             warning(ME.message);
         end
     end
-    % gui.myWaitbar(FigureHandle, fw);
 end
 
 Tnt = table(ctag, ccat);
@@ -281,9 +238,7 @@ selected = gui.myChecklistdlg(FigureHandle, items, ...
 if isempty(selected), return; end
 
 if any(contains(selected, 'LLM Summarize'))
-    % fw = gui.myWaitbar(FigureHandle, [], false, 'Use LLM to generate enrichment analysis report');
     gui.sc_llm_enrichr2word(outdir, FigureHandle);
-    % gui.myWaitbar(FigureHandle, fw);
 end
 
 if any(contains(selected, 'Open Output Folder'))

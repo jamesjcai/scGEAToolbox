@@ -13,45 +13,48 @@ allowunique = false;
 % per-cell label vector, so the composite needs no special handling.
 [thisc] = gui.i_selectnclass(sce, allowunique,[],[],FigureHandle);
 if isempty(thisc), return; end
-if isscalar(unique(thisc))
-        answer = gui.myQuestdlg(FigureHandle, "All cells are in the same group. No comparison will be made. Continue?", ...
-            "", {'Yes', 'No', 'Cancel'}, 'No');
-        switch answer
-            case 'Yes'
-            otherwise
-                return;
-        end
-    else    % length(unique(thisc)) ~= 1
-        [ci, cLi] = findgroups(string(thisc));
-        listitems = natsort(cLi);
-        n = length(listitems);
+% The comparison draws two groups side by side (sc_uitabgrpfig_expcomp
+% uses c == 1 and c == 2), so exactly two are needed. One group used to
+% leave SCE1 unset after a "Continue?" Yes; one or 3+ picked from the list
+% crashed or silently dropped groups, both with the progress bar left open.
+[ci, cLi] = findgroups(string(thisc));
+if isscalar(cLi)
+    gui.myWarndlg(FigureHandle, ['All cells are in the same group, so ' ...
+        'there is nothing to compare. Choose a grouping with at least two groups.']);
+    return;
+end
+listitems = natsort(cLi);
+if gui.i_isuifig(FigureHandle)
+    [indxx, tfx] = gui.myListdlg(FigureHandle, ...
+        listitems, 'Select two groups:', ...
+        listitems(1:2), true);
+else
+    [indxx, tfx] = listdlg('PromptString', ...
+        {'Select two groups:'}, ...
+        'SelectionMode', 'multiple', ...
+        'ListString', listitems, ...
+        'InitialValue', 1:2, 'ListSize', [220, 300]);
+end
+if tfx ~= 1, return; end
+if numel(indxx) ~= 2
+    gui.myWarndlg(FigureHandle, sprintf( ...
+        'Select exactly two groups to compare; %d were selected.', numel(indxx)));
+    return;
+end
+[y1, idx1] = ismember(listitems(indxx), cLi);
+assert(all(y1));
+idx2 = ismember(ci, idx1);
+sce1 = copy(sce).selectcells(idx2);  % OK
+thisc = thisc(idx2);
 
-    if gui.i_isuifig(FigureHandle)
-        [indxx, tfx] = gui.myListdlg(FigureHandle, ...
-            listitems, 'Select two groups:', ...
-            listitems);
-    else
-        [indxx, tfx] = listdlg('PromptString', ...
-            {'Select two groups:'}, ...
-            'SelectionMode', 'multiple', ...
-            'ListString', listitems, ...
-            'InitialValue', 1:n, 'ListSize', [220, 300]);
-    end
-
-        if tfx == 1
-            [y1, idx1] = ismember(listitems(indxx), cLi);
-            assert(all(y1));
-            idx2 = ismember(ci, idx1);
-            sce1 = copy(sce).selectcells(idx2);  % OK
-            thisc = thisc(idx2);
-        else
-            return;
-        end
-    end
-
-
-fw=gui.myWaitbar(FigureHandle);
-gui.sc_uitabgrpfig_expcomp(sce1, glist, FigureHandle, [axx, bxx], thisc);
+fw = gui.myWaitbar(FigureHandle);
+try
+    gui.sc_uitabgrpfig_expcomp(sce1, glist, FigureHandle, [axx, bxx], thisc);
+catch ME
+    gui.myWaitbar(FigureHandle, fw, true);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
+end
 gui.myWaitbar(FigureHandle, fw);
 
 end

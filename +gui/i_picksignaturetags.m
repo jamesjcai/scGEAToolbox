@@ -40,7 +40,7 @@ allLabel = "All signatures (" + string(height(T)) + ")";
 listitems = [allLabel; uTags + " (" + string(counts) + ")"];
 
 if gui.i_isuifig(parentfig)
-    [indx, tf] = gui.myListdlg(parentfig, listitems, 'Select Collection:');
+    [indx, tf] = gui.myListdlg(parentfig, listitems, 'Select Collection:', [], true);
 else
     [indx, tf] = listdlg('PromptString', 'Select Collection', ...
         'SelectionMode', 'multiple', 'ListString', ...

@@ -158,16 +158,8 @@ if ~istable(T1), T1 = table(); end
 if ~istable(T2), T2 = table(); end
 
 % Significant pairs (p_value < 0.05)
-if ~isempty(T1) && ismember('p_value', T1.Properties.VariableNames)
-    T1sig = T1(T1.p_value < 0.05, :);
-else
-    T1sig = T1;
-end
-if ~isempty(T2) && ismember('p_value', T2.Properties.VariableNames)
-    T2sig = T2(T2.p_value < 0.05, :);
-else
-    T2sig = T2;
-end
+T1sig = i_significant(T1);
+T2sig = i_significant(T2);
 
 fprintf('%s -> %s: %d total pairs, %d significant (p<0.05)\n', ...
     celltype1, celltype2, height(T1), height(T1sig));
@@ -221,6 +213,23 @@ i_print_json_summary(results);
 end
 
 
+% ---- Helper: pairs with p_value < 0.05 ------------------------------
+function Tsig = i_significant(T)
+% A table without a p_value column has nothing to call significant. This
+% used to return the whole table, so every candidate pair went to the
+% report -- and to the agent's interpretation -- as a significant one.
+if isempty(T)
+    Tsig = T;
+elseif ismember('p_value', T.Properties.VariableNames)
+    Tsig = T(T.p_value < 0.05, :);
+else
+    warning('llm:run_sctenifoldxct:noPValue', ...
+        'The scTenifoldXct result has no p_value column; no pair is reported as significant.');
+    Tsig = T([], :);
+end
+end
+
+
 % ---- Helper: print JSON summary -------------------------------------
 function i_print_json_summary(results, top_n)
 if nargin < 2, top_n = 20; end
@@ -239,7 +248,12 @@ dir2 = struct( ...
     'n_sig_pairs',    height(results.T2sig), ...
     'top_pairs',      {i_table_to_structs(results.T2sig, top_n)});
 
+% STATUS for the schema GEOcellar's analysis node reads. A run that gets
+% here has results; zero significant pairs is one of them, reported by
+% n_sig_pairs, and an analysis that cannot run raises an error instead.
 summary = struct( ...
+    'status',             'completed', ...
+    'reason',             '', ...
     'sample',             results.sample, ...
     'celltype1',          results.celltype1, ...
     'celltype2',          results.celltype2, ...
@@ -270,22 +284,8 @@ end
 
 % ---- Helper: locate and load cleandata.mat --------------------------
 function sce = i_load_sce(sample_id, data_dir)
-hits = dir(fullfile(data_dir, '*', sample_id, 'cleandata.mat'));
-if isempty(hits)
-    flat = fullfile(data_dir, sample_id, 'cleandata.mat');
-    if isfile(flat)
-        mat_path = flat;
-    else
-        error('llm:run_sctenifoldxct:fileNotFound', ...
-            'Cannot find cleandata.mat for sample "%s" under "%s".', ...
-            sample_id, data_dir);
-    end
-else
-    mat_path = fullfile(hits(1).folder, hits(1).name);
-end
-fprintf('Loading %s\n', mat_path);
-s = load(mat_path, 'sce');
-sce = s.sce;
+% The shared loader. This file carried its own copy of it.
+sce = llm.i_load_sce(sample_id, data_dir);
 end
 
 

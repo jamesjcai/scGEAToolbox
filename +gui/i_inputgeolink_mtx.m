@@ -27,26 +27,23 @@ if ~isempty(answer1) && ~isempty(answer2)
     a = tempname;
     mkdir(a);
     cd(a);
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar([]);
     try
         fprintf('Downloading %s...\n', answer2);
-        % gunzip(answer{2});
         websave('genes.tsv.gz', answer2);
         fprintf('Downloading %s...\n', answer1);
-        % gunzip(answer{1});
         websave('matrix.mtx.gz', answer1);
         if ~isempty(answer3)
-            % gunzip(answer{3});
             fprintf('Downloading %s...\n', answer3);
             websave('barcodes.tsv.gz', answer3);
         end
         [X, genelist, celllist, ftdone] = sc_read10xdir(a);
     catch ME
-        gui.gui_waitbar(fw, true);
+        gui.myWaitbar([], fw, true);
         errordlg(ME.message);
         return;
     end
-    gui.gui_waitbar(fw);
+    gui.myWaitbar([], fw);
 end
 end
 
@@ -121,7 +118,7 @@ if ~isempty(answer1) && ~isempty(answer2)
         a = tempname;
         mkdir(a);
         cd(a);
-        fw = gui.gui_waitbar;
+        fw = gui.myWaitbar([]);
         try
             fprintf('Downloading %s...\n', answer2);
             % gunzip(answer{2});
@@ -137,11 +134,11 @@ if ~isempty(answer1) && ~isempty(answer2)
             [X, genelist, celllist, ftdone] = sc_read10xdir(a);
         catch ME
             cd(pw1);
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar([], fw, true);
             errordlg(ME.message);
             return;
         end
-        gui.gui_waitbar(fw);
+        gui.myWaitbar([], fw);
         cd(pw1);
     end
 end

@@ -13,14 +13,16 @@ Xt = gui.i_transformx(sce.X, [], [], FigureHandle);
 if isempty(Xt), return; end
 gt = sce.g;
 
-if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Select genes? Click No to include all genes."))
-    % sce.X = Xt;
+% A closed dialog is a cancel. It used to count as No, so closing either
+% question ran on all genes or all cells.
+answerg = gui.myQuestdlg(FigureHandle, "Select genes? Click No to include all genes.");
+if ~ismember(answerg, {'Yes', 'No'}), return; end
+if strcmp(answerg, 'Yes')
     [glist] = gui.i_selectngenes(sce, [], FigureHandle);
     if isempty(glist) || all(strlength(glist) == 0), return; end
     [y, idx] = ismember(glist, sce.g);
-    % assignin("base","glist",glist);
-    % assignin("base","g",sce.g);
     if ~any(y), return; end
+    idx = idx(y);   % an unmatched gene has idx 0, which cannot index Xt
     Xt = Xt(idx,:);
     gt = sce.g(idx);
 end
@@ -28,6 +30,7 @@ end
 % Grouping cells based on user input
 groupingConfirmed = gui.myQuestdlg(FigureHandle, ['Grouping cells? Select Yes to pick a grouping variable. ' ...
 'Select No to include all cells.'], 'Grouping');
+if ~ismember(groupingConfirmed, {'Yes', 'No'}), return; end
 
 if strcmp(groupingConfirmed, 'Yes')
     % Several grouping variables may be picked; they cross into one composite
@@ -61,8 +64,6 @@ if strcmp(groupingConfirmed, 'Yes')
                 t.Properties.VariableNames{j}, cL(k));
         end
 
-        % size(T)
-        % size(t)
         T = [T, t(:, 2:4)];
     end
 
@@ -71,7 +72,6 @@ else
     T = sc_genestats(Xt, gt);
 end
 
-% gui.i_viewtable(T, FigureHandle);
 gui.TableViewerApp(T, FigureHandle, "GeneStats");
 
 % Export the results to a table

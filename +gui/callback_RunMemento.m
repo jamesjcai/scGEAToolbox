@@ -3,8 +3,6 @@ function callback_RunMemento(src, ~)
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 % if ~gui.gui_showrefinfo('Memento [PMID:39454576]', FigureHandle), return; end
 
-% [wkdir] = gui.i_getwrkdir;
-% if isempty(wkdir), return; end
 extprogname = 'py_memento';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
@@ -20,11 +18,24 @@ X2 = sce.X(:, i2);
 c = [zeros(size(X1,2),1); ones(size(X2,2),1)];
 scex = SingleCellExperiment([X1 X2], sce.g, [], c);
 scex.c_batch_id = c;
-[succeeded] = run.py_writeh5ad(scex, 'input.h5ad', wkdir);
+try
+    [succeeded] = run.py_writeh5ad(scex, 'input.h5ad', wkdir);
+catch ME
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
+end
 if ~succeeded, return; end
 
-
-T = run.py_memento(wkdir);
+% The Python run is long and showed nothing; errors surfaced raw.
+fw = gui.myWaitbar(FigureHandle, [], false, 'Running Memento...');
+try
+    T = run.py_memento(wkdir);
+catch ME
+    gui.myWaitbar(FigureHandle, fw, true);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
+end
+gui.myWaitbar(FigureHandle, fw);
 outfile = sprintf('%s_vs_%s_Memento_results', ...
         matlab.lang.makeValidName(string(cL1)), matlab.lang.makeValidName(string(cL2)));
 

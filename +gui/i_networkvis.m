@@ -21,33 +21,19 @@ textOpts.Interpreter = 'none';
 fx = gui.myFigure(parentfig);
 ax = fx.AxHandle;
 
-% if ~curved
-%    gplot(G.adjacency, xy, '-k');
-% else
 curve_gplot(G.adjacency, xy, curved);
-% end
 
 hold(ax,"on");
 scatter(ax, xy(:,1), xy(:,2), 1, ...
         'MarkerEdgeColor','none', ...
         'MarkerFaceColor',[.8 .8 .8]);
 
-    % for k=1:length(G.Nodes.Name)
-    %     [wx, hx] = measureText(G.Nodes.Name{k}, textOpts);
-    %     text(xy(k,1)-wx/2, xy(k,2), ...
-    %         G.Nodes.Name{k},'FontSize',15,...
-    %         'BackgroundColor','w', ...
-    %         'FontWeight','normal', ...
-    %         'HorizontalAlignment','center', ...
-    %         'VerticalAlignment','middle','Margin',0.2);
-    % end
 in_addtext([],[]);
 set(ax, 'XTick', [], 'YTick', []);
 axis(ax, "off");
 fx.addCustomButton('off', {@in_rotatetext, true}, "fillet3d.jpg", "Rotate Text");
 fx.addCustomButton('off', {@in_rotatetext, false}, "rotation.gif", "Rotate Text");
 fx.show(parentfig);
-    % set(gcf, 'Color', 'white')
 vangle = 0;
 
 
@@ -57,7 +43,6 @@ function in_rotatetext(~, ~, increase)
         % could strip the labels off an unrelated figure instead of this one.
         delete(findall(ax, 'Type', 'text'));
 
-        % bkcolor = gui.i_getthemebkgcolor(gcf);
         if increase
             vangle=vangle+5;
         else
@@ -65,7 +50,7 @@ function in_rotatetext(~, ~, increase)
         end
         for k=1:length(G.Nodes.Name)
             [wx] = measureText(G.Nodes.Name{k}, textOpts);
-            text(xy(k,1)-floor(wx/2), xy(k,2), ...
+            text(ax, xy(k,1)-floor(wx/2), xy(k,2), ...
                 G.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'FontWeight','normal', ...
                 'Interpreter','none', ...
@@ -81,11 +66,11 @@ function in_addtext(~, ~)
         % could strip the labels off an unrelated figure instead of this one.
         delete(findall(ax, 'Type', 'text'));
 
-        bkcolor = gui.i_getthemebkgcolor(gcf);
+        bkcolor = gui.i_getthemebkgcolor(fx.FigHandle);
 
         for k=1:length(G.Nodes.Name)
             [wx] = measureText(G.Nodes.Name{k}, textOpts);
-            text(xy(k,1)-floor(wx/2), xy(k,2), ...
+            text(ax, xy(k,1)-floor(wx/2), xy(k,2), ...
                 G.Nodes.Name{k},'FontSize',textOpts.FontSize,...
                 'Color',1-bkcolor,...
                 'FontWeight','normal', ...
@@ -97,9 +82,6 @@ function in_addtext(~, ~)
 
 
  function [width, height] = measureText(txt, textOpts)
-    % if(nargin < 3)
-    %    axis = gca();
-    % end
     if nargin < 2
         textOpts = struct();
         textOpts.HorizontalAlignment = 'center';
@@ -177,13 +159,10 @@ end
     f = currentp(2);
 
     x2 = curvetop(1);
-    % y2=curvetop(2);
     x1 = currentp(1);
     y1 = currentp(2);
 
     if nargin < 3
-        % x3=min([x1,x2])+abs(x1-x2)/2;
-        % y3=y1;    controllp=[x3 y3];
         controllp = [(d + o) / 2 + (i - f) / 4, (f + i) / 2 + (d - o) / 4];
     end
     P = [[currentp'; 0], [controllp'; 0], [curvetop'; 0]];

@@ -40,12 +40,24 @@ switch lower(smplmethod)
         usebootstrp = true;
 end
 
-if exist('@tensor/tensor.m', 'file') ~= 2
-    error('Need Tensor Toolbox for MATLAB (https://www.tensortoolbox.org/)');
-end
+% Adds the toolbox from the 'tensor_toolbox_path' preference when it is not
+% on the path, as ten.sctenifoldnet does. A bare exist() check here ignored
+% the preference, so a toolbox installed from the scTenifold menu looked
+% missing to this function alone.
+ten.check_tensor_toolbox();
 
 if isempty(which('net.pcrnet'))
     error('Need net.pcrnet (scGEAToolbox)');
+end
+
+% The CP decomposition in ten.do_td_cp takes one component per subsampled
+% network, and its nvecs initialisation cannot draw more of them than there
+% are genes. Below that it failed deep in the Tensor Toolbox with "Index
+% exceeds the number of array elements".
+if size(X, 1) < nsubsmpl
+    error('pcrnet_denoised:tooFewGenes', ...
+        ['Tensor-denoised PCR needs at least as many genes as subsampled ', ...
+        'networks (%d); got %d. Add genes or lower nsubsmpl.'], nsubsmpl, size(X, 1));
 end
 
 if donorm

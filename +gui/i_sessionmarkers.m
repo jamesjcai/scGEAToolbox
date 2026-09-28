@@ -1,5 +1,5 @@
 function [Tm, srcname] = i_sessionmarkers(newTm, newsrcname)
-%I_SESSIONMARKERS Remember one customized marker gene list for the session.
+%I_SESSIONMARKERS Remember one custom marker gene list for the session.
 %
 %   [Tm, srcname] = gui.i_sessionmarkers()          read what is remembered
 %   gui.i_sessionmarkers(Tm, srcname)               remember this list
@@ -13,7 +13,7 @@ function [Tm, srcname] = i_sessionmarkers(newTm, newsrcname)
 %
 %   The list lives in a persistent variable, so it lasts as long as the MATLAB
 %   session and is shared by every figure. Typing a marker list is slow enough
-%   that retyping it for the next selection is the main reason the customized
+%   that retyping it for the next selection is the main reason the custom
 %   path goes unused; nothing is written to disk, because a list that outlived
 %   the session would then be a setting nobody remembers setting.
 %
@@ -31,7 +31,7 @@ if nargin > 0
     else
         storedTm = newTm;
         if nargin < 2 || strlength(string(newsrcname)) == 0
-            storedsrcname = "customized list";
+            storedsrcname = "custom list";
         else
             storedsrcname = string(newsrcname);
         end

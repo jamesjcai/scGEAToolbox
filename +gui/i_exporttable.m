@@ -41,10 +41,8 @@ switch answer
                 'Save Data to Workspace', [], parentfig);
         else
             if needwait
-                % disp('needwait')
                 waitfor(export2wsdlg(labels, vars, values));
             else
-                % disp('~needwait')
                 export2wsdlg(labels, vars, values);
             end
         end
@@ -66,12 +64,8 @@ switch answer
                 writematrix(T, filename, 'Delimiter', '\t');
             end
             drawnow;
-            % if needwait
-            %     gui.myHelpdlg(parentfig, sprintf('Result has been saved in %s', filename), '');
-            % else
                 gui.myHelpdlg(parentfig, ...
                     sprintf('Result has been saved in %s', filename));
-%            end
         end
     case 'Excel file'
         if ~isempty(deffilename)

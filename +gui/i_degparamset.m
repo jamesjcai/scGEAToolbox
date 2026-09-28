@@ -7,8 +7,6 @@ if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
-% preftagname ='scimilmodelpath'
-% preftagname ='openscedlgindex';
 preftagname ='degtestparamset';
 defaultset = getpref('scgeatoolbox', preftagname, ...
 {0.05, 1.0, 0.01, 'Adjusted P-value'});
@@ -30,7 +28,6 @@ if nogui
 else
     paramset = [];
     definput = {num2str(defaultset{1}), num2str(defaultset{2}), num2str(defaultset{3})};
-    % definput = {'0.05', '1.0', '0.01'};
     prompt = {'Min. abs(diff(pct)): e.g., 0.05=5% (default)', ...
               'Min. abs(log2(FC)): e.g., 1.0=2x (default), 0.59=1.5x, 0.26=1.2x, 1.5=2.83x:', ...
               'Adjusted P-value cutoff: e.g., 0.01 (default)'};
@@ -63,7 +60,6 @@ else
             sortbywhat = 'Adjusted P-value';
         case 'Fold Change'
             sortbywhat = 'Fold Change';
-            % disp('DE genes are sorted by absolute fold change (FC).');
         otherwise
             % User cancelled; return empty so callers abort.
             paramset = [];

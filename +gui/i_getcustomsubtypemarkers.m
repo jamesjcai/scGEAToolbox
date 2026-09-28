@@ -31,7 +31,7 @@ end
 answer = gui.myQuestdlg(parentfig, ...
     sprintf(['Subtype markers for %s.\n\nFormat: one subtype per line, ' ...
     'name and genes separated by a tab.'], in_display(targetname)), ...
-    'Customized Subtype Markers', [options, {'Cancel'}], options{1});
+    'Custom Subtype Markers', [options, {'Cancel'}], options{1});
 if isempty(answer) || strcmp(answer, 'Cancel'), return; end
 
 switch answer
@@ -74,7 +74,7 @@ Tm = pkg.i_parsemarkerlist(a);
 if isempty(Tm)
     gui.myErrordlg(parentfig, ['No usable marker list. Each line needs a ' ...
         'subtype name, a tab, and at least one gene symbol.'], ...
-        'Customized Subtype Markers');
+        'Custom Subtype Markers');
     Tm = [];
     return;
 end
@@ -84,7 +84,7 @@ if height(Tm) < 2
     answer = gui.myQuestdlg(parentfig, sprintf(['Only one subtype (%s) was ' ...
         'given, so every cell of %s will end up with that label. ' ...
         'Continue?'], Tm.Var1(1), in_display(targetname)), ...
-        'Customized Subtype Markers', {'Continue', 'Cancel'}, 'Cancel');
+        'Custom Subtype Markers', {'Continue', 'Cancel'}, 'Cancel');
     if ~strcmp(answer, 'Continue'), Tm = []; return; end
 end
 end

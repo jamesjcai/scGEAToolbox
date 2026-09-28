@@ -17,7 +17,6 @@ if sum(idx) > 0
     keptidx = f_mtreads < mtratio;
     if sum(~keptidx) > 0
         X = X(:, keptidx);
-        %X(:,~keptidx)=[];
         if verbose
             fprintf('Removed %s with mt-read ratio >=%f (or %f%%).\n', ...
                 sum(~keptidx), mtratio, mtratio*100);

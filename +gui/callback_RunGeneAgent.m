@@ -75,7 +75,13 @@ if strcmp('Yes', gui.myQuestdlg(FigureHandle, "Wait until the analysis is comple
     % The code execution will pause here until user clicks Continue
     % if strcmp(selection, 'Continue')
     options = weboptions('Timeout', 30);
-    out = webread(retrieveurl, options);
+    try
+        out = webread(retrieveurl, options);
+    catch ME
+        % A timeout or an unfinished job surfaced as a raw error.
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+        return;
+    end
     % Process the output and generate the report
     if isstruct(out)
         in_generateAIReport(out);

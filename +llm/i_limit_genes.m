@@ -12,7 +12,7 @@ function sce = i_limit_genes(sce, n, mustkeep)
 %     5. Remove genes starting with 'LINC' (lncRNAs)
 %     6. Remove mouse predicted genes   (Gm[0-9]{3,})
 %     7. Remove mouse RIKEN clones      (ends with 'Rik')
-%     8. Keep top n HVGs via sc_splinefit
+%     8. Keep top n HVGs via sc_analyticfit
 %
 %   mustkeep - gene name that must survive all filters (e.g. KO gene).
 
@@ -34,8 +34,11 @@ if any(rm)
     sce = sce.selectgenesbyindex(~rm);
 end
 
-T_hvg = sc_splinefit(sce.X, sce.g);
-glist = T_hvg.genes(1:min(n, sce.NumGenes));
+T_hvg = sc_analyticfit(sce.X, sce.g);
+% HEIGHT rather than SCE.NUMGENES: the ranker drops genes that are zero
+% in every cell, so its table can be shorter than the SCE and indexing
+% out to NUMGENES throws.
+glist = T_hvg.genes(1:min(n, height(T_hvg)));
 if strlength(mustkeep) > 0 && ~ismember(mustkeep, glist)
     glist(end) = mustkeep;
 end

@@ -32,20 +32,6 @@ listitems = [baselistitems, ...
         sce.list_cell_attributes(1:2:end)];
 nx = length(baselistitems);
 
-    %     a=evalin('base','whos');
-    %     b=struct2cell(a);
-    %     v=false(length(a),1);
-    %     for k=1:length(a)
-    %         if max(a(k).size)==sce.NumCells && min(a(k).size)==1
-    %             v(k)=true;
-    %         end
-    %     end
-    %     if any(v)
-    %         a=a(v);
-    %         b=b(:,v);
-    %         listitems=[listitems,'Customized C...'];
-    %     end
-
 n = length(listitems);
 if n < 2
        gui.myWarndlg(parentfig, ['This function requires at least two ', ...
@@ -53,9 +39,6 @@ if n < 2
                 'CLUSTER_ID, or CELL_TYPE_TXT).']);
         return;
     end
-
-    % listitems={'Current Class (C)','Cluster ID','Batch ID',...
-    %            'Cell Type','Cell Cycle Phase'};
 
 
 preftagname ='selected2states';
@@ -65,7 +48,7 @@ if any(defaultindx > n) || any(defaultindx < 1), defaultindx = [n-1, n]; end
 if gui.i_isuifig(parentfig)
         [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
             'Select cell state/grouping variable:', ...
-            listitems(defaultindx));
+            listitems(defaultindx), true);
     else
         [indx2, tf2] = listdlg('PromptString', ...
             {'Select cell state/grouping variable:'}, ...

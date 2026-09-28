@@ -53,14 +53,18 @@ msg = [sprintf('%d TFs against %d glycogenes, on %d cells.', ...
 if isfield(info, 'auprc') && istable(info.auprc) && ~isempty(info.auprc)
     msg(end+1) = "";
     msg(end+1) = "The estimator validation table (AUPRC against known edges) " + ...
-        "opens alongside the results - read it before trusting the ranking.";
+        "is the first tab of the results window - read it before trusting the ranking.";
 end
 gui.myHelpdlg(FigureHandle, msg, 'TF-glycogene mutual information');
 
+% One window, validation first. As two windows both opened centred on the
+% app, so the second exactly covered the table the notice says to read.
 if isfield(info, 'auprc') && istable(info.auprc) && ~isempty(info.auprc)
-    gui.i_viewtable(info.auprc, FigureHandle);
+    hTbl = gui.i_viewtable({info.auprc, info.topTFs}, FigureHandle, ...
+        ["Estimator validation (AUPRC)", "Top TFs"]);
+else
+    hTbl = gui.i_viewtable(info.topTFs, FigureHandle);
 end
-gui.i_viewtable(info.topTFs, FigureHandle);
 gui.i_exporttable(info.topPairs, true, 'Tglycotfmi', 'GlycoTfMiTable', ...
-    [], [], FigureHandle);
+    [], [], hTbl);
 end

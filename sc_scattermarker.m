@@ -65,18 +65,12 @@ elseif isStringScalar(targetg)
         else
             z = s(:, 3);
         end
-        %        c=log2(1+X(genelist==targetg,:));
-        % c = X(genelist == targetg, :);
         idx = strcmp(genelist, targetg);
         c = full(X(idx, :));
 
         titxt = '';
         switch methodid
             case 1
-                % within_stemscatter(x, y, c);
-                % assignin("base","x",x)
-                % assignin("base","y",y)
-                % assignin("base","c",c)
                 gui.i_stemscatter([x, y], c);
                 h1 = gca;
                 grid(h1, "on");
@@ -122,10 +116,6 @@ elseif isStringScalar(targetg)
                     z = zeros(size(x));
                     is2d = true;
                 end
-                % explorer2IDX = y;
-                % assignin('base', 'explorer2IDX', explorer2IDX);
-
-                % c=log2(1+X(genelist==g,:));
 
                 h1 = subplot(1, 2, 1);
                 s1 = scatter3(h1, x, y, z, sz, c, 'filled');
@@ -133,7 +123,6 @@ elseif isStringScalar(targetg)
                 set(h1, 'YTickLabel', []);
                 set(h1, 'ZTickLabel', []);
                 grid(h1, 'on');
-                % h1.YDataSource='explorer2IDX';
                 title(h1, targetg);
 
                 titxt = gui.i_getsubtitle(c);
@@ -144,15 +133,11 @@ elseif isStringScalar(targetg)
                 hold(h2, 'on');
                 scatter3(h2, x, y, zeros(size(y)), 5, c, 'filled');
                 %[ayy,byy]=view(h2);
-                % h2.YDataSource='explorer2IDX';
-                % hLD = linkdata('on');
                 set(h2, 'XTickLabel', []);
                 set(h2, 'YTickLabel', []);
-                %set(h2,'ZTickLabel',[]);
                 grid(h2, 'on');
 
                 if ~is2d
-                    % evalin('base', 'h=findobj(gcf,''type'',''axes'');');
                     evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
                     evalin('base', 'rotate3d on');
                 end
@@ -173,16 +158,6 @@ elseif isStringScalar(targetg)
 
         ori_c = c;
 
-%       title(targetg);
-%       subtitle(titxt);
-
-        % subtitle(sprintf('(%s/%s = %.2f%% nonzero)', ...
-        %                    num2bankScalar(sum(c > 0)), ...
-        %                    num2bankScalar(numel(c)), ...
-        %                    100 * sum(c > 0) ./ numel(c)));
-        % pt = uipushtool(defaultToolbar);
-        % tx.ButtonDownFcn=@dispgname;
-
         if showcam
             hFig = gcf;
             tb = uitoolbar(hFig);
@@ -198,7 +173,7 @@ elseif isStringScalar(targetg)
     end
 
     if showcam
-        gui.gui_3dcamera(tb, targetg, false, hFig);
+        gui.i_3dcamera(tb, targetg, false, hFig);
     end
 end
 
@@ -208,7 +183,6 @@ end
     delete(s2);
     s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
     view(h2, ax, bx);
-    %title(h2,titxt);
     title(h2, targetg);
     subtitle(h2, titxt);
 
@@ -218,7 +192,6 @@ end
     view(h1, ax, bx);
     colorbar(h1);
 
-    %title(h1,titxt);
     title(h1, targetg);
     subtitle(h1, titxt);
     end
@@ -228,11 +201,8 @@ end
     delete(s2);
     s2 = stem3(h2, x, y, c, 'marker', 'none', 'color', 'm');
 
-    %view(h2,ayy,byy);
-
     delete(s1);
     s1 = scatter3(h1, x, y, z, sz, c, 'filled');
-    %view(h1,axx,bxx);
     title(h1, targetg);
     subtitle(h1, titxt);
     title(h2, targetg);
@@ -245,7 +215,10 @@ end
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', g));
     end
 
-    function i_PickColorMap(~, ~, c)
+    function i_PickColorMap(src, ~, c)
+        % A local function: hFig is not in scope here, so use the button's figure.
+        hFig = ancestor(src, 'figure');
+        cleanupObj = onCleanup(@() gui.i_raisefig(hFig));
         list = {'parula', 'turbo', 'hsv', 'hot', 'cool', 'spring', ...
             'summer', 'autumn (default)', ...
             'winter', 'jet'};
@@ -256,49 +229,16 @@ end
             if strcmp(a, 'autumn (default)')
                 a = 'autumn';
             end
-            gui.i_setautumncolor(c, a, [], [], [], hFig);
+            gui.i_setautumncolor(c, a, [], [], hFig.CurrentAxes, hFig);
             setpref('scgeatoolbox', 'prefcolormapname', a);
         end
     end
 
-        % function callback_linksubplots(~,~)
-        %     evalin('base', 'h=findobj(gcf,''type'',''axes'');');
-        %     evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
-        %     evalin('base', 'rotate3d on');
-        % end
-
-
-        % function i_setautumncolor(c)
-        %     a = colormap('autumn');
-        %     a(1, :) = [.8 .8 .8];
-        %     if numel(unique(c)) == 1
-        %         for kk = 1:size(a, 1)
-        %             a(kk, :) = [.8 .8 .8];
-        %         end
-        %     end
-        %     colormap(a);
-        % end
 
 
     function selectcolormapeditor(~, ~)
         % colormapeditor;
     end
-
-    % function [str] = num2bankScalar(num)
-    %     % https://www.mathworks.com/matlabcentral/answers/96131-is-there-a-format-in-matlab-to-display-numbers-such-that-commas-are-automatically-inserted-into-the
-    %     num = floor(num*100) / 100;
-    %     str = num2str(num);
-    %     k = find(str == '.', 1);
-    %     if isempty(k)
-    %         % str=[str,'.00'];
-    %     end
-    %     % FIN = min(length(str),find(str == '.')-1);
-    %     FIN = length(str);
-    %     for i = FIN - 2:-3:2
-    %         str(i + 1:end + 1) = str(i:end);
-    %         str(i) = ',';
-    %     end
-    % end
 
     function within_stemscatter(x, y, z)
         if nargin < 3
@@ -315,6 +255,4 @@ end
             scatter(x, y, 10, z, 'filled');
             hold off;
         end
-        % [caz,cel]=view;
-        % view([-45,-45,300]);
     end

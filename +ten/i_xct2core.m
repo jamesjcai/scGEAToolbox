@@ -105,21 +105,21 @@ end
 
 % -- GRNs -----------------------------------------------------------------
 % Same shared builder and settings as ten.sctenifoldxct: ncomp=3 with a 0.75
-% edge filter. TEN.I_XCTGRN owns the pcrnet call, the max-normalisation, the
+% edge filter, on log-normalised expression. TEN.I_XCTGRN owns the pcrnet call, the max-normalisation, the
 % filtering and the symmetrisation.
 if verbose
     fprintf('[%s] Sample 1 GRNs: %s\n', tag, i_grnsource(cfg.grn_s1, cfg.grn_t1));
 end
-A_s1 = ten.i_xctgrn(X_s1, 3, 0.75, false, cfg.useparallel, ...
+A_s1 = ten.i_xctgrn(i_lognorm(X_s1), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_s1, processed=cfg.grn_s1_processed);
-A_t1 = ten.i_xctgrn(X_t1, 3, 0.75, false, cfg.useparallel, ...
+A_t1 = ten.i_xctgrn(i_lognorm(X_t1), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_t1, processed=cfg.grn_t1_processed);
 if verbose
     fprintf('[%s] Sample 2 GRNs: %s\n', tag, i_grnsource(cfg.grn_s2, cfg.grn_t2));
 end
-A_s2 = ten.i_xctgrn(X_s2, 3, 0.75, false, cfg.useparallel, ...
+A_s2 = ten.i_xctgrn(i_lognorm(X_s2), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_s2, processed=cfg.grn_s2_processed);
-A_t2 = ten.i_xctgrn(X_t2, 3, 0.75, false, cfg.useparallel, ...
+A_t2 = ten.i_xctgrn(i_lognorm(X_t2), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_t2, processed=cfg.grn_t2_processed);
 
 % One bundle per sample, so the direction swap is a single operation and the
@@ -331,6 +331,17 @@ X = single(X);
 Xs = X(:, sce.c_cell_type_tx == c1);
 Xt = X(:, sce.c_cell_type_tx == c2);
 end % i_fromsce
+
+
+%% ---- library-size normalisation followed by log1p ----
+function X = i_lognorm(X)
+% For the GRN inputs, which TEN.I_XCTGRN requires log-normalised: on raw
+% counts the cells' sequencing depth reads as co-expression. The matrices
+% themselves stay raw because TEN.I_XCTW12 normalises its own inputs.
+cs = sum(X, 1);
+cs(cs == 0) = 1;
+X = log1p(X./cs.*median(cs));
+end % i_lognorm
 
 
 %% ---- indices of database pairs present in the gene list ----

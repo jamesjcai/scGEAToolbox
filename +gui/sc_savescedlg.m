@@ -18,7 +18,7 @@ defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
        if gui.i_isuifig(parentfig)
             [indx, tf] = gui.myListdlg(parentfig, list, ...
-                'Select a destination:', list(defaultindx));
+                'Select a destination:', list(defaultindx), false);
         else
             [indx, tf] = listdlg('ListString', list, ...
                 'SelectionMode', 'single', ...
@@ -50,7 +50,15 @@ switch ButtonName
             else
                 filename = fullfile(path, file);
                 fw = gui.myWaitbar(parentfig);
-                save(filename, 'sce', '-v7.3');
+                % Disk full, read-only folder or a locked file: the bar stayed
+                % up and the menu callback errored.
+                try
+                    save(filename, 'sce', '-v7.3');
+                catch ME
+                    gui.myWaitbar(parentfig, fw, true);
+                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
+                    return;
+                end
                 gui.myWaitbar(parentfig, fw);
                 OKPressed = true;
             end
@@ -67,8 +75,30 @@ switch ButtonName
                 return;
             else
                 filename = fullfile(path, file);
+                % Asked here, before the progress bar: run.commoncheck_R asks with no
+                % parent, so without this its question opened behind the open bar.
+                if ~ispref('scgeatoolbox', 'rexecutablepath')
+                    if strcmp(gui.myQuestdlg(parentfig, 'This needs R, which is not set up. Set it up now?'), 'Yes')
+                        gui.i_setrenv(parentfig);
+                    end
+                    if ~ispref('scgeatoolbox', 'rexecutablepath'), return; end
+                end
                 fw = gui.myWaitbar(parentfig);
-                sc_sce2rds(sce, filename);
+                % A failed save used to be reported as a success: the
+                % status was ignored and no file existed.
+                try
+                    status = sc_sce2rds(sce, filename);
+                catch ME
+                    gui.myWaitbar(parentfig, fw, true);
+                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
+                    return;
+                end
+                if ~status || ~isfile(filename)
+                    gui.myWaitbar(parentfig, fw, true);
+                    gui.myErrordlg(parentfig, sprintf(['R did not write %s. ' ...
+                        'The R output in the Command Window should say why.'], filename));
+                    return;
+                end
                 gui.myWaitbar(parentfig, fw);
                 fprintf("\nTo read file, in R:\n");
                 fprintf("library(Seurat)\n");
@@ -76,8 +106,7 @@ switch ButtonName
                 OKPressed = true;
             end
         case 'AnnData/H5ad File (*.h5ad)...'
-            answer = gui.myQuestdlg(parentfig, 'This function requires Python. Continue?','');
-            if ~strcmp(answer,'Yes'), return; end
+            % No Python question: the .h5ad writer is native MATLAB now.
             if ~isempty(a)
                 [file, path] = uiputfile({'*.h5ad'; '*.*'}, 'Save as', a);
             else
@@ -88,7 +117,14 @@ switch ButtonName
                 return;
             else
                 filename = fullfile(path, file);
-                if sc_sce2h5ad(sce, filename)
+                try
+                    ok = sc_sce2h5ad(sce, filename);
+                catch ME
+                    % It rethrows after removing the partial file.
+                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
+                    return;
+                end
+                if ok
                     fprintf("\nTo read file, in Python:\n");
                     fprintf("adata = anndata.read(""%s"")\n", file);
                     OKPressed = true;
@@ -104,14 +140,13 @@ switch ButtonName
             values = {copy(sce), sce.X, sce.g, sce.s};
 
             if gui.i_isuifig(parentfig)
-                % gui.i_bringtofront(parentfig);
                 [~, OKPressed] = gui.myExport2wsdlg(labels, vars, values, ...
                     'Save Data to Workspace', ...
                     [true, false, false, false], parentfig);
             else
                 [~, OKPressed] = export2wsdlg(labels, vars, values, ...
                     'Save Data to Workspace', ...
-                    logical([1, 0, 0, 0]), {@smhelp});
+                    logical([1, 0, 0, 0]));
             end
         otherwise
             return;

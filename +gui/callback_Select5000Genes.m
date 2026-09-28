@@ -72,7 +72,6 @@ end
 
 if sce.NumCells*sce.NumGenes < 4e8
     sceori = copy(sce);
-    % disp('Ready for reversible.');
 else
     confirmanswer = gui.myQuestdlg(FigureHandle, 'You are about to change the SCE data. This cannot be undone.');
     if ~strcmp(confirmanswer, 'Yes'), return; end
@@ -85,14 +84,12 @@ c = 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     sce = sce.rmmtgenes;
     disp('Mt-genes removed.');
-    % requirerefresh = true;
 end
 
 c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     sce = sce.rmhemoglobingenes;
     disp('Hemoglobin genes removed.');
-    % requirerefresh = true;
 end
 
 c = c + 1;
@@ -119,7 +116,6 @@ c = c + 1;
 if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     sce = sce.rmribosomalgenes;
     disp('Ribosomal genes removed.');
-    % requirerefresh = true;
 end
 
 c = c + 1;
@@ -148,8 +144,6 @@ if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     mfolder = fileparts(mfilename('fullpath'));
     switch spciestag
         case 'human'
-            % T = readtable(fullfile(mfolder, ...
-            %     '../assets', 'HGNCBiomart.txt'));
             load(fullfile(mfolder, ...
                 '..', 'assets', 'Biomart', 'Biomart_human_genes.mat'), 'T');
         case 'mouse'
@@ -163,7 +157,6 @@ if strcmpi(answer{c},'Yes') || strcmpi(answer{c},'Y')
     a2 = length(sce.g);
     fprintf('Found and removed %s without an approved symbol.\n', ...
         pkg.i_plural(a1-a2, 'gene'));
-    % requirerefresh = true;
 end
 
 try
@@ -173,7 +166,6 @@ try
         sce = sce.selectkeepgenes(1, a);
         a2 = length(sce.g);
         fprintf('%d lowly expressed genes found and removed.\n',a1-a2);
-        % requirerefresh = true;
     end
 catch ME
     warning(ME.message);
@@ -181,9 +173,12 @@ end
 
 try
     a = str2double(answer{IDX_HVGN});
-    % T = sc_hvg(sce.X, sce.g);
-    T = sc_splinefit(sce.X, sce.g);
-    glist = T.genes(1:min([a, sce.NumGenes]));
+    T = sc_analyticfit(sce.X, sce.g);
+    % HEIGHT(T) rather than SCE.NUMGENES: the ranker drops genes that
+    % are zero in every cell, so its table can be shorter than the SCE
+    % and indexing out to NUMGENES runs off the end. SC_SPLINEFIT drops
+    % them too, so this was reachable before the ranker changed.
+    glist = T.genes(1:min([a, height(T)]));
     [y, idx] = ismember(glist, sce.g);
     if ~all(y)
         gui.myErrordlg(FigureHandle, 'Runtime error.');
@@ -218,8 +213,6 @@ try
     % CELLS, so it does its own stash-and-restore with the surviving
     % columns rather than the ones captured up top.
     sce = sce.qcfilterwhitelist(1000, 0.15, 15, 500, whitelist);
-    % assignin("base", "c_after", sce.c);
-    % assignin("base", "numcells_after", sce.numcells);
 catch ME
     gui.myWaitbar(FigureHandle, fw,true);
     gui.myWarndlg(FigureHandle, ME.message, ME.identifier);

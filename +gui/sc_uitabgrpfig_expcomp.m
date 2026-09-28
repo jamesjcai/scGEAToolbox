@@ -1,17 +1,9 @@
 function sc_uitabgrpfig_expcomp(sce, glist, parentfig, ~, thisc)
 
-% if nargin < 4, cazcel = []; end
 if nargin < 3, parentfig = []; end
-% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
-%     p = parentfig.Position;
-%     cx = [p(1)+p(3)/2 p(2)+p(4)/2];
-% end
 
 % https://www.mathworks.com/help/rptgen/ug/compile-a-presentation-program.html
 if (ismcc || isdeployed) && pkg.i_isreportgenavailable('ppt'), makePPTCompilable(); end
-
-% pw1 = fileparts(mfilename('fullpath'));
-% pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
 
 hx=gui.myFigure(parentfig, true);
@@ -31,7 +23,6 @@ hFig.Position(3) = hFig.Position(3) * 1.8;
 % end
 
 n = length(glist);
-% a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
 
 tabgp = uitabgroup();
 tab = cell(n,1);
@@ -54,14 +45,6 @@ for k=1:n
     if issparse(c2), c2 = full(c2); end
 
     tab{k} = uitab(tabgp, 'Title', sprintf('%s',glist(k)));
-
-    %{
-    t = tiledlayout(1,2,'Parent',tab{k});
-    ax1 = nexttile;
-    hpl{k,1} = scatter3(sce.s(:,1), sce.s(:,2), sce.s(:,3), 5, c, 'filled','Parent', ax1);
-    ax2 = nexttile;
-    hpl{k,2} = scatter(sce.s(:,1), sce.s(:,2), 5, c, 'filled','Parent', ax2);
-    %}
 
     ax0{k} = axes('parent',tab{k});
     ax{k,1} = subplot(1,2,1);
@@ -95,14 +78,9 @@ end
 
 tabgp.SelectionChangedFcn=@displaySelection;
 
-% hx.addCustomButton('off', [], "IMG00107.GIF", " ");
-% hx.addCustomButton('off', @i_linksubplots, 'keyframes-minus.jpg', 'Link subplots');
 hx.addCustomButton('off',  @i_genecards, 'www.jpg', 'GeneCards...');
-% hx.addCustomButton('off', @i_RescaleExpr, 'IMG00074.GIF', 'Rescale expression level [log2(x+1)]');
-% hx.addCustomButton('off', @i_ResetExpr, 'plotpicker-geobubble2.gif', 'Reset expression level');
+hx.addCustomButton('off', @i_proteinstructure, 'hexagon_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Protein Structure...');
 hx.addCustomButton('off', @in_savedata, "Save.gif", 'Save Gene List...');
-% hx.addCustomButton('off', @i_savemainfig, "powerpoint.gif", 'Save Figure to PowerPoint File...');
-% hx.addCustomButton('off', @i_savemainfigx, "xpowerpoint.gif", 'Save Figure as Graphic File...');
 
 hx.show(parentfig);
 
@@ -115,13 +93,16 @@ function in_savedata(~,~)
 function displaySelection(~,event)
         t = event.NewValue;
         txt = t.Title;
-        % disp("Viewing gene " + txt);
         [~,idx]=ismember(txt,glist);
         focalg = glist(idx);
     end
 
 function i_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
+    end
+
+function i_proteinstructure(~, ~)
+        gui.i_viewprotein(focalg, ParentFig=hFig);
     end
 
 end

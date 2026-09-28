@@ -38,7 +38,15 @@ if (length(celltype) != ncol(X) || length(batchid) != ncol(X)) {
 
 countMatrix <- Matrix(as.matrix(X))
 rownames(countMatrix) <- g
-colnames(countMatrix) <- paste0("C", seq_len(ncol(countMatrix)))
+if ("cellid" %in% datasets$name) {
+    cellid <- as.character(h5read(file = "input.h5", name = "/cellid"))
+    if (length(cellid) != ncol(X)) {
+        stop("Length of cellid does not match the number of columns in X.")
+    }
+    colnames(countMatrix) <- make.unique(cellid)
+} else {
+    colnames(countMatrix) <- paste0("C", seq_len(ncol(countMatrix)))
+}
 
 countMatrix <- CreateSeuratObject(countMatrix)
 sce <- NormalizeData(countMatrix)

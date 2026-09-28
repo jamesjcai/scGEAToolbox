@@ -10,6 +10,9 @@ if nargin < 4, sce = []; end
 % the axis labels (labelx) index the columns.
 P = splitapply(@mean, Y, c);
 n = size(P, 2);
+% Keep the names as given for the exported table: the ones drawn below lose
+% their "(Collection)" prefix and get TeX-escaped underscores.
+rawlabels = cellstr(string(labelx));
 
 %         axes_limits=[repmat(min([0, min(P(:))]),1,n);...
 %             repmat(max(P(:)),1,n)];
@@ -27,8 +30,11 @@ end
 
 hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
+% Every draw below, the button callbacks included, targets this axes: the
+% current axes after a dialog can be another window's.
+ax = hx.AxHandle;
 
-hx.addCustomButton('off', {@i_savedata}, 'floppy-disk-arrow-in.jpg', 'Export data...');
+hx.addCustomButton('off', {@i_savedata}, 'floppy-disk-arrow-in.jpg', 'Save Score Matrix...');
 hx.addCustomButton('off', @i_showvalues, "heap_snapshot_large_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg", 'Switch Values ON/OFF');
 hx.addCustomButton('off', @i_reordersamples, "keyframe-plus-in.jpg", 'Switch Legend ON/OFF');
 hx.addCustomButton('on', @i_editgrpnames, 'edit.jpg', 'Rename Group Names');
@@ -39,46 +45,46 @@ showlegend = true;
 bkcolor = gui.i_getthemebkgcolor(hFig);
 
 labelx = gui.i_escapeunderscore(labelx);
-spider_plot_R2019b(P, 'AxesLabels', labelx, ...
+spider_plot_R2019b(P, 'AxesHandle', ax, 'AxesLabels', labelx, ...
 'AxesPrecision', 2, 'AxesLimits', axes_limits, ...
 'BackgroundColor', bkcolor, ...
 'AxesFontColor', 1-bkcolor, ...
 'AxesZeroColor', 1-bkcolor);
 cL = gui.i_escapeunderscore(cL);
-legend(cL, 'Location', 'best');
-if ~isempty(titlex), title(titlex); end
+legend(ax, cL, 'Location', 'best');
+if ~isempty(titlex), title(ax, titlex); end
 hx.show(parentfig);
 
 
 function i_showvalues(~, ~)
         showaxes = ~showaxes;
-        cla(hx.AxHandle);
+        cla(ax, 'reset');
         if showaxes
-            spider_plot_R2019b(P, 'AxesLabels', labelx, ...
+            spider_plot_R2019b(P, 'AxesHandle', ax, 'AxesLabels', labelx, ...
                 'AxesDisplay', 'all', 'AxesPrecision', 2, ...
                 'AxesLimits', axes_limits, ...
                 'BackgroundColor', bkcolor, ...
                 'AxesFontColor', 1-bkcolor, ...
                 'AxesZeroColor', 1-bkcolor);
         else
-            spider_plot_R2019b(P, 'AxesLabels', labelx, ...
+            spider_plot_R2019b(P, 'AxesHandle', ax, 'AxesLabels', labelx, ...
                 'AxesDisplay', 'none', 'AxesPrecision', 2, ...
                 'AxesLimits', axes_limits,...
                 'BackgroundColor', bkcolor, ...
                 'AxesFontColor', 1-bkcolor, ...
                 'AxesZeroColor', 1-bkcolor);
         end
-        if showlegend, legend(cL); end
-        if ~isempty(titlex), title(titlex); end
+        if showlegend, legend(ax, cL); end
+        if ~isempty(titlex), title(ax, titlex); end
     end
 
 function i_reordersamples(~, ~)
         showlegend = ~showlegend;
 
         if showlegend
-            legend(cL, 'Location', 'best');
+            legend(ax, cL, 'Location', 'best');
         else
-            legend off
+            legend(ax, 'off');
         end
     end
 
@@ -86,7 +92,7 @@ function i_reordersamples(~, ~)
 function i_editgrpnames(~, ~)
 
         if gui.i_isuifig(parentfig)
-            [indxx, tfx] = gui.myListdlg(hFig, string(cL), 'Select group name');
+            [indxx, tfx] = gui.myListdlg(hFig, string(cL), 'Select group name', [], false);
         else
             [indxx, tfx] = listdlg('PromptString', ...
                 {'Select group name'}, ...
@@ -103,27 +109,39 @@ function i_editgrpnames(~, ~)
             end
             if ~isempty(newctype)
                 cL(c(i)) = newctype;
-                legend(cL, 'Location', 'best');
+                legend(ax, cL, 'Location', 'best');
             end
         end
     end
 
 
 function i_savedata(~, ~)
-        if isempty(sce)
-            a = string(1:size(Y, 1));
-        else
-            a = matlab.lang.makeUniqueStrings(sce.c_cell_id);
+        answerx = gui.myQuestdlg(hFig, ['Save the score of every cell, ' ...
+            'or the group means the radar plot draws?'], 'Save Score Matrix', ...
+            {'Per-cell Scores', 'Group Means', 'Cancel'}, 'Per-cell Scores');
+        switch answerx
+            case 'Per-cell Scores'
+                if isempty(sce)
+                    a = string(1:size(Y, 1));
+                else
+                    a = matlab.lang.makeUniqueStrings(string(sce.c_cell_id));
+                end
+                T = array2table(Y, 'VariableNames', rawlabels, 'RowNames', a);
+                T.Cell_Group = strrep(string(cL(c)), '\_', '_');
+                T.Properties.DimensionNames{1} = 'Cell_ID';
+                gui.i_exporttable(T, false, ...
+                    'Tcellsignmt', 'CellSignatTable', [], [], hFig);
+            case 'Group Means'
+                % cL is TeX-escaped for the legend (and may have been renamed).
+                grp = matlab.lang.makeUniqueStrings(strrep(string(cL), '\_', '_'));
+                T = array2table(P, 'VariableNames', rawlabels, 'RowNames', grp);
+                T.NumCells = accumarray(c(:), 1);
+                T.Properties.DimensionNames{1} = 'Cell_Group';
+                gui.i_exporttable(T, false, ...
+                    'Tspiderdata', 'SpiderOutTable', [], [], hFig);
+            otherwise
+                return;
         end
-        T = array2table(Y, 'VariableNames', ...
-            labelx, 'RowNames', a);
-        name = 'Cell_Group';
-        % T.(name) = thisc;
-        T.(name) = cL(c);
-        T.Properties.DimensionNames{1} = 'Cell_ID';
-        needwait = false;
-        gui.i_exporttable(T, needwait, ...
-            'Tspiderdata', 'SpiderOutTable', [], [], hFig);
     end
 
 end

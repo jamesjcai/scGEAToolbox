@@ -25,9 +25,6 @@ xlabel(txtx);
 ylabel(txty);
 set(fh, 'WindowButtonDownFcn', @mouseDownCallback);
 
-% ButtonH=uicontrol('Parent',fh,'Style','pushbutton',...
-%     'String','Done','Units','normalized','Position',[0.0 0.5 0.4 0.2],'Visible','on');
-
 ab = uicontrol(fh, 'String', ...
 'Cancel', 'Units', 'normalized', ...
 'Position', [0.65, 0.02, 0.2, 0.056], ...
@@ -46,7 +43,6 @@ waitfor(fh);
 
 function i_CloseFig(~, varargin)
         idxx = idx;
-        % delete(fh);
         closereq;
     end
 
@@ -77,8 +73,8 @@ function i_CloseFig(~, varargin)
                 lh4 = yline(yr(2), 'r-', 'LineWidth', 1);
 
 
-                ia = (x > lh1.Value) & (x < lh2.Value);
-                ja = (y > lh3.Value) & (y < lh4.Value);
+                ia = in_inside(x, lh1.Value, lh2.Value);
+                ja = in_inside(y, lh3.Value, lh4.Value);
                 idx = ia & ja;
                 xr = [lh1.Value, lh2.Value];
                 yr = [lh3.Value, lh4.Value];
@@ -90,7 +86,6 @@ function i_CloseFig(~, varargin)
                 xydata = guidata(figHandle);
                 if ~isempty(h2), delete(h2); end
                 h2 = scatter(ax, xydata(~idx, 1), xydata(~idx, 2), 'xr');
-                % set(ax,'ActivePositionProperty','OuterPosition');
                 set(fh, 'Resize', 'off')
             catch
                 errordlg('Wrong inputs')
@@ -99,23 +94,9 @@ function i_CloseFig(~, varargin)
     end
 
 
-        %     function updatepoints(ia,ja,xydata)
-        %         ax.Title.String=sprintf('Inclusion: %d out of %d (%.2f%%)\nExclusion: %d out of %d (%.2f%%)',...
-        %             sum(ia&ja),length(ia),100*sum(idx)./length(ia),...
-        %             length(ia)-sum(ia&ja),length(ia),100*(length(ia)-sum(idx))./length(ia));
-        %         set(ab,"String","Done")
-        %         %hold(ax,'off');
-        %         %h1=scatter(ax,xydata(idx,1),xydata(idx,2),'o');
-        %         hold(ax,'on')
-        %         if ~isempty(h2), delete(h2); end
-        %         h2=scatter(ax,xydata(~idx,1),xydata(~idx,2),'xr');
-        %     end
-
             function mouseDownCallback(figHandle, varargin)
                 % get the handles structure
                 xydata = guidata(figHandle);
-                %     lh1=handles{1}; lh2=handles{2};
-                %     lh3=handles{3}; lh4=handles{4};
 
                 % get the position where the mouse button was pressed (not released)
                 % within the GUI
@@ -151,24 +132,22 @@ function i_CloseFig(~, varargin)
                             min(abs((yy - axes1.YLim)./diff(axes1.YLim)))
                         if abs(xx-lh1.Value) < abs(xx-lh2.Value)
                             if ~isempty(lh1), delete(lh1); end
-                            % lh1=xline(xx,'r-');
-                            lh1 = xline(0, 'g-', 'LineWidth', 1);
+                            lh1 = xline(axes1, xx, 'g-', 'LineWidth', 1);   % was xline(0): the lower cutoff snapped to 0
                         else
                             if ~isempty(lh2), delete(lh2); end
-                            lh2 = xline(xx, 'r-', 'LineWidth', 1);
+                            lh2 = xline(axes1, xx, 'r-', 'LineWidth', 1);
                         end
                     else
                         if abs(yy-lh3.Value) < abs(yy-lh4.Value)
                             if ~isempty(lh3), delete(lh3); end
-                            % lh3=yline(yy,'r-');
-                            lh3 = yline(0, 'g-', 'LineWidth', 1);
+                            lh3 = yline(axes1, yy, 'g-', 'LineWidth', 1);   % was yline(0)
                         else
                             if ~isempty(lh4), delete(lh4); end
-                            lh4 = yline(yy, 'r-', 'LineWidth', 1);
+                            lh4 = yline(axes1, yy, 'r-', 'LineWidth', 1);
                         end
                     end
-                    ia = (xydata(:, 1) > lh1.Value) & (xydata(:, 1) < lh2.Value);
-                    ja = (xydata(:, 2) > lh3.Value) & (xydata(:, 2) < lh4.Value);
+                    ia = in_inside(xydata(:, 1), lh1.Value, lh2.Value);
+                    ja = in_inside(xydata(:, 2), lh3.Value, lh4.Value);
                     idx = ia & ja;
                     xr = [lh1.Value, lh2.Value];
                     yr = [lh3.Value, lh4.Value];
@@ -177,14 +156,20 @@ function i_CloseFig(~, varargin)
                         sum(ia & ja), length(ia), 100*sum(idx)./length(ia), ...
                         length(ia)-sum(ia & ja), length(ia), 100*(length(ia) - sum(idx))./length(ia));
                     set(ab, "String", "Done")
-                    % hold(ax,'off');
-                    % h1=scatter(ax,xydata(idx,1),xydata(idx,2),'o');
                     hold(ax, 'on')
                     if ~isempty(h2), delete(h2); end
                     h2 = scatter(ax, xydata(~idx, 1), xydata(~idx, 2), 'xr');
-                    % set(ax,'ActivePositionProperty','OuterPosition');
                     set(fh, 'Resize', 'off')
                 end
         end
 
         end % end of function
+
+
+function tf = in_inside(v, lo, hi)
+% The lower bound is inclusive. Every caller starts it at 0 for a metric
+% that cannot be negative, and a strict > excluded every cell whose value
+% is exactly 0: 0% mtDNA, or no reads in Malat1/Meg3/Kcnq1ot1 -- the cells
+% the lncRNA filter exists to keep.
+tf = (v >= lo) & (v < hi);
+end

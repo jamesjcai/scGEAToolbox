@@ -9,17 +9,6 @@ end
 
 
 s = [];
-% slist = fieldnames(sce.struct_cell_embeddings);
-%
-% valids = false (length(slist), 1);
-% for k=1:length(slist)
-%     sx = sce.struct_cell_embeddings.(slist{k});
-%     if ~isempty(sx) && size(sx,1) == sce.NumCells
-%         valids(k) = true;
-%     end
-% end
-% if ~any(valids), return; end
-% vslist = slist(valids);
 
 [vslist] = gui.i_checkexistingembed(sce, ndim);
 if isempty(vslist)
@@ -30,7 +19,7 @@ end
 
 if gui.i_isuifig(parentfig)
     [indx, tf] = gui.myListdlg(parentfig, vslist, ...
-        'Select an embedding S:');
+        'Select an embedding S:', [], false);
 else
     [indx, tf] = listdlg('PromptString', ...
         {'Select an embedding S:'}, ...

@@ -1,74 +1,66 @@
 function callback_BuildGeneNetwork(src, ~)
+% CALLBACK_BUILDGENENETWORK  Build a GRN for one cell population.
+%
+% One flow for Network > Build Gene Regulatory Network (GRN)...:
+%
+%   1. Cells   all cells, or the cells in chosen groups of one grouping
+%   2. Genes   pick from a list, paste names, or all genes
+%   3. Method  selected genes: any method in net.grnmethods, then the
+%              transform; gui.i_showgrn saves the network to the
+%              working folder and draws it.
+%              All genes: gui.callback_BuildGRNAllGenes takes over.
+%
+% See also gui.callback_BuildGRNAllGenes, gui.callback_CompareGeneNetwork,
+%   net.grnmethods, gui.i_showgrn, sc_grnview.
+
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-[glist] = gui.i_selectngenes(sce, [], FigureHandle);
+% --- Cells
+cellIdx = gui.i_pickgrncells(sce, FigureHandle, sprintf(['A gene ', ...
+    'regulatory network describes one cell population. Build it from ', ...
+    'all %d cells, or only from cells in groups you select?'], sce.NumCells));
+if isempty(cellIdx), return; end
+
+% --- Genes
+[glist, useAll] = gui.i_pickgrngenes(sce.g, FigureHandle);
+if useAll
+    gui.callback_BuildGRNAllGenes(src, cellIdx);
+    return;
+end
 if isempty(glist), return; end
 
 [y, i] = ismember(upper(glist), upper(sce.g));
 if ~all(y), error('Runtime error.'); end
 fprintf("%s\n", glist)
 
-methods = {'PCR (PC Regression)', ...
-           'Chatterjee Xi Correlation', ...
-           'Pearson Correlation', ...
-           'Distance Correlation', ...
-           'Mutual Information', ...
-           'GENIE3 (Random Forest)'};
-methodkeys = {'pcrnet', 'xicor', 'pearson', 'distcorr', 'mi', 'genie3'};
+% The method list, its preferred transform and its pre-run warnings all
+% live in net.grnmethods.
+method = gui.i_selectgrnmethod(FigureHandle, sprintf(['How should the ', ...
+    'links between the %d genes be scored?'], numel(glist)));
+if isempty(method), return; end
 
-[sel, ok] = gui.myListdlg(FigureHandle, methods, ...
-    'Select GRN construction method', methods{1}, false);
-if ~ok, return; end
-methodkey = methodkeys{sel};
-
-[Xt] = gui.i_transformx(sce.X, true, 6, FigureHandle);
+[Xt] = gui.i_transformx(sce.X(:, cellIdx), true, method.Transform, FigureHandle);
 if isempty(Xt), return; end
 x = Xt(i, :);
+if ~gui.i_confirmgrnrun(method, x, 1, FigureHandle), return; end
 
 fw = gui.myWaitbar(FigureHandle);
 try
-    A = sc_grn(x, methodkey);
+    A = sc_grn(x, method.Key);
 catch ME
-    gui.myWaitbar(FigureHandle, fw);
+    gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
 gui.myWaitbar(FigureHandle, fw);
 
-cannotview = false;
-cannotsave = false;
+% Saved silently to the working folder, then drawn whole (or sketched,
+% for a long gene list); the figure's toolbar exports and locates it.
+key = char(method.Key);
 try
-    sc_grnview(A, glist, '', FigureHandle);
+    gui.i_showgrn(A, glist, key, lower(matlab.lang.makeValidName(key)), ...
+        FigureHandle);
 catch ME
-    cannotview = true;
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-end
-if cannotview
-    try
-        G = net.i_makegraph(A, glist);
-        if strcmp('Yes', gui.myQuestdlg(FigureHandle, 'Save network?'))
-            % if gui.i_isuifig(FigureHandle)
-            %     [file, path] = uiputfile(FigureHandle, {'*.mat'; '*.*'}, 'Save as');
-            % else
-                [file, path] = uiputfile({'*.mat'; '*.*'}, ...
-                    'Save as', 'network_file');
-            %end
-            if isequal(file, 0) || isequal(path, 0)
-                return;
-            else
-                filename = fullfile(path, file);
-                fw = gui.myWaitbar(FigureHandle);
-                save(filename, 'G');
-                gui.myWaitbar(FigureHandle, fw);
-                gui.myHelpdlg(FigureHandle, 'File saved.');
-            end
-        end
-    catch ME
-        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-        cannotsave = true;
-    end
-end
-if cannotview && cannotsave
-
 end
 end

@@ -19,7 +19,6 @@ i_additem(sce.c_cell_type_tx, 'Cell Type');
 i_additem(sce.c_batch_id, 'Batch ID');
 i_additem(full(sum(sce.X))', 'Library Size');
 i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
-% i_additem(zeros(sce.NumCells,1), 'Mt-reads Ratio');
 
     function i_additem(itemv, itemn)
         if ~isempty(itemv) && length(unique(itemv)) >= 1
@@ -35,20 +34,6 @@ i_additem(full(sum(sce.X > 0))', 'Number of Detected Genes');
 
 listitems = [baselistitems, sce.list_cell_attributes(1:2:end)];
 nx = length(baselistitems);
-
-% a=evalin('base','whos');
-% b=struct2cell(a);
-% v=false(length(a),1);
-% for k=1:length(a)
-%     if max(a(k).size)==sce.NumCells && min(a(k).size)==1
-%         v(k)=true;
-%     end
-% end
-% if any(v)
-%     a=a(v);
-%     b=b(:,v);
-%     listitems=[listitems,'Customized C...'];
-% end
 
 n = length(listitems);
 if n < 1
@@ -66,28 +51,15 @@ if any(defaultindx > n) || any(defaultindx < 1), defaultindx = [n-1, n]; end
 if isempty(initialsel), initialsel = defaultindx; end
 
 if gui.i_isuifig(parentfig)
-    % if ~isempty(initialsel)
     [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
         'Select cell state/grouping variable:', ...
-        listitems(initialsel));
-    % else
-    %    [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
-    %         'Select cell state/grouping variable:');
-    % end
+        listitems(initialsel), true);
 else
-    % if ~isempty(initialsel)
     [indx2, tf2] = listdlg('PromptString', ...
         {'Select cell state/grouping variable:'}, ...
         'SelectionMode', 'multiple', ...
         'ListString', listitems, ...
         'InitialValue', initialsel, 'ListSize', [220, 300]);
-    % else
-    %    [indx2, tf2] = listdlg('PromptString', ...
-    %        {'Select cell state/grouping variable:'}, ...
-    %        'SelectionMode', 'multiple', ...
-    %        'ListString', listitems, ...
-    %        'ListSize', [220, 300]);
-    % end
 end
 
 if tf2 == 1

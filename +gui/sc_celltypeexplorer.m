@@ -48,16 +48,13 @@ function MenuSelected1(src, ~)
         state = src.Enable;
         if strcmp(state, 'on')
             hBr.Enable = 'on';
-            % tt.CData = ptImage; % zeros(16,16,3);
         else
             hBr.Enable = 'off';
-            % tt.CData = ptImage;
         end
     end
 
 
 hBr = brush(hFig);
-    % hBr.Enable='on';
 
 hBr.ActionPostCallback = {@onBrushAction, X, genelist, s, ...
         species, organ, method};
@@ -82,7 +79,6 @@ end
         if isprop(hLines(k), 'BrushData') && any(hLines(k).BrushData)
             % Output the selected data to the base workspace with assigned name
             ptsSelected = logical(hLines(k).BrushData.');
-            % find(ptsSelected)
 
 
             switch lower(method)
@@ -106,20 +102,20 @@ end
             %    hLines(k).YData(ptsSelected).'];
             % assignin('base',names{k},data)
 
-            hold on
+            hold(hAx, 'on');
             ctxt = strrep(ctxt, '_', '\_');
             if size(s, 2) >= 3
-                scatter3(s(ptsSelected, 1), s(ptsSelected, 2), s(ptsSelected, 3), 'x');
+                scatter3(hAx, s(ptsSelected, 1), s(ptsSelected, 2), s(ptsSelected, 3), 'x');
                 si = mean(s(ptsSelected, :));
-                text(si(:, 1), si(:, 2), si(:, 3), sprintf('%s', ctxt), ...
+                text(hAx, si(:, 1), si(:, 2), si(:, 3), sprintf('%s', ctxt), ...
                     'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
             elseif size(s, 2) == 2
-                scatter(s(ptsSelected, 1), s(ptsSelected, 2), 'x')
+                scatter(hAx, s(ptsSelected, 1), s(ptsSelected, 2), 'x')
                 si = mean(s(ptsSelected, :));
-                text(si(:, 1), si(:, 2), sprintf('%s', ctxt), ...
+                text(hAx, si(:, 1), si(:, 2), sprintf('%s', ctxt), ...
                     'fontsize', 10, 'FontWeight', 'bold', 'BackgroundColor', 'w', 'EdgeColor', 'k');
             end
-            hold off
+            hold(hAx, 'off');
             %            ctexplorer_celltypeid=ctexplorer_celltypeid+1;
             %             a=matlab.lang.makeValidName(ctxt);
             %             a=extractBefore(a,min([10 strlength(a)]));

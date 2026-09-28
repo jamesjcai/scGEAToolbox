@@ -81,12 +81,13 @@ if isfield(info, 'depthRatioDetected') && ~isempty(info.depthRatioDetected) ...
 end
 gui.myHelpdlg(FigureHandle, msg, 'Glycogene detection depth');
 
+hTbl = FigureHandle;   % no table window: export over the app as before
 if isfield(info, 'byGroup') && istable(info.byGroup) && ~isempty(info.byGroup)
-    gui.i_viewtable(info.byGroup, FigureHandle);
+    hTbl = gui.i_viewtable(info.byGroup, FigureHandle);
 end
 
 gui.i_exporttable(T, true, 'Tglycodetect', 'GlycoDetectionTable', ...
-    [], [], FigureHandle);
+    [], [], hTbl);
 end
 
 

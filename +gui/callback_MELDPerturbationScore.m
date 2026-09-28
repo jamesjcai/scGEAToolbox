@@ -52,7 +52,7 @@ try
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-    rethrow(ME);
+    return;   % reported; a rethrow here also printed "Error while evaluating"
 end
 gui.myWaitbar(FigureHandle, fw);
 

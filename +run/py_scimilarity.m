@@ -53,9 +53,6 @@ else
     disp('Using working directory provided.');
     cd(wkdir);
 end
-% winopen(wkdir);
-
-% fw = gui.gui_waitbar([], [], 'Checking Python environment...');
 
 x = pyenv;
 try
@@ -79,7 +76,6 @@ if ~prepare_input_only
         end
     end
 
-% try
 pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
 tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
         'input.h5ad', 'output.h5ad', 'output.csv', 'output_stats.csv'};
@@ -112,15 +108,6 @@ end
 % carry 1.8-2.0% of counts, but new_example_sce.mat has one cell at 83%.
 Xcounts = single(full(X));
 
-    % if ~isempty(target_celltypes)
-    %    writetable(table(target_celltypes),'tg.csv','WriteVariableNames',false);
-    % end
-    % g = sce.g;
-    % writetable(table(g),'g.csv','WriteVariableNames',false);
-    % sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
-    % T = pkg.i_makeattributestable(sce);
-    % writetable(T,'c.csv');
-
 
 g = cellstr(genelist);
 if ~isempty(target_celltypes)
@@ -129,18 +116,6 @@ if ~isempty(target_celltypes)
     else
         save('X.mat','-v7.3',"Xcounts","modeldir","g");
     end
-% catch ME
-%     if pkg.i_isvalid(fw)
-%          gui.gui_waitbar(fw, true);
-%     end
-%     errordlg(ME.message,'');
-%     return;
-% end
-% if pkg.i_isvalid(fw)
-%     gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
-%     pause(0.5);
-%     gui.gui_waitbar(fw, [], [], sprintf('Running %s...', 'py\_scimilarity'));
-% end
 codefullpath = fullfile(codepth,'script_mat.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 % The copy i_addwd2script leaves in wkdir is what the user runs by hand after
@@ -152,10 +127,6 @@ disp(cmdlinestr)
 
 if ~prepare_input_only
     [status] = system(cmdlinestr, '-echo');
-    % [status2] = movefile('output.h5ad',fname);
-    % if status == 0 && pkg.i_isvalid(fw)
-    %     gui.gui_waitbar(fw, [], 'output.csv is written.');
-    % end
     if status == 0 && exist('output.csv', 'file')
         t = readtable('output.csv','ReadVariableNames', true, ...
             'VariableNamingRule', 'modify');
@@ -169,12 +140,6 @@ if ~prepare_input_only
                 'VariableNamingRule', 'modify');
             stats = removevars(stats, 1);   % the pandas index column
         end
-        % cL = h5read('output.h5ad','/obs/predictions_unconstrained/categories');
-        % c = h5read('output.h5ad','/obs/predictions_unconstrained/codes');
-        % if any(c==0)
-        %     cL = [cL; "undetermined"];
-        %     c(c==0) = numel(cL);
-        % end
     end
 else
     % script_mat.py, not script.py: I_ADDWD2SCRIPT copies script_mat.py into

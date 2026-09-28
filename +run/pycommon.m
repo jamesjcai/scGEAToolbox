@@ -14,7 +14,7 @@ cd(wrkpth);
 x = pyenv;
 if strlength(x.Executable) == 0, return; end
 
-fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+fw = gui.myWaitbar([], [], [], 'Checking Python environment...');
 
 try
     pkg.i_add_conda_python_path;
@@ -28,14 +28,13 @@ disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
     if pkg.i_isvalid(fw)
-        gui.gui_waitbar(fw, [], 'Checking Python...error.');
+        gui.myWaitbar([], fw, [], 'Checking Python...error.');
     end
-    % waitfor(errordlg(sprintf('%s',cmdout)));
     disp(cmdout);
     error('%s has not been installed properly.', ...
         upper(prgwkdir));
 end
 if pkg.i_isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Checking Python environment is complete.');
+    gui.myWaitbar([], fw, [], 'Checking Python environment is complete.');
 end
 ok = true;

@@ -21,7 +21,6 @@ for k = 1:length(embeddingtags)
     end
 
 
-   % evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
 hBr = brush(hFig);
 hBr.ActionPostCallback = {@onBrushAction, axesv};
 
@@ -43,7 +42,7 @@ function in_showcellstate(~, ~)
         a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
         for kx = 1:length(axesv)
            s = sce.struct_cell_embeddings.(embeddingtags{kx});
-           if ~isempty(s)
+           if ~isempty(s) && ~isempty(axesv{kx})
                h = gui.i_gscatter3(s, c, 1, 1, axesv{kx});
                title(axesv{kx}, string(embeddingtags{kx})+" - "+string(clabel));
                h.DataTipTemplate.DataTipRows = row;
@@ -57,7 +56,7 @@ function in_showgeneexp(~, ~)
         if isempty(gsorted), return; end
         figure(hFig);
        if gui.i_isuifig(hFig)
-            [indx, tf] = gui.myListdlg(hFig, gsorted, 'Select a gene:');
+            [indx, tf] = gui.myListdlg(hFig, gsorted, 'Select a gene:', [], false);
         else
             [indx, tf] = listdlg('PromptString', 'Select a gene:', ...
                 'SelectionMode', 'single', 'ListString', ...
@@ -66,8 +65,12 @@ function in_showgeneexp(~, ~)
 
         if tf == 1
             c = full(sce.X(sce.g == gsorted(indx), :));
+            % Its own: A was only ever set inside in_showcellstate, where it
+            % is local, so this button always errored on the first panel.
+            a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
 
             for kx = 1:length(axesv)
+               if isempty(axesv{kx}), continue; end   % embedding not drawn
                s = sce.struct_cell_embeddings.(embeddingtags{kx});
                gui.i_gscatter3(s, c, 1, 1, axesv{kx});
                title(axesv{kx}, string(embeddingtags{kx})+" - "+string(gsorted(indx)));
@@ -77,16 +80,23 @@ function in_showgeneexp(~, ~)
     end
 
 function onBrushAction(~, event, axv)
-        for kx=1:length(axv)
-            if isequal(event.Axes, axv{kx})
-                idx = kx;
-                continue;
+        % Copy the brushed cells to every other panel. By the panel's
+        % scatter, not .Children: that is several objects once a panel
+        % holds anything else, and IDX was undefined for an axes not in AXV.
+        src = [];
+        for kx = 1:length(axv)
+            if ~isempty(axv{kx}) && isequal(event.Axes, axv{kx})
+                src = findobj(axv{kx}, 'Type', 'scatter');
+                break;
             end
         end
-        d = axv{idx}.Children.BrushData;
-        for kx=1:length(axv)
-            if kx ~= idx
-                axv{kx}.Children.BrushData = d;
+        if isempty(src), return; end
+        d = src(1).BrushData;
+        for kx = 1:length(axv)
+            if isempty(axv{kx}) || isequal(event.Axes, axv{kx}), continue; end
+            h = findobj(axv{kx}, 'Type', 'scatter');
+            if ~isempty(h) && numel(h(1).BrushData) == numel(d)
+                h(1).BrushData = d;
             end
         end
     end

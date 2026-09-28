@@ -29,7 +29,7 @@ gsorted = natsort(sce.g);
 if isempty(gsorted), return; end
 
 if gui.i_isuifig(FigureHandle)
-    [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene');
+    [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene', [], false);
 else
     [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
         'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
@@ -46,51 +46,31 @@ if isempty(A0)
     X = sc_norm(sce.X);
     X = log1p(X);
     useGPU = pkg.i_usegpu(X);
-    if useGPU
-        disp('GPU detected — using CUDA GPU acceleration.');
-        useparallel = false;
-    else
-        answer3 = gui.myQuestdlg(FigureHandle, 'Use parallel computing?', 'Parallel Computing', ...
-            {'Use parallel', 'Not use parallel'}, 'Use parallel');
-        switch answer3
-            case 'Use parallel'
-                useparallel = true;
-            case 'Not use parallel'
-                useparallel = false;
-            otherwise
-                return;
-        end
-    end
 
     fw = gui.myWaitbar(FigureHandle);
     disp('Constructing gene regulatory network...')
     try
-        A0 = net.pcrnet(X, 3, false, true, useparallel, ~useparallel, useGPU);
+        A0 = net.pcrnet(X, 3, false, true, false, false, useGPU);
     catch ME
         gui.myWaitbar(FigureHandle, fw, true);
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
         return;
     end
     gui.myWaitbar(FigureHandle, fw);
-
-    if ~(ismcc || isdeployed)
-        labels = {'Save network to variable named:'};
-        vars = {'A0'};
-        values = {A0};
-        export2wsdlg(labels, vars, values);
-    end
+    isreconstructed = true;
 else
+    isreconstructed = false;
     answer2 = gui.myQuestdlg(FigureHandle, ...
         sprintf('Ready to knock out %s (gene #%d). Continue?', sce.g(idx), idx));
     if ~strcmpi(answer2, 'Yes'), return; end
 end
 
-if nnz(A0(idx, :) ~= 0) == 0
+if nnz(A0(:, idx) ~= 0) == 0
     gui.myWarndlg(FigureHandle, sprintf('KO gene (%s) has no links with other genes.', sce.g(idx)));
     return;
-elseif nnz(A0(idx, :) ~= 0) < 50
+elseif nnz(A0(:, idx) ~= 0) < 50
     s = sprintf('KO gene (%s) has too few links (n=%d). Continue?', ...
-        sce.g(idx), nnz(A0(idx, :) ~= 0));
+        sce.g(idx), nnz(A0(:, idx) ~= 0));
     if ~strcmpi(gui.myQuestdlg(FigureHandle, s, '', [], [], 'error'), 'Yes'), return; end
 end
 
@@ -120,6 +100,12 @@ disp('Tf=ten.e_fgsearun(T);');
 disp('Tn=ten.e_fgseanet(Tf);');
 disp('===============================');
 
+% Offered only now: this dialog used to open, without waiting, right after
+% the network was built, so it sat under the knockout progress bar and the
+% results dialog.
+if isreconstructed
+    in_offersavenetwork(A0);
+end
 
     function A0 = in_loadnetwork(hfig, sce_)
         A0 = [];
@@ -140,7 +126,7 @@ disp('===============================');
             a = a(valididx);
             b = struct2cell(a);
             if gui.i_isuifig(hfig)
-                [indx, tf] = gui.myListdlg(hfig, b(1, :), 'Select network variable:');
+                [indx, tf] = gui.myListdlg(hfig, b(1, :), 'Select network variable:', [], false);
             else
                 [indx, tf] = listdlg('PromptString', {'Select network variable:'}, ...
                     'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
@@ -175,6 +161,20 @@ disp('===============================');
         end
         if size(A0, 1) ~= n || size(A0, 2) ~= n
             A0 = [];
+        end
+    end
+
+    function in_offersavenetwork(net)
+        % Last step, after the results: every progress bar is closed by now,
+        % and the dialog blocks, so nothing else opens on top of it.
+        if ismcc || isdeployed, return; end
+        labels = {'Save constructed network to variable named:'};
+        if gui.i_isuifig(FigureHandle)
+            gui.myExport2wsdlg(labels, {'A0'}, {net}, ...
+                'Save Network to Workspace', [], FigureHandle);
+        else
+            waitfor(export2wsdlg(labels, {'A0'}, {net}, ...
+                'Save Network to Workspace'));
         end
     end
 

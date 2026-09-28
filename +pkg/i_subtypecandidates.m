@@ -4,12 +4,13 @@ function [ctypelist, matched, primarytypes, resolved] = i_subtypecandidates(sce)
 %   [ctypelist, matched, primarytypes, resolved] = pkg.i_subtypecandidates(sce)
 %
 % Outputs:
-%   ctypelist    - the primary types present in sce.c_cell_type_tx that still
-%                  have cells to subdivide; empty when the data has none
+%   ctypelist    - the primary types present in sce.c_cell_type_tx; empty
+%                  when the data has none of them
 %   matched      - per cell, the primary type its label belongs to, "" for none
 %   primarytypes - every primary type the marker table knows about
-%   resolved     - per cell, true when the label already names its subtype and
-%                  a subtype run would therefore leave it alone
+%   resolved     - per cell, true when the label already names a subtype of
+%                  that primary, so a run will re-derive it rather than
+%                  subdivide a cell that had no subtype yet
 %
 % One answer for both the menu and the dialog: GUI.I_UPDATEANNOTATEMENU asks
 % whether there is anything to annotate before enabling the menu item, and
@@ -17,12 +18,12 @@ function [ctypelist, matched, primarytypes, resolved] = i_subtypecandidates(sce)
 % The marker table's cell type column is cached because the menu asks every
 % time the Annotate menu is opened.
 %
-% RESOLVED is why CTYPELIST is not simply the distinct values of MATCHED. A
-% dataset annotated only as "Plasma cells" reaches the primary type "B cells"
-% through PKG.I_SUBTYPEOVERLAP, but every one of those cells already carries
-% its subtype and SC_CSUBTYPEANNO would refuse the run. Offering "B cells"
-% there would be a menu item that can only fail, so a primary counts as a
-% candidate only while it still has an unresolved cell.
+% RESOLVED is for reporting, not for filtering. A dataset annotated only as
+% "Plasma cells" reaches the primary type "B cells" through
+% PKG.I_SUBTYPEOVERLAP, and that run is worth offering: those cells are B
+% cells whose subtype was decided by a competition among primary types rather
+% than among B cell subtypes, and re-deriving it is the point. What RESOLVED
+% buys is a dialog that can say so before the user commits to it.
 %
 % see also: pkg.i_matchprimarytype, pkg.i_subtypeoverlap,
 %           gui.callback_SubtypeAnnotation, gui.i_updateannotatemenu
@@ -44,7 +45,7 @@ matched = pkg.i_matchprimarytype(sce.c_cell_type_tx, primarytypes);
 [oprimary, ~, isoverlap] = pkg.i_subtypeoverlap(sce.c_cell_type_tx);
 resolved = isoverlap & oprimary == matched;
 
-ctypelist = unique(matched(strlength(matched) > 0 & ~resolved));
+ctypelist = unique(matched(strlength(matched) > 0));
 end
 
 function primarytypes = in_primarytypes()

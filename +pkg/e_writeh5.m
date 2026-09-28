@@ -1,4 +1,4 @@
-function e_writeh5(X, genelist, filename, celltype, batchid)
+function e_writeh5(X, genelist, filename, celltype, batchid, cellid)
 
 % This function writes a sparse or dense matrix (X) along with optional metadata
 % (genelist, celltype, and s) into an HDF5 file.
@@ -7,13 +7,16 @@ function e_writeh5(X, genelist, filename, celltype, batchid)
 %   genelist  - List of gene names (string array)
 %   filename  - Output HDF5 filename (string)
 %   celltype  - Cell type information (string array)
-%   s         - Additional numeric metadata
+%   batchid   - Batch ID per cell (string array)
+%   cellid    - Cell ID per cell (string array); written as /cellid only
+%               when given, so readers can tell it apart from a default
 %
 % Example:
 % X = sparse([1 0; 0 2]);
 % genelist = ["Gene1", "Gene2"];
 % e_writeh5(X, genelist, 'output.h5');
 
+if nargin < 6, cellid = []; end
 if nargin < 5, batchid = []; end
 if nargin < 4, celltype = []; end
 
@@ -28,16 +31,6 @@ if nnz(X) == 0
     warning('X is an empty sparse matrix. The output file may not contain meaningful data.');
 end
 
-
-% if isa(X,'SingleCellExperiment')
-%     genelist=X.g;
-%     X=X.X;
-% end
-% if nargin<2, genelist=string([1:size(X,1)].'); end
-
-% X = sparse([1 0 2; 0 0 3; 4 5 6]);
-% pkg.e_writeh5(X,["a"],'test.h5');
-% [Y,g]=pkg.e_readh5('test.h5');
 
 
 % https://www.10xgenomics.com/support/software/space-ranger/advanced/hdf5-feature-barcode-matrix-format
@@ -82,6 +75,15 @@ h5write(filename, '/celltype', celltype);
 if ~isstring(batchid), batchid = string(batchid); end
 h5create(filename, '/batchid', size(batchid), 'Datatype', 'string');
 h5write(filename, '/batchid', batchid);
+
+if ~isempty(cellid)
+    cellid = string(cellid(:));
+    if numel(cellid) ~= m
+        error('cellid has %d elements but X has %d columns. Pass one ID per cell.', numel(cellid), m);
+    end
+    h5create(filename, '/cellid', size(cellid), 'Datatype', 'string');
+    h5write(filename, '/cellid', cellid);
+end
 
 
 end

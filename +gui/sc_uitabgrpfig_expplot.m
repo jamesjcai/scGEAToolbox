@@ -6,16 +6,9 @@ if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
     cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
-% if ~isempty(parentfig) && isa(parentfig,'matlab.ui.Figure')
-%     p = parentfig.Position;
-%     cx = [p(1)+p(3)/2 p(2)+p(4)/2];
-% end
 
 % https://www.mathworks.com/help/rptgen/ug/compile-a-presentation-program.html
 if (ismcc || isdeployed) && pkg.i_isreportgenavailable('ppt'), makePPTCompilable(); end
-
-% pw1 = fileparts(mfilename('fullpath'));
-% pth = fullfile(pw1, '..', 'assets', 'Misc', 'myTemplate.pptx');
 
 
 hx = gui.myFigure(parentfig, true);
@@ -28,34 +21,17 @@ a = getpref('scgeatoolbox', 'prefcolormapname', 'autumn');
 
 tabgp = uitabgroup();
 tab = cell(n,1);
-% ax0 = cell(n,1);
 ax = cell(n,2);
 
 idx = 1;
 focalg = glist(idx);
-
-% y = cell(n,1);
-% for k=1:n
-%     y{k} = sce.X(sce.g == glist(k), :);
-% end
 
 for k = 1:n
     c = y{k};
     if issparse(c), c = full(c); end
     tab{k} = uitab(tabgp, 'Title', sprintf('%s', glist(k)));
 
-    %{
-    t = tiledlayout(1,2,'Parent',tab{k});
-    ax1 = nexttile;
-    hpl{k,1} = scatter3(s(:,1), s(:,2), s(:,3), 5, c, 'filled','Parent', ax1);
-    ax2 = nexttile;
-    hpl{k,2} = scatter(s(:,1), s(:,2), 5, c, 'filled','Parent', ax2);
-    %}
-
-    % ax0{k} = axes('parent',tab{k});
-
     ax{k, 1} = subplot(1, 2, 1,'Parent', tab{k});
-    % ax{k,1}.Tag = sprintf('axes_tab%d_left',k);
 
     if size(s,2)>2
         scatter3(ax{k,1}, s(:,1), s(:,2), s(:,3), 5, c, 'filled');
@@ -69,8 +45,6 @@ for k = 1:n
         subtitle(ax{k,1}, gui.i_getsubtitle(c));
 
     gui.i_setautumncolor(c, a, true, any(c==0), ax{k,1}, parentfig);
-
-    % ax{k,2} = subplot(1,2,2);
 
     ax{k,2} = subplot(1, 2, 2,'Parent', tab{k});
     % ax{k,2}.Tag = sprintf('axes_tab%d_right', k);   % 👈 assign unique Tag
@@ -94,37 +68,17 @@ for k = 1:n
         % Register callbacks
         % hRotate.ActionPreCallback  = @(src,evnt) startDrag(hFig, evnt, ax{k,2});
 
-        %{
-        ax = axes('Parent', tab{k});
-        hold(ax, 'on');
-        ax1 = subplot(1,2,1,tab{k});
-        hold(ax1,'on')
-        hpl{k,1} = scatter3(s(:,1), s(:,2), s(:,3), 5, c, 'filled','Parent', ax1);
-        ax2 = subplot(1,2,2,tab{k});
-        hold(ax2,'on')
-        hpl{k,2} = scatter(s(:,1), s(:,2), 5, c, 'filled','Parent', ax2);
-        %}
-
-        %{
-        hax{k} = axes('Parent', tab{k});
-        if size(s,2)>=3
-            hpl{k} = scatter3(s(:,1), s(:,2), s(:,3), 5, c, 'filled','Parent', hax{k});
-        else
-            hpl{k} = scatter(s(:,1), s(:,2), 5, c, 'filled','Parent', hax{k});
-        end
-        title(hax{k}, targetg(k));
-        subtitle(hax{k}, gui.i_getsubtitle(c));
-        %}
-
 end
 dorotation = false;
+% Tabs added by "Show on the same figure...", one per side of the tabs.
+mergedtab = gobjects(0);
 
 trackedAxes = [ax{:,1}, ax{:,2}];   % only the right ones, or ax(:) if you want all
 hRotate.ActionPostCallback = @(src,evnt) stopDrag(evnt, trackedAxes);
-% hRotate.ActionPostCallback = @(src,evnt) stopDrag(hFig, evnt);
 
 tabgp.SelectionChangedFcn=@displaySelection;
 hx.addCustomButton('off', @in_genecards, 'www.jpg', 'GeneCards...');
+hx.addCustomButton('off', @in_proteinstructure, 'hexagon_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Protein Structure...');
 hx.addCustomButton('off', @in_savedata, "floppy-disk-arrow-in.jpg", 'Save Gene List...');
 hx.addCustomButton('off', {@gui.callback_RunGeneAgent, glist}, "mw-microprocessor.jpg", 'Run GeneAgent...');
 hx.addCustomButton('off', @in_mergetabs, 'Brightness-3--Streamline-Core.jpg', 'Show on the same figure...');
@@ -141,45 +95,20 @@ function in_colormap(~, ~)
     end
 
 function in_mergetabs(~, ~)
-        figure;
-        for kx = 1:n
-            hAx2 = nexttile;
-            hAx1 = ax{kx,1};
-            gui.i_cloneaxes(hAx1, hAx2);
+        % New tabs in this window, not new windows. Rebuilt on every click,
+        % so they show the gene tabs as they are now.
+        delete(mergedtab(isvalid(mergedtab)));
+        sides = ["All genes", "All genes, stem"];
+        mergedtab = gobjects(1, 2);
+        for kside = 1:2
+            mergedtab(kside) = uitab(tabgp, 'Title', sides(kside));
+            tl = tiledlayout(mergedtab(kside), 'flow');
+            for kx = 1:n
+                gui.i_cloneaxes(ax{kx, kside}, nexttile(tl));
+            end
         end
-        figure;
-        for kx = 1:n
-            hAx2 = nexttile;
-            hAx1 = ax{kx,2};
-            gui.i_cloneaxes(hAx1, hAx2);
-        end
+        tabgp.SelectedTab = mergedtab(1);
     end
-
-    % function cloneAxes(hAx1, hAx2)
-    %     copyobj(allchild(hAx1), hAx2);
-    %
-    %     props = {'XLim','YLim','ZLim','XScale','YScale','ZScale',...
-    %              'XDir','YDir','ZDir','Colormap','CLim','View'};
-    %     for kk = 1:numel(props)
-    %         try
-    %             set(hAx2, props{kk}, get(hAx1, props{kk}));
-    %         catch
-    %         end
-    %     end
-    %
-    %     xlabel(hAx2, get(get(hAx1,'XLabel'),'String'));
-    %     ylabel(hAx2, get(get(hAx1,'YLabel'),'String'));
-    %     title(hAx2,  get(get(hAx1,'Title'),'String'));
-    %     subtitle(hAx2,  get(get(hAx1,'Subtitle'),'String'));
-    %
-    %         gridProps = {'XGrid','YGrid','ZGrid', ...
-    %          'XMinorGrid','YMinorGrid','ZMinorGrid', ...
-    %          'Box'};
-    %     for kk = 1:numel(gridProps)
-    %         set(hAx2, gridProps{kk}, get(hAx1, gridProps{kk}));
-    %     end
-    %
-    % end
 
 function in_savedata(~,~)
         gui.i_exporttable(table(glist), true, ...
@@ -189,23 +118,18 @@ function in_savedata(~,~)
 function displaySelection(~,event)
         t = event.NewValue;
         txt = t.Title;
-        % disp("Viewing gene " + txt);
         [~,idx] = ismember(txt, glist);
-        focalg = glist(idx);
+        % A merged tab is not one gene; keep the last gene selected.
+        if idx > 0, focalg = glist(idx); end
     end
 
 function in_genecards(~, ~)
         web(sprintf('https://www.genecards.org/cgi-bin/carddisp.pl?gene=%s', focalg),'-new');
     end
 
-    % function startDrag(hFig, evnt, targetAx)
-    %     if isequal(evnt.Axes, targetAx)
-    %         disp('Rotation started on target axes');
-    %         hFig.WindowButtonMotionFcn = @(src,~) duringDrag(targetAx);
-    %     end
-    % end
-
-%  copyobj(allchild(axOld(j)), axNew);
+function in_proteinstructure(~, ~)
+        gui.i_viewprotein(focalg, ParentFig=hFig);
+    end
 
 
 function stopDrag(evnt, trackedAxes)
@@ -221,8 +145,6 @@ function stopDrag(evnt, trackedAxes)
             else
                 tag = 'left';
             end
-
-            % fprintf('Rotation stopped on subplot %s #%d\n', tag, idxa);
 
             % trackedAxes(idxa).Tag
             % camPos = trackedAxes(idxa).CameraPosition;
@@ -242,11 +164,5 @@ function stopDrag(evnt, trackedAxes)
             disp('Rotation stopped on unknown axes (not in tracked list)');
         end
     end
-
-    % function duringDrag(ax)
-    %     % Runs only while dragging on the chosen axes
-    %     camPos = ax.CameraPosition;
-    %     fprintf('Camera (%.2f, %.2f, %.2f)\n', camPos);
-    % end
 
 end

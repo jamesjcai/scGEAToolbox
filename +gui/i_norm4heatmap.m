@@ -17,33 +17,12 @@ if ~isscalar(methodid)
         numel(methodid));
 end
 
-% listitems = {'zscore std', ...
-%     'zscore robust', ...
-%     'norm 2', ...
-%     'norm Inf', ...
-%     'scale std', ...
-%     'scale mad', ...
-%     'scale first', ...
-%     'scale iqr', ...
-%     'range [0 1]', ...
-%     'range [1 10]', ...
-%     'center mean', ...
-%     'center median', ...
-%     'center scale', ...
-%     'medianiqr'};
-
 
 switch methodid
     case 1
-        % Y = zscore(Y, 0, 2);   %
-        % assignin("base","Y",Y);
-        % assignin("base","dim",dim);
         Y = normalize(Y, dim, 'zscore');
     case 2
         Y = normalize(Y, dim, 'zscore', 'robust');
-        % Y = zscore(Y, 0, 2);
-        % Y = reshape(zscore(Y(:)), size(Y));
-        % Y = Y ./ (max(abs(Y(:))));
     case 3
         Y = normalize(Y, dim, 'norm', 2);
     case 4
@@ -75,20 +54,10 @@ switch methodid
 end
 
 
-% qx = quantile(Y(:), 0.90);
-% Y(Y > qx) = qx;
-% qx = quantile(Y(:), 0.10);
-% %Y(Y<qx)=qx;
-% Y(Y < qx) = 0;
 if doclip
-    try
-        Y = clipxx(Y, quantile(Y(:), 0.05), quantile(Y(:), 0.95));
-    catch
-        y = Y;
-        y(Y<quantile(Y(:), 0.05))=quantile(Y(:), 0.05);
-        y(Y>quantile(Y(:), 0.95))=quantile(Y(:), 0.95);
-        Y = y;
-    end
+    q = quantile(Y(:), [0.05, 0.95]);
+    Y(Y < q(1)) = q(1);
+    Y(Y > q(2)) = q(2);
 end
 
 end

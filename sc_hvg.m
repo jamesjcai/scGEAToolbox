@@ -53,7 +53,10 @@ end
 % log(fitratio) cannot evaluate. They are nGenes-long vectors, so densifying
 % is cheap; for dense X these calls are no-ops.
 u = full(mean(X, 2, 'omitnan'));
-vx = full(var(X, 0, 2, 'omitnan'));
+% PKG.E_ROWVAR, not STD/VAR along dim 2: on a sparse matrix those walk
+% every zero (7.0 s against 0.23 s at 20000 genes x 30000 cells); the
+% values agree to ~1e-12 relative, and a constant row still gives 0.
+vx = pkg.e_rowvar(X, "omitnan");
 cv2 = vx ./ u.^2;
 dropr = full(dropr);
 
@@ -118,17 +121,13 @@ else
     Xsorted = Xori;
     gsorted = T.genes;
 end
-% T=T(removedidx,:);
 if plotit
     %[~,~]=maxk(fitratio,100);
-    %    figure;
     hx = gui.myFigure([], true);
 
     hFig = hx.FigHandle;
     hFig.Position(3) = hFig.Position(3) * 1.8;
-    % hAx = axes('Parent', FigureHandle);
     hAx1 = subplot(2, 2, [1 3]);
-    % tb = findall(hFig, 'Tag', 'FigureToolBar');
     hx.addCustomButton('off', @in_callback_HighlightGenes, 'plotpicker-qqplot.gif', 'Highlight top HVGs');
     hx.addCustomButton('off', @in_HighlightSelectedGenes, 'curve-array.jpg', 'Highlight selected genes');
     hx.addCustomButton('off', @ExportGeneNames, 'bookmark-book.jpg', 'Export Selected HVG gene names...');
@@ -138,21 +137,9 @@ if plotit
 
     h = scatter(hAx1, log(u), log(cv2), 'filled', 'MarkerFaceAlpha', .1);
     hold on
-    % scatter(log(u(top100idx)),log(cv2(top100idx)),'x');
     plot(hAx1, log(u), log(cv2fit), '.', 'markersize', 10);
-    %plot(hAx1, log(u(removedidx1)), log(cv2(removedidx1)), 'xr', 'markersize', 10);
-    %plot(hAx1, log(u(removedidx2)), log(cv2(removedidx2)), '+r', 'markersize', 10);
-    %plot(hAx1, log(u(top100idx)), log(cv2(top100idx)), '^k', 'markersize', 10);
 
     %[~,i]=sort(fitratio,'descend');
-    %xi=u(i); yi=cv2(i); yifit=cv2fit(i);
-    %
-    %    scatter(log(xi),log(yi))
-    %    hold on
-    %    scatter(log(xi(1:100)),log(yi(1:100)),'x');
-    %    plot(log(xi),log(yifit),'.','markersize',10);
-    %    plot(log(xi),log(yifit*chi2inv(0.975,df)./df),'.k');
-    %    plot(log(xi),log(yifit*chi2inv(0.025,df)./df),'.k');
     xlabel(hAx1, 'Mean Expression (log)');
     ylabel(hAx1, 'CV² (log)');
     legend(hAx1, {'Data Points', 'Fitted Curve'}, 'Location', 'best');
@@ -191,9 +178,6 @@ end
         if ~isempty(glist)
             [y, idx] = ismember(glist, g);
             idx = idx(y);
-            % idv = zeros(1, length(hvgidx));
-            % idv(idx)=1;
-            % h.BrushData = idv;
             for k = 1:length(idx)
                 dt = datatip(h, 'DataIndex', idx(k));
             end

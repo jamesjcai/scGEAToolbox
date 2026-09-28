@@ -50,5 +50,4 @@ X = h5read(outputfile, '/X');
 contamination = h5read(outputfile, '/contamination');
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-% cd(oldpth);
 end

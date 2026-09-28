@@ -1,5 +1,9 @@
-function callback_RunEnrichr(src, ~, predefinedlist, enrichrtype, ...
+function T = callback_RunEnrichr(src, ~, predefinedlist, enrichrtype, ...
     backgroundlist, ~, wkdir)
+% T = gui.callback_RunEnrichr(...) returns the enriched terms instead of
+% showing them, so a caller running more than one list can show them in one
+% window. T is empty when nothing ran or the web version was used.
+T = table.empty;
 
 if nargin < 7, wkdir = ''; end
 if nargin < 6, outfiletag = ""; end
@@ -11,8 +15,6 @@ else
 end
 if nargin < 4, enrichrtype = []; end
 if nargin < 3, predefinedlist = []; end
-
-%    [FigureHandle, sce] = gui.gui_getfigsce(src);
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 gsorted = natsort(sce.g);
@@ -38,7 +40,6 @@ if isempty(predefinedlist)
                 min([200, length(gsorted)]))), [], FigureHandle);
         end
     else
-        % ingenelist = gui.i_inputgenelist(predefinedlist);
         ingenelist = predefinedlist;
     end
 if isempty(ingenelist) || all(strlength(ingenelist) < 1)
@@ -89,12 +90,18 @@ switch enrichrtype
     case 'Web-based'
         fw = gui.myWaitbar(FigureHandle, [], false, ...
             'Sending genes to web browser...');
-        % gui.i_enrichtest(genelist, backgroundlist, numel(genelist));
+        try
             if ~isempty(backgroundlist)
                 run.web_Enrichr_bkg(ingenelist, backgroundlist, numel(ingenelist), wkdir);
             else
                 run.web_Enrichr(ingenelist, numel(ingenelist), '', wkdir);
             end
+        catch ME
+            % Without this a failed browser hand-off left the bar open.
+            gui.myWaitbar(FigureHandle, fw, true);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+            return;
+        end
         gui.myWaitbar(FigureHandle, fw, false, ...
             'Check web browser & submit genes to Enrichr.');
         return;
@@ -130,8 +137,15 @@ try
 
 
 fw = gui.myWaitbar(FigureHandle);
-Tlist = run.ml_Enrichr(ingenelist, backgroundlist, genesets,...
-                           minugenes, pvaluecut);
+try
+    Tlist = run.ml_Enrichr(ingenelist, backgroundlist, genesets, ...
+        minugenes, pvaluecut);
+catch ME
+    % A network or API failure used to leave the bar open over the app.
+    gui.myWaitbar(FigureHandle, fw, true);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
+end
 
 T=table;
 for k = 1:height(Tlist)
@@ -141,18 +155,13 @@ for k = 1:height(Tlist)
     end
 
 gui.myWaitbar(FigureHandle, fw);
-
-    % [~, ~] = gui.i_exporttable(T, true, 'Tenrichrres', ...
-    %    sprintf('Enrichr_Results_%s', outfiletag),[],[],FigureHandle);
+if nargout > 0, return; end
 
 options = {'View Table', 'Circos Plot'};
-    % answer = gui.myQuestdlg(FigureHandle, 'View Enrichr Result Table or Show the Table as a Circos Plot?', ...
-    %    '', {options{1}, options{2}}, options{1});
 
 answer = options{1};
 switch answer
         case options{1}
-            % gui.i_viewtable(T, FigureHandle);
             gui.TableViewerApp(T, FigureHandle);
         case options{2}
             if height(T) > 1

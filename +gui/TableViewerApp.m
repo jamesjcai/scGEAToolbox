@@ -144,18 +144,6 @@ for actionIdx = 1:numel(customActions)
     end
 end
 
-    %{
-    printBtn = uibutton(btnLayout, 'Text', 'Print Table', ...
-                   'ButtonPushedFcn', @(btn,event) printTable(uitTable));
-    printBtn.Layout.Row = 2;
-    printBtn.Layout.Column = 2;
-
-    statsBtn = uibutton(btnLayout, 'Text', 'Show Statistics', ...
-                    'ButtonPushedFcn', @(btn,event) showStatistics(uitTable));
-    statsBtn.Layout.Row = 2;
-    statsBtn.Layout.Column = 3;
-    %}
-
     % Update sort dropdown with column names
 updateSortDropdown(sortByDropdown, uitTable);
 

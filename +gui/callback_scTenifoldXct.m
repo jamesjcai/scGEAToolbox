@@ -30,7 +30,7 @@ if ~has_dlt, def_midx = MTHD_SPEC; end
 if ~has_stats, def_midx = MTHD_PYTHON; end
 
 [midx, tf] = gui.myListdlg(FigureHandle, methodlist, ...
-'Select scTenifoldXct implementation:', methodlist(def_midx));
+'Select scTenifoldXct implementation:', methodlist(def_midx), false);
 if ~tf || isempty(midx), return; end
 
 % Block Path A if Deep Learning Toolbox is absent
@@ -88,33 +88,9 @@ if ~use_python
 end
 
 % ── 1c. Parallel computing ───────────────────────────────────────────────
-% net.pcrnet regresses each gene on the principal components of the others.
-% That loop dominates the runtime and runs as a parfor when asked. Follows the
-% idiom in callback_scTenifoldNet1lite: a GPU wins if present, because
-% net.pcrnet cannot combine parfor with gpuArray.
+% None: net.pcrnet builds every regression from one eigendecomposition, so
+% there is no per-gene loop for a parfor to split.
 useparallel = false;
-if ~use_python
-    if pkg.i_usegpu(sce.X)
-        disp('GPU detected — using CUDA GPU acceleration.');
-    else
-        answerp = gui.myQuestdlg(FigureHandle, ...
-            ['Build the gene regulatory networks with parallel computing?' ...
-             newline newline ...
-             'Usually NOT worth it. net.pcrnet runs one SVD per gene, and ' ...
-             'the serial loop is already parallel: multithreaded BLAS spreads ' ...
-             'each SVD across every core, worth 3.0x at 600 genes and 5.7x ' ...
-             'at 1856. A parfor fragments that work and fights it.' ...
-             newline newline ...
-             'Measured on 20 cores, 784 cells, against serial with no pool: ' ...
-             'roughly break-even at 600 genes, 0.5x at 1200 and 0.3x at ' ...
-             '1856 - about three times slower. A Threads pool is no better. ' ...
-             'Worth trying only for small gene sets.'], ...
-            'Parallel Computing', ...
-            {'Not use parallel', 'Use parallel'}, 'Not use parallel');
-        if isempty(answerp), return; end
-        useparallel = strcmp(answerp, 'Use parallel');
-    end
-end
 
 % ── 2. Python-only setup (wkdir + pyenv) ─────────────────────────────────
 prepare_input_only = false;
@@ -199,6 +175,12 @@ sce = sce.selectcells(idx);
 
 % ── 6. Run selected implementation ───────────────────────────────────────
 Tres = [];
+% The MATLAB paths report no progress of their own, so the app looked frozen
+% while they ran. The Python runner opens its own bar.
+fw = [];
+if ~use_python
+    fw = gui.myWaitbar(FigureHandle, [], [], 'Running scTenifoldXct...');
+end
 switch midx
 
     case MTHD_NN   % ── Path A: Neural Network ─────────────────────────────
@@ -209,6 +191,7 @@ switch midx
             Tres = ten.xct.xctmain_nn(X_s, X_t, g, 'twosided', twosided, ...
                 'w12mode', w12mode, 'useparallel', useparallel);
         catch ME
+            in_closewaitbar(FigureHandle, fw, true);   % before the error, not under it
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
@@ -218,6 +201,7 @@ switch midx
             Tres = ten.sctenifoldxct(sce, string(cL{x1}), string(cL{x2}), ...
                 twosided, 'w12mode', w12mode, 'useparallel', useparallel);
         catch ME
+            in_closewaitbar(FigureHandle, fw, true);   % before the error, not under it
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
@@ -230,6 +214,7 @@ switch midx
             Tres = ten.xct.xctmain(X_s, X_t, g, 'twosided', twosided, ...
                 'w12mode', w12mode, 'useparallel', useparallel);
         catch ME
+            in_closewaitbar(FigureHandle, fw, true);   % before the error, not under it
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
@@ -239,11 +224,13 @@ switch midx
             Tres = run.py_scTenifoldXct(sce, cL{x1}, cL{x2}, twosided, ...
                 wkdir, true, prepare_input_only, FigureHandle);
         catch ME
+            in_closewaitbar(FigureHandle, fw, true);   % before the error, not under it
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
 
 end
+in_closewaitbar(FigureHandle, fw, false);
 
 % ── 7. Post-process: unify two-sided results and add direction column ─────
 T = [];
@@ -309,12 +296,13 @@ if ~isempty(T)
             winopen(a);
             pause(2)
             if strcmp(gui.myQuestdlg(FigureHandle, 'Export result to other format?'), 'Yes')
-                gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable', [], [], FigureHandle);
+                gui.i_exporttable(T, true, 'Ttenifldxct', 'TenifldXctTable', [], [], FigureHandle);
             end
         case 'Export result...'
-            gui.i_exporttable(T, false, 'Ttenifldxct', 'TenifldXctTable');
+            gui.i_exporttable(T, true, 'Ttenifldxct', 'TenifldXctTable', [], [], FigureHandle);
         otherwise
-            winopen(a);
+            % Dismissed: the result is already saved; opening Explorer here
+            % turned a cancel into an action.
     end
 
 else
@@ -328,4 +316,11 @@ else
     end
 end
 
+end
+
+function in_closewaitbar(parentfig, fw, witherror)
+% Close the MATLAB-path progress bar; a no-op when none was opened.
+if ~isempty(fw) && pkg.i_isvalid(fw)
+    gui.myWaitbar(parentfig, fw, witherror);
+end
 end

@@ -15,9 +15,6 @@ function [X, genelist, celllist, ftdone] = sc_readparsebio(selpath, ~)
 
 if nargin < 2, coln = 2; end
 if nargin < 1, selpath = uigetdir; end
-% if isempty(selpath) || selpath==0 || ~isfolder(selpath)
-%     error('Need valide folder name.');
-% end
 fprintf('Processing %s...\n', selpath);
 [out, aff] = i_guessmtxfile(selpath);
 if ~isempty(out)
@@ -51,7 +48,6 @@ else
 end
 if ~exist(ftfname, 'file')
     if ~exist(zftfname, 'file')
-        % error('No features.tsv file.');
         ftdone = false;
     else
         [~, nametxt] = fileparts(zftfname);
@@ -85,12 +81,6 @@ if ~exist(ftfname, 'file'), error('No feature file'); end
 
 fprintf('Reading matrix file...');
 
-% if exist(bcfname,'file')
-%     [X,genelist,celllist]=sc_readmtxfile(mmfname,ftfname,bcfname,coln);
-% else
-%     [X,genelist]=sc_readmtxfile(mmfname,ftfname,[],coln);
-%     celllist=[];
-% end
 [X] = sc_readmtxfile(mmfname);
 if ~issparse(X)
     X = uint16(X);

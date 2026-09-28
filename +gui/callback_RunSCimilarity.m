@@ -358,8 +358,13 @@ function coords = i_poolcoordinates(sce)
 % path can run a large dataset out of memory.
 
 ndim = 30;
-[~, Xhvg] = sc_splinefit(sce.X, sce.g, true, false);
-Xhvg = Xhvg(1:min(2000, size(Xhvg, 1)), :);
+% SC_ANALYTICFIT returns gene names, not a sorted matrix, so the rows
+% are picked out by name. Order does not matter to the PCA below, and a
+% duplicated gene name keeps both of its rows. It ranks on SCE.X
+% without densifying it, so the memory note above still holds.
+Thvg = sc_analyticfit(sce.X, sce.g);
+nkeep = min(2000, height(Thvg));
+Xhvg = sce.X(ismember(sce.g, Thvg.genes(1:nkeep)), :);
 Xnorm = single(full(log1p(pkg.norm_libsize(Xhvg, 1e4))));
 ndim = min(ndim, max(1, min(size(Xnorm))-1));
 [~, coords] = pca(Xnorm.', NumComponents=ndim);

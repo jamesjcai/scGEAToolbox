@@ -14,15 +14,12 @@ else
 end
 Xi = X(:, i);
 gi = upper(genelist);
-% [Xi,gi]=sc_selectg(Xi,genelist);
 if strcmpi(database, 'clustermole')
-    % disp('Using clustermole marker database')
     [Tct] = run.r_clustermole(Xi, gi, [], 'species', species);
 elseif strcmpi(database, 'panglaodb')
-    % disp('Using panglaodb marker database')
 
 
-    [Tct] = run.ml_alona_new(Xi, gi, [], 'species', species, ...
+    [Tct] = run.ml_alona(Xi, gi, [], 'species', species, ...
         'bestonly', bestonly);
 
 

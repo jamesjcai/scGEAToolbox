@@ -2,8 +2,8 @@
 %% Load example data
 
 cdgea; % set working directory
-[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
-[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
+[X,genelistx]=sc_readfile(pkg.i_exampledata('GSM3204304_P_P_Expr.csv'));
+[Y,genelisty]=sc_readfile(pkg.i_exampledata('GSM3204305_P_N_Expr.csv'));
 [X,genelistx]=sc_selectg(X,genelistx,3,1);
 [Y,genelisty]=sc_selectg(Y,genelisty,3,1);
 %% Intersection of common genes in X, Y and Z
@@ -35,8 +35,8 @@ figure;
 scatter(s(:,1), s(:,2), 20, cellidx, 'filled')
 %% Using SC3 example data yan.csv
 
-[X,genelist] = sc_readtsvfile('example_data/yan.csv');
-t = readtable('example_data/yan_celltype.txt');
+[X,genelist] = sc_readtsvfile(pkg.i_exampledata('yan.csv'));
+t = readtable(pkg.i_exampledata('yan_celltype.txt'));
 celltypelist = string(t.cell_type1);
 rng(235); showlegend = true;
 
@@ -46,7 +46,7 @@ c2 = run.ml_SIMLR(X, 6);
 c3 = run.ml_SoptSC(X, 'k', 6);
 
 % Result of SC3/R pacakge
-load example_data/sc3_results.txt
+sc3_results = load(pkg.i_exampledata('sc3_results.txt'));
 c0 = sc3_results;
 %% Compare clustering results between SC3/R vs SC3, SIMILR and SoptSC
 

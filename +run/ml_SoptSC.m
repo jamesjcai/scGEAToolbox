@@ -43,7 +43,6 @@ if ~(ismcc || isdeployed), addpath(pth); end
 
 if donorm
     [X] = sc_norm(X, 'type', 'deseq');
-    %    X=log10(X+1);
 end
 
 

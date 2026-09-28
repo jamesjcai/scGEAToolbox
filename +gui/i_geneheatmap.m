@@ -19,8 +19,6 @@ if noanswer, return; end
 gidx = gidx(y);
 glist = glist(y);
 
-% [Xt]=gui.i_transformx(sce.X, [], [], parentfig);
-% if isempty(Xt), return; end
 Xt = sc_norm(sce.X);
 Xt = log1p(Xt);
 
@@ -29,7 +27,6 @@ Y = Xt(gidx, :);
 Y = Y(:, cidx);
 [Y] = gui.i_norm4heatmap(Y);
 
-% szgn = grpstats(c, c, @numel);
 szgn = splitapply(@numel, c, c);
 a = zeros(1, max(c));
 b = zeros(1, max(c));
@@ -38,29 +35,20 @@ for k = 1:max(c)
     b(k) = round(sum(c == k)./2);
 end
 
-% figure;
-% heatmap(Y)
-% assignin('base','Y',Y);
-% assignin('base','g',glist) ;
-% heatmap(Y,'YDisplayLabels',glist, ...
-%     'XDisplayLabels',strings(size(Y,2),1), ...
-%     'GridVisible',false,'ColorScaling','scaled',...
-%     'ColorbarVisible',false)
-
 hx=gui.myFigure(parentfig);
-h = imagesc(Y);
-% hFig.Colormap = repmat(linspace(0, 1, 25).', 1, 3);
-set(gca, 'XTick', a-b);
-set(gca, 'XTickLabel', cL);
-% set(gca,'XTickLabelRotation',0);
-set(gca, 'YTick', 1:length(glist));
-set(gca, 'YTickLabel', glist);
-set(gca, 'TickLength', [0, 0]);
-% colormap(flipud(bone));
-box on
+% Every draw below, including the button callbacks, targets this axes:
+% after a dialog the current axes can be another window's.
+ax = hx.AxHandle;
+h = imagesc(ax, Y);
+set(ax, 'XTick', a-b);
+set(ax, 'XTickLabel', cL);
+set(ax, 'YTick', 1:length(glist));
+set(ax, 'YTickLabel', glist);
+set(ax, 'TickLength', [0, 0]);
+box(ax, 'on');
 
 szc = cumsum(szgn);
-for k = 1:length(szc), xline(szc(k)+0.5, 'y-'); end
+for k = 1:length(szc), xline(ax, szc(k)+0.5, 'y-'); end
 
 hx.addCustomButton('on', @in_callback_renamecat, 'guideicon.gif', 'Rename groups...');
 hx.addCustomButton('off', @in_callback_resetcolor, 'plotpicker-geobubble2.gif', 'Reset color map');
@@ -71,43 +59,46 @@ hx.show(parentfig);
 fliped = false;
 
 function in_callback_flipxy(~, ~)
-        % delete(h);
         fliped = ~fliped;
         if fliped
-            h = imagesc(Y');
-            set(gca, 'YTick', a-b);
-            set(gca, 'YTickLabel', cL);
-            % set(gca,'YTickLabelRotation',90);
-            set(gca, 'XTick', 1:length(glist));
-            set(gca, 'XTickLabel', glist);
-            set(gca, 'XTickLabelRotation', 90);
-            set(gca, 'TickLength', [0, 0]);
+            h = imagesc(ax, Y');
+            set(ax, 'YTick', a-b);
+            set(ax, 'YTickLabel', cL);
+            set(ax, 'XTick', 1:length(glist));
+            set(ax, 'XTickLabel', glist);
+            set(ax, 'XTickLabelRotation', 90);
+            set(ax, 'TickLength', [0, 0]);
         else
-            h = imagesc(Y);
-            set(gca, 'XTick', a-b);
-            set(gca, 'XTickLabel', cL);
-            % set(gca,'XTickLabelRotation',0);
-            set(gca, 'YTick', 1:length(glist));
-            set(gca, 'YTickLabel', glist);
-            set(gca, 'TickLength', [0, 0]);
+            h = imagesc(ax, Y);
+            set(ax, 'XTick', a-b);
+            set(ax, 'XTickLabel', cL);
+            set(ax, 'YTick', 1:length(glist));
+            set(ax, 'YTickLabel', glist);
+            set(ax, 'TickLength', [0, 0]);
         end
     end
 
 function in_callback_renamecat(~, ~)
-        tg = gui.i_inputgenelist(string(cL), true, parentfig);
+        % The dialog belongs to this plot window, so closing it raises this
+        % window rather than the main app.
+        tg = gui.i_inputgenelist(string(cL), true, hx.FigHandle);
         if isempty(tg), return; end
         if length(tg) == length(cL)
-            set(gca, 'XTick', a-b);
-            set(gca, 'XTickLabel', tg(:))
+            % Group labels sit on the Y axis while the map is flipped.
+            if fliped
+                set(ax, 'YTick', a-b, 'YTickLabel', tg(:));
+            else
+                set(ax, 'XTick', a-b, 'XTickLabel', tg(:));
+            end
             cL = tg;
         else
-            gui.myErrordlg(parentfig, 'Wrong input.');
+            gui.myErrordlg(hx.FigHandle, 'Wrong input.');
         end
     end
 
 function in_callback_resetcolor(~, ~)
-        set(gca, 'FontSize', 10);
-        colormap default
+        set(ax, 'FontSize', 10);
+        colormap(ax, 'default')
     end
 
 end

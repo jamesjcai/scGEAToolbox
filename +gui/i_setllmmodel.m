@@ -72,7 +72,7 @@ listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'Anthropic', ...
 
 if gui.i_isuifig(parentfig)
     [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
-            'Select a LLM provider:', listItems(1));
+            'Select a LLM provider:', listItems(1), false);
 else
     [selectedIndex, ok] = listdlg('PromptString', ...
                           'Select a LLM provider:', ...
@@ -98,10 +98,6 @@ switch selectedProvider
         end
         if strcmp(a, 'Ollama is running')
             a = webread('http://127.0.0.1:11434/api/tags');
-                % [a,str]=dos('Ollama list');
-                % if a == 0
-                % tokens = regexp(str, '([a-zA-Z0-9.-]+):latest', 'tokens');
-                % model_names = cellfun(@(x) x{1}, tokens, 'UniformOutput', false);
 
 
            if isfield(a, 'models') && size(a.models, 1) > 0
@@ -117,7 +113,7 @@ switch selectedProvider
 
            if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                    'Select a model:');
+                    'Select a model:', [], false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                               'SelectionMode', 'single', ...
@@ -147,19 +143,22 @@ switch selectedProvider
     case 'Gemini'
         if ~exist(apikeyfile,"file")
             gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
+            return;   % LOADENV on a missing file threw after the dialog
         end
         loadenv(apikeyfile,"FileType","env");
         if ~isempty(getenv("GEMINI_API_KEY"))
-            url = sprintf('https://generativelanguage.googleapis.com/v1beta/models?key=%s', ...
-                  getenv("GEMINI_API_KEY"));
-            a = webread(url);
-            model_names = cellfun(@(x) x.name, a.models, 'UniformOutput', false);
+            % The key in a header, not in the URL, where it is written to
+            % proxy and server access logs.
+            url = 'https://generativelanguage.googleapis.com/v1beta/models';
+            a = webread(url, weboptions('HeaderFields', ...
+                {'x-goog-api-key', getenv("GEMINI_API_KEY")}, 'Timeout', 30));
+            model_names = cellstr(i_field2str(a.models, 'name'));
             model_names = extractAfter(model_names, 7);
             [y, idx]=ismember('gemini-2.0-flash', model_names);
             if y
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                            'Select a model:', model_names(idx));
+                            'Select a model:', model_names(idx), false);
                 else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
@@ -169,7 +168,7 @@ switch selectedProvider
             else
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                            'Select a model:');
+                            'Select a model:', [], false);
                 else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
@@ -189,6 +188,7 @@ switch selectedProvider
     case 'NVIDIA'
         if ~exist(apikeyfile,"file")
             gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
+            return;   % LOADENV on a missing file threw after the dialog
         end
         loadenv(apikeyfile,"FileType","env");
         if ~isempty(getenv("NVIDIA_API_KEY"))
@@ -204,7 +204,6 @@ switch selectedProvider
             try
                 models_response = webread(models_url, options);
                 model_names = string({models_response.data.id});
-                % model_names = string(cellfun(@(s) s.id, models_response.data, 'UniformOutput', false));
             catch ME
                 gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, 'Error fetching models');
@@ -217,7 +216,7 @@ switch selectedProvider
             if y
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a model:', model_names(idx));
+                        'Select a model:', model_names(idx), false);
                 else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                         'SelectionMode', 'single', ...
@@ -227,7 +226,7 @@ switch selectedProvider
             else
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a model:');
+                        'Select a model:', [], false);
                 else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                         'SelectionMode', 'single', ...
@@ -247,6 +246,7 @@ switch selectedProvider
     case 'TAMUAIChat'
         if ~exist(apikeyfile,"file")
             gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
+            return;   % LOADENV on a missing file threw after the dialog
         end
         loadenv(apikeyfile,"FileType","env");
         if ~isempty(getenv("TAMUAI_API_KEY"))
@@ -261,8 +261,7 @@ switch selectedProvider
 
             try
                 models_response = webread(models_url, options);
-                model_names = string(cellfun(@(s) s.id, ...
-                    models_response.data, 'UniformOutput', false));
+                model_names = i_field2str(models_response.data, 'id');
             catch ME
                 gui.myWaitbar(parentfig, fw, true);
                 gui.myErrordlg(parentfig, ME.message, 'Error fetching models');
@@ -275,7 +274,7 @@ switch selectedProvider
             if y
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                            'Select a model:', model_names(idx));
+                            'Select a model:', model_names(idx), false);
                 else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
@@ -285,7 +284,7 @@ switch selectedProvider
             else
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                            'Select a model:');
+                            'Select a model:', [], false);
                 else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
@@ -305,20 +304,27 @@ switch selectedProvider
     case 'OpenAI'
         if ~exist(apikeyfile,"file")
             gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
+            return;   % LOADENV on a missing file threw after the dialog
         end
         loadenv(apikeyfile,"FileType","env");
-        if ~isempty(getenv("OpenAI_API_KEY"))
+        % OPENAI_API_KEY, the name the pipelines and .env.example use, or
+        % the OpenAI_API_KEY this once read alone: environment names are
+        % case-sensitive on macOS and Linux, so there the conventional name
+        % was never found and choosing OpenAI silently did nothing.
+        openaiKey = getenv("OPENAI_API_KEY");
+        if isempty(openaiKey), openaiKey = getenv("OpenAI_API_KEY"); end
+        if ~isempty(openaiKey)
             OPEN_WEBUI_API_ENDPOINT = "https://api.openai.com/v1";
             models_url = sprintf('%s/models', OPEN_WEBUI_API_ENDPOINT);
 
             options = weboptions('HeaderFields', {'Authorization', ...
-                sprintf('Bearer %s', getenv("OpenAI_API_KEY"))}, ...
+                sprintf('Bearer %s', openaiKey)}, ...
                 'ContentType', 'json',...
                 'Timeout', 30);
 
             try
                 models_response = webread(models_url, options);
-                model_names = string(arrayfun(@(s) s.id, models_response.data, 'UniformOutput', false));
+                model_names = i_field2str(models_response.data, 'id');
              catch ME
                 fprintf('Error fetching models: %s\n', ME.message);
                 return;
@@ -328,7 +334,7 @@ switch selectedProvider
             if y
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                            'Select a model:', model_names(idx));
+                            'Select a model:', model_names(idx), false);
                 else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
@@ -338,7 +344,7 @@ switch selectedProvider
             else
                 if gui.i_isuifig(parentfig)
                     [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                            'Select a model:');
+                            'Select a model:', [], false);
                 else
                     [idx, ok2] = listdlg('PromptString', 'Select a model:', ...
                                   'SelectionMode', 'single', ...
@@ -385,8 +391,7 @@ switch selectedProvider
         try
             models_response = webread(models_url, options);
             % Response shape: struct with field 'data', each element has 'id'
-            model_names = string(cellfun(@(s) s.id, ...
-                models_response.data, 'UniformOutput', false));
+            model_names = i_field2str(models_response.data, 'id');
         catch ME
             gui.myWaitbar(parentfig, fw, true);
             gui.myErrordlg(parentfig, ME.message, 'Error fetching Anthropic models');
@@ -406,7 +411,7 @@ switch selectedProvider
         if y
             if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a Claude model:', model_names(idx));
+                        'Select a Claude model:', model_names(idx), false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a Claude model:', ...
                               'SelectionMode', 'single', ...
@@ -417,7 +422,7 @@ switch selectedProvider
         else
             if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a Claude model:');
+                        'Select a Claude model:', [], false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a Claude model:', ...
                               'SelectionMode', 'single', ...
@@ -457,8 +462,7 @@ switch selectedProvider
         fw = gui.myWaitbar(parentfig);
         try
             models_response = webread(models_url, options);
-            model_names = string(cellfun(@(s) s.id, ...
-                models_response.data, 'UniformOutput', false));
+            model_names = i_field2str(models_response.data, 'id');
         catch ME
             gui.myWaitbar(parentfig, fw, true);
             gui.myErrordlg(parentfig, ME.message, 'Error fetching DeepSeek models');
@@ -471,7 +475,7 @@ switch selectedProvider
         if y
             if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a DeepSeek model:', model_names(idx));
+                        'Select a DeepSeek model:', model_names(idx), false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a DeepSeek model:', ...
                               'SelectionMode', 'single', 'ListString', model_names, ...
@@ -479,7 +483,7 @@ switch selectedProvider
             end
         else
             if gui.i_isuifig(parentfig)
-                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a DeepSeek model:');
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a DeepSeek model:', [], false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a DeepSeek model:', ...
                               'SelectionMode', 'single', 'ListString', model_names, ...
@@ -516,8 +520,7 @@ switch selectedProvider
         fw = gui.myWaitbar(parentfig);
         try
             models_response = webread(models_url, options);
-            model_names = string(cellfun(@(s) s.id, ...
-                models_response.data, 'UniformOutput', false));
+            model_names = i_field2str(models_response.data, 'id');
         catch ME
             gui.myWaitbar(parentfig, fw, true);
             gui.myErrordlg(parentfig, ME.message, 'Error fetching xAI models');
@@ -530,7 +533,7 @@ switch selectedProvider
         if y
             if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select an xAI model:', model_names(idx));
+                        'Select an xAI model:', model_names(idx), false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select an xAI model:', ...
                               'SelectionMode', 'single', 'ListString', model_names, ...
@@ -538,7 +541,7 @@ switch selectedProvider
             end
         else
             if gui.i_isuifig(parentfig)
-                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select an xAI model:');
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select an xAI model:', [], false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select an xAI model:', ...
                               'SelectionMode', 'single', 'ListString', model_names, ...
@@ -575,8 +578,7 @@ switch selectedProvider
         fw = gui.myWaitbar(parentfig);
         try
             models_response = webread(models_url, options);
-            model_names = string(cellfun(@(s) s.id, ...
-                models_response.data, 'UniformOutput', false));
+            model_names = i_field2str(models_response.data, 'id');
             % Keep only chat-capable models (exclude embed/moderation models)
             is_chat = cellfun(@(s) isfield(s,'capabilities') && ...
                 isfield(s.capabilities,'completion_chat') && ...
@@ -596,7 +598,7 @@ switch selectedProvider
         if y
             if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a Mistral model:', model_names(idx));
+                        'Select a Mistral model:', model_names(idx), false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a Mistral model:', ...
                               'SelectionMode', 'single', 'ListString', model_names, ...
@@ -604,7 +606,7 @@ switch selectedProvider
             end
         else
             if gui.i_isuifig(parentfig)
-                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a Mistral model:');
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a Mistral model:', [], false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a Mistral model:', ...
                               'SelectionMode', 'single', 'ListString', model_names, ...
@@ -658,7 +660,7 @@ switch selectedProvider
         if y
             if gui.i_isuifig(parentfig)
                 [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a Cohere model:', model_names(idx));
+                        'Select a Cohere model:', model_names(idx), false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a Cohere model:', ...
                               'SelectionMode', 'single', 'ListString', model_names, ...
@@ -666,7 +668,7 @@ switch selectedProvider
             end
         else
             if gui.i_isuifig(parentfig)
-                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a Cohere model:');
+                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a Cohere model:', [], false);
             else
                 [idx, ok2] = listdlg('PromptString', 'Select a Cohere model:', ...
                               'SelectionMode', 'single', 'ListString', model_names, ...
@@ -690,11 +692,25 @@ switch selectedProvider
 end
 
 fw = gui.myWaitbar(parentfig);
-% [done2] = llm.i_checkllm(apikeyfile);
 done2=true;
 gui.myWaitbar(parentfig, fw);
 
 if done && done2
      gui.myHelpdlg(parentfig, "LLM provider and" + ...
          " model are set successfully.");
+end
+end
+
+function v = i_field2str(d, name)
+% D.(NAME) of every element as a string array, whichever shape JSONDECODE
+% gave D: a struct array when every object in the reply has the same fields,
+% a cell array of structs when they differ. The model-list code assumed one
+% shape per provider -- CELLFUN for most, ARRAYFUN for OpenAI -- and threw
+% "Error fetching models" whenever the reply came in the other.
+if iscell(d)
+    v = string(cellfun(@(x) x.(name), d, 'UniformOutput', false));
+else
+    v = string({d.(name)});
+end
+v = v(:);
 end

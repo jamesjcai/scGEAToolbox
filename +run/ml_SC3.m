@@ -8,8 +8,6 @@ if nargin < 3
     plotit = false;
 end
 if nargin < 2
-    % [optimk]=fun_num_cluster(X,'type','simlr');
-    % [optimk]=fun_num_cluster(X,'type','sc3');
     [optimk] = pkg.e_numclusters(X);
 else
     optimk = k;
@@ -172,9 +170,6 @@ A = exp(-Dis./max(Dis(:))); % adjacency matrix
 % see https://people.orie.cornell.edu/dpw/orie6334/lecture7.pdf
 % see https://en.wikipedia.org/wiki/Laplacian_matrix#Symmetric_normalized_Laplacian_2
 
-%     [V,D]=eig(L);
-%     [~,ind]=sort(diag(D));
-%     V = V(:,ind);
 [V, ~] = eigs(L, k, 'smallestreal');
 end
 
@@ -205,7 +200,6 @@ L = diag(D) - A;
 if nargout > 1
     D(D ~= 0) = sqrt(1./D(D ~= 0));
     D = diag(D);
-    % Lnorm=D*L*D;
     Lnorm = eye(size(A, 1)) - D * A * D; % L = I-D^-1/2*W*D^-1/2
 end
 end

@@ -2,36 +2,26 @@ function A = sc_grn(X, type, varargin)
 %SC_GRN Construct single-cell gene regulatory network (scGRN)
 %
 %   A = sc_grn(X) uses default type 'pcrnet'.
-%   A = sc_grn(X, type) where type is one of:
-%       'pcrnet'          - principal component regression (parallel by default)
-%       'pcrnet_batch'    - PCR (batch pagesvd)
-%       'pcrnet_denoised' - tensor-denoised PCR (robust, slow)
-%       'genie3'          - random forest ensemble (slow)
-%       'pearson'         - thresholded Pearson correlation
-%       'xicor'           - Chatterjee's xi correlation (nonlinear)
-%       'distcorr'        - distance correlation (nonlinear, symmetric)
-%       'mi'              - mutual information (parallel)
-%       'grnformer'       - GRNFormer graph transformer (Hegde & Cheng 2026)
-%       'tn'              - tensor-network MPS Born machine (panel-scale)
+%   A = sc_grn(X, type) builds the network with the method named TYPE.
+%   A = sc_grn(X, type, extra...) passes further arguments to methods
+%   that take them ('grnformer' needs tf_idx; 'tn' takes a gene list).
 %
-%   For 'grnformer', additional arguments are required / supported:
-%       A = sc_grn(X, 'grnformer', tf_idx)
-%       A = sc_grn(X, 'grnformer', tf_idx, 'GroundTruth', GT, ...)
-%   where tf_idx is a logical or integer index vector of TF genes, and
-%   remaining name-value pairs are forwarded to net.grnformer.
+%   The methods, with a one-line description and the extra arguments each
+%   accepts, are the rows of net.grnmethods(); run it to list them:
+%       T = net.grnmethods();
+%       disp(T(:, ["Key", "Summary", "ExtraArgs"]))
 %
-%   For 'tn', an optional gene-name list may be supplied:
-%       A = sc_grn(X, 'tn', genelist)
-%   'tn' is panel-scale (restrict X to a curated module, <= ~20 genes).
-%   See ten.tngrn for the full edge table and virtual-knockout options.
+%   X is a genes-by-cells matrix, expected to be already normalised and
+%   transformed, as it is on every in-tree path: the GUI runs
+%   gui.i_transformx first, and +cli/cmd_grn normalises before calling.
+%   No branch normalises for you.
 %
-%   X is expected to be already normalised and transformed, as it is on
-%   both in-tree paths: +gui/callback_BuildGeneNetwork runs gui.i_transformx
-%   first, and +cli/cmd_grn normalises before calling. No branch normalises
-%   for you.
+%   A is genes-by-genes, indexed in the order of the rows of X. A(i, j) is
+%   the edge from gene i to gene j (regulators in rows) for every method;
+%   symmetric methods give A(i, j) == A(j, i). net.pcrnet itself returns
+%   targets in rows, and its registry rows transpose it.
 %
-%   All methods except 'tn' are implemented in the +net/ package.
-%   See also: net.pcrnet, net.genie3, net.xicornet, net.grnformer, ten.tngrn
+%   See also: net.grnmethods, sc_grnview.
 
 arguments
     X {mustBeNumeric}
@@ -41,57 +31,17 @@ arguments (Repeating)
     varargin
 end
 
-type = lower(string(type));
-
-validTypes = ["pcrnet" "pcrnet_batch" "pcrnet_denoised" ...
-              "genie3" "pearson" "xicor" "distcorr" "mi" "grnformer" "tn"];
-if ~ismember(type, validTypes)
-    error("sc_grn:InvalidType", ...
-          "Type must be one of: %s", strjoin(validTypes, ", "));
+catalog = net.grnmethods();
+row = find(catalog.Key == lower(type));
+if isempty(row)
+    error("sc_grn:InvalidType", "Type must be one of: %s", ...
+        strjoin(catalog.Key, ", "));
+end
+if ~isempty(varargin) && catalog.ExtraArgs(row) == ""
+    error("sc_grn:UnexpectedArguments", ...
+        "Method '%s' takes no arguments after the type; got %d.", ...
+        catalog.Key(row), numel(varargin));
 end
 
-switch type
-    case "pcrnet"
-        A = net.pcrnet(X, 3, false, true, false, false, pkg.i_usegpu(X));
-    case "pcrnet_batch"
-        A = net.pcrnet_batch(X);
-    case "pcrnet_denoised"
-        A = net.pcrnet_denoised(X);
-    case "genie3"
-        % donorm = false. This passed TRUE, so this one branch out of ten
-        % ran sc_norm(X, 'type', 'libsize') on its input while the other
-        % nine took X as supplied. Callers hand over data they have
-        % already normalised and transformed -- +gui/callback_BuildGeneNetwork
-        % runs gui.i_transformx before calling, and +cli/cmd_grn normalises
-        % up front -- so this library-size-normalised an already log1p'd
-        % matrix, which is not a meaningful operation on either scale, and
-        % it did so only when the user picked GENIE3 from the menu.
-        A = net.genie3(X, [], false);
-    case "pearson"
-        A = net.pearsonnet(X);
-    case "xicor"
-        A = net.xicornet(X);
-    case "distcorr"
-        A = net.distcorrnet(X);
-    case "mi"
-        A = net.minet(X);
-    case "grnformer"
-        if isempty(varargin)
-            error("sc_grn:MissingTFIdx", ...
-                "grnformer requires tf_idx as the third argument.\n" + ...
-                "  Usage: sc_grn(X, 'grnformer', tf_idx, ...)");
-        end
-        tf_idx = varargin{1};
-        extra  = varargin(2:end);
-        A = net.grnformer(X, tf_idx, extra{:});
-    case "tn"
-        % Tensor-network MPS Born machine (panel-scale; restrict X to a module).
-        % Optional 3rd arg: sc_grn(X, 'tn', genelist)
-        genelist = string.empty;
-        if ~isempty(varargin), genelist = varargin{1}; end
-        A = ten.tngrn(X, genelist, 'EdgesOnly', true);
-    otherwise
-        % Should not reach here — type is validated by ismember check above
-        error('sc_grn:InvalidType', 'Unknown GRN type: %s', type);
-end
+A = catalog.Build{row}(X, varargin);
 end

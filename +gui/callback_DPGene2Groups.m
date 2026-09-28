@@ -33,10 +33,6 @@ function callback_DPGene2Groups(src, ~)
         return;
     end
     
-    % assignin("base", "setmatrx", setmatrx);
-    % assignin("base", "setnames", setnames);
-    % assignin("base", "setgenes", setgenes);
-    
     fw = gui.myWaitbar(FigureHandle, [], false, 'Computing differential programs...');
     cleanupObj = onCleanup(@() i_closewaitbar(fw)); 
     
@@ -44,7 +40,6 @@ function callback_DPGene2Groups(src, ~)
     bgsubtract = true;
     try
         sceX = log1p(sc_norm(sce.X));
-        % sceX = sc_transform(sce.X, 'type', 'PearsonResiduals');
         [T, Zx_dpg, Zy_dpg] = sc_dpg(sceX(:,i1), sceX(:,i2), sce.g, setmatrx, setnames, setgenes, ranknorm, bgsubtract);
     catch ME
         gui.myWaitbar(FigureHandle, fw, true);

@@ -1,4 +1,4 @@
-function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir, method, direction)
+function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir, method, direction, options)
 % LLM.RUN_DV_ANALYSIS  Cell type-specific DV analysis between two GEO samples.
 %
 %   results = llm.run_dv_analysis(sample_id1, sample_id2)
@@ -6,6 +6,7 @@ function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir, me
 %   results = llm.run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir)
 %   results = llm.run_dv_analysis(..., out_dir, method)
 %   results = llm.run_dv_analysis(..., out_dir, method, direction)
+%   results = llm.run_dv_analysis(..., NumPermutations=30)
 %
 %   Loads cleandata.mat for each sample (each file contains a
 %   SingleCellExperiment variable named 'sce') and performs differential
@@ -24,7 +25,8 @@ function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir, me
 %
 %   If out_dir is provided, results are saved as Excel files
 %   (DV_<id1>_vs_<id2>_<celltype>.xlsx; a non-default method adds
-%   _<method> after DV, and direction 'deviation' adds _devsign) with
+%   _<method> after DV, direction 'deviation' adds _devsign, and
+%   NumPermutations=K adds _perm<K>) with
 %   sheets: All genes, Up-regulated, Down-regulated, Note ('Variability
 %   increasing'/'decreasing' in place of up/down for 'deviation').
 %
@@ -47,6 +49,16 @@ function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir, me
 %                  'mean' (default) by mean expression, or 'deviation'
 %                  by deviation from each sample's curve.
 %
+%   Name-value options:
+%     NumPermutations - SC_DVG's NumPermutations: 0 (default) or at least 10.
+%                  When positive, pval comes from a permutation null. The
+%                  default p-value is not calibrated on real cells (see
+%                  "Calibration" in SC_DVG): random halves of one cell type
+%                  pass many genes that do not differ. The up/down split
+%                  below thresholds pval, so use about 30 when the lists
+%                  matter; it costs about K+1 times the runtime per cell type.
+%                  The JSON summary reports it as num_permutations.
+%
 %   Output:
 %     results - struct array with one element per shared cell type:
 %       .cell_type  - cell type label (string)
@@ -60,6 +72,16 @@ function results = run_dv_analysis(sample_id1, sample_id2, data_dir, out_dir, me
 %     results = llm.run_dv_analysis('GSM2333580', 'GSM2333581', ...
 %                   'C:/abs/path/to/data', 'C:/abs/path/to/output');
 
+arguments
+    sample_id1
+    sample_id2
+    data_dir = []
+    out_dir = []
+    method = []
+    direction = []
+    options.NumPermutations (1,1) double {mustBeInteger, mustBeNonnegative} = 0
+end
+
 if nargin < 3 || isempty(data_dir), data_dir = 'data'; end
 if nargin < 4, out_dir = []; end
 if nargin < 5 || isempty(method), method = 'splinefit'; end
@@ -68,6 +90,13 @@ method = validatestring(method, {'splinefit', 'analytic'}, ...
 if nargin < 6 || isempty(direction), direction = 'mean'; end
 direction = validatestring(direction, {'mean', 'deviation'}, ...
     mfilename, 'direction', 6);
+numPerm = options.NumPermutations;
+% Checked here rather than left to SC_DVG, whose error the per-cell-type
+% try/catch below would report as an analysis failure of every cell type.
+if numPerm > 0 && numPerm < 10
+    error('llm:run_dv_analysis:TooFewPermutations', ...
+        'NumPermutations must be 0 or at least 10.');
+end
 
 max_cells = 2000;   % subsample per cell type for speed
 
@@ -136,9 +165,12 @@ for k = 1:numel(shared_ct)
     n1 = numel(idx1);
     n2 = numel(idx2);
 
-    % Subset SCE objects by cell type
-    sce1_ct = sce1.selectcells(idx1);
-    sce2_ct = sce2.selectcells(idx2);
+    % Subset copies: SingleCellExperiment is a handle class, and
+    % selectcells/qcfilter shrink the object they are called on, so
+    % subsetting sce1/sce2 themselves would leave the next cell type's
+    % indices pointing into this one's cells.
+    sce1_ct = copy(sce1).selectcells(idx1);
+    sce2_ct = copy(sce2).selectcells(idx2);
 
     % QC filter (remove low-quality cells/genes after subsetting)
     sce1_ct = sce1_ct.qcfilter;
@@ -155,7 +187,8 @@ for k = 1:numel(shared_ct)
     T = [];
     try
         T = sc_dvg(sce1_ct, sce2_ct, ...
-            {char(sample_id1)}, {char(sample_id2)}, method, direction);
+            {char(sample_id1)}, {char(sample_id2)}, method, direction, ...
+            NumPermutations=numPerm);
     catch ME
         fprintf('FAILED: %s\n', ME.message);
         skipped{end+1} = struct('cell_type', char(ct), 'n1', n1, 'n2', n2, ...
@@ -164,7 +197,8 @@ for k = 1:numel(shared_ct)
     end
 
     % Label columns (adds sample-specific headers and note fields)
-    [T, Tnt] = pkg.in_DVTableProcess(T, {char(sample_id1)}, {char(sample_id2)}, direction);
+    [T, Tnt] = pkg.in_DVTableProcess(T, {char(sample_id1)}, {char(sample_id2)}, ...
+        direction, numPerm);
 
     % Split significant genes (pval < 0.05) into up (DiffSign > 0, sample 1) and down
     Tup = T(T.DiffSign > 0 & T.pval < 0.05, :);
@@ -197,6 +231,9 @@ for k = 1:numel(shared_ct)
             uplabel = 'Variability increasing (p<0.05)';
             dnlabel = 'Variability decreasing (p<0.05)';
         end
+        if numPerm > 0
+            methodinfix = sprintf('%s_perm%d', methodinfix, numPerm);
+        end
         outfile = sprintf('DV%s_%s_vs_%s_%s.xlsx', methodinfix, ...
             matlab.lang.makeValidName(sample_id1), ...
             matlab.lang.makeValidName(sample_id2), ...
@@ -218,14 +255,14 @@ fprintf('\nDV analysis complete: %d cell type(s) analysed, %d skipped.\n', ...
     numel(results), numel(skipped));
 
 % ---- Print JSON summary for agent consumption -----------------------
-i_print_json_summary(results, skipped, sample_id1, sample_id2, method, direction);
+i_print_json_summary(results, skipped, sample_id1, sample_id2, method, direction, numPerm);
 end
 
 
 % ---- Helper: print JSON summary of top DV genes ---------------------
 function i_print_json_summary(results, skipped, sample_id1, sample_id2, ...
-        method, direction, top_n)
-if nargin < 7, top_n = 20; end
+        method, direction, numPerm, top_n)
+if nargin < 8, top_n = 20; end
 
 cell_types = {};
 for k = 1:numel(results)
@@ -254,11 +291,24 @@ elseif isempty(cell_types)
     no_results_reason = 'No shared annotated cell types found between the two samples.';
 end
 
+% STATUS and REASON are the fields GEOcellar's analysis node reads
+% (_check_empty_results: status == "no_results"), as run_de_analysis and
+% the scTenifoldNet/Knk runners emit them. Without them an analysis whose
+% every cell type was skipped counted as a produced result.
+if isempty(no_results_reason)
+    status = 'completed';
+else
+    status = 'no_results';
+end
+
 summary = struct( ...
+    'status',            status, ...
+    'reason',            no_results_reason, ...
     'sample1',           char(sample_id1), ...
     'sample2',           char(sample_id2), ...
     'method',            char(method), ...
     'direction',         char(direction), ...
+    'num_permutations',  numPerm, ...
     'cell_types',        {cell_types}, ...
     'skipped',           {skipped}, ...
     'no_results_reason', no_results_reason);

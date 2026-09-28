@@ -244,7 +244,7 @@ Function                          Purpose
 ``gui.sc_scattergenes``           gene scatter: ``mean_cv``,
                                   ``meanlg_varlg``, ``mean_dropr``
 ``gui.sc_stem3``                  stem plot of selected genes across cells
-``gui.i_hvgsplinefitplot``        3-D spline-fit scatter
+``gui.i_hvgcurveplot``            3-D gene cloud with a fitted curve
 ``gui.i_plot_pseudotimeseries``   expression against pseudotime
 ``gui.sc_celltypeexplorer_auto``  cluster and explore cell types
 ================================  ========================================
@@ -265,7 +265,6 @@ Method                     Purpose
 ``sortcells``              reorder cells
 ``onestepraw2anno``        raw counts through to annotation in one call
 ``exportToJsonl``          export for external tools
-``toSCE2``                 convert to ``SingleCellExperiment2``
 =========================  ===============================================
 
 Wrappers for external tools
@@ -277,23 +276,23 @@ must be installed and configured separately. ``run.web_*`` call web services.
 
 **MATLAB** -- ``ml_alona``, ``ml_alona_new``, ``ml_cogaps``, ``ml_ComBat``,
 ``ml_diffuse``, ``ml_Enrichr``, ``ml_geneagent``, ``ml_GENIE3``,
-``ml_Harmony``, ``ml_Harmony2``, ``ml_MAGIC``, ``ml_metaviz``, ``ml_PHATE``,
+``ml_Harmony``, ``ml_MAGIC``, ``ml_metaviz``, ``ml_PHATE``,
 ``ml_PickMarkers``, ``ml_SC3``, ``ml_scDock``, ``ml_SCEVAN``,
 ``ml_scGeneFit``, ``ml_SIMLR``, ``ml_SinNLRR``, ``ml_SnnDpc``, ``ml_SoptSC``,
-``ml_talklr``, ``ml_TENET``, ``ml_TSCAN``, ``ml_UMAP``
+``ml_talklr``, ``ml_TSCAN``, ``ml_UMAP``
 
-**Python** -- ``py_cellbender``, ``py_GenKI``, ``py_geosketch``,
+**Python** -- ``py_cellbender``, ``py_GenKI``,
 ``py_GSEApy_enr``, ``py_harmonypy``, ``py_MELD``, ``py_memento``,
 ``py_panhumanpy``, ``py_scimilarity``, ``py_scrublet``,
 ``py_scTenifoldCko_gene``, ``py_scTenifoldCko_path``, ``py_scTenifoldXct``,
-``py_SERGIO``, ``py_writeh5ad``
+``py_writeh5ad``
 
 **R** -- ``r_clustermole``, ``r_cogaps``, ``r_copykat``, ``r_decontX``,
 ``r_DESeq2``, ``r_fgsea``, ``r_harmony``, ``r_infercnv``, ``r_MAST``,
 ``r_monocle3``, ``r_readSeuratRds``, ``r_saveSeuratRds``, ``r_SCEVAN``,
 ``r_seurat``, ``r_SeuratCellCycle``, ``r_SeuratSctransform``
 
-**Web** -- ``web_Enrichr``, ``web_Enrichr_bkg``, ``web_STRING``
+**Web** -- ``web_Enrichr``, ``web_Enrichr_bkg``
 
 Packages
 --------

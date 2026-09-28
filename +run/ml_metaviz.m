@@ -6,18 +6,14 @@ if nargin < 2 || isempty(ndim), ndim = 2; end
 S = [];
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
-    % svdpca and phate live in external/ml_PHATE.
+    % phate lives in external/ml_PHATE.
     phatecleanup = pkg.i_addpathtemp( ...
         fullfile(fileparts(pw1), 'external', 'ml_PHATE'));   %#ok<NASGU>
-    if isMATLABReleaseOlderThan('R2026a')
-        % UMAP.m also needs the classes under external/ml_umap45/util
-        % (Args, MatBasics, PopUp, String, ...), so both go on the path.
-        % They are generic enough to shadow other code, so both come off
-        % again when this function returns.
-        umappth = fullfile(fileparts(pw1), 'external', 'ml_umap45');
-        umapcleanup = pkg.i_addpathtemp(umappth, ...
-            fullfile(umappth, 'util'));   %#ok<NASGU>
-    end
+end
+if isMATLABReleaseOlderThan('R2026a')
+    % Fail now, not after the t-SNE and PHATE runs, if the UMAP add-on the
+    % pre-R2026a path needs is missing.
+    pkg.i_checkumapaddon();
 end
 
 nstep = 6 + 1;
@@ -30,16 +26,30 @@ catch ME
     disp('Using memory mapping file.');
 end
 
-if showwaitbar, fw = gui.gui_waitbar_adv; end
+if showwaitbar, fw = gui.myWaitbar([]); end
 Xn = log1p(sc_norm(X))';
-try
-    data = svdpca(Xn, 300, 'random');
-catch
-    data = svdpca(Xn, 50, 'random');
-end
-% data=Xn;
 
-if showwaitbar, gui.gui_waitbar_adv(fw, 1/nstep, 'Meta Visualization - PCA...'); end
+% Up to 300 components, dropping to 50 when the data is too small to
+% support that -- which is what the try/catch here used to accomplish, by
+% letting RANDPCA throw its "k must be <= the smallest dimension" error and
+% catching it. Asking first is cheaper and does not use an exception for
+% flow control. The final MIN only bites where the old catch branch threw
+% in its turn and took the whole function down with it.
+npc = 300;
+if npc > min(size(Xn)), npc = 50; end
+npc = min(npc, min(size(Xn)));
+
+% This is what external/ml_PHATE/svdpca did with method='random', over
+% PKG.E_RANDPCA instead of that folder's own RANDPCA. The two give bit-
+% identical scores, but e_randPCA puts the caller's random stream back
+% afterwards, where RANDPCA leaves the session parked on rng('default') --
+% here that reset landed immediately before this function's own t-SNE,
+% UMAP and PHATE views.
+data = Xn - mean(Xn, 1);
+[coeff, ~, ~] = pkg.e_randPCA(data.', npc);
+data = data*coeff;
+
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - PCA...', 1/nstep); end
 [~, S{1}] = pca(data, NumComponents = ndim);
 
 try
@@ -51,14 +61,11 @@ catch
 end
 
 try
-    if showwaitbar, gui.gui_waitbar_adv(fw, 1/nstep, 'Meta Visualization - MDS...'); end
-    % D=squareform(pdist(data));
+    if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - MDS...', 1/nstep); end
     S{end+1} = pkg.e_embedbyd(sqrt(DS), ndim, 2);
 catch
     % MDS is optional; the other embeddings (KPCA, t-SNE, ...) still run
 end
-
-% [y]=pkg.e_isomap(log(sc_norm(X)+1)');
 
 % The SECOND output. PKG.E_KPCA's first output is COEFF, the projection
 % coefficients for mapping new data, not an embedding: EIGS returns
@@ -66,30 +73,30 @@ end
 % coeff gives every kernel component equal weight and throws the spectrum
 % away. Its own header describes coeff as something you multiply a kernel
 % by to obtain an embedding.
-if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA1...'); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - KPCA1...', 2/nstep); end
 [~, kpcaScore] = pkg.e_kpca(DS, ndim, 30, true);
 S{end+1} = kpcaScore;
 
-if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA2...'); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - KPCA2...', 2/nstep); end
 [~, kpcaScore] = pkg.e_kpca(DS, ndim, 40, true);
 S{end+1} = kpcaScore;
 
-if showwaitbar, gui.gui_waitbar_adv(fw, 2/nstep, 'Meta Visualization - KPCA3...'); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - KPCA3...', 2/nstep); end
 [~, kpcaScore] = pkg.e_kpca(DS, ndim, 50, true);
 S{end+1} = kpcaScore;
 
-if showwaitbar, gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 1/3...'); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - TSNE 1/3...', 3/nstep); end
 S{end+1} = tsne(data, Perplexity = 30, NumDimensions = ndim);
 
-if showwaitbar, gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 2/3...'); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - TSNE 2/3...', 3/nstep); end
 S{end+1} = tsne(data, Perplexity = 15, NumDimensions = ndim);
 
-if showwaitbar, gui.gui_waitbar_adv(fw, 3/nstep, 'Meta Visualization - TSNE 3/3...'); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - TSNE 3/3...', 3/nstep); end
 S{end+1} = tsne(data, Perplexity = 50, NumDimensions = ndim);
 
-if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 1/3...'); end
-if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 2/3...'); end
-if showwaitbar, gui.gui_waitbar_adv(fw, 4/nstep, 'Meta Visualization - UMAP 3/3...'); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - UMAP 1/3...', 4/nstep); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - UMAP 2/3...', 4/nstep); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - UMAP 3/3...', 4/nstep); end
 if ~isMATLABReleaseOlderThan('R2026a')
     S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=15);
     S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=30);
@@ -114,11 +121,11 @@ if dophate
         {'t', 20, 'ndim', ndim, 'k', 30}};
     for phateStep = 1:numel(phateArgs)
         if showwaitbar
-            gui.gui_waitbar_adv(fw, 5/nstep, sprintf( ...
-                'Meta Visualization - PHATE %d/3...', phateStep));
+            gui.myWaitbar([], fw, [], [], sprintf( ...
+                'Meta Visualization - PHATE %d/3...', phateStep), 5/nstep);
         end
         try
-            S{end+1} = phate(sqrt(Xn), phateArgs{phateStep}{:}); %#ok<AGROW>
+            S{end+1} = i_guardedphate(sqrt(Xn), phateArgs{phateStep}); %#ok<AGROW>
         catch ME
             warning('ml_metaviz:phateFailed', ...
                 'PHATE view %d of 3 did not converge (%s); it is left out.', ...
@@ -127,18 +134,41 @@ if dophate
     end
 end
 
-if showwaitbar, gui.gui_waitbar_adv(fw, 6/nstep, 'Meta Visualization - METAVIZ'); end
+if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - METAVIZ', 6/nstep); end
 if usingmmfile
     [Y] = metaviz_memmap(S, ndim);
 else
     [Y] = metaviz_tensor(S, ndim);
 end
-if showwaitbar, gui.gui_waitbar_adv(fw); end
+if showwaitbar, gui.myWaitbar([], fw); end
+end
+
+function Y = i_guardedphate(data, args)
+% Call PHATE and leave the session state as it was found.
+%
+% PHATE reaches external/ml_PHATE/randPCA, which opens its randomized
+% branch with rng('default') and a bare "warning off" and undoes neither.
+% One default RUN.ML_METAVIZ call therefore parked the whole session on
+% seed 0 and silenced every later warning. RUN.ML_PHATE guards its own
+% PHATE call the same way; this is the other call site. The folder is
+% third-party and out of scope for the repository's hygiene rules, so the
+% restoring belongs on this side of the call.
+%
+% A wrapper rather than a save/restore pair around the loop in the caller:
+% the ONCLEANUP objects fire the moment this function returns, so the state
+% is already back when the caller's CATCH raises ml_metaviz:phateFailed --
+% which PHATE's own "warning off" would otherwise have suppressed for every
+% view after the first -- and it holds when PHATE throws.
+rngState = rng();
+restoreRng = onCleanup(@() rng(rngState));
+warnState = warning();
+restoreWarn = onCleanup(@() warning(warnState));
+Y = phate(data, args{:});
 end
 
 function reduction = i_legacyumap(data, ndim, nneighbors)
 % Embed an already normalized/reduced cells-by-features matrix with the
-% bundled external/ml_umap45 package (pre-R2026a fallback only).
+% File Exchange UMAP add-on (pre-R2026a fallback only).
 u = UMAP;
 u.n_components = ndim;
 u.n_neighbors = nneighbors;
@@ -146,45 +176,6 @@ u.verbose = false;
 u.setMethod(pkg.i_umapmethod());
 reduction = u.fit_transform(data);
 end
-
-% figure; scatter(Y(:,1),Y(:,2));
-
-%{
-disp('sTSNE2')
-sTSNE2=tsne(Xn,Perplexity=15,NumDimensions=3);
-disp('sTSNE3')
-sTSNE3=tsne(Xn,Perplexity=50,NumDimensions=3);
-disp('sTSNE4')
-sTSNE4=tsne(data,Perplexity=30,NumDimensions=3);
-disp('sTSNE5')
-sTSNE5=tsne(data,Perplexity=15,NumDimensions=3);
-disp('sTSNE6')
-sTSNE6=tsne(data,Perplexity=50,NumDimensions=3);
-
-
-disp('sUMAP2')
-sUMAP2=run_umap_main(Xn,'n_components',3,'n_neighbors',30);
-disp('sUMAP3')
-sUMAP3=run_umap_main(Xn,'n_components',3,'n_neighbors',50);
-disp('sUMAP4')
-sUMAP4=run_umap_main(data,'n_components',3,'n_neighbors',15);
-disp('sUMAP5')
-sUMAP5=run_umap_main(data,'n_components',3,'n_neighbors',30);
-disp('sUMAP6')
-sUMAP6=run_umap_main(data,'n_components',3,'n_neighbors',50);
-
-disp('sPHATE2')
-sPHATE2 = phate(sqrt(Xn), 't', 20, 'ndim', 3, 'k', 30);
-disp('sPHATE3')
-sPHATE3 = phate(sqrt(Xn), 't', 20, 'ndim', 3, 'k', 50);
-disp('sPHATE4')
-sPHATE4 = phate(data, 't', 20, 'ndim', 3, 'k', 5);
-disp('sPHATE5')
-sPHATE5 = phate(data, 't', 20, 'ndim', 3, 'k', 30);
-disp('sPHATE6')
-sPHATE6 = phate(data, 't', 20, 'ndim', 3, 'k', 50);
-
-%}
 
 % PCA: the fast SVD function svds from R package rARPACK with embedding dimension k=2.
 % MDS: the basic R function cmdscale with embedding dimension k=2.
@@ -218,14 +209,10 @@ end
 fclose(fileID);
 m = memmapfile(mmf, 'Format', 'single', 'Writable', true);
 
-% D=zeros(n,n,K,'single');
 for k = 1:K
     d = pdist2(Sinput{k}, Sinput{k});
-    %    D(:,:,k)=d./vecnorm(d);
     m.Data((n^2)*(k - 1)+1:(n^2)*(k)) = d ./ vecnorm(d);
 end
-
-% isequal(D(:),m.Data)
 
 %%
 m.Offset = 0;
@@ -256,9 +243,7 @@ for l = 1:n % cell
         s2 = (n * n) * (k - 1);
         s = s1 + s2;
         t = s + n - 1;
-        % isequal(s:t,D(:,l,k)')
         d = d + w(k, l)' .* m.Data(s:t);
-        % d=d+w(k,l)'.*D(:,l,k);
     end
     M(:, l) = d;
 end

@@ -80,12 +80,36 @@ if isa(src, 'matlab.apps.AppBase')
     end
 end
 
+pcsBefore = i_harmonypcs(sce);
 if ~fun(src), return; end
 done = true;
 
 if ~isa(src, 'matlab.apps.AppBase'), return; end
 [src.c, src.cL] = findgroups(string(src.sce.c));
 src.in_RefreshAll(true, false);
+
+% Only the native backend's "Correct PCs" path leaves corrected components,
+% and the existing clusters were computed before them. Offer to redo the
+% clustering on them now, while it is obvious why.
+pcsAfter = i_harmonypcs(src.sce);
+if ~isempty(pcsAfter) && ~isequal(pcsBefore, pcsAfter)
+    if strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
+            ['Re-cluster cells on the batch-corrected principal ' ...
+            'components (Louvain, resolution 0.8)?'], ''))
+        fw = gui.myWaitbar(FigureHandle);
+        try
+            src.sce.clustercells([], 'louvainpc', true);
+        catch ME
+            gui.myWaitbar(FigureHandle, fw, true);
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+            return;
+        end
+        gui.myWaitbar(FigureHandle, fw);
+        [src.c, src.cL] = findgroups(string(src.sce.c_cluster_id));
+        src.sce.c = src.c;
+        src.in_RefreshAll(true, false);
+    end
+end
 
 if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
         'Update Saved Embedding?', '')), return; end
@@ -99,4 +123,11 @@ if ismember(methodtag, fieldnames(src.sce.struct_cell_embeddings))
         sprintf('%s Embedding is updated.', methodtag));
 end
 
+end
+
+function pcs = i_harmonypcs(sce)
+pcs = [];
+if isfield(sce.struct_cell_reductions, 'harmony')
+    pcs = sce.struct_cell_reductions.harmony;
+end
 end

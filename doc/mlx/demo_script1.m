@@ -2,8 +2,8 @@
 %% Read scRNA-seq data, X and Y
 
 cdgea; % set working directory
-[X,genelistx]=sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
-[Y,genelisty]=sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
+[X,genelistx]=sc_readfile(pkg.i_exampledata('GSM3204304_P_P_Expr.csv'));
+[Y,genelisty]=sc_readfile(pkg.i_exampledata('GSM3204305_P_N_Expr.csv'));
 %% Select genes with at least 3 cells having more than 5 reads per cell.
 
 [X,genelistx]=sc_selectg(X,genelistx,5,3);

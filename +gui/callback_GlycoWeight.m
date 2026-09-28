@@ -101,9 +101,9 @@ gui.myHelpdlg(FigureHandle, [ ...
     "statement about this dataset, not an absolute amount of glycan."], ...
     'Glyco re-weighted communication');
 
-gui.i_viewtable(T_out, FigureHandle);
+hTbl = gui.i_viewtable(T_out, FigureHandle);
 gui.i_exporttable(T_out, true, 'Tglycoweight', 'GlycoWeightTable', ...
-    [], [], FigureHandle);
+    [], [], hTbl);
 end
 
 

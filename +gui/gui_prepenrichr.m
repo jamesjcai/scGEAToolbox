@@ -35,14 +35,6 @@ if ~isempty(backgroundlist)
 
     outbackgroundlist = backgroundlist;
 
-    % answer = gui.myQuestdlg(parentfig, 'Enrichr with background?','');
-    % if strcmp(answer, 'Yes')
-    %     outbackgroundlist = backgroundlist;
-    % elseif strcmp(answer, 'No')
-    %     outbackgroundlist = [];
-    % else
-    %     return;
-    % end
 end
 
 % enrichrtype = gui.myQuestdlg(parentfig, 'Select the type of Enrichr application.','', ...

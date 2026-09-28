@@ -1,5 +1,5 @@
 function [y, txt, T] = gui_showrefinfo(reftarget, parentfig)
-% see also: gui.gui_uishowrefinfo
+% see also: gui.myHelpdlg, gui.myQuestdlg
 
 if nargin<2, parentfig = []; end
 if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"

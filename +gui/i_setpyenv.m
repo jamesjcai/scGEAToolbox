@@ -32,7 +32,6 @@ else
     if isempty(answer), return; end
     switch answer
         case 'Use this'
-            % done = true;
 
             lastwarn('');
             try
@@ -70,7 +69,6 @@ end
 
 
 function [done] = ix_setpyenv(deflt)
-        % selpath = uigetdir;
         done = false;
 
         if ispc

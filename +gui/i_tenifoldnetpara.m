@@ -5,9 +5,6 @@ if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
     cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
-%   addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
-%   addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
-%   addOptional(p,'savegrn',false,@islogical);
 nsubsmpl = [];
 csubsmpl = [];
 savegrn = [];

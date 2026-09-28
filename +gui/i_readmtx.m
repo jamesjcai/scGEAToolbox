@@ -8,7 +8,6 @@ end
 
 sce = [];
 
-% preftagname ='openscedlgindex';
 preftagname ='oldmtxfilefoldr';
 oldfolder = getpref('scgeatoolbox', preftagname, pwd);
 if ~isfolder(oldfolder), oldfolder = pwd; end
@@ -38,7 +37,6 @@ if ~exist(featurestxtfile, 'file')
 end
 if ~exist(featurestxtfile, 'file')
     answer = gui.myQuestdlg(parentfig, 'Pick features.tsv (gene list) file?');
-    % error('Cannot find features.tsv')
     switch answer
         case 'Yes'
             if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
@@ -77,7 +75,6 @@ if ~exist(barcodestxtfile, 'file')
 end
 if ~exist(barcodestxtfile, 'file')
     answer = gui.myQuestdlg(parentfig, 'Pick barcodes.tsv file (optional)?');
-    % error('Cannot find features.tsv')
     switch answer
         case 'Yes'
             [fname2, pathname2] = uigetfile( ...
@@ -93,8 +90,6 @@ if ~exist(barcodestxtfile, 'file')
         case 'No'
             barcodestxtfile = [];
         otherwise
-            % [X, g] = sc_readmtxfile(matrixmtxfile, featurestxtfile, [], 2);
-            % sce = SingleCellExperiment(X, g);
             gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
             return;
     end
@@ -105,8 +100,6 @@ else
     switch answer
         case 'Yes'
         case 'No'
-            % gui.myHelpdlg(parentfig, ('Action Cancelled.','');
-            % return;
             barcodestxtfile = [];
         otherwise
             gui.myHelpdlg(parentfig, 'Action Cancelled.', '');
@@ -118,6 +111,9 @@ answer = gui.myQuestdlg(parentfig, sprintf('Matrix file: %s\nFeature file: %s\nB
 matrixmtxfile, featurestxtfile, barcodestxtfile), 'Confirm File Selection');
 if ~strcmp(answer, 'Yes'), return; end
 fw = gui.myWaitbar(parentfig);
+% Closed on every exit: a read error used to leave it open under the
+% caller's error dialog.
+closeFw = onCleanup(@() gui.myWaitbar(parentfig, fw, true));
 if exist(matrixmtxfile, 'file') && exist(featurestxtfile, 'file') && exist(barcodestxtfile, 'file')
     [X, g, celllist] = sc_readmtxfile(matrixmtxfile, featurestxtfile, barcodestxtfile, 2);
     sce = SingleCellExperiment(X, g);

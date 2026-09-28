@@ -26,6 +26,7 @@ if isfolder(wkdir), cd(wkdir); end
 import ten.*
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
+netname = '';   % where an existing network came from, for the confirm prompt
 
 answer = gui.myQuestdlg(FigureHandle, 'Construct network de novo or use existing network in Workspace?', ...
     'Input Network', {'Construct de novo', 'Use existing'}, 'Construct de novo');
@@ -33,11 +34,6 @@ switch answer
     case 'Use existing'
         a = evalin('base', 'whos');
         b = struct2cell(a);
-        % if isempty(b)
-        %     gui.myHelpdlg(FigureHandle, 'No variable in the WorkSpace.', '');
-        %
-        %     return;
-        % end
         valididx = false(length(a), 1);
         for k = 1:length(a)
             if max(a(k).size) == sce.NumGenes && min(a(k).size) == sce.NumGenes
@@ -48,18 +44,18 @@ switch answer
             [anw] = gui.myQuestdlg(FigureHandle, 'Workspace contains no network variable. Read from .mat file?','');
             if ~strcmp(anw, 'Yes'), return; end
             [A0] = in_readA0fromfile(sce.NumGenes);
+            netname = 'file';
             if isempty(A0) || size(A0, 1) ~= sce.NumGenes || size(A0, 2) ~= sce.NumGenes
                 gui.myErrordlg(FigureHandle, 'Not a valid network.');
                 return;
             end
         else
-            % valididx=ismember(b(4,:),'double');
             a = a(valididx);
             b = b(:, valididx);
 
        if gui.i_isuifig(FigureHandle)
             [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), ...
-                'Select network variable:');
+                'Select network variable:', [], false);
         else
             [indx, tf] = listdlg('PromptString', {'Select network variable:'}, ...
                 'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
@@ -67,6 +63,7 @@ switch answer
 
             if tf == 1
                 A0 = evalin('base', a(indx).name);
+                netname = a(indx).name;
             else
                 return;
             end
@@ -93,7 +90,7 @@ gsorted = natsort(sce.g);
 if isempty(gsorted), return; end
 
    if gui.i_isuifig(FigureHandle)
-        [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene');
+        [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene', [], false);
     else
         [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
             'SelectionMode', 'single', 'ListString', gsorted, 'ListSize', [220, 300]);
@@ -111,7 +108,7 @@ if isempty(A0)
         sce.g(idx), idx));
 else
     answer = gui.myQuestdlg(FigureHandle, sprintf('Ready to knock out %s (gene #%d) from network (%s). Continue?', ...
-        sce.g(idx), idx, a(indx).name));
+        sce.g(idx), idx, netname));
 end
 
 if ~strcmpi(answer, 'Yes'), return; end
@@ -136,15 +133,14 @@ if isempty(A0)
     end
     isreconstructed = true;
 else
-    % doit = false;
-    if nnz(A0(idx, :) ~= 0) == 0
+    if nnz(A0(:, idx) ~= 0) == 0
         s = sprintf('KO gene (%s) has no link or too few links (n<50) with other genes.', ...
             sce.g(idx));
         gui.myWarndlg(FigureHandle, s);
         return;
-    elseif nnz(A0(idx, :) ~= 0) < 50
+    elseif nnz(A0(:, idx) ~= 0) < 50
         s = sprintf('KO gene (%s) has too few links (n=%d) with other genes. Continue?', ...
-            sce.g(idx), nnz(A0(idx, :) ~= 0));
+            sce.g(idx), nnz(A0(:, idx) ~= 0));
         answer11 = gui.myQuestdlg(FigureHandle, s,'',[],[],'error');
         switch answer11
             case 'Yes'
@@ -172,23 +168,10 @@ else
             return;
         end
     end
-    % A1=A0;
-    % A1(idx,:)=0;
-    % [aln0,aln1]=i_ma(A0,A1);
-    % T=i_dr(aln0,aln1,sce.g,true);
     isreconstructed = false;
 end
 
-if ~(ismcc || isdeployed)
-    if isreconstructed
-        labels = {'Save network to variable named:'};
-        vars = {'A0'};
-        values = {A0};
-        waitfor(export2wsdlg(labels, vars, values));
-    end
-end
-
-
+% Results first, then the network: the table is what was asked for.
 [answer, filename] = gui.i_exporttable(T, true, ...
     sprintf('Ttenifldknk_%s', sce.g(idx)), ...
     sprintf('TenifldKnkTable_%s', sce.g(idx)), [], [], FigureHandle);
@@ -204,19 +187,19 @@ disp('Tf=ten.e_fgsearun(T);');
 disp('Tn=ten.e_fgseanet(Tf);');
 disp('===============================');
 
+if isreconstructed
+    in_offersavenetwork(A0);
+end
+
     function [A0] = in_readA0fromfile(n)
         A0 = [];
-        if gui.i_isuifig(FigureHandle)
-            [fname, pathname] = uigetfile(FigureHandle, ...
-                {'*.mat', 'Saved GRN Files (*.mat)'; ...
-                '*.*', 'All Files (*.*)'}, ...
-                'Pick a GRN Data File');
-        else
-            [fname, pathname] = uigetfile( ...
-                {'*.mat', 'Saved GRN Files (*.mat)'; ...
-                '*.*', 'All Files (*.*)'}, ...
-                'Pick a GRN Data File');
-        end
+        % uigetfile takes no parent figure (a figure passed first is read
+        % as the filter spec); raise the app afterwards.
+        [fname, pathname] = uigetfile( ...
+            {'*.mat', 'Saved GRN Files (*.mat)'; ...
+            '*.*', 'All Files (*.*)'}, ...
+            'Pick a GRN Data File');
+        if pkg.i_isvalid(FigureHandle), figure(FigureHandle); end
         if isequal(fname, 0), return; end
             filen = fullfile(pathname, fname);
             data = load(filen, 'A0');
@@ -231,6 +214,20 @@ disp('===============================');
                     A0 = [];
                 end
             end
+    end
+
+    function in_offersavenetwork(net)
+        % Last step, after the results: every progress bar is closed by now,
+        % and the dialog blocks, so nothing else opens on top of it.
+        if ismcc || isdeployed, return; end
+        labels = {'Save constructed network to variable named:'};
+        if gui.i_isuifig(FigureHandle)
+            gui.myExport2wsdlg(labels, {'A0'}, {net}, ...
+                'Save Network to Workspace', [], FigureHandle);
+        else
+            waitfor(export2wsdlg(labels, {'A0'}, {net}, ...
+                'Save Network to Workspace'));
+        end
     end
 
 end

@@ -80,7 +80,7 @@ switch selecteditem
     % case 'Global Coordination Level (GCL) [PMID:33139959]'
 
     case 'Define a New Score...'
-        ttxt = 'Customized Score';
+        ttxt = 'Custom Score';
 
         if gui.i_isuifig(FigureHandle)
             newcstype = gui.myInputdlg({'Name of the new cell score:'}, ...
@@ -101,8 +101,6 @@ switch selecteditem
         % Saving is handled centrally after the switch, so every
         % score source offers it on the same terms.
     case 'MSigDB Molecular Signatures'
-        % speciestag = gui.i_selectspecies(2, true, FigureHandle);
-        % if isempty(speciestag), return; end
         try
             [posg, ctselected] = gui.i_selectMSigDBGeneSets(speciestag, false, FigureHandle);
         catch ME
@@ -117,12 +115,35 @@ switch selecteditem
         [~, methodid] = gui.i_pickscoremethod([], FigureHandle);
         if isempty(methodid), return; end
 
+        % Scored directly, as i_scorePredefinedSets does: gui.e_cellscore
+        % opens a blocking error dialog per failure, which here meant one
+        % dialog per failed set under the open bar, and the empty scores
+        % then went on to the plots. Failures are reported once, after.
+        valid = false(n, 1);
         fw = gui.myWaitbar(FigureHandle);
         for k = 1:n
-            y{k} = gui.e_cellscore(sce, posg{k}, ...
-                methodid, false, FigureHandle);
+            try
+                y{k} = sc_cellscore(sce.X, sce.g, posg{k}, [], methodid);
+            catch ME
+                warning('Skipping score "%s": %s', string(ttxt(k)), ME.message);
+                y{k} = [];
+            end
+            % A set with none of its genes in the data does not throw:
+            % sc_cellscore warns and returns all NaN.
+            valid(k) = ~isempty(y{k}) && ~all(isnan(y{k}));
         end
         gui.myWaitbar(FigureHandle, fw);
+        if ~any(valid)
+            gui.myWarndlg(FigureHandle, ['No scores could be computed. The ' ...
+                'selected gene sets have too few expressed genes in this dataset.']);
+            return;
+        end
+        if ~all(valid)
+            gui.myWarndlg(FigureHandle, sprintf( ...
+                '%d of %d score(s) skipped (too few expressed genes): %s', ...
+                sum(~valid), n, strjoin(string(ttxt(~valid)), ', ')));
+            y = y(valid); ttxt = ttxt(valid); posg = posg(valid);
+        end
 
 
     case 'PanglaoDB Cell Type Markers'
@@ -154,7 +175,7 @@ switch selecteditem
         listitems = sort(ctlist);
         if gui.i_isuifig(FigureHandle)
             [indx, tf] = gui.myListdlg(FigureHandle, listitems, ...
-                'Select Class:');
+                'Select Class:', [], false);
         else
             [indx, tf] = listdlg('PromptString', ...
                 {'Select Class'}, ...
@@ -163,7 +184,6 @@ switch selecteditem
         end
         if ~tf == 1, return; end
         ctselected = listitems(indx);
-        % idx=find(matches(ctlist,ctselected));
         idx = matches(ctlist, ctselected);
         ctmarkers = Tm.Var2{idx};
         posg = string(strsplit(ctmarkers, ','));
@@ -200,11 +220,7 @@ if isempty(y), return; end
 [sce, needupdatesce] = i_saveScoresAsAttributes(sce, ...
     keepidx, y, ttxt, FigureHandle);
 
-% assignin('base','y',y);
-% assignin('base','thisc',thisc);
-
 if showcomparision
-    % if iscell(y)
     plotkind = i_pickComparisonPlotType(FigureHandle);
     if ~isempty(plotkind)
         % Say what the axes are and where the numbers came
@@ -220,22 +236,8 @@ if showcomparision
         gui.sc_uitabgrpfig_vioplot(y, ttxt, thisc, ...
             FigureHandle, plotkind, labelinfo);
     end
-    % else
-    %                    gui.i_violinplot(y, thisc, ttxt, true, [], posg, FigureHandle);
-    %                    xlabel('Cell group');
-    %                    ylabel('Cellular score');
-    %                end
 else
-    %     [methodid]=gui.i_pickscatterstem('Scatter+Stem');
-    %     if isempty(methodid), return; end
-    %         f=gui.i_cascadefig(sce,glist(k),axx,bxx,k,methodid);
-    %     [h1]=sc_scattermarker(sce.X,sce.g,...
-    %                  sce.s,g,methodid);
     if iscell(y)
-        % t=array2table(cell2mat({rand(10,1),rand(10,1),rand(10,1)}),'VariableNames',{'aa','bb','cc'});
-        % assignin("base",'y',y);
-        % assignin("base",'ttxt',ttxt);
-        % assignin("base",'k',k);
 
         if length(y)>1
             % One tab per score for Heat/Stem; the score heatmap
@@ -258,7 +260,6 @@ else
                 figfun(sce, y{1}, posg, ttxt{1}, FigureHandle);
             end
         end
-        % gui.sc_uitabgrpfig_expplot(y, markerlist, sce.s, FigureHandle, [axx, bxx]);
     else
         % Any saving already happened above, with the user asked.
         figfun = i_pickScatterPlotType(FigureHandle);
@@ -326,7 +327,7 @@ end
 listitems = string(T.ScoreType(rows));
 
 if gui.i_isuifig(parentfig)
-    [indx, tf] = gui.myListdlg(parentfig, listitems, prompt);
+    [indx, tf] = gui.myListdlg(parentfig, listitems, prompt, [], true);
 else
     [indx, tf] = listdlg('PromptString', prompt, ...
         'SelectionMode', 'multiple', 'ListString', ...

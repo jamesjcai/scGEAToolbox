@@ -4,34 +4,38 @@ function callback_CloseAllOthers(src, ~)
 % Get the handle of the currently active figure
 [FigureHandle] = gui.gui_getfigsce(src);
 
-allFigures = findall(0, 'Type', 'Figure');
+% Visible windows only: findall also returns hidden figures, which are not
+% windows the user can see or meant to close.
+allFigures = findall(0, 'Type', 'Figure', 'Visible', 'on');
+others = allFigures(allFigures ~= FigureHandle);
 
-% Check if the current figure is in the list of all figures and there's more than one figure
-[isCurrentInList, currentIndex] = ismember(FigureHandle, allFigures);
+if isempty(others)
+    % Used to do nothing at all, which looked like the menu was broken.
+    gui.myHelpdlg(FigureHandle, 'No other figures are open.', '', true);
+    return;
+end
 
-if isCurrentInList && length(allFigures) > 1
-    % Ask the user to confirm before closing other figures
-    confirmation = gui.myQuestdlg(FigureHandle, ...
-        'Close all other figures?', 'Confirmation');
-    if isempty(confirmation), return; end
-    % If the user does not confirm, exit the function
-    if ~strcmp(confirmation, 'Yes')
-        return;
+confirmation = gui.myQuestdlg(FigureHandle, ...
+    sprintf('Close %s?', pkg.i_plural(numel(others), 'other figure')), ...
+    'Confirmation');
+if ~strcmp(confirmation, 'Yes'), return; end
+
+for k = 1:numel(others)
+    try
+        % CLOSE runs the window's CloseRequestFcn, which may ask first.
+        close(others(k));
+    catch closeError
+        disp(['Failed to close figure: ', closeError.message]);
     end
+end
 
-    % Loop through all figure handles and close the ones that are not the current one
-    for index = 1:length(allFigures)
-        if index ~= currentIndex
-            try
-                % Attempt to close the figure
-                close(allFigures(index));
-
-            catch closeError
-                % Handle any exceptions that occur during closing a figure
-                disp(['Failed to close figure ', num2str(allFigures(index)), ': ', closeError.message]);
-            end
-        end
-    end
+% Counted, not assumed: a window whose own close request was declined,
+% or that failed to close, is still open.
+left = others(isvalid(others));
+if isempty(left)
     gui.myHelpdlg(FigureHandle, 'All other figures have been closed.', '', true);
+else
+    gui.myHelpdlg(FigureHandle, sprintf('%s still open.', ...
+        pkg.i_plural(numel(left), 'figure is', 'figures are')), '', true);
 end
 end

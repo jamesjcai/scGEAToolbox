@@ -5,7 +5,7 @@ function [tmpcelltypev, speciestag] = callback_Brush4Celltypes(src)
 %   cell with a datatip. Labels are not written to the sce, which
 %   GUI.I_CONFIRMONCE says once a session rather than on every selection.
 %
-%   The markers are PanglaoDB's by default. The other choice is a customized
+%   The markers are PanglaoDB's by default. The other choice is a custom
 %   marker list - typed, loaded from a file, or started from ScTypeDB.
 %   GUI.I_GETCUSTOMMARKERS remembers it for the session, so the next selection
 %   opens on the markers just used and takes one OK to confirm them.
@@ -68,14 +68,22 @@ end
 [ptsSelected, letdoit] = gui.i_expandbrushed(ptsSelected, sce, FigureHandle);
 if ~letdoit, return; end
 
-% Which markers to score the selection against. The customized path needs no
+% Which markers to score the selection against. The custom path needs no
 % species: the genes are the user's own, so there is nothing to look up.
+%
+% The option reads "Database markers" to match the Annotate menu, which no
+% longer names PanglaoDB in its labels. The question itself says which
+% database that is, so choosing between the two does not require knowing the
+% toolbox: an option a user cannot identify is one they will not pick. The
+% full citation is a hover away in the menu items' tooltips and
+% in the reference dialog GUI.CALLBACK_DETERMINECELLTYPECLUSTERS shows.
 answer = gui.myQuestdlg(FigureHandle, ['Which marker genes should the ' ...
-    'selected cells be scored against?'], 'Marker Genes', ...
-    {'PanglaoDB (built-in)', 'Customized marker genes...'}, ...
-    'PanglaoDB (built-in)');
+    'selected cells be scored against? The built-in set is PanglaoDB.'], ...
+    'Marker Genes', ...
+    {'Database markers (built-in)', 'Custom marker genes...'}, ...
+    'Database markers (built-in)');
 if isempty(answer), return; end
-usecustom = strcmp(answer, 'Customized marker genes...');
+usecustom = strcmp(answer, 'Custom marker genes...');
 
 if usecustom
     Tm = gui.i_getcustommarkers(FigureHandle, sce);
@@ -102,7 +110,7 @@ ctxt = Tct.C1_Cell_Type;
 gui.myWaitbar(FigureHandle, fw);
 
 if gui.i_isuifig(FigureHandle)
-    [indx, tf] = gui.myListdlg(FigureHandle, ctxt, 'Select cell type');
+    [indx, tf] = gui.myListdlg(FigureHandle, ctxt, 'Select cell type', [], false);
 else
     [indx, tf] = listdlg('PromptString', ...
         {'Select cell type'}, 'SelectionMode', 'single', ...

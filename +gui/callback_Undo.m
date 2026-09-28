@@ -15,8 +15,10 @@ if nargin < 1 || isempty(src), return; end
 if ~isa(src, 'matlab.apps.AppBase'), return; end
 if ~pkg.i_isvalid(src.UIFigure), return; end
 
-s = getappdata(src.UIFigure, 'sceundo');
-if isempty(s) || ~isstruct(s) || ~isfield(s, 'sce') || isempty(s.sce)
+% Past a cancelled operation's snapshot, if that is the newest one; see
+% GUI.I_EFFECTIVEUNDO.
+s = gui.i_effectiveundo(src.UIFigure, src.sce);
+if isempty(s)
     gui.myHelpdlg(src.UIFigure, 'Nothing to undo.');
     return;
 end
@@ -29,9 +31,15 @@ src.sce = s.sce;
 
 s.sce = previous;
 s.isredo = ~s.isredo;
+s.prev = [];   % consumed: redo swaps back, nothing further down
 setappdata(src.UIFigure, 'sceundo', s);
 
 [src.c, src.cL] = findgroups(string(src.sce.c));
+% Import Data is undoable too, so the dataset coming back may be a
+% different one, from another species.
+if isprop(src, 'speciestag')
+    src.speciestag = pkg.i_guessspecies(src.sce.g);
+end
 src.in_RefreshAll(true, false);
 done = true;
 

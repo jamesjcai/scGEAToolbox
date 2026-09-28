@@ -39,7 +39,6 @@ if ~isempty(findobj(srcAx.Parent, 'Type', 'Legend'))
     legend(ax2);
 end
 copyColorbarComplete(srcAx, ax2);
-% copyColorbarBasic(srcAx, ax2);
 
 if ~isempty(findobj(srcAx.Parent, 'Type', 'ColorBar'))
     colorbar(ax2);

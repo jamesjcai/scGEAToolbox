@@ -69,7 +69,11 @@ arguments
     opts.PlotIt (1,1) logical = false
 end
 
-X = double(full(X));
+% DOUBLE but not FULL: every step below preserves sparsity, and SCE.X is
+% stored sparse single for all but the densest data. Densifying here cost
+% 10 GB on a 25000 x 50000 matrix that is 1 GB sparse, which put HVG
+% selection out of reach on exactly the datasets that need it.
+X = double(X);
 c = opts.ScaleFactor;
 
 if isempty(genelist)
@@ -103,11 +107,17 @@ if ~all(keep)
     Xn(~keep, :) = [];
     genelist(~keep) = [];
 end
-u     = mean(Xn, 2, "omitnan");
-cv    = std(Xn, 0, 2, "omitnan") ./ u;
+% FULL on the per-gene vectors, not on XN: these are m-long, so densifying
+% them is cheap, and it keeps the table columns and the projection below
+% dense whatever XN is. The values are identical either way.
+% PKG.E_ROWVAR, not STD/VAR along dim 2: on a sparse matrix those walk
+% every zero (7.0 s against 0.23 s at 20000 genes x 30000 cells); the
+% values agree to ~1e-12 relative, and a constant row still gives 0.
+u     = full(mean(Xn, 2, "omitnan"));
+cv    = sqrt(pkg.e_rowvar(Xn, "omitnan")) ./ u;
 lgu   = log1p(u);
 lgcv  = log1p(cv);
-dropr = 1 - sum(Xn > 0, 2) ./ size(Xn, 2);
+dropr = 1 - full(sum(Xn > 0, 2)) ./ size(Xn, 2);
 
 [~, order] = sortrows([lgu, dropr, lgcv], [1 3 2]);
 lgu = lgu(order); lgcv = lgcv(order); dropr = dropr(order);
@@ -184,17 +194,29 @@ end
 
 % =========================================================================
 function z = i_dropout(mu, libSize, c, phi)
-% Predicted fraction of zero counts at normalized mean MU.
+% Predicted fraction of zero counts at normalized mean MU: the average over
+% cells of each cell's zero probability, (1 + phi*t)^(-1/phi) with
+% t = libSize*mu/c (exp(-t) in the Poisson limit).
+%
+% It is evaluated at every grid point and again at every gene's projection
+% -- about 40000 means times every cell -- and was most of this function's
+% run time. Two exact rewrites, agreeing with the old form to ~1e-15:
+%   - cells sharing a library size share a term, so the mean is a weighted
+%     sum over the distinct sizes (one matrix-vector product);
+%   - (1 + phi*t)^(-1/phi) is computed as exp(-log1p(phi*t)/phi), three
+%     times faster than the non-integer power.
 mu  = mu(:).';
 z   = zeros(numel(mu), 1);
-blk = max(1, floor(2e7 / numel(libSize)));
+[s, ~, ic] = unique(libSize(:));
+w   = accumarray(ic, 1).' / numel(libSize);    % share of cells at each size
+blk = max(1, floor(2e7 / numel(s)));
 for i = 1:blk:numel(mu)
     j = i:min(i + blk - 1, numel(mu));
-    t = libSize(:) * (mu(j) / c);
+    t = s * (mu(j) / c);
     if phi <= 1e-10
-        z(j) = mean(exp(-t), 1).';
+        z(j) = (w * exp(-t)).';
     else
-        z(j) = mean((1 + phi * t) .^ (-1/phi), 1).';
+        z(j) = (w * exp(-log1p(phi * t) / phi)).';
     end
 end
 end
@@ -205,7 +227,10 @@ function [muHat, F] = i_project(P, lgrid, curve)
 % log(mu). The curve is smooth, so a single step reaches sub-grid precision.
 mug = exp(lgrid);
 C   = [curve.x(mug), curve.y(mug), curve.z(mug)];
-k   = dsearchn(C, P);
+% KNNSEARCH (a kd-tree) rather than DSEARCHN: the same nearest grid point
+% for every gene, NaN rows included, 1.25 s against 0.07 s for 20000 genes
+% on the default 20000-point grid.
+k   = knnsearch(C, P);
 
 edge = k <= 1 | k >= numel(lgrid);
 k0   = min(max(k, 2), numel(lgrid) - 1);

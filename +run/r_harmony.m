@@ -40,7 +40,6 @@ pkg.i_addwd2script(codefullpath, wkdir, 'R');
 pkg.i_runrcode(codefullpath, Rpath);
 
 if exist('output.h5', 'file')
-    % load("output.mat", "sout")
     sout = h5read("output.h5", "/harmony_embeddings");
 else
     error('run.r_harmony:noOutput', ...
@@ -50,6 +49,5 @@ end
 
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
-% cd(oldpth);
 
 end

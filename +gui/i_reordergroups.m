@@ -11,7 +11,6 @@ noanswer = true;
 [c, cL] = findgroups(string(thisc));
 newidx = 1:numel(cL);
 if isscalar(cL)
-    % gui.myErrordlg(parentfig, 'Only one cell type or cluster.');
     noanswer = false;
     return;
 end

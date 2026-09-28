@@ -1,11 +1,27 @@
-function obj = clustercells(obj, k, methodid, forced, sx)
+function obj = clustercells(obj, k, methodid, forced, sx, opts)
 %CLUSTERCELLS  Cluster the cells of a SingleCellExperiment.
 %
-%   sce = sce.clustercells(k) clusters into K groups using the cell
-%   embedding. sce.clustercells(k, methodid) picks the method:
-%   'kmeans' (default), 'kmedoids', 'spectclust', 'snndpc' or 'mbkmeans'
-%   work on the embedding; 'sc3', 'simlr', 'soptsc' and 'sinnlrr' work on
-%   the expression matrix and need no embedding.
+%   sce = sce.clustercells() clusters the Seurat way: Louvain on a
+%   shared-nearest-neighbour graph of the cells' principal components
+%   (PKG.E_CELLPCS, then SC_LOUVAIN) at resolution 0.8, letting the graph
+%   decide the number of clusters. This is method 'louvainpc', the
+%   default. sce.clustercells(k) instead tunes the resolution so that K
+%   clusters come out, and sce.clustercells(..., Resolution=G) fixes the
+%   resolution at G and ignores K. sce.clustercells(..., Genes=G) adds
+%   the genes G to the highly variable genes the components are taken
+%   from, for markers too sparse to rank as variable.
+%
+%   After batch correction (GUI.CALLBACK_HARMONY), 'louvainpc' clusters on
+%   the corrected components kept in SCE.STRUCT_CELL_REDUCTIONS.HARMONY, as
+%   long as they still have one row per cell. Passing GENES asks for a
+%   particular gene set, so it recomputes the components from X instead.
+%
+%   sce.clustercells(k, methodid) picks another method: 'kmeans',
+%   'kmedoids', 'spectclust', 'snndpc', 'mbkmeans' and 'louvain' work on
+%   the embedding SCE.S; 'sc3', 'simlr', 'soptsc' and 'sinnlrr' work on
+%   the expression matrix. 'louvainpc' also works from the expression
+%   matrix and needs no embedding. Note 'louvain' is Louvain on the
+%   embedding, not on the principal components.
 %
 %   sce.clustercells(k, methodid, forced) recomputes even when a
 %   clustering is already present. SX supplies an embedding to use in
@@ -34,22 +50,37 @@ function obj = clustercells(obj, k, methodid, forced, sx)
 %
 %   See also SC_CLUSTER_S, SC_CLUSTER_X, PKG.E_HASEMBEDDING.
 
-if nargin < 5, sx = []; end
-if nargin < 4 || isempty(forced), forced = false; end
-if nargin < 3 || isempty(methodid), methodid = 'kmeans'; end
-if nargin < 2 || isempty(k)
+arguments
+    obj
+    k = []
+    methodid = []
+    forced = []
+    sx = []
+    opts.Resolution double = []
+    opts.Genes = []
+end
+
+if isempty(forced), forced = false; end
+if isempty(methodid), methodid = 'louvainpc'; end
+methodid = char(methodid);
+
+graphMethods = {'louvainpc'};
+% LOUVAINPC lets the graph set the cluster count, so it gets no default K.
+if isempty(k) && ~ismember(methodid, graphMethods)
     k = round(obj.NumCells/100, -1);
     if k == 0, k = 1; end
 end
 
-embeddingMethods = {'kmeans', 'kmedoids', 'spectclust', 'snndpc', 'mbkmeans'};
+embeddingMethods = {'kmeans', 'kmedoids', 'spectclust', 'snndpc', ...
+    'mbkmeans', 'louvain'};
 expressionMethods = {'sc3', 'simlr', 'soptsc', 'sinnlrr'};
 
-if ~ismember(methodid, [embeddingMethods, expressionMethods])
+if ~ismember(methodid, [graphMethods, embeddingMethods, expressionMethods])
     error('SingleCellExperiment:clustercells:unknownMethod', ...
-        ['Unknown clustering method ''%s''. Embedding-based: %s. ', ...
-        'Expression-based: %s.'], methodid, ...
-        strjoin(embeddingMethods, ', '), strjoin(expressionMethods, ', '));
+        ['Unknown clustering method ''%s''. Principal-component graph: %s. ', ...
+        'Embedding-based: %s. Expression-based: %s.'], methodid, ...
+        strjoin(graphMethods, ', '), strjoin(embeddingMethods, ', '), ...
+        strjoin(expressionMethods, ', '));
 end
 
 usesEmbedding = ismember(methodid, embeddingMethods);
@@ -67,7 +98,13 @@ if alreadyClustered && ~forced
     return;
 end
 
-if usesEmbedding
+if ismember(methodid, graphMethods)
+    pcs = i_correctedpcs(obj);
+    if isempty(pcs) || ~isempty(opts.Genes)
+        pcs = pkg.e_cellpcs(obj.X, obj.g, Whitelist=opts.Genes);
+    end
+    id = sc_louvain(pcs, k, Resolution=opts.Resolution);
+elseif usesEmbedding
     if isempty(sx)
         id = sc_cluster_s(obj.s, k, 'type', methodid);
     else
@@ -79,4 +116,17 @@ end
 
 obj.c_cluster_id = id(:);
 obj.struct_cell_clusterings.(methodid) = obj.c_cluster_id;
+end
+
+function pcs = i_correctedpcs(obj)
+% Batch-corrected components, or [] when there are none or they no longer
+% have one row per cell. SELECTCELLS and REMOVECELLS subset them with the
+% cells; the row check is for anything that changes the cells without
+% going through those.
+pcs = [];
+r = obj.struct_cell_reductions;
+if isstruct(r) && isfield(r, 'harmony') && ~isempty(r.harmony) && ...
+        size(r.harmony, 1) == obj.NumCells
+    pcs = r.harmony;
+end
 end

@@ -18,7 +18,28 @@ end
 % changing, not about losing it.
 if ~gui.i_confirmoverwritecelltype(FigureHandle, sce), return; end
 
-[c, cL] = findgroups(string(sce.c));
+% Annotation labels the groups on screen. A freshly loaded object has one
+% group, the constructor's all-ones, and annotating that gives every cell
+% the same type. Offer to cluster first, the same way Single Click Solution
+% does, rather than letting the user find out from the result. It is asked
+% here but run after the remaining dialogs, so cancelling one of them leaves
+% the object as it was.
+clusterfirst = false;
+if numel(unique(sce.c)) < 2
+    answer = gui.myQuestdlg(FigureHandle, ...
+        ['All cells are in one group, so they would all get the same ' ...
+        'cell type. Cluster them first (Louvain on principal ' ...
+        'components, resolution 0.8)?'], '', ...
+        {'Cluster First', 'Annotate As Is', 'Cancel'}, 'Cluster First');
+    switch answer
+        case 'Cluster First'
+            clusterfirst = true;
+        case 'Annotate As Is'
+            % One group, one label: what the user asked for.
+        otherwise
+            return;
+    end
+end
 
 if usedefaultdb
     organtag = "all";
@@ -37,6 +58,20 @@ end
 
 [manuallyselect, bestonly] = gui.i_annotemanner(FigureHandle);
 if isempty(manuallyselect), return; end
+
+if clusterfirst
+    fw = gui.myWaitbar(FigureHandle);
+    try
+        sce = sce.clustercells([], 'louvainpc', true);
+    catch ME
+        gui.myWaitbar(FigureHandle, fw, true);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+        return;
+    end
+    gui.myWaitbar(FigureHandle, fw);
+    sce.c = sce.c_cluster_id;
+end
+[c, cL] = findgroups(string(sce.c));
 
 % Set up live datatip handle if requested and available
 h = [];
@@ -68,7 +103,7 @@ for ix = 1:max(c)
     ctxt = Tct.C1_Cell_Type;
     if manuallyselect && length(ctxt) > 1
         if gui.i_isuifig(FigureHandle)
-            [indx, tf] = gui.myListdlg(FigureHandle, ctxt, 'Select cell type');
+            [indx, tf] = gui.myListdlg(FigureHandle, ctxt, 'Select cell type', [], false);
         else
             [indx, tf] = listdlg('PromptString', {'Select cell type'}, ...
                 'SelectionMode', 'single', 'ListString', ctxt, 'ListSize', [220, 300]);

@@ -15,22 +15,11 @@ if isa(sce, 'SingleCellExperiment')
         case 'Alphabetic'
             gsorted = natsort(sce.g);
         case 'Average Expression'
-            % X=sce.X;
-            % if issparse(X)
-            %    try
-            %        X=full(X);
-            %    catch
-            %    end
-            % end
-            % [T] = sc_genestats(sce.X, sce.g);
             [~, idx] = sort(mean(sce.X,2), 'descend');
             gsorted = sce.g(idx);
         case 'Unsorted'
             gsorted = sce.g;
         case '% of Nonzero Cells'
-            % [T] = sc_genestats(sce.X, sce.g);
-            % [~, idx] = sort(T.Dropout_rate, 'ascend');
-            % gsorted = sce.g(idx);
             tic;
             X=sce.X;
             if issparse(X)
@@ -40,48 +29,12 @@ if isa(sce, 'SingleCellExperiment')
                    % keep X sparse if it's too large to densify
                end
             end
-            % tic;
                 [~, idx] = sort(mean(X,2), 'descend');
                 gsorted = sce.g(idx);
                 toc;
                 X=X(idx,:);
                 [~, idx] = sort(sum(X>0,2), 'descend');
                 gsorted = gsorted(idx);
-            % toc;
-        otherwise
-            return;
-    end
-
-elseif isa(sce, 'SingleCellExperiment2')
-    switch answer2
-        case 'Alphabetic'
-            gsorted = natsort(sce.geneAnn.names);
-        case 'Average Expression'
-            [~, idx] = sort(mean(sce.X,2), 'descend');
-            gsorted = sce.geneAnn.names(idx);
-        case 'Unsorted'
-            gsorted = sce.geneAnn.names;
-        case '% of Nonzero Cells'
-            % [T] = sc_genestats(sce.X, sce.g);
-            % [~, idx] = sort(T.Dropout_rate, 'ascend');
-            % gsorted = sce.g(idx);
-            tic;
-            X=sce.X;
-            if issparse(X)
-               try
-                   X=full(X);
-               catch
-                   % keep X sparse if it's too large to densify
-               end
-            end
-            % tic;
-                [~, idx] = sort(mean(X,2), 'descend');
-                gsorted = sce.geneAnn.names(idx);
-                toc;
-                X=X(idx,:);
-                [~, idx] = sort(sum(X>0,2), 'descend');
-                gsorted = gsorted(idx);
-            % toc;
         otherwise
             return;
     end

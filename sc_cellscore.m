@@ -64,17 +64,19 @@ if nargin < 4 || isempty(maxRank), maxRank = 1500; end
 idx = matches(genelist, tgsPos, 'IgnoreCase', true);
 n = sum(idx);
 
-% Per-cell ranks with highest expression at rank 1; average ties.
-R = tiedrank(-full(X));
+% Per-cell ranks with highest expression at rank 1, ties averaged -- the
+% signature's rows of tiedrank(-X), without ranking the whole matrix. See
+% I_SETRANKS.
+R = i_setranks(X, idx);
 R(R > maxRank) = maxRank + 1;
 
 % Mann-Whitney U statistic per cell: rank sum minus its minimum n(n+1)/2.
-rankSum = sum(R(idx, :), 1);
+rankSum = sum(R, 1);
 u = rankSum - (n * (n + 1)) / 2;
 score = 1 - u / (n * maxRank);
 
 % Cells whose signature genes all rank beyond maxRank score 0 (UCell).
-score(all(R(idx, :) > maxRank, 1)) = 0;
+score(all(R > maxRank, 1)) = 0;
 score = score(:);
 end
 
@@ -89,8 +91,10 @@ if nargin < 6, ctrl = 100; end
 if nargin < 5, nbin = 24; end
 if nargin < 4, tgsNeg = []; end
 
-if issparse(X), X = full(X); end
-
+% Kept sparse: SC_NORM and LOG1P both preserve sparsity, and only the rows
+% of the signature and its control genes are ever averaged. This used to
+% FULL() the matrix and then build a gene-sorted dense copy of it as well,
+% twice for a signature with negative markers.
 X = sc_norm(X);
 X = log1p(X);
 
@@ -113,7 +117,7 @@ if nargin < 5, nbin = 24; end
 if nargin < 4, directtag = 1; end
 
 cluster_length = size(X, 1);
-data_avg = mean(X, 2);
+data_avg = full(mean(X, 2));
 
 % Break exact ties (e.g. all-zero genes) before binning, matching Seurat's
 % addition of rnorm(n)/1e30 to data.avg prior to cut_number.
@@ -122,7 +126,9 @@ data_avg = data_avg + randn(size(data_avg)) / 1e30;
 [~, I] = sort(data_avg);
 data_avg = data_avg(I);
 gsorted = genelist(I);
-Xsorted = X(I, :);
+% No XSORTED = X(I, :): a permuted copy of the whole matrix, when only a few
+% hundred rows are read. Rows are picked below as I(mask), which is the
+% same rows in the same order.
 
 % Equal-frequency bins over sorted mean expression (Seurat cut_number).
 %
@@ -167,8 +173,8 @@ if isempty(ctrl_use)
     return;
 end
 
-ctrl_score = mean(Xsorted(matches(gsorted, ctrl_use, 'IgnoreCase', true), :), 1);
-features_score = mean(Xsorted(idx, :), 1);
+ctrl_score = full(mean(X(I(matches(gsorted, ctrl_use, 'IgnoreCase', true)), :), 1));
+features_score = full(mean(X(I(idx), :), 1));
 
 if directtag > 0
     score = transpose(features_score-ctrl_score);
@@ -197,8 +203,6 @@ if nSet == 0
     score = NaN(nCells, 1);
     return;
 end
-
-if issparse(X), X = full(X); end
 
 % Maximum attainable area. At most AUCMAXRANK of the set's genes can sit
 % inside the recovery window, so the best case is MIN(nSet, aucMaxRank) of
@@ -231,13 +235,76 @@ end
 % undetected in every cell. Averaging ties gives every tied gene the same
 % rank, so the score no longer depends on gene order; i_ucell above already
 % does exactly this.
-ranks = tiedrank(-X);              % nGenes x nCells, highest expression first
-
-setRanks = ranks(idx, :);          % nSet x nCells
+% I_SETRANKS returns exactly the set's rows of tiedrank(-X).
+setRanks = i_setranks(X, idx);     % nSet x nCells, highest expression first
 inWindow = setRanks <= aucMaxRank;
 
 % Area under the step recovery curve equals sum(aucMaxRank - rank_i) over
 % the set genes inside the window.
 area = sum(inWindow, 1)*aucMaxRank - sum(setRanks.*inWindow, 1);
 score = (area./maxArea)';
+end
+
+
+%% ---- per-cell ranks of the signature genes ----
+function R = i_setranks(X, idx)
+% R = the rows IDX of tiedrank(-full(X)): each cell's genes ranked from the
+% highest value down, ties averaged. Only the signature's rows are
+% returned, so R is nSet x nCells.
+%
+% Ranking the whole matrix, as UCell and AUCell did, densified it and sorted
+% every gene of every cell: 11 s and ~20 GB at 20000 x 50000 cells. Here each
+% cell's stored nonzeros are sorted once; its zeros are one tied block,
+% ranked after the positives, so a signature gene that is zero in a cell
+% takes that block's average rank. A value that is NaN anywhere sends the
+% matrix to TIEDRANK itself, whose NaN handling this does not reproduce.
+if any(isnan(nonzeros(X)))
+    R = tiedrank(-full(X));
+    R = R(idx, :);
+    return;
+end
+
+[G, C] = size(X);
+setpos = zeros(G, 1);
+setpos(idx) = 1:nnz(idx);                  % gene row -> row of R
+R = zeros(nnz(idx), C);
+
+perCol = max(1, nnz(X)/max(C, 1));
+step = max(1, floor(1e7/perCol));
+for c0 = 1:step:C
+    cols = c0:min(C, c0 + step - 1);
+    [i, j, v] = find(X(:, cols));
+    i = i(:);
+    j = j(:);
+    v = full(double(v(:)));
+
+    % Each cell's nonzeros from the highest down.
+    [~, o] = sortrows([j, -v]);
+    i = i(o);
+    j = j(o);
+    v = v(o);
+
+    nc = numel(cols);
+    nnzc = accumarray(j, 1, [nc, 1]);
+    npos = accumarray(j, v > 0, [nc, 1]);
+    n0 = G - nnzc;
+
+    % Position among the cell's nonzeros, averaged over ties.
+    first = cumsum([0; nnzc(1:end-1)]);
+    pos = (1:numel(i)).' - first(j);
+    newtie = [true; diff(j) ~= 0 | diff(v) ~= 0];
+    tid = cumsum(newtie);
+    tsize = accumarray(tid, 1);
+    tfirst = pos(newtie);
+    avgpos = tfirst(tid) + (tsize(tid) - 1)/2;
+
+    % Positives rank first, then the zero block, then any negatives.
+    r = avgpos + (v < 0).*n0(j);
+    zeroRank = npos + (n0 + 1)/2;
+
+    Rb = repmat(zeroRank.', size(R, 1), 1);
+    keep = setpos(i) > 0;
+    Rb(sub2ind(size(Rb), setpos(i(keep)), j(keep))) = r(keep);
+    R(:, cols) = Rb;
+end
 end

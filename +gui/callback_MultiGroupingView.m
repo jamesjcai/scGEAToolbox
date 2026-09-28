@@ -5,7 +5,6 @@ function callback_MultiGroupingView(src, ~)
 answer = gui.myQuestdlg(FigureHandle, 'Select type of multi-view:','', ...
 {'Multigrouping','Multiembedding'},'Multigrouping');
 
-% figure(FigureHandle);
 gui.i_bringtofront(FigureHandle);
 switch answer
     case 'Multigrouping'
@@ -42,7 +41,7 @@ switch answer
         if gui.i_isuifig(FigureHandle)
             [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, ...
                 'Select embeddings:', ...
-                listitems);
+                listitems, true);
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select embeddings:'}, ...

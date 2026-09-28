@@ -50,7 +50,7 @@ catch ME
 end
 gui.myWaitbar(FigureHandle, fw);
 
-gui.i_viewtable(T, FigureHandle);
+hTbl = gui.i_viewtable(T, FigureHandle);
 gui.i_exporttable(T, true, 'Tglycoref', 'GlycoReferenceTable', ...
-    [], [], FigureHandle);
+    [], [], hTbl);
 end

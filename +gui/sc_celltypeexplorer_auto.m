@@ -9,23 +9,18 @@ addOptional(p, 'k', 6, @(x) (x > 0) && isnumeric(x) && isscalar(x));
 addOptional(p, 'species', "mouse", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["human", "mouse"]));
 addOptional(p, 'organ', "all", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["all", "heart", "immunesystem", "brain", "pancreas"]));
 addOptional(p, 'tmethod', "alona", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), "alona"));
-addOptional(p, 'cmethod', "snndpc", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["snndpc", "kmeans", "kmedoids", "dbscan", "spectclust"]));
+addOptional(p, 'cmethod', "snndpc", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["snndpc", "kmeans", "kmedoids", "dbscan", "spectclust", "louvain"]));
 parse(p, X, genelist, s, varargin{:});
 k = p.Results.k;
 species = p.Results.species;
 organ = p.Results.organ; %#ok
 tmethod = p.Results.tmethod;
 cmethod = p.Results.cmethod;
-% cmethod='snndpc';
 c = sc_cluster_s(s, k, 'plotit', false, 'type', cmethod);
 OUT.c = c;
 OUT.X = cell(k, 1);
 OUT.type = cell(k, 1);
 
-% rng(1234)
-% c=sc_cluster_s(s,6,'type','kmedoids','plotit',false);
-% K=max(c);
-% figure;
 if size(s, 2) >= 3
     scatter3(s(:, 1), s(:, 2), s(:, 3), 10, c);
 elseif size(s, 2) == 2
@@ -34,8 +29,6 @@ end
 hold on
 
 for i = 1:max(c)
-    % ptsSelected=s(c==i,:);
-    % [Tct]=sc_celltypebrushed(X,genelist,s,ptsSelected,species);
     Xi = X(:, c == i);
     OUT.X{i} = Xi;
     [Xi, gi] = sc_selectg(Xi, genelist);
@@ -44,7 +37,7 @@ for i = 1:max(c)
 
     switch lower(tmethod)
         case 'alona'
-            [Tct] = run.ml_alona_new(Xi, gi, [], 'species', species);
+            [Tct] = run.ml_alona(Xi, gi, [], 'species', species);
             ctxt = Tct.C1_Cell_Type{1};
         otherwise
             error('sc_celltypeexplorer_auto:unknownMethod', ...

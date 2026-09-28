@@ -7,7 +7,11 @@ if isa(src, 'matlab.apps.AppBase')
 
         oldMarker = ha1.Marker;
         oldSizeData = ha1.SizeData;
-        oldColorMap = colormap(src.UIFigure);
+        % The axes, not the figure: i_gscatter3 sets the map on the axes,
+        % and that does not change the figure's, so reading the figure
+        % handed back the default map and a 3D-to-2D projection redrew the
+        % groups in parula.
+        oldColorMap = colormap(src.UIAxes);
         para.oldMarker = oldMarker;
         para.oldSizeData = oldSizeData;
         para.oldColorMap = oldColorMap;
@@ -29,7 +33,6 @@ else
     end
     ah = findobj(parentfig, 'type', 'Axes');
 
-    % assignin('base',"ah",ah)
     ha = findobj(ah.Children, 'type', 'Scatter');
     if ~isempty(ha)
         ha1 = ha(1);

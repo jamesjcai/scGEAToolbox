@@ -10,13 +10,6 @@ answer = gui.myQuestdlg(parentfig, 'Genes in whitelist will not be removed. Sele
 'Whitelist Genes', {'Yes', 'No', 'Cancel'}, 'Yes');
 switch answer
     case 'Yes'
-        %            whitelist=0;
-        %             [gsorted]=gui.i_sortgenenames(sce);
-        %             if isempty(gsorted), return; end
-        %             [idx]=gui.i_selmultidialog(gsorted);
-        %             if isempty(idx), return; end
-        %             if isscalar(idx) && idx==0, return; end
-        % whitelist=gsorted(idx);
         [whitelist] = gui.i_selectngenes(sce, [], parentfig);
         if isempty(whitelist)
             gui.myHelpdlg(parentfig, 'No whitelist gene selected. Click OK to continue.');

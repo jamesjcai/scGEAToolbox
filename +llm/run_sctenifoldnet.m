@@ -87,8 +87,15 @@ fprintf('Applying QC filter (sample 1)...\n');
 sce1 = sce1.qcfilterwhitelist(1000, 0.15, 15, 500, []);
 fprintf('Applying QC filter (sample 2)...\n');
 sce2 = sce2.qcfilterwhitelist(1000, 0.15, 15, 500, []);
-X1_all = sce1.X;
-X2_all = sce2.X;
+% QCFILTERWHITELIST drops genes detected in fewer than 15 cells, sample by
+% sample, so the two gene lists can differ afterwards. They were used as if
+% they still matched COMMON_GENES: unequal lengths made every cell type fail
+% in i_ma, and equal lengths with different genes misaligned the rows and
+% named the wrong genes as differentially regulated.
+[common_genes, i1, i2] = intersect(sce1.g, sce2.g, 'stable');
+X1_all = sce1.X(i1, :);
+X2_all = sce2.X(i2, :);
+fprintf('Genes kept by QC in both samples: %d\n', numel(common_genes));
 fprintf('After QC: %s (sample 1), %s (sample 2)\n', ...
     pkg.i_plural(sce1.NumCells, 'cell'), ...
     pkg.i_plural(sce2.NumCells, 'cell'));
@@ -122,6 +129,8 @@ i_log(out_dir, sprintf('START scTenifoldNet (lite): %s vs %s | %d cell types', .
 
 % ---- scTenifoldNet (lite) per cell type -----------------------------
 ri = 0;
+nTooSmall = 0;
+nFailed = 0;
 for k = 1:numel(shared_ct)
     ct = shared_ct(k);
     mask1 = ct1 == ct;
@@ -133,6 +142,7 @@ for k = 1:numel(shared_ct)
         fprintf('Skipping "%s": fewer than 100 cells (%d in sample1, %d in sample2).\n', ...
             ct, n1, n2);
         i_log(out_dir, sprintf('SKIP "%s": n1=%d n2=%d (both need >=100)', ct, n1, n2));
+        nTooSmall = nTooSmall + 1;
         continue;
     end
 
@@ -176,12 +186,14 @@ for k = 1:numel(shared_ct)
     catch ME
         fprintf('FAILED: %s\n', ME.message);
         i_log(out_dir, sprintf('FAILED "%s": %s', ct, ME.message));
+        nFailed = nFailed + 1;
         continue;
     end
 
     if isempty(T) || ~istable(T) || ~ismember('pAdjusted', T.Properties.VariableNames)
         fprintf('  No valid results returned.\n');
         i_log(out_dir, sprintf('FAILED "%s": no valid results returned', ct));
+        nFailed = nFailed + 1;
         continue;
     end
 
@@ -218,7 +230,11 @@ i_log(out_dir, sprintf('COMPLETE scTenifoldNet: %d cell type(s) analysed; emitti
 
 % ---- Print JSON summary for agent consumption -----------------------
 if isempty(results)
-    no_results_reason = 'All cell types skipped — minimum 100 cells not met in at least one sample.';
+    % Say which: this always blamed the 100-cell minimum, including when
+    % every cell type had failed in the analysis itself.
+    no_results_reason = sprintf(['No cell type produced results: %d had ' ...
+        'fewer than 100 cells in a sample, %d failed in the analysis (see ' ...
+        'the run log).'], nTooSmall, nFailed);
 else
     no_results_reason = '';
 end

@@ -5,9 +5,9 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag, fw
 %   sce = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag)
 %   sce = sc_csubtypeanno(..., fw, opts)
 %
-%   Cells annotated as cell_type_target are isolated, re-embedded and
-%   re-clustered on their own, each of the new clusters is scored against the
-%   subtype markers of that type in assets/PanglaoDB/cellsubtypes.xlsx, and the
+%   Cells annotated as cell_type_target are isolated and re-clustered on
+%   their own, each of the new clusters is scored against the subtype
+%   markers of that type in assets/PanglaoDB/cellsubtypes.xlsx, and the
 %   subtype labels are merged back into sce.c_cell_type_tx in place. Cells of
 %   every other type keep the labels they had.
 %
@@ -16,11 +16,12 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag, fw
 %   by an exact string comparison, so a gross annotation that spells the type
 %   as "T cells_{3}", "CD8+ T cells" or "T memory cells" is picked up as well.
 %
-%   Cells whose label already names a subtype of the target - "T regulatory
+%   Cells whose label already names a subtype of the target - "T memory
 %   cells", "Plasma cells", "Interneurons", the 37 names PKG.I_SUBTYPEOVERLAP
-%   knows celltypes.xlsx and cellsubtypes.xlsx both cover - are recognized as
-%   the target's cells but left out of the run and keep their labels. Pass
-%   OPTS.CELLSELECTION to subdivide them anyway.
+%   knows celltypes.xlsx and cellsubtypes.xlsx both cover - are part of the
+%   target and go into the run with the rest, so their subtype is re-derived
+%   from the subtype markers and the whole population ends up under one
+%   vocabulary. Pass OPTS.CELLSELECTION to hold them out instead.
 %
 %   formatid   0 subtype alone (default), 1 'Type_{Subtype}', 2 'Type (Subtype)'
 %   speciestag 'human' (default) or 'mouse'
@@ -40,6 +41,19 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag, fw
 %     CellSelection     logical index of the cells to subdivide, for when the
 %                       target is a label rather than a primary type.
 %                       Default: whatever PKG.I_MATCHPRIMARYTYPE matches.
+%     EmbedMarkers      force the scored markers into the gene set the
+%                       principal components are taken from, on top of the
+%                       highly variable genes of the isolated population.
+%                       Default true. The clusters are scored against these
+%                       markers, so leaving one out of the components means
+%                       the clustering can fail to
+%                       separate the subtypes that marker defines and the
+%                       scoring has nothing left to find. Isolating
+%                       Fibroblasts from the bundled example, 109 of the 191
+%                       markers are detected in that population and 94 of
+%                       them already rank among its top 2000 HVGs, so this
+%                       adds 15 genes and closes a gap of the same size.
+%                       Set false for the pre-2026-09 gene set.
 %
 %   See also GUI.CALLBACK_SUBTYPEANNOTATION, PKG.I_MATCHPRIMARYTYPE,
 %   PKG.I_SUBTYPEOVERLAP, PKG.E_DETERMINECELLTYPE.
@@ -54,6 +68,7 @@ usecustom = isstruct(opts) && isscalar(opts) && isfield(opts, 'SubtypeMarkers');
 customtable = [];
 if usecustom, customtable = opts.SubtypeMarkers; end
 addprimary = in_optfield(opts, 'AddPrimaryMarkers', ~usecustom);
+embedmarkers = in_optfield(opts, 'EmbedMarkers', true);
 if nargin < 4 || isempty(speciestag)
     speciestag = 'human';
 end
@@ -89,38 +104,35 @@ else
 end
 
 selectedidx = in_optfield(opts, 'CellSelection', []);
-nresolved = 0;
 if isempty(selectedidx)
-    % Every label that means the target type, not only the ones spelled the way
-    % the marker table spells it.
+    % Every label that means the target type, not only the ones spelled the
+    % way the marker table spells it - and that includes the labels which
+    % already name one of its subtypes. celltypes.xlsx and cellsubtypes.xlsx
+    % overlap, so a primary annotation run hands back "T memory cells" or
+    % "Plasma cells" beside "T cells" and "B cells", and those cells are T
+    % cells and B cells.
+    %
+    % They are taken into the run rather than left alone, for two reasons.
+    % Leaving them out ended with the dataset naming one population twice -
+    % "T cells (Memory)" for the cells this run labelled, "T memory cells"
+    % for the ones it skipped - which is the very thing the subtype
+    % vocabulary exists to avoid. And they are part of the population being
+    % re-clustered: holding 60 of 300 T cells out moves the cluster
+    % boundaries for the other 240.
+    %
+    % It does mean a subtype call already on the label is re-derived. That
+    % is the intent: the old call came out of a competition among 191
+    % primary types in celltypes.xlsx, not among this type's subtypes, so
+    % scoring it against the subtype markers is the better of the two
+    % answers, not merely a different one. A caller who wants the old
+    % behaviour passes OPTS.CELLSELECTION with those cells excluded;
+    % GUI.CALLBACK_SUBTYPEANNOTATION stashes the pre-run labels either way.
     selectedidx = pkg.i_matchprimarytype(sce.c_cell_type_tx, cell_type_target) ...
         == string(cell_type_target);
-
-    % ...except the labels that already name a subtype of it. celltypes.xlsx
-    % and cellsubtypes.xlsx overlap, so a primary annotation run can hand back
-    % "T regulatory cells" or "Plasma cells" alongside "T cells" and "B cells".
-    % Those cells belong to the target - PKG.I_SUBTYPEOVERLAP is how they were
-    % recognized as its cells in the first place - but re-clustering them would
-    % replace a subtype the markers already decided with whichever subtype
-    % their new cluster happens to score highest for. Coarser, and no more
-    % likely to be right. They keep the label they have.
-    [oprimary, ~, isoverlap] = pkg.i_subtypeoverlap(sce.c_cell_type_tx);
-    isresolved = reshape(isoverlap & oprimary == string(cell_type_target), ...
-        size(selectedidx));
-    nresolved = sum(selectedidx & isresolved);
-    selectedidx = selectedidx & ~isresolved;
 end
 selectedidx = reshape(logical(selectedidx), size(sce.c_cell_type_tx));
 
 if ~any(selectedidx)
-    if nresolved > 0
-        % Not the same complaint: the cells are there, they are just all
-        % subtyped already, and the caller has nothing left to gain.
-        error('sc_csubtypeanno:AlreadySubtyped', ['All %d %s in the data ' ...
-            'already carry a subtype label. There is nothing left to ' ...
-            'subdivide. Collapse the subtypes back to the cell type first ' ...
-            'if you want them re-annotated.'], nresolved, cell_type_target);
-    end
     error('SCE.C_CELLTYPE_TXT does not contain the target cell type.');
 end
 
@@ -164,24 +176,44 @@ if ~isempty(fw)
 end
 sce2 = copy(sce);
 sce2 = sce2.selectcells(selectedidx); % OK
+% Components of the whole dataset, batch-corrected or not, are dominated by
+% the differences BETWEEN cell types, which is the wrong space to split one
+% type in. Drop them so the clustering below recomputes on these cells.
+sce2.struct_cell_reductions = struct();
 
 % Isolating one cell type leaves genes with no counts at all in it. They carry
-% nothing for the re-embedding, and SC_SPLINEFIT drops them anyway - noisily,
+% nothing for the clustering, and SC_SPLINEFIT drops them anyway - noisily,
 % one warning per run. Dropping them here also takes them out of the marker
 % scoring below, where a marker that is measured but never detected in this
 % population was counted among the matched genes and diluted that subtype's
 % score without adding to it.
 sce2 = sce2.selectgenes(1, 1);   % keep genes with >=1 count in >=1 cell
 
-if ~isempty(fw)
-    gui.myWaitbar(fw.FigureHandle, fw.fw, false, '', ...
-        'Reembedding extracted cells...', 0.2);
+% The principal components below are taken from the isolated population's
+% own HVGs, which are recomputed here on a few hundred to a few thousand
+% cells. WGENE - the markers the clusters below are scored against - is the
+% one list that must survive that cut: a subtype marker expressed in a
+% fraction of an already-small population need not rank as variable, and if
+% it is absent the clustering can fail to split the subtypes it defines,
+% leaving PKG.E_DETERMINECELLTYPE nothing to score.
+%
+% Matched through PKG.I_MATCHGENENAMES rather than used directly: WGENE is
+% upper-cased by PKG.E_MARKERWEIGHT, so on a mouse dataset none of the names
+% are in SCE2.G as spelled and none of them would be added.
+%
+% No embedding is computed. A 3-D t-SNE of these cells used to be, but it was
+% dropped with SCE2: nothing below reads SCE2.S, and on the bundled example
+% removing it left every label unchanged and cut the run by 40-65%.
+embedwhitelist = [];
+if embedmarkers
+    embedwhitelist = pkg.i_matchgenenames(sce2.g, wgene, sce2.X);
+    fprintf(['SC_CSUBTYPEANNO: %d subtype markers kept in the genes the ' ...
+        'clusters are computed from.\n'], numel(embedwhitelist));
 end
-sce2 = sce2.embedcells('tsne3d', true, true, 3);
 
 if ~isempty(fw)
     gui.myWaitbar(fw.FigureHandle, fw.fw, false, '', ...
-        'Clustering extract cells...', 0.3);
+        'Clustering extracted cells...', 0.3);
 end
 % Ask for a cluster count instead of taking the default. CLUSTERCELLS
 % defaults to round(NumCells/100, -1), which rounds to the nearest TEN and so
@@ -193,8 +225,13 @@ end
 % At least one cluster per subtype, so each has somewhere to land, and up to
 % two, so a subtype that splits is not forced back together; capped at one
 % cluster per 25 cells, below which a cluster is too small to score.
+%
+% Louvain on principal components, with the resolution tuned to KCLUST.
+% EMBEDWHITELIST goes into the components, which is where the markers have
+% to be to reach the clusters.
 kclust = in_clustercount(sce2.NumCells, height(Tm));
-sce2 = sce2.clustercells(kclust, [], true);
+sce2 = sce2.clustercells(kclust, 'louvainpc', true, [], ...
+    Genes=embedwhitelist);
 
 [c, cL] = findgroups(string(sce2.c_cluster_id));
 

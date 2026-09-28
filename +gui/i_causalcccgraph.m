@@ -186,7 +186,8 @@ hx.show(parentfig);
         % nothing else to pass.
         fw = gui.myWaitbar(hFig);
         xyPrint = gui.i_causalcccdeclutter([p.XData' p.YData'], string(G.Nodes.Side));
-        gui.i_networkvisccc(G, xyPrint, curved, p.NodeFontSize, hFig);
+        gui.myFigure.drawInto(hFig, ...
+            @() gui.i_networkvisccc(G, xyPrint, curved, p.NodeFontSize, hFig));
         gui.myWaitbar(hFig, fw);
     end
 

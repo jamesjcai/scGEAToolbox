@@ -1,6 +1,13 @@
 function i_renametitle(src, ~)
 [parentfig] = gui.gui_getfigsce(src);
-ax = gca; % Get the current axes
+% gca never sees a uifigure's axes (it would make a new figure); ask the
+% button's own figure instead.
+ax = parentfig.CurrentAxes;
+if isempty(ax)
+    ax = findobj(parentfig, 'Type', 'axes');
+    if isempty(ax), return; end
+    ax = ax(1);
+end
 titleObj = ax.Title; % Access the Title property of the axes
 
 if isempty(titleObj.String)

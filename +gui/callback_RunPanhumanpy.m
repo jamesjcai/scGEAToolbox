@@ -16,40 +16,6 @@ end
 % SCimilarity trained model. Download SCimilarity models.
 % Note, this is a large tarball - downloading and uncompressing can take a several minutes.
 
-% [modeldir] = gui.i_setscimilaritymodelpath;
-% if isempty(modeldir), return; end
-
-% label_ints_file = fullfile(modeldir, 'label_ints.csv');
-% if exist(label_ints_file, "file")
-%    answer = gui.myQuestdlg(FigureHandle, 'Unconstrained or constrained annotation','', ...
-%        {'Unconstrained','Constrained'},'Unconstrained');
-%    switch answer
-%        case 'Unconstrained'
-%            target_celltypes = '';
-%        case 'Constrained'
-%            T = readtable(label_ints_file, 'ReadVariableNames',true, ...
-%                'VariableNamingRule', 'modify');
-%            allcelltypes = natsort(string(T.x0));
-            % scimilmodelpath
-            % scimiltargetcel
-%            if ispref('scgeatoolbox', 'scimiltargetcel')
-%                preselected_celltypes = getpref('scgeatoolbox', 'scimiltargetcel');
-%            else
-%                preselected_celltypes = '';
-%            end
-%            [idx] = gui.i_selmultidialog(allcelltypes, preselected_celltypes, FigureHandle);
-%            if isempty(idx), return; end
-%            if idx == 0, return; end
-%            target_celltypes = allcelltypes(idx);
-%            setpref('scgeatoolbox', 'scimiltargetcel', target_celltypes);
-%        otherwise
-%            return;
-%    end
-% else
-%    gui.myWarndlg(FigureHandle, "Missing label_ints.csv. Scimilarity model path is invalid.");
-%    return;
-% end
-
 extprogname = 'py_panhumanpy';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);

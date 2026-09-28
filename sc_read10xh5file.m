@@ -24,13 +24,8 @@ if exist(filenm, 'file') ~= 2
 end
 
 grouptag = "/matrix/";
-%try
     h = h5info(filenm);
-    % grouptag = strcat(h.Groups(1).Name, "/");
     assert(any(contains(string({h.Groups.Name}), "/matrix")))
-%catch
-%    warning('Failed to read HDF5 file info. Using default group tag.');
-%end
 
 data = pkg.e_guessh5field(filenm, {grouptag}, {'data'}, true);
 indices = pkg.e_guessh5field(filenm, {grouptag}, {'indices'}, true);
@@ -42,69 +37,21 @@ if isempty(g)
     warning('Gene names or feature names are not assigned.');
 end
 
-% try
-% g=h5read(filenm,[h.Groups.Groups(1).Name,'/gene_names']);
-% catch
-%     try
-%         g=h5read(filenm,[h.Groups.Groups(1).Name,'/name']);
-%     catch
-%         try
-%             g=h5read(filenm,[h.Groups(1).Name,'/gene_names']);
-%         catch
-%             error('GENE_NAMES not found.');
-%         end
-%     end
-% end
-
 b = pkg.e_guessh5field(filenm, {grouptag, '/matrix/features/'}, {'barcodes'}, false);
 if isempty(b), warning('B is not assigned.'); end
 
-%
-%     try
-%     barcodes=h5read(filenm,[hinfo.Groups.Groups(1).Name,'/barcodes']);
-% catch
-%         try
-%             barcodes=h5read(filenm,[hinfo.Groups(1).Name,'/barcodes']);
-%         catch
-%             warning('BARCODES not found.');
-%         end
-% end
-
-% try
-%     X=zeros(shape(1),shape(2));
-% catch
 if ~isMATLABReleaseOlderThan('R2025a')
     X = spalloc(shape(1), shape(2), length(data), 'single');
 else
     X = spalloc(shape(1), shape(2), length(data));
 end
 
-%end
-
-%c=0; olda=-1;
 for k = 1:length(indptr) - 1
-    % if mod(c,round(length(indptr)/100))==0
-    %     a=round(100*(c/length(indptr)));
-    %     if a~=olda
-    %         %fprintf('......%d%%\n',a);
-    %         gui.gui_waitbar_adv(fw,a/100);
-    %         olda=a;
-    %     end
-    % end
     ix = indptr(k) + 1:indptr(k+1);
     X((indices(ix) + 1), k) = data(ix);
-    %    c=c+1;
 end
-%fprintf('......100%%\n');
 
 g = deblank(string(g));
-
-% genelist=strings(length(g),1);
-% for k=1:length(g)
-%     genelist(k)=string(g(k).data);
-% end
-%gui.gui_waitbar(fw);
-%gui.gui_waitbar_adv(fw);
 
 if all(contains(b,'-'))
     c = extractAfter(b, "-");

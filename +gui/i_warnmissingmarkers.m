@@ -16,7 +16,7 @@ function [missing] = i_warnmissingmarkers(parentfig, sce, Tm, dlgtitle)
 %   See also pkg.i_missingmarkers, gui.i_getcustommarkers,
 %   gui.callback_SubtypeAnnotation.
 
-if nargin < 4 || isempty(dlgtitle), dlgtitle = 'Customized Marker Genes'; end
+if nargin < 4 || isempty(dlgtitle), dlgtitle = 'Custom Markers'; end
 if nargin < 3, Tm = []; end
 if nargin < 2, sce = []; end
 

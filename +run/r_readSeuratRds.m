@@ -14,7 +14,9 @@ if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 isdebug = false;
 tmpfilelist = {'inputrdsfile.txt', 'output.h5', ...
 'g.csv', 'X.csv', 'umap.csv', 'barcodes.csv', ...
-'annotation.csv', 'metadata.csv'};
+'annotation.csv', 'metadata.csv', ...
+'batch.csv', 'celltype.csv'};   % written by script.R too: a stale pair gave
+% the next file's cells the previous file's batch and cell-type labels
 pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
 % run cannot leave a previous run's output to be picked up as this one's
 
@@ -36,7 +38,6 @@ if exist('g.csv', 'file')
 end
 
 if exist('output.h5', 'file')
-    % X = h5read('output.h5', '/X');
     filenm = 'output.h5';
     grouptag = '/';
     data = pkg.e_guessh5field(filenm, {grouptag}, {'data'}, true);
@@ -50,8 +51,6 @@ if exist('output.h5', 'file')
     else
         X = spalloc(shape(1), shape(2), length(data));
     end
-
-    % X = spalloc(shape(1), shape(2), length(data));
 
     for k = 1:length(indptr) - 1
         i = indptr(k) + 1:indptr(k+1);
@@ -100,17 +99,6 @@ if exist(batchfile,'file')
 end
 
 
-% if exist('annotation.csv', 'file')
-%     disp('Reading celltype from annotation.csv');
-%     t = readtable('annotation.csv', 'Delimiter', ',');
-%     if ~isempty(t) && ismember('x', text.Properties.VariableNames)
-%         if sce.NumCells == length(string(t.x))
-%             sce.c_cell_type_tx = string(t.x);
-%         end
-%     end
-% else
-
-% if isdeployed || ~isempty(which('celltype.csv'))
 celltypefile = 'celltype.csv';
 if exist(celltypefile, 'file')
     disp('Reading celltype from celltype.csv');

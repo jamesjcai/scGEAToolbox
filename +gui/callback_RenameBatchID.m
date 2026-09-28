@@ -8,11 +8,7 @@ requirerefresh = false;
 
 if isempty(sce.c_batch_id)
     sce.c_batch_id = string(ones(sce.NumCells, 1));
-    % gui.myErrordlg(FigureHandle, 'sce.c_batch_id undefined');
-    % return;
 end
-% answer = gui.myQuestdlg(FigureHandle, 'Rename batch ID?');
-% if ~strcmp(answer, 'Yes'), return; end
 
 if ~isstring(sce.c_batch_id)
     sce.c_batch_id = string(sce.c_batch_id);
@@ -29,7 +25,7 @@ end
 
 if gui.i_isuifig(FigureHandle)
     [indxx, tfx] = gui.myListdlg(FigureHandle, cLi, ...
-        'Select batch ID');
+        'Select batch ID', [], false);
 else
     [indxx, tfx] = listdlg('PromptString', ...
         {'Select batch ID'}, ...

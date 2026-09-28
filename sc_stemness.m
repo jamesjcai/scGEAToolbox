@@ -8,7 +8,7 @@ function s = sc_stemness(X, g)
 %     g : cell array of gene names (matching rows of X)
 %
 %   Output:
-%     s : 1 x cells vector of normalized stemness scores (Spearman)
+%     s : cells x 1 vector of normalized stemness scores (Spearman)
 %
 %   Uses a default stemness signature loaded from:
 %     assets/scCancer/pcbc_stemsig.txt
@@ -30,20 +30,12 @@ T = readtable(dbfile1, 'FileType', 'text', 'ReadVariableNames', false);
 
 % Ensure common genes between stem signature and input matrix
 [~, ix, iy] = intersect(T.Var1, g);
-% X = sc_norm(X);
-% X = log1p(X);
 X = X(iy, :);
 if issparse(X), X = full(X); end
 stem_sig_common = T.Var2(ix, :);
 
 % Initialize the stemness score array
 % s = zeros(size(X, 2), 1);
-
-% Calculate Spearman correlation for each cell (column in X)
-% for i = 1:width(X_common)
-%     s(i) = corr(X_common(:, i), stem_sig_common(:), ...
-%         'Type', 'Spearman');
-% end
 
 s = corr(X, stem_sig_common, ...
     "Type", "Spearman");

@@ -113,6 +113,12 @@ end
 % apart in anything except their arguments. TEN.I_XCTGRN owns the pcrnet call,
 % the max-normalisation, the filtering and the symmetrisation, and records why
 % parallel and fastersvd are both left off.
+%
+% The GRNs are built on log-normalised expression, as TEN.I_XCTGRN's help
+% requires and the reference does (core.py raises "require log data"). X
+% arrives as raw counts from every caller; on raw counts the cells'
+% sequencing depth reads as co-expression, and independent genes came out
+% 93-97% positive edges (tests/xctLogNormTest.m).
 if verbose
     if isempty(cfg.grn1)
         fprintf('[%s] Building GRN: %s ...\n', tag, celltype1);
@@ -120,7 +126,7 @@ if verbose
         fprintf('[%s] Using precomputed GRN: %s (skipping pcrnet build)\n', tag, celltype1);
     end
 end
-A_s = ten.i_xctgrn(X_s, 3, 0.75, false, cfg.useparallel, ...
+A_s = ten.i_xctgrn(i_lognorm(X_s), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn1, processed=cfg.grn1_processed);
 
 if verbose
@@ -130,7 +136,7 @@ if verbose
         fprintf('[%s] Using precomputed GRN: %s (skipping pcrnet build)\n', tag, celltype2);
     end
 end
-A_t = ten.i_xctgrn(X_t, 3, 0.75, false, cfg.useparallel, ...
+A_t = ten.i_xctgrn(i_lognorm(X_t), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn2, processed=cfg.grn2_processed);
 
 % -- Alignment, one direction at a time -----------------------------------
@@ -371,8 +377,8 @@ end % i_loadlrdb
 
 %% ---- library-size normalisation followed by log1p ----
 function X = i_lognorm(X)
-% Applied only to the neural solver's network inputs; the GRN step keeps the
-% caller's original matrix.
+% Applied to the GRN inputs and the neural solver's network inputs. X itself
+% stays raw because TEN.I_XCTW12 log-normalises its own "outer" inputs.
 
 X = double(X);
 col_sums = sum(X, 1);

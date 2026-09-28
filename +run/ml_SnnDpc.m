@@ -3,16 +3,15 @@ function [c] = ml_SnnDpc(s, cluK, knnK)
 %
 % http://mlwiki.org/index.php/SNN_Clustering#SSN_Clustering_Algorithm
 % https://link.springer.com/article/10.1007/s12539-019-00357-4
+%
+% The work is done by PKG.E_SNNDPC, which reproduces the reference
+% implementation in EXTERNAL/ML_SNNDPC/SNNDPC_ORI exactly but in O(N*K)
+% rather than O(N^2) time and memory. SNNDPC_ORI is kept only as the
+% reference TESTS/SNNDPCLOUVAINTEST checks against.
 
 if nargin < 3, knnK = 4; end
 if nargin < 2, cluK = 10; end
 
-pw1 = fileparts(mfilename('fullpath'));
-pth = fullfile(pw1, '..', 'external', 'ml_SNNDPC');
-if ~(ismcc || isdeployed)
-    addpath(pth);
-end
-x = SnnDpc_ori(s, ones(size(s, 1), 1), knnK, 'AutoPick', cluK);
-c = x.cluster;
+c = pkg.e_snndpc(s, cluK, knnK);
 
 end

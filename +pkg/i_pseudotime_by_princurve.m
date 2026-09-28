@@ -11,10 +11,6 @@ n = size(s, 1);
 mass = 1 / n * ones(1, n);
 y0 = [];
 cut_indices0 = [];
-% y0=i_pseudotime_by_splinefit(s);
-%        crit_dens = .075;
-%        lambda1 = .006;
-%        lambda2 = 4/3*sqrt(lambda1/crit_dens);
 
 
 % lambda1 - the coefficient for length penalty in the objective functional.
@@ -40,7 +36,6 @@ restoreWarn = onCleanup(@() warning(warnState));
 warning('off', 'all');
 [yfinal, ~, I, ~] = mppc(y0, cut_indices0, s, mass, lambda1, lambda2, tol, rho, ...
 max_m, max_avg_turn, normalize_data, pause_bool, false);
-% toc;
 
 
 t = (I + randn(size(I)))';
@@ -48,7 +43,5 @@ xyz1 = yfinal;
 t = normalize(t, 'range');
 
 if plotit
-    % hold on
-    % plot3(xyz1(1:end-1, 1), xyz1(1:end-1, 2), xyz1(1:end-1, 3), '-r', 'linewidth', 2);
 end
 end

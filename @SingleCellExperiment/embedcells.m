@@ -8,55 +8,83 @@ if nargin < 4 || isempty(usehvgs), usehvgs = true; end
 if nargin < 3 || isempty(forced), forced = false; end
 if nargin < 2, methodtag = 'tsne3d'; end
 
-% validTypes = {'tsne','umap','phate'};
-% checkType = @(x) any(validatestring(x,validTypes));
+% USEHVGS takes a mode name as well as a logical, so a caller that only
+% passes a choice through - GUI.I_GETHVGNUM's answer reaching here from the
+% main app, say - does not have to assemble the gene list itself. See
+% PKG.I_VALIDGENEMODE for the names.
+[~, usehvgs, usemarkers, markerweight] = pkg.i_validgenemode(usehvgs);
+
 if isempty(obj.s) || forced
     if isstring(methodtag) || ischar(methodtag)
         methodtag = lower(methodtag);
     end
 
     if usehvgs && size(obj.X, 1) > numhvg
-        % disp('Identifying HVGs')
-        try
-            [~, X, g] = sc_splinefit(obj.X, obj.g, true, false, true);
-        catch ME
-           warning(ME.message);
-           [~, X, g] = sc_hvg(obj.X, obj.g, true, false, true, false, true);
-        end
+        % The gene set is shared with PKG.E_CELLPCS; the ranking and its
+        % rationale live in PKG.I_SELECTHVGS.
+        keep = pkg.i_selecthvgs(obj.X, obj.g, numhvg);
 
-        % Take the top numhvg of what came back, not of what went in.
-        % SC_SPLINEFIT drops genes that are all zero, so on a subset of the
-        % cells - one cell type isolated for subtype annotation, say - fewer
-        % genes come back than obj.g has. Building the mask from obj.g then
-        % puts a true past the end of X as soon as the subset leaves fewer
-        % than numhvg expressed genes, and the indexing errors.
-        nkeep = min(numhvg, numel(g));
-        idx = false(numel(g), 1);
-        idx(1:nkeep) = true;
-
-        X = X(idx, :);
-        g = g(idx);
+        X = obj.X(keep, :);
+        g = obj.g(keep);
     else
         X = obj.X;
         g = obj.g;
     end
 
-    if ~isempty(whitelist)
-        assert(all(ismember(whitelist, obj.g)));
-        [~, idx] = setdiff(whitelist, g);
-        if ~isempty(idx)
-            [~, idxx] = ismember(whitelist, obj.g);
-            Xresv = obj.X(idxx, :);
-            X = [X; Xresv(idx, :)];
-            g = [g; whitelist(idx)];
+    if usemarkers
+        markerlist = pkg.i_getmarkerwhitelist(obj.g, obj.X);
+        if isempty(whitelist)
+            whitelist = markerlist;
+        else
+            whitelist = union(string(whitelist(:)), markerlist);
         end
+    end
+
+    nappended = 0;
+    if ~isempty(whitelist)
+        ngene = numel(g);
+        [X, g] = pkg.i_appendgenes(X, g, whitelist, obj.X, obj.g);
+        nappended = numel(g) - ngene;
+        fprintf('EMBEDCELLS: %d additional whitelisted genes included.\n', ...
+            nappended);
+    end
+
+    % Up-weighting the appended genes has to happen AFTER library-size
+    % normalisation, so this normalises here and tells the embedder not to
+    % do it again. Scaling raw counts instead does not work: it changes
+    % every cell's total, which SC_NORM then divides back out unevenly.
+    % Measured at w=5 on 100 genes, pre-normalisation scaling left the
+    % weighted genes at 1.6x the baseline variance instead of the intended
+    % 25x, and dragged the genes that were NOT weighted to 0.73x.
+    %
+    % PKG.I_APPENDGENES puts the added genes at the bottom, so they are the
+    % last NAPPENDED rows.
+    applyweight = markerweight > 1 && nappended > 0;
+    if applyweight && ~any(strncmp(methodtag, {'tsne', 'umap'}, 4))
+        % SC_PHATE and RUN.ML_METAVIZ normalise internally and expose no
+        % flag to stop them, so there is nowhere to put the weights. Warn
+        % rather than error: this runs per method inside a multi-method
+        % loop, and aborting would lose the embeddings that do support it.
+        warning('SingleCellExperiment:embedcells:weightNotApplied', ...
+            ['%s normalises internally, so the marker weighting was not ' ...
+            'applied to it. Its gene set is still the union.'], ...
+            upper(methodtag));
+        applyweight = false;
+    end
+    if applyweight
+        X = log1p(sc_norm(X));
+        X(isnan(X)) = 0;
+        wrows = (numel(g) - nappended + 1):numel(g);
+        X(wrows, :) = X(wrows, :) * markerweight;
+        fprintf('EMBEDCELLS: those %d genes up-weighted %gx.\n', ...
+            nappended, markerweight);
     end
 
     switch methodtag
         case {'tsne','tsne2d','tsne3d'}
-            obj.s = sc_tsne(X, ndim, true);
+            obj.s = sc_tsne(X, ndim, ~applyweight, ~applyweight);
         case {'umap','umap2d','umap3d'}
-            obj.s = sc_umap(X, ndim);
+            obj.s = sc_umap(X, ndim, ~applyweight, ~applyweight);
         case {'phate','phate2d','phate3d'}
             obj.s = sc_phate(X, ndim);
         case {'metaviz','metaviz2d','metaviz3d'}
@@ -74,7 +102,6 @@ if isempty(obj.s) || forced
     end
 
     obj.struct_cell_embeddings.(methoddimtag) = single(obj.s);
-    % disp('SCE.S added');
 else
     disp('Use `sce = sce.embedcells(''tSNE'', true)` to overwrite existing SCE.S.');
 end

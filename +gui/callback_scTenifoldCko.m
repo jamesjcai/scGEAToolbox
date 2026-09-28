@@ -65,7 +65,6 @@ sce.c_batch_id(c == x1) = "Source";
 sce.c_batch_id(c == x2) = "Target";
 sce.c_cell_type_tx = string(cL(c));
 
-% idx=thisc==cL{x1} | thisc==cL{x2};
 idx = c == x1 | c == x2;
 sce = sce.selectcells(idx);  % OK
 celltype1 = cL{x1};
@@ -79,6 +78,7 @@ Cko_approach = gui.myQuestdlg(FigureHandle, 'Select CKO approach:','',...
 if ~ismember(Cko_approach, {'Block Ligand-Receptor','Complete Gene Knockout'}), return; end
 
 
+T = [];       % the Block path never set it, so an empty result crashed below
 switch Cko_approach
     case 'Block Ligand-Receptor'
 
@@ -100,7 +100,7 @@ switch Cko_approach
 
        if gui.i_isuifig(FigureHandle)
             [targetpathid, tf] = gui.myListdlg(FigureHandle, ...
-                targetpath, 'Select path(s) to block:');
+                targetpath, 'Select path(s) to block:', [], true);
         else
             [targetpathid, tf] = listdlg('PromptString', {'Select path(s) to block:'}, ...
                 'SelectionMode', 'multiple', 'ListString', ...
@@ -109,20 +109,17 @@ switch Cko_approach
 
         if tf ~= 1, return; end
 
-        % assignin("base","sce",sce)
-        % assignin("base","celltype1",celltype1)
-        % assignin("base","celltype2",celltype2)
-        % assignin("base","targetg",targetg)
-        % assignin("base","targetpathid",targetpathid)
-        % prepare_input_only = true;
+        try
+            [Tcell] = run.py_scTenifoldCko_path(sce, celltype1, celltype2, targetg, ...
+                targetpathid, wkdir, true, prepare_input_only, FigureHandle);
+        catch ME
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+            return;
+        end
 
-        [Tcell] = run.py_scTenifoldCko_path(sce, celltype1, celltype2, targetg, ...
-            targetpathid, wkdir, true, prepare_input_only);
-
-        % return;
     case 'Complete Gene Knockout'
        if gui.i_isuifig(FigureHandle)
-            [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene');
+            [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene', [], false);
         else
             [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
                 'SelectionMode', 'single', 'ListString', ...
@@ -135,7 +132,8 @@ switch Cko_approach
         end
         targetg = sce.g(idx);
 
-        answer = gui.myQuestdlg(FigureHandle, sprintf('Knockout %s in which cell type?',targetg), '', 'Both', celltype1, celltype2, 'Both');
+        answer = gui.myQuestdlg(FigureHandle, sprintf('Knockout %s in which cell type?',targetg), '', ...
+            {'Both', char(celltype1), char(celltype2)}, 'Both');
         switch answer
             case 'Both'
                 targettype=sprintf("%s+%s", celltype1, celltype2);
@@ -147,15 +145,22 @@ switch Cko_approach
                 return;
         end
 
-        T = [];
-        [Tcell] = run.py_scTenifoldCko_gene(sce, celltype1, celltype2, targetg, ...
-            targettype, wkdir, true, prepare_input_only);
+        try
+            [Tcell] = run.py_scTenifoldCko_gene(sce, celltype1, celltype2, targetg, ...
+                targettype, wkdir, true, prepare_input_only, FigureHandle);
+        catch ME
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+            return;
+        end
     otherwise
         gui.myErrordlg(FigureHandle, 'Invalid option.','');
         return;
 end
 
 
+if istable(Tcell)
+    Tcell = {Tcell, []};   % only output1.txt was written
+end
 if ~isempty(Tcell)
         [T1] = Tcell{1};
         [T2] = Tcell{2};
@@ -182,37 +187,10 @@ if ~isempty(T)
         assert(length(knownpair)==height(T));
 
         T=[T, table(knownpair)];
-        % T(:,[4 5 6 7 11]) = [];
 
         outfile = fullfile(wkdir,"outfile_interaction_changes.csv");
-        % if isfile(outfile)
-        %     answerx = gui.myQuestdlg(FigureHandle, 'Overwrite file? Select No to save in a temporary file.');
-        % else
-        %     answerx = 'Yes';
-        % end
-        % if isempty(wkdir) || ~isfolder(wkdir) || ~strcmp(answerx, 'Yes')
-        %     [a, b] = pkg.i_tempdirfile("sctendifoldcko");
-        %     writetable(T, b);
-        %
-        %     answer = gui.myQuestdlg(FigureHandle, sprintf('Result has been saved in %s', b), ...
-        %         '', 'Export result...', 'Locate result file...', 'Export result...');
-        %     switch answer
-        %         case 'Locate result file...'
-        %             winopen(a);
-        %             pause(2)
-        %             if strcmp(gui.myQuestdlg(FigureHandle, 'Export result to other format?'), 'Yes')
-        %                 gui.i_exporttable(T, false, 'Ttenifldcko', 'TenifldCkoTable');
-        %             end
-        %         case 'Export result...'
-        %             gui.i_exporttable(T, false, 'Ttenifldcko', 'TenifldCkoTable');
-        %         otherwise
-        %             winopen(a);
-        %     end
-        % else
         writetable(T, outfile);
-        gui.myHelpdlg(FigureHandle, ...
-            sprintf('Result of cell-cell interaction changes has been saved in %s', outfile), '');
-        % end
+        savedmsg = sprintf('Result of cell-cell interaction changes has been saved in %s.', outfile);
     else
         if ~prepare_input_only
             gui.myHelpdlg(FigureHandle, 'No ligand-receptor pairs are identified.');
@@ -223,8 +201,15 @@ if ~isempty(T)
         end
     end
 
-if exist("merged_embeds.h5",'file') && strcmp('Yes', gui.myQuestdlg(FigureHandle, 'In addtion to cell-cell interaction changes, scTenifoldCko also gives the result of gene expression changes. Continue?'))
-        fn=fullfile(wkdir, 'merged_embeds.h5');
+% The embeddings are written to WKDIR; the runner has already changed back
+% out of it, so a bare file name here looked in the wrong folder.
+fn = fullfile(wkdir, 'merged_embeds.h5');
+if isempty(T)
+    % nothing saved, and the no-result case has already been reported
+elseif ~isfile(fn)
+    gui.myHelpdlg(FigureHandle, savedmsg, '');
+elseif strcmp('Yes', gui.myQuestdlg(FigureHandle, [savedmsg, ' ', ...
+        'scTenifoldCko also gives the result of gene expression changes. Compute it now?']))
         eb = h5read(fn,'/data')';
         n = height(eb);
         sl = n / 4;
@@ -245,15 +230,15 @@ if exist("merged_embeds.h5",'file') && strcmp('Yes', gui.myQuestdlg(FigureHandle
         [T] = ten.i_dr(a, c, sce.g, true);
         T = addvars(T, string(repelem(celltype1, height(T), 1)), 'Before', 1);
         T.Properties.VariableNames{'Var1'} = 'celltype';
-        outfile1 = sprintf('outfile_expression_changes_in_%s.csv', ...
-            matlab.lang.makeValidName(celltype1));
+        outfile1 = fullfile(wkdir, sprintf('outfile_expression_changes_in_%s.csv', ...
+            matlab.lang.makeValidName(celltype1)));
         writetable(T, outfile1);
 
         [T] = ten.i_dr(b, d, sce.g, true);
         T = addvars(T, string(repelem(celltype2, height(T), 1)), 'Before', 1);
         T.Properties.VariableNames{'Var1'} = 'celltype';
-        outfile2 = sprintf('outfile_expression_changes_in_%s.csv', ...
-            matlab.lang.makeValidName(celltype2));
+        outfile2 = fullfile(wkdir, sprintf('outfile_expression_changes_in_%s.csv', ...
+            matlab.lang.makeValidName(celltype2)));
         writetable(T, outfile2);
         gui.myHelpdlg(FigureHandle, {'Result of gene expression changes has been saved in:', ...
             sprintf('%s', outfile1), ...

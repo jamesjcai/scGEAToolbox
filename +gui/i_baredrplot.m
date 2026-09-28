@@ -7,7 +7,6 @@ if nargin < 3, t = 'tSNE'; end
 if nargin < 2, c = []; end
 
 colortag = 'k';
-% try
 
 if ~isMATLABReleaseOlderThan('R2025a') && ~isempty(parentfig)
     try
@@ -19,29 +18,11 @@ if ~isMATLABReleaseOlderThan('R2025a') && ~isempty(parentfig)
     end
 end
 
-% catch
-% end
-
-% if size(s, 2) >= 3
-%     x = s(:, 1);
-%     y = s(:, 2);
-%     z = s(:, 3);
-%     is2d = false;
-% else
-%     x = s(:, 1);
-%     y = s(:, 2);
-%     z = zeros(size(x));
-%     is2d = true;
-% end
 isAxesHandle = isa(ax, 'matlab.graphics.axis.Axes'); % isgraphics(s, 'axes');
 if ~isAxesHandle && isempty(c), error('Empty handle.'); end
 
 hx = gui.myFigure(parentfig);
 hFig = hx.FigHandle;
-
-% if ~isempty(parentfig)
-%    hFig.Position = parentfig.Position;
-% end
 
 if isAxesHandle
     if ~gui.i_isuifig(hFig)
@@ -58,7 +39,6 @@ else
     else
         hAx = axes('Parent', hFig, 'Visible', 'off');
     end
-    % h1 = gui.i_gscatter3(ax, c, 1, 1, hAx);
 end
 
 
@@ -71,9 +51,6 @@ grid(hAx, 'off');
 xLimits = hAx.XLim;
 yLimits = hAx.YLim;
 zLimits = hAx.ZLim;
-
-% bx=gca;
-% assert(isequal(bx, hAx));
 
 is3d1 = isprop(hAx, 'ZLim');
 h = get(hAx, 'Children');
@@ -93,11 +70,8 @@ is3d = is3d1 & is3d2;
 
 hold(hAx, 'on');
 
-% assignin("base","ax",ax);
-
 dts = findall(ax, 'Type', 'datatip');
 hscatter = ax.Children(1);
-% assignin("base","dts", dts);
 
 stxtyes=cell(length(hscatter.XData),1);
 
@@ -123,10 +97,6 @@ if is3d    % ======================================== 3D
     quiver3(hAx, a, b, c, 0, lb/5, 0, 'Color', colortag, 'LineWidth', 1); % Y-axis
     quiver3(hAx, a, b, c, 0, 0, lc/5, 'Color', colortag, 'LineWidth', 1); % Z-axis
 
-%    axis_length = 20;
-%    quiver3(0, 0, 0, axis_length, 0, 0, 'k', 'LineWidth', 1); % X-axis
-%    quiver3(0, 0, 0, 0, axis_length, 0, 'k', 'LineWidth', 1); % Y-axis
-%    quiver3(0, 0, 0, 0, 0, axis_length, 'k', 'LineWidth', 1); % Z-axis
     txt1 = sprintf('%s\\_1', t);
     txt2 = sprintf('%s\\_2', t);
     txt3 = sprintf('%s\\_3', t);
@@ -137,7 +107,6 @@ if is3d    % ======================================== 3D
     text(hAx, a, b, c+lc/5, txt3);
     view(hAx, 3);
 else          % ======================================== 2D
-    % disp('2D')
     hAx.Units = "pixels";
     r = hAx.Position(3)/hAx.Position(4);
 
@@ -186,16 +155,6 @@ hx.show(parentfig);
 
 
  function [width, height] = measureText(txt, textOpts, ax)
-    % if(nargin < 3)
-    %    ax = gca();
-    % end
-    % if nargin < 2
-    %     textOpts = struct();
-    %     textOpts.HorizontalAlignment = 'center';
-    %     textOpts.VerticalAlignment = 'middle';
-    %     textOpts.FontSize = 10;
-    %     textOpts.FontWeight = 'normal';
-    % end
     hTest = text(ax, 0, 0, txt, textOpts);
     textExt = get(hTest, 'Extent');
     delete(hTest);

@@ -2,9 +2,9 @@
 %% Load and pre-process three data sets, X, Y and Z
 
 cdgea; % set working directory
-[X,genelistx] = sc_readfile('example_data/GSM3204304_P_P_Expr.csv');
-[Y,genelisty] = sc_readfile('example_data/GSM3204305_P_N_Expr.csv');
-[Z,genelistz] = sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
+[X,genelistx] = sc_readfile(pkg.i_exampledata('GSM3204304_P_P_Expr.csv'));
+[Y,genelisty] = sc_readfile(pkg.i_exampledata('GSM3204305_P_N_Expr.csv'));
+[Z,genelistz] = sc_readfile(pkg.i_exampledata('GSM3044891_GeneExp.UMIs.10X1.txt'));
 [X,genelistx] = sc_selectg(X, genelistx, 3, 1);
 [Y,genelisty] = sc_selectg(Y, genelisty, 3, 1);
 [Z,genelistz] = sc_selectg(Z, genelistz, 3, 1);
@@ -51,7 +51,7 @@ gui.sc_scattergenes(X, genelistx, 'mean_dropr');
 %% 3D scatter plot with spline fit
 
 figure;
-gui.i_hvgsplinefitplot(X, genelistx, true, true);
+gui.i_hvgcurveplot(X, genelistx, true, true, [], "splinefit");
 %% Feature selection and show top 50 differentially deviated (DD) genes
 
 T = sc_splinefit2(X, Y, genelistx, genelisty);

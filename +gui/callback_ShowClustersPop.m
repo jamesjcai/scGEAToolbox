@@ -2,6 +2,10 @@ function callback_ShowClustersPop(src, ~)
 
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
+% The app, kept apart from SRC: IN_CALLBACK_SCGEATOOLSCE takes a SRC of its
+% own, and a nested function's argument is this workspace's variable, so the
+% first button click would overwrite it with the button.
+appsrc = src;
 if ~isempty(FigureHandle) && pkg.i_isvalid(FigureHandle) && FigureHandle.Visible == "on"
     figure(FigureHandle);
     cleanupObj = onCleanup(@() gui.i_raisefig(FigureHandle));
@@ -17,8 +21,6 @@ if ~strcmp(answer, 'Yes'), return; end
 [thisc, ~] = gui.i_selectnclass(sce, true,'','',FigureHandle);
 if isempty(thisc), return; end
 [c, cL] = findgroups(string(thisc));
-% [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
-% if noanswer, return; end
 if max(c)==1
     gui.myHelpdlg(FigureHandle, sprintf('Only one type of cells: %s',cL{1}))
     return;
@@ -35,25 +37,24 @@ end
         return;
     end
 
-% cLa=getappdata(FigureHandle,'cL');
-% if ~isempty(cLa) && length(cL)==length(cLa)
-%    cL=cLa;
-% end
 cmv = 1:max(c);
 idxx = cmv;
 [cmx] = countmember(cmv, c);
 
 
-% answer = gui.myQuestdlg(FigureHandle, 'Sort by size of cell groups?');
-% if strcmpi(answer, 'Yes')
 [~, idxx] = sort(cmx, 'descend');
 SCEV = SCEV(idxx);
-% end
 
 try
     sces = sce.s;
-    h = findall(FigureHandle, 'type', 'scatter');
-    if isempty(h.ZData), sces = sce.s(:, 1:2); end
+    % The app's own scatter: findall returned every scatter on the window,
+    % and h.ZData errored for none or for more than one.
+    if isa(src, 'matlab.apps.AppBase') && pkg.i_isvalid(src.h)
+        h = src.h;
+    else
+        h = findall(FigureHandle, 'type', 'scatter');
+    end
+    if isempty(h) || isempty(h(1).ZData), sces = sce.s(:, 1:2); end
 
     [para] = gui.i_getoldsettings(src, FigureHandle);
 
@@ -85,62 +86,45 @@ try
                 box(ax{nf, k}, 'on');
             end
         end
-        colormap(hx.AxHandle, para.oldColorMap);
+        % The figure, so every panel gets it: on hx.AxHandle, the hidden
+        % axes under the tab group, it reached none of them.
+        if isfield(para, 'oldColorMap'), colormap(hx.FigHandle, para.oldColorMap); end
     end
-    hx.addCustomButton('off', @in_callback_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Extract and Work on Separate SCEs...');
+    hx.addCustomButton('off', @in_callback_scgeatoolsce, "icon-mat-touch-app-10.gif", 'Work on a Group, or Save Groups as SCEs...');
     hx.show(FigureHandle);
 catch ME
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
 end
 
-function in_callback_scgeatoolsce(src, ~)
-        parentfig = src.Parent.Parent;
-        figure(parentfig);
+function in_callback_scgeatoolsce(~, ~)
         figure(hx.FigHandle);
 
-        % answer1 = gui.myQuestdlg(FigureHandle, 'Extract cells from different groups and view new SCEs, or save new SCEs?','',...
-        %    'View SCEs','Save SCEs','Cancel','View SCEs');
-
-        % hx.FigHandle.Theme
-
-        answer1 = gui.myQuestdlg(hx.FigHandle, 'Extract cells and make new SCEs?','');
+        % Working on a group replaces the dataset in the main window, with
+        % an Undo snapshot, rather than opening a scgeatoolApp window per
+        % group over it. Keeping several groups as separate datasets is what
+        % Save SCEs is for. (This dialog used to offer only Yes/No/Cancel,
+        % so Save SCEs could not be reached.)
+        optHere = 'Work on One Group';
+        optSave = 'Save SCEs';
+        answer1 = gui.myQuestdlg(hx.FigHandle, ['Work on one group in the ', ...
+            'main window (Edit > Undo brings the rest back), or save groups ', ...
+            'as separate SCE files?'], '', {optHere, optSave, 'Cancel'}, optHere);
         switch answer1
-            case {'Cancel','No'}
-                return;
-            case {'Yes','View SCEs'}
-                [idx] = in_selectcellgrps(cL(idxx), hx.FigHandle);
+            case optHere
+                [idx] = in_selectcellgrps(cL(idxx), hx.FigHandle, false);
                 if isempty(idx), return; end
-                cL2 = cL(idxx);
-                % currentColormap = colormap;
-                % figure(FigureHandle)
-                % colormap(currentColormap);
-
-                s=0;
-                for ik=1:length(idx)
-                    % scev = SCEV{idx(ik)};
-                    scev = copy(sce).selectcells(SCEV{idx(ik)}); % OK
-
-                    % p = scgeatool(scev,'useuifig', ...
-                    %    gui.i_isuifig(FigureHandle));
-                    % p.Name=matlab.lang.makeValidName(cL2{idx(ik)});
-
-                    % if isa(src, 'matlab.apps.AppBase')
-
-                    scgeatoolApp(scev);
-
-                    % else
-                    %    scgeatool(scev);
-                    % end
-                    % p.Position([2])=p.Position([2])-s*30;
-                    % p.Position([1])=p.Position([1])+s*30;
-                    % p.Position([3 4])=p.Position([3 4])*0.8;
-                    s=s+1;
-                    pause(0.5);
-                end
-                if pkg.i_isvalid(hx)
+                scev = copy(sce).selectcells(SCEV{idx}); % OK
+                if isa(appsrc, 'matlab.apps.AppBase')
+                    % Before the data changes, not in the menu handler:
+                    % only this button changes it, and a snapshot for the
+                    % display alone would push out the last real Undo.
+                    gui.i_snapshot(appsrc, 'Work on Cell Group');
                     hx.closeFigure;
+                    gui.i_replacesce(appsrc, scev, sce.NumCells);
+                else
+                    scgeatool(scev);
                 end
-           case 'Save SCEs'
+            case optSave
                 answer2=gui.myQuestdlg(hx.FigHandle, 'Where to save files?','',{'Use Temporary Folder', ...
                     'Select a Folder','Cancel'},'Use Temporary Folder');
                 switch answer2
@@ -155,7 +139,7 @@ function in_callback_scgeatoolsce(src, ~)
                         if ~isfolder(seltpath), return; end
                     case 'Use Temporary Folder'
                         seltpath = tempdir;
-                    case 'Cancel'
+                    otherwise
                         return;
                 end
                 disp(['User selected: ', seltpath]);
@@ -164,13 +148,10 @@ function in_callback_scgeatoolsce(src, ~)
                     return;
                 end
 
-                [idx] = in_selectcellgrps(cL(idxx));
-
-
+                [idx] = in_selectcellgrps(cL(idxx), hx.FigHandle, true);
                 cL2=cL(idxx);
                 if isempty(idx), return; end
                 for ik=1:length(idx)
-                    % scev=SCEV{idx(ik)};
                     scev = copy(sce).selectcells(SCEV{idx(ik)}); % OK
 
                     scev=scev.qcfilter;
@@ -179,19 +160,11 @@ function in_callback_scgeatoolsce(src, ~)
                     outmatfile=fullfile(seltpath,outmatfile);
                     if ~exist(outmatfile,"file")
                         q=sprintf('Save file %s?',outmatfile);
-                        answerx=gui.myQuestdlg(hx.FigHandle, q,'');
                     else
                         q=sprintf('Overwrite file %s?',outmatfile);
-                        answerx=gui.myQuestdlg(hx.FigHandle, q,'');
                     end
-                    switch answerx
-                        case 'Yes'
-                            sce = scev;
-                            save(outmatfile, 'sce', '-v7.3');
-                        otherwise
-                            return;
-                    end
-                    pause(0.5);
+                    if ~strcmp(gui.myQuestdlg(hx.FigHandle, q,''), 'Yes'), return; end
+                    in_savesce(outmatfile, scev);
                 end
             otherwise
                 return;
@@ -199,17 +172,30 @@ function in_callback_scgeatoolsce(src, ~)
     end
 end
 
-function [idx] = in_selectcellgrps(grpv, FigureHandle)
+function in_savesce(outmatfile, sce)
+% A local function, so the variable saved as SCE is not the caller's SCE:
+% assigning SCE inside the nested callback replaced the dataset it went on
+% to extract the next group from.
+save(outmatfile, 'sce', '-v7.3');
+end
+
+function [idx] = in_selectcellgrps(grpv, FigureHandle, multiple)
 idx=[];
+if multiple
+    prompt = 'Select Group(s):';
+    selmode = 'multiple';
+else
+    prompt = 'Select a Group:';
+    selmode = 'single';
+end
 
    if gui.i_isuifig(FigureHandle)
         [indx2, tf2] = gui.myListdlg(FigureHandle, grpv, ...
-            'Select Group(s):',...
-            grpv(1));
+            prompt, grpv(1), multiple);
     else
         [indx2, tf2] = listdlg('PromptString', ...
-            {'Select Group(s):'}, ...
-            'SelectionMode', 'multiple', 'ListString', grpv, ...
+            {prompt}, ...
+            'SelectionMode', selmode, 'ListString', grpv, ...
             'InitialValue', 1, 'ListSize', [220, 300]);
    end
 

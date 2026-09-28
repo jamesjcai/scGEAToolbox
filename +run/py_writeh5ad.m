@@ -26,8 +26,11 @@ else
     cd(wkdir);
 end
 
+fw = [];   % the error path below tests it whether or not verbose is on
 if verbose
-    fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+    fw = gui.myWaitbar([], [], [], 'Checking Python environment...');
+    % Closed on every exit: save/writetable below can throw with it open.
+    closeFw = onCleanup(@() gui.myWaitbar([], fw, true));
 end
 
 if isempty(pe)
@@ -52,7 +55,7 @@ if verbose
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
         if pkg.i_isvalid(fw)
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar([], fw, true);
         end
         error('%s', cmdout);
     end
@@ -81,12 +84,11 @@ restoreCellId = onCleanup(@() i_restorecellid(sce, originalCellId));
 sce.c_cell_id = matlab.lang.makeUniqueStrings(sce.c_cell_id);
 T = pkg.i_makeattributestable(sce);
 writetable(T,'c.csv');
-% disp('Files written.');
 
 if verbose && pkg.i_isvalid(fw)
-    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
+    gui.myWaitbar([], fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
-    gui.gui_waitbar(fw, [], [], 'Running py\_writeh5ad...');
+    gui.myWaitbar([], fw, [], [], 'Running py_writeh5ad...');
 end
 
 codefullpath = fullfile(codepth,'script.py');
@@ -99,11 +101,11 @@ disp(cmdlinestr)
 if status1 == 0 && status2 == 1
     succeeded = true;
     if verbose && pkg.i_isvalid(fw)
-        gui.gui_waitbar(fw, false, 'File is written.');
+        gui.myWaitbar([], fw, false, 'File is written.');
     end
 else
     if verbose && pkg.i_isvalid(fw)
-        gui.gui_waitbar(fw, true, 'File is failed to save.');
+        gui.myWaitbar([], fw, true, 'File is failed to save.');
     end
 end
 

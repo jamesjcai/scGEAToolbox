@@ -54,14 +54,11 @@ switch p.Results.type
 
         % Determinning the number of clusters
         eigenvalues = [];
-        % if isempty(optimk)
         [~, No_cluster] = Num_cluster(W, No_cluster1);
         optimk = No_cluster;
-        % end
     case 'sc3'
 
         %% estimate k
-        % X=log2(X+1);
         Dis = squareform(pdist(X'));
         A = exp(-Dis./max(Dis(:))); % adjacency matrix
         xD = diag(sum(A).^-0.5); % D=diag(sum(A)); % d(i) the degree of node i

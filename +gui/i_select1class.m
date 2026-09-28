@@ -17,9 +17,6 @@ clabel = '';
 
 [listitems, a, b] = i_classlistitems(sce, allowsingle);
 
-% listitems={'Current Class (C)','Cluster ID','Batch ID',...
-%            'Cell Type','Cell Cycle Phase'};
-
 y = false;
 if ~isempty(prefersel)
     [y, idx]=ismember(prefersel,listitems);
@@ -87,17 +84,6 @@ end
 
 function [c] = i_pickvariable
         c = [];
-        %     a=evalin('base','whos');
-        %     b=struct2cell(a);
-        %     v=false(length(a),1);
-        %     for k=1:length(a)
-        %         if max(a(k).size)==sce.NumCells && min(a(k).size)==1
-        %             v(k)=true;
-        %         end
-        %     end
-        %     if any(v)
-        % valididx=ismember(b(4,:),'double');
-        % a=a(valididx);
         if gui.i_isuifig(parentfig)
             % Same reason as above, and a nastier failure if left multi:
             % a(indx).name with a vector indx expands to a comma-separated
@@ -113,14 +99,5 @@ function [c] = i_pickvariable
         if tf == 1
             c = evalin('base', a(indx).name);
         end
-        %    end
 end
-    % if isempty(thisc)
-    %     gui.myErrordlg(parentfig, 'Undefined');
-    %     return;
-    % end
-    % if numel(unique(thisc))==1
-    %     gui.myWarndlg(parentfig, "Cannot compare with an unique group");
-    %     return;
-    % end
 end

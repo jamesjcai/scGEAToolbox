@@ -40,7 +40,6 @@ switch answer
         ylabelv = glist;
 
         fw = gui.myWaitbar(FigureHandle);
-        % gui.sc_uitabgrpfig_expplot(thisyv, ylabelv, sce.s, FigureHandle);
         gui.sc_uitabgrpfig_feaplot(thisyv, ylabelv, sce.s, FigureHandle, 2);
         gui.myWaitbar(FigureHandle, fw);
 

@@ -25,5 +25,4 @@ try
 if done
         fprintf('Response received successfully.\n');
     end
-    % disp(res);
 end

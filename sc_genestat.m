@@ -39,7 +39,10 @@ end
 
 % --- Compute stats ---
 u = mean(X, 2, 'omitnan');
-cv = std(X, 0, 2, 'omitnan') ./ u;
+% PKG.E_ROWVAR, not STD/VAR along dim 2: on a sparse matrix those walk
+% every zero (7.0 s against 0.23 s at 20000 genes x 30000 cells); the
+% values agree to ~1e-12 relative, and a constant row still gives 0.
+cv = sqrt(pkg.e_rowvar(X, "omitnan")) ./ u;
 lgu = log1p(u);
 lgcv = log1p(cv);
 dropr = 1 - sum(X > 0, 2) ./ size(X, 2);

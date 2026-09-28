@@ -14,13 +14,9 @@ if ~(ismcc || isdeployed)
     addpath(pth);
 end
 if nargin < 2 || isempty(k)
-    k = fun_num_cluster(X);
+    k = pkg.e_numclusters(X);
     fprintf('k=%d\n', k);
 end
-
-% if nargin<3
-%     donorm=false;
-% end
 
 % if donorm
 %     % [X]=sc_norm(X);

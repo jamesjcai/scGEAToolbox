@@ -1,9 +1,20 @@
-function [done] = i_setwrkdir(preftagname, parentfig)
-% I_SETWRKDIR - set workding directory
+function [done, changed] = i_setwrkdir(preftagname, parentfig, askchange)
+% I_SETWRKDIR - set working directory
+%
+% DONE is true when a working folder is set on return. CHANGED is true
+% only when this call stored a new one.
+%
+% With ASKCHANGE false (the default), an already-set folder is accepted
+% silently -- what the analyses that merely need a folder want. With
+% ASKCHANGE true the current folder is shown and can be kept or replaced,
+% which is what Setup > Set Working Folder is for: without it that menu
+% could only ever set the folder once.
 % see also: I_SETPYENV, I_SETRENV
 
-if nargin<2, parentfig = []; end
+if nargin < 3, askchange = false; end
+if nargin < 2, parentfig = []; end
 if nargin < 1, preftagname = 'externalwrkpath'; end
+changed = false;
 if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
     cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
@@ -25,13 +36,27 @@ if ~issetup
         'not been set up. Locate a folder?']);
     if ~strcmp(answer, 'Yes'), return; end
     if ispc
-        [~,b]=system("echo % username%");
-        pathdefult = sprintf('C:\\Users\\%s\\Documents\\', ...
-            string(deblank(b)));
+        pathdefult = fullfile(getenv('USERPROFILE'), 'Documents');
     else
         pathdefult = '';
     end
     [done] = ix_setwdpath(pathdefult, parentfig);
+    changed = done;
+elseif askchange
+    curpath = getpref('scgeatoolbox', preftagname);
+    answer = gui.myQuestdlg(parentfig, curpath, 'Working Folder', ...
+        {'Use this', 'Use another', 'Cancel'}, 'Use this');
+    switch answer
+        case 'Use this'
+            done = true;
+        case 'Use another'
+            [done] = ix_setwdpath(curpath, parentfig);
+            changed = done;
+        otherwise
+            % Cancel, or the dialog was closed: the folder stays set, but
+            % the user did not confirm it, so report nothing done.
+            return;
+    end
 else
     done = true;
 end

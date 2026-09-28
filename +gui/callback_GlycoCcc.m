@@ -77,8 +77,8 @@ gui.myHelpdlg(FigureHandle, [ ...
     "expresses a lectin that reads it - not that the glycan was observed."], ...
     'Glyco-lectin communication');
 
-gui.i_viewtable(T, FigureHandle);
-gui.i_exporttable(T, true, 'Tglycoccc', 'GlycoCccTable', [], [], FigureHandle);
+hTbl = gui.i_viewtable(T, FigureHandle);
+gui.i_exporttable(T, true, 'Tglycoccc', 'GlycoCccTable', [], [], hTbl);
 end
 
 

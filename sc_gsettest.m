@@ -119,6 +119,14 @@ function [T, info] = sc_gsettest(stats, genelist, setmatrx, setnames, setgenes, 
 %      Zyla et al. (2019) Bioinformatics 35:5146 (CERNO);
 %      Subramanian et al. (2005) PNAS 102:15545 (GSEA).
 %
+%   Every method here permutes gene labels. RUN.ML_GSEA permutes sample
+%   labels instead, which keeps the correlation between genes intact at the
+%   cost of needing replicate samples; see its help for when that trade is
+%   the right one.
+%
+% See also RUN.ML_GSEA, SC_FGSEA, PKG.E_GETGENESETS,
+%          PKG.E_GSEASCORE.
+%
 % See also: SC_DEG, SC_DVG, SC_HVG, PKG.E_GETGENESETS, PKG.E_ULM
 
 arguments
@@ -149,7 +157,7 @@ if numel(stats) ~= numel(genelist)
         numel(stats), numel(genelist));
 end
 
-[setmatrx, setnames, setgenes] = i_normalizesets(setmatrx, setnames, setgenes);
+[setmatrx, setnames, setgenes] = pkg.i_normalizegenesets(setmatrx, setnames, setgenes);
 
 % Drop unusable genes, then collapse duplicate symbols to their most extreme
 % statistic. The universe is every measured gene, including genes in no set:
@@ -314,41 +322,6 @@ idx = v(k);
 end
 
 % =========================================================================
-function [setmatrx, setnames, setgenes] = i_normalizesets(setmatrx, setnames, setgenes)
-% Accept either the PKG.E_GETGENESETS triple or a cell array of gene lists.
-if iscell(setmatrx) && ~isempty(setmatrx) && ~isnumeric(setmatrx{1})
-    lists = cellfun(@(v) string(v(:)), setmatrx(:), UniformOutput=false);
-    setgenes = unique(vertcat(lists{:}));
-    setgenes = setgenes(strlength(setgenes) > 0);
-    mat = false(numel(lists), numel(setgenes));
-    for k = 1:numel(lists)
-        mat(k, :) = ismember(setgenes, lists{k});
-    end
-    setmatrx = mat;
-end
-if isempty(setgenes)
-    error("sc_gsettest:NoSetGenes", ...
-        "SETGENES is empty. Pass the gene symbols for the columns of " + ...
-        "SETMATRX, or pass SETMATRX as a cell array of gene-name lists.");
-end
-setgenes = string(setgenes(:));
-if isempty(setnames)
-    setnames = "Set" + string((1:size(setmatrx, 1))');
-end
-setnames = string(setnames(:));
-if numel(setnames) ~= size(setmatrx, 1)
-    error("sc_gsettest:SizeMismatch", ...
-        "SETNAMES (%d) must have one entry per row of SETMATRX (%d).", ...
-        numel(setnames), size(setmatrx, 1));
-end
-if numel(setgenes) ~= size(setmatrx, 2)
-    error("sc_gsettest:SizeMismatch", ...
-        "SETGENES (%d) must have one entry per column of SETMATRX (%d).", ...
-        numel(setgenes), size(setmatrx, 2));
-end
-end
-
-% =========================================================================
 function [t, df] = i_twosamplet(M, s, m, n)
 % Pooled-variance two-sample t of set genes against the remaining genes,
 % for all sets at once via two sparse matrix-vector products.
@@ -385,9 +358,9 @@ end
 
 % =========================================================================
 function [nes, p, es] = i_gsea(M, s, m, n, opts)
-% Preranked GSEA with gene-label permutation. Only the running sum at hit
-% positions can be extremal, so each enrichment score costs O(m log m)
-% rather than O(n) -- without that the permutation loop is unusable.
+% Preranked GSEA with gene-label permutation. Each enrichment score comes
+% from PKG.E_GSEASCORE, which evaluates the running sum at the hit
+% positions only; without that the permutation loop is unusable.
 [ssort, ord] = sort(s, "descend");
 w = abs(ssort).^opts.Weight;
 Msort = M(:, ord);
@@ -426,13 +399,13 @@ for j = 1:numel(sizes)
     mk = sizes(j);
     esp = zeros(nperm, 1);
     for b = 1:nperm
-        esp(b) = i_es(w, sort(randperm(n, mk))', n, mk);
+        esp(b) = pkg.e_gseascore(w, sort(randperm(n, mk))', n, mk);
     end
     nullBySize{j} = esp;
 end
 
 for k = 1:nSets
-    es(k) = i_es(w, find(Msort(k, :))', n, m(k));
+    es(k) = pkg.e_gseascore(w, find(Msort(k, :))', n, m(k));
     esp = nullBySize{sizeOf(k)};
 
     if es(k) >= 0
@@ -529,26 +502,6 @@ end
 % justify. Stop at 1/nperm^2, roughly the square of what the empirical
 % p-value can resolve, and say so rather than reporting realmin.
 p = max(tailP, 1/nperm^2);
-end
-
-% =========================================================================
-function es = i_es(w, q, n, m)
-% Weighted KS enrichment score. Q holds the ascending positions of the M set
-% genes within the descending-statistic ordering.
-nr = sum(w(q));
-if nr <= 0 || m >= n
-    es = 0;
-    return;
-end
-cumhit = cumsum(w(q))/nr;
-misses = (q - (1:m)')/(n - m);
-espos = max([0; cumhit - misses]);                  % maxima land on a hit
-esneg = min([0; [0; cumhit(1:m-1)] - misses]);      % minima just before one
-if espos > -esneg
-    es = espos;
-else
-    es = esneg;
-end
 end
 
 % =========================================================================

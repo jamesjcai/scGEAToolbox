@@ -121,10 +121,6 @@ end
                 %%% General Info. %%%
                 %%%%%%%%%%%%%%%%%%%%%
                 Black = [0, 0, 0] / 255;
-                % LightGray  =[192     192      192    ]/255;
-                % LightGray2 =[160     160      164    ]/255;
-                % MediumGray =[128     128      128    ]/255;
-                % White      =[255     255      255    ]/255;
 
 
                 %%%%%%%%%%%%%%%%%%%%%%%
@@ -279,8 +275,6 @@ end
 
                 [WrapString, NewMsgTxtPos] = textwrap(MsgHandle, Question, 75);
 
-                % NumLines=size(WrapString,1);
-
                 AxesHandle = axes('Parent', QuestFig, 'Position', [0, 0, 1, 1], 'Visible', 'off');
 
                 texthandle = text( ...
@@ -378,15 +372,6 @@ set(IconAxes, ...
                 % IconData = questIconData;
                 % questIconMap(256, :) = get(QuestFig, 'color');
                 % IconCMap = questIconMap;
-
-                % Img = image('CData', IconData, 'Parent', IconAxes);
-                % set(QuestFig, 'Colormap', IconCMap);
-                % set(IconAxes, ...
-                %     'Visible', 'off', ...
-                %     'YDir', 'reverse', ...
-                %     'XLim', get(Img, 'XData'), ...
-                %     'YLim', get(Img, 'YData') ...
-                %     );
 
                 % make sure we are on screen
                 movegui(QuestFig)

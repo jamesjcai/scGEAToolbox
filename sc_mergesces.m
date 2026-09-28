@@ -65,7 +65,6 @@ catch ME
         'Could not merge embeddings (%s). Using random s.', ME.message);
     sce.s = randn(size(X, 2), 3);
 end
-% sce.c_batch_id=c;
 
 if ~isempty(sce1.c_batch_id) && ~isempty(sce2.c_batch_id)
     if ~isstring(sce1.c_batch_id)

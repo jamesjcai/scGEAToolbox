@@ -46,7 +46,12 @@ codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
-[~] = system(cmdlinestr, '-echo');
-
-T = readtable(fullfile(wkdir, 'output.csv'),"FileType","text");
+outcsv = fullfile(wkdir, 'output.csv');
+if isfile(outcsv), delete(outcsv); end   % never report a previous run's result
+[status] = system(cmdlinestr, '-echo');
+if status ~= 0 || ~isfile(outcsv)
+    error('run:py_memento:failed', ...
+        'Memento did not produce a result (exit status %d). See the Command Window.', status);
+end
+T = readtable(outcsv, "FileType", "text");
 end

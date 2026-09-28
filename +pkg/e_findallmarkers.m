@@ -1,32 +1,92 @@
 function [T] = e_findallmarkers(X, g, c, cL, logfc, minpct, showwaitbar, ...
-                maxnummarkers)
-
-% https://satijalab.org/seurat/reference/findallmarkers
-if nargin < 4, cL = []; end
-if nargin < 5 || isempty(logfc), logfc = 0.5; end % logfc.threshold
-if nargin < 6 || isempty(minpct), minpct = 0.1; end % min pct
-if nargin < 7, showwaitbar = false; end
-if nargin < 8, maxnummarkers = 100; end
+                maxnummarkers, opts)
+% E_FINDALLMARKERS  Markers of every cluster against the rest, as Seurat's FindAllMarkers.
+%   T = pkg.e_findallmarkers(X, g, c) tests each group in C against all other
+%   cells with a Wilcoxon rank-sum test on log1p-normalised counts.
+%
+%   Positional options, [] for the default:
+%     cL             group names, when C is already integer-coded
+%     logfc          |avg_log2FC| >= logfc              (logfc.threshold, 0.1)
+%     minpct         max(pct_1, pct_2) >= minpct        (min.pct, 0.01)
+%     showwaitbar    false
+%     maxnummarkers  rows kept per group after ranking  (Inf)
+%
+%   Name-value options:
+%     OnlyPos       keep only avg_log2FC > 0 rows       (only.pos, false)
+%     PAdjust       "bonferroni" over all genes, as Seurat, or "bh"
+%     ReturnThresh  significance cut-off                (return.thresh, 0.01)
+%     ThresholdOn   column ReturnThresh applies to: "p_val", as Seurat, or
+%                   "p_val_adj"
+%
+%   Every default is Seurat v5's. The pre-v5 behaviour of this function was
+%   logfc 0.5, minpct 0.1, OnlyPos=true, PAdjust="bh", ReturnThresh=0.05,
+%   ThresholdOn="p_val_adj".
+%
+%   https://satijalab.org/seurat/reference/findallmarkers
+arguments
+    X
+    g
+    c
+    cL = []
+    logfc = []
+    minpct = []
+    showwaitbar = false
+    maxnummarkers = []
+    opts.OnlyPos (1,1) logical = false
+    opts.PAdjust (1,1) string {mustBeMember(opts.PAdjust, ["bonferroni", "bh"])} = "bonferroni"
+    opts.ReturnThresh (1,1) double {mustBeBetween(opts.ReturnThresh, 0, 1)} = 0.01
+    opts.ThresholdOn (1,1) string {mustBeMember(opts.ThresholdOn, ["p_val", "p_val_adj"])} = "p_val"
+end
+% Callers pass [] to mean "default", which an arguments-block default does
+% not cover.
+if isempty(logfc), logfc = 0.1; end
+if isempty(minpct), minpct = 0.01; end
+if isempty(maxnummarkers), maxnummarkers = Inf; end
 
 if isempty(cL)
     [c, cL] = findgroups(string(c));
 end
-if issparse(X), X = full(X); end
+% Kept sparse. This used to FULL() the whole matrix and then copy
+% X(:, c == kc) and X(:, c ~= kc) for every cluster before a per-gene
+% RANKSUM loop: 37.9 s and a dense copy of the matrix at 5000 genes x
+% 10000 cells x 10 clusters, over 20 GB at 20000 x 50000.
 X = log1p(sc_norm(X));
 if showwaitbar
-    fw = gui.gui_waitbar_adv;
+    fw = gui.myWaitbar([]);
 end
 mC = max(c);
+c = c(:);
+N = size(X, 2);
+
+% Every cluster against the rest from one ranking of each gene; the same
+% p-values RANKSUM gives. See PKG.E_RANKSUMROWS.
+P = pkg.e_ranksumrows(X, c);
+
+% Means on the normalised count scale and detection rates, per cluster and
+% for the rest, through a sparse cells-by-clusters membership matrix.
+% EXPM1 inverts the LOG1P above exactly and keeps X sparse.
+member = sparse(1:N, c, 1, N, mC);
+nIn = full(sum(member, 1));
+nOut = N - nIn;
+E = expm1(X);
+sumIn = full(E*member);
+avgIn = sumIn./nIn;
+avgOut = (full(sum(E, 2)) - sumIn)./nOut;
+detIn = full(double(X > 0)*member);
+pctIn = detIn./nIn;
+pctOut = (full(sum(X > 0, 2)) - detIn)./nOut;
+
 Tcell = cell(mC, 1);
 for kc = 1:mC
     if showwaitbar
         if kc ~= mC
-            gui.gui_waitbar_adv(fw, kc/mC, sprintf('Processing %s', cL{kc}));
+            gui.myWaitbar([], fw, [], [], sprintf('Processing %s', cL{kc}), kc/mC);
         else
-            gui.gui_waitbar_adv(fw, (kc-1)/mC, sprintf('Processing %s', cL{kc}));
+            gui.myWaitbar([], fw, [], [], sprintf('Processing %s', cL{kc}), (kc-1)/mC);
         end
     end
-    [t] = in_findmarkers(X(:, c == kc), X(:, c ~= kc), cL(kc));
+    [t] = in_findmarkers(P(:, kc), avgIn(:, kc), avgOut(:, kc), ...
+        pctIn(:, kc), pctOut(:, kc), cL(kc));
     % IN_FINDMARKERS returns its rows already ranked. It has to: truncating
     % first and sorting afterwards -- which is what this did -- keeps the
     % first MAXNUMMARKERS genes in GENELIST order and throws the real
@@ -41,52 +101,45 @@ T = T(idx, :);
 [~, idx] = natsort(T.grp);
 T = T(idx, :);
 if showwaitbar
-    gui.gui_waitbar_adv(fw);
+    gui.myWaitbar([], fw);
 end
 
 
-function [t] = in_findmarkers(x, y, ctxt)
-ng = size(x, 1);
-p_val = ones(ng, 1);
-avg_log2FC = ones(ng, 1);
-avg_1 = zeros(ng, 1);
-avg_2 = zeros(ng, 1);
-pct_1 = ones(ng, 1);
-pct_2 = ones(ng, 1);
-nx = size(x, 2);
-ny = size(y, 2);
-for k = 1:ng
-    xk = x(k, :);
-    yk = y(k, :);
-    p_val(k) = ranksum(xk, yk);
-    % X arrives log1p-transformed, so the means have to be taken back to the
-    % normalised count scale before they can be divided. Taking log2 of a
-    % ratio of log-means -- which is what this computed -- is not a fold
-    % change on any scale: a marker at 200 against 70 counts has a true
-    % log2FC of 1.50 and came out as 0.315, below the default LOGFC
-    % threshold, so the strongest markers were the ones being dropped.
-    % EXPM1 inverts the LOG1P exactly and allocates only a row, which
-    % matters on a matrix this size. Pseudocount and form follow SC_DEG so
-    % that the two functions report the same number for the same contrast.
-    avg_1(k) = mean(expm1(xk));
-    avg_2(k) = mean(expm1(yk));
-    avg_log2FC(k) = log2(avg_1(k) + 1) - log2(avg_2(k) + 1);
-    pct_1(k) = nnz(xk > 0) ./ nx;
-    pct_2(k) = nnz(yk > 0) ./ ny;
+function [t] = in_findmarkers(p_val, avg_1, avg_2, pct_1, pct_2, ctxt)
+ng = numel(p_val);
+% AVG_1 and AVG_2 are means on the normalised count scale, not of the
+% log1p values. Taking log2 of a ratio of log-means -- which this once
+% computed -- is not a fold change on any scale: a marker at 200 against 70
+% counts has a true log2FC of 1.50 and came out as 0.315, below the default
+% LOGFC threshold, so the strongest markers were the ones being dropped.
+% Pseudocount and form follow SC_DEG so that the two functions report the
+% same number for the same contrast.
+avg_log2FC = log2(avg_1 + 1) - log2(avg_2 + 1);
+if opts.PAdjust == "bonferroni"
+    % Seurat's p.adjust(..., n = nrow(object)): the family is every gene,
+    % tested or not. A NaN p-value stays NaN and fails every threshold.
+    p_val_adj = min(p_val*ng, 1);
+else
+    % PKG.E_FDR replaces the two-branch block that used to sit here. Its
+    % MAFDR branch and its PKG.E_FDR_BH branch are the same algorithm on
+    % clean input -- they agree to 2e-16 -- but they disagree whenever the
+    % p-values carry NaN, which is what RANKSUM returns for a gene with no
+    % counts in either group and what a per-cell-type run produces in bulk.
+    % One drops those from the family, the other counts them, so the same
+    % command gave a different answer depending on whether the
+    % Bioinformatics Toolbox was installed.
+    p_val_adj = pkg.e_fdr(p_val);
 end
-% PKG.E_FDR replaces the two-branch block that used to sit here. Its MAFDR
-% branch and its PKG.E_FDR_BH branch are the same algorithm on clean input
-% -- they agree to 2e-16 -- but they disagree whenever the p-values carry
-% NaN, which is what RANKSUM returns for a gene with no counts in either
-% group and what a per-cell-type run produces in bulk. One drops those from
-% the family, the other counts them, so the same command gave a different
-% answer depending on whether the Bioinformatics Toolbox was installed.
-p_val_adj = pkg.e_fdr(p_val);
 grp = repmat(ctxt, ng, 1);
 t = table(grp, g, p_val, avg_log2FC, avg_1, avg_2, ...
     pct_1, pct_2, p_val_adj);
-t = t(p_val_adj < 0.05 & avg_log2FC > logfc & ...
-    (pct_1 > minpct | pct_2 > minpct), :);
+if opts.OnlyPos
+    isFoldChangeKept = (avg_log2FC >= logfc) & (avg_log2FC > 0);
+else
+    isFoldChangeKept = abs(avg_log2FC) >= logfc;
+end
+t = t(t.(opts.ThresholdOn) < opts.ReturnThresh & isFoldChangeKept & ...
+    max(pct_1, pct_2) >= minpct, :);
 % Rank here, before the caller truncates to MAXNUMMARKERS. Ties on the
 % adjusted p-value are common -- the rank-sum test has a floor set by the
 % group sizes -- so the fold change breaks them, as in SC_DEGMAST.

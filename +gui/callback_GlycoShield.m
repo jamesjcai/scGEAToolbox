@@ -86,9 +86,9 @@ if ~isempty(noSeq)
 end
 gui.myHelpdlg(FigureHandle, msg, 'N-glycan shielding');
 
-gui.i_viewtable(T, FigureHandle);
+hTbl = gui.i_viewtable(T, FigureHandle);
 gui.i_exporttable(T, true, 'Tglycoshield', 'GlycoShieldTable', ...
-    [], [], FigureHandle);
+    [], [], hTbl);
 end
 
 

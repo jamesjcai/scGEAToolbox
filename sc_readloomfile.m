@@ -17,29 +17,16 @@ if exist(filenm, 'file') ~= 2
     error('FileNotFound');
 end
 
-fw = gui.gui_waitbar;
+fw = gui.myWaitbar([]);
+closeFw = onCleanup(@() gui.myWaitbar([], fw, true));   % a read error left it open
 
-%hinfo=h5info(filenm);
-% X=h5read(filenm,'/matrix/');
 X = pkg.e_guessh5field(filenm, {'/matrix/'}, {''}, true);
 
-%g=h5read(filenm,'/row_attrs/Gene');
 g = pkg.e_guessh5field(filenm, {'/row_attrs/'}, {'Gene', 'gene_ids', 'gene_name'}, false);
 if isempty(g), warning('G is not assigned.'); end
 
 b = pkg.e_guessh5field(filenm, {'/col_attrs/'}, {'CellID', 'Cell'}, false);
 if isempty(b), warning('B is not assigned.'); end
-
-% barcodes=[];
-% try
-%     barcodes=h5read(filenm,'/col_attrs/Cell');
-% catch
-%     try
-%         barcodes=h5read(filenm,'/col_attrs/CellID');
-%     catch ME
-%         warning(ME.message);
-%     end
-% end
 
 X = pkg.e_uint2sparse(X);
 
@@ -65,5 +52,5 @@ X = pkg.e_uint2sparse(X);
 %     end
 % end
 
-gui.gui_waitbar(fw);
+gui.myWaitbar([], fw);
 end

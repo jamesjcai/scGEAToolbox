@@ -9,8 +9,7 @@ function cleanupobj = i_addpathtemp(varargin)
 %   already on the path are never removed.
 %
 %   Use this for third-party folders whose file names are generic enough to
-%   shadow toolbox or user code (for example external/ml_umap45/util, which
-%   defines Args.m, File.m, Map.m, Plots.m and String.m).
+%   shadow toolbox or user code.
 %
 %   Assign the output to a variable that lives as long as the folders are
 %   needed. Calling PKG.I_ADDPATHTEMP(...) without capturing the output

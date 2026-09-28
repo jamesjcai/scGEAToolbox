@@ -50,14 +50,12 @@ if do_geneculst
     % and the PCA that follows runs on the leftovers.
     Z = linkage(Y, 'complete');
     clu = cluster(Z, 'maxclust', n);
-    % X = grpstats(X, clu, @(x) mean(x, 1));
     X = splitapply(@(x) mean(x, 1), X, clu);
-    % Xn=[];
-    % for k=1:27
-    %    Xn=[Xn;mean(X(idx==k,:),1)];
-    % end
 end
 
+% PCA and FITGMDIST reject sparse input, and sce.X is sparse. After gene
+% clustering X is only clusters-by-cells, so densifying here is cheap.
+X = full(X);
 
 if do_reduce
     % Briefly, Ei from all cells are organized into a H × N matrix E?. Each row
@@ -93,7 +91,10 @@ clunum = i_selectclunum(X);
 gmfit = fitgmdist(X, clunum, 'CovarianceType', 'full', 'RegularizationValue', 0.1);
 clusterid = cluster(gmfit, X);
 % clucenter = grpstats(X, clusterid, @mean);
-clucenter = splitapply(@mean, X, clusterid);
+% MEAN(X, 1), not MEAN: a one-cell cluster hands SPLITAPPLY a 1-row block,
+% which plain MEAN averages across its columns to a scalar, and the rows then
+% fail to concatenate.
+clucenter = splitapply(@(x) mean(x, 1), X, clusterid);
 
 txtc = strings(size(clucenter, 1), 1);
 for k = 1:size(clucenter, 1)
@@ -223,15 +224,3 @@ end
 clunum = idx1 + 1;
 end
 
-%{
-c1=clucenter(1,1:2);
-c2=clucenter(2,1:2);
-x1=X(clusterid==1,1:2);
-difvec=c2-c1;
-difv=difvec/norm(difvec);
-[~,idx]=sort(difv*x1');
-x1=x1(idx,:);
-for k=1:size(x1,1)
-    text(x1(k,1),x1(k,2),sprintf('%d',k));
-end
-%}

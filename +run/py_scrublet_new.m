@@ -6,9 +6,6 @@ if nargin < 2, wkdir = pkg.i_tempdirfile(); end
 isDoublet = [];
 doubletscore = [];
 prgfoldername = 'py_scrublet';
-% [pyok, wrkpth, x] = run.pycommon(prgfoldername);
-% if ~pyok, return; end
-% isdebug = false;
 
 oldpth = pwd();
 cleanupCwd = onCleanup(@() cd(oldpth));
@@ -22,7 +19,7 @@ else
     cd(wkdir);
 end
 
-fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+fw = gui.myWaitbar([], [], [], 'Checking Python environment...');
 
 x = pyenv;
 try
@@ -41,7 +38,7 @@ disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
     if pkg.i_isvalid(fw)
-        gui.gui_waitbar(fw, true);
+        gui.myWaitbar([], fw, true);
     end
     error('%s', cmdout);
 end
@@ -57,11 +54,10 @@ save('input.mat', '-v7.3', 'X');
 disp('Input file written.');
 
 if pkg.i_isvalid(fw)
-    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
+    gui.myWaitbar([], fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
-    gui.gui_waitbar(fw, [], [], 'Running Scrublet...');
+    gui.myWaitbar([], fw, [], [], 'Running Scrublet...');
 end
-% fw = gui.gui_waitbar([],[],'Running Scrublet...');
 codefullpath = fullfile(codepth,'script.py');
 
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
@@ -76,7 +72,7 @@ if status == 0 && exist('output.mat', 'file')
 end
 
 if status == 0 && pkg.i_isvalid(fw)
-    gui.gui_waitbar(fw, [], 'Scrublet is complete');
+    gui.myWaitbar([], fw, [], 'Scrublet is complete');
 end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end

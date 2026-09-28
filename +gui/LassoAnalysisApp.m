@@ -18,7 +18,6 @@ if nargin < 2
     X = randn(100,5);
     weights = [0;2;0;-3;0]; % Only two nonzero coefficients
     y = X*weights + randn(100,1)*0.1; % Small added noise
-    % error('Both X (predictors) and y (response) must be provided');
 end
 
 % Validate dimensions
@@ -407,7 +406,6 @@ try
         % Sort by absolute coefficient value
         [~, sortIdx] = sort(abs(tableData.Coefficient), 'descend');
         tableData = tableData(sortIdx, :);
-        % assignin('base',"tableData",tableData)
         tableData.Variable = cellstr(tableData.Variable);
         coeffTable.Data = table2cell(tableData);
         coeffTable.ColumnName = {'Variable', 'Coefficient'};
@@ -438,15 +436,10 @@ try
             selVarNames = varNames(selectedIdx);
             [~, rankIdx] = sort(abs(selCoefs), 'descend');
 
-            % assignin('base',"selCoefs",selCoefs)
-            % assignin('base',"selVarNames",selVarNames)
-
             selTable = table((1:length(selCoefs))', ...
                              selVarNames(rankIdx), ...
                              selCoefs(rankIdx), ...
                              'VariableNames', {'Rank', 'Variable', 'Coefficient'});
-
-            % assignin('base', "selTable", selTable);
 
             selTable.Variable = cellstr(selTable.Variable);
             selectedVarsTable.Data = table2cell(selTable);
@@ -499,7 +492,6 @@ try
     % modelName = modelNameEdit.Value;
     % if isempty(modelName)
         modelName = 'SelectedVars';
-    % end
 
     % Create a variable with the model name in the workspace
     model = appData.LassoModel;
@@ -520,7 +512,6 @@ try
     % else
         uialert(fig, ['Selected variables saved to workspace as "', modelName, '".'], ...
             'Genes Saved', 'Icon', 'success');
-    % end
 
 catch ME
     uialert(fig, ['Error saving model: ', ME.message], ...
@@ -565,7 +556,6 @@ try
     % else
         uialert(fig, ['Model saved to workspace as "', modelName, '".'], ...
             'Model Saved', 'Icon', 'success');
-    % end
 
 catch ME
     uialert(fig, ['Error saving model: ', ME.message], 'Save Error', 'Icon', 'error');

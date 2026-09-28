@@ -18,10 +18,4 @@ A0 = mean(Xhat0, 3);
 if nargout > 1
     XM0denoised = Xhat0;
 end
-% M=true(size(A0));
-% for k=1:size(Xhat0,3)
-%     [A]=ten.e_filtadjc(Xhat0(:,:,k),0.75);
-%     M=M & (A~=0);
-% end
-% A0=A0.*M;
 end

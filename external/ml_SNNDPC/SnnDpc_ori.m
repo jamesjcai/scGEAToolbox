@@ -14,7 +14,6 @@ addParameter(parser, 'Distance', [], @(dist1)all(~diag(dist1)) && issymmetric(di
 addParameter(parser, 'Ui', false);
 parse(parser, data, answer, K, varargin{:});
 
-import java.util.LinkedList
 import Library.*
 
 %Number of points
@@ -115,16 +114,19 @@ NC = length(center);
 cluster(center) = 1:NC;
 
 %Assign non-center, inevitable subordinate points
-queue = LinkedList;
-for p = center
-    queue.offerFirst(p);
-end
-while ~queue.isEmpty()
-    this = queue.pollLast();
+%FIFO queue; each point is enqueued at most once, when it is first assigned
+queue = zeros(1, N);
+queue(1:NC) = center;
+head = 1;
+tail = NC;
+while head <= tail
+    this = queue(head);
+    head = head + 1;
     for next = dist1Order(this, 2:K)
         if cluster(next) < 0 && sharedCount(this, next) >= K / 2
             cluster(next) = cluster(this);
-            queue.push(next);
+            tail = tail + 1;
+            queue(tail) = next;
         end
     end
 end

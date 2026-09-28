@@ -13,13 +13,13 @@ end
 accv = string(accv);
 SCEV = cell(length(accv), 1);
 if guiwaitbar
-    fw = gui.gui_waitbar_adv;
-    gui.gui_waitbar_adv(fw, 0.15);
+    fw = gui.myWaitbar([]);
+    gui.myWaitbar([], fw, [], [], '', 0.15);
 end
 for k = 1:length(accv)
     [sce] = sc_readgeoaccess(strtrim(accv(k)));
     if guiwaitbar
-        gui.gui_waitbar_adv(fw, 0.15+0.75*(k / length(accv)));
+        gui.myWaitbar([], fw, [], [], '', 0.15+0.75*(k / length(accv)));
     end
     if length(accv) > 1
         sce = sce.qcfilterwhitelist(500, 0.15, 5, '');
@@ -40,12 +40,8 @@ else
     sce = SCEV{1};
 end
 
-if guiwaitbar, gui.gui_waitbar_adv(fw); end
+if guiwaitbar, gui.myWaitbar([], fw); end
 
-% answerstruced = gui.myQuestdlg(FigureHandle, 'Process merged SCE data (tSNE, clustering, and cell type annotation)?', ...
-%    '', {'Yes', 'Skip'}, 'Yes');
-% if strcmp(answerstruced, 'Yes')
-    % [ndim] = gui.i_choose2d3d;
     ndim = 3;
     if ~isempty(ndim)
         FigureHandle=[];
@@ -55,18 +51,9 @@ if guiwaitbar, gui.gui_waitbar_adv(fw); end
         if ~isempty(speciestag)
             if isempty(ndim), return; end
             sce = sce.embedcells('tsne3d', true, true, ndim);
-            % k = round(sce.NumCells/100);
-            % sce = sce.clustercells(k, 'kmeans', true);
             sce = sce.clustercells([], [], true);
-            % sce = pkg.e_celltypes2allclust(sce, speciestag, true);
             sce = sce.assigncelltype(speciestag, false);
         end
     end
-% end
 end
 
-    %
-    % sce = sce.qcfilter;
-    % sce = sce.embedcells('tsne3d',true);
-    % sce = sce.clustercells([], [], true);
-    % sce = sce.assigncelltype(speciestag, false);

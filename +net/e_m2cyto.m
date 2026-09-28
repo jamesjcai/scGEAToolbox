@@ -19,19 +19,10 @@ end
 
 fid = fopen(fname, 'w');
 [ii, jj, ~] = find(A);
-% if nargin == 3,
 [~, ~, att] = find(link_attrib);
 fprintf(fid, 'Source\tTarget\tWeight\n');
 for ik = 1:length(att) % nnz(A)
     fprintf(fid, '%s\t%s\t%f\n', ndname(ii(ik)), ndname(jj(ik)), att(ik));
-    %     fprintf(fid,[num2str(ii(i)) ' ' num2str(jj(i)) ' ' num2str(val(i)) ' ' ...
-    %                  num2str(att(i)) '\n']);
 end
-% else
-%   for i = 1:nnz(m)
-%     fprintf(fid,[num2str(ii(i)) ' ' num2str(jj(i)) ' ' num2str(val(i)) '\n']);
-%   end
-%   fprintf(fid,[num2str(n) ' ' num2str(n) ' ' num2str(0) '\n']);
-% end
 fclose(fid);
 end

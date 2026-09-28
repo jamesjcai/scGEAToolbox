@@ -12,5 +12,4 @@ end
 t = readtable(lncrnafile,'ReadVariableNames',false, ...
 'VariableNamingRule', 'modify');
 g = string(t.Var1);
-% delete(fname);
 end

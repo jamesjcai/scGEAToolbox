@@ -55,24 +55,11 @@ if isempty(backgroundlist)
 
     for id = 1:n
         gene_set_library = genesets(id); % "KEGG_2015";
-        % output{id, 2} = gene_set_library;
         ENRICHR_URL = "https://maayanlab.cloud/Enrichr/enrich";
         query_string = sprintf("?userListId=%d&backgroundType=%s", ...
                        user_list_id, gene_set_library);
         url = ENRICHR_URL + query_string;
         response = jsondecode(convertCharsToStrings(char(webread(url))));
-        % res = response.(gene_set_library);
-        % isok = false(length(res),1);
-        % for k = 1:length(res)
-        %     if size(res{k}{6},1) >= minumgene
-        %         isok(k) = true;
-        %     end
-        % end
-        % res = res(isok);
-        % T = table;
-        % for k = 1:length(res)
-        %     T = [T; cell2table(res{k}','VariableNames', headertxt)];
-        % end
 
         [T] = in_response2T(response, gene_set_library, minumgene, pvaluecut);
         output{id} = T;
@@ -92,12 +79,10 @@ else    % using background
     formData = MultipartFormProvider('background', strjoin(backgroundlist, newline));
     request = RequestMessage('post', [], formData);
     response = send(request, URI(base_url));
-    % assignin("base","response",response);
     background_id = response.Body.Data.backgroundid;
 
     for id = 1:n
         gene_set_library = genesets(id); % "KEGG_2015";
-        % output{id, 2} = gene_set_library;
 
         base_url = "https://maayanlab.cloud/speedrichr/api/backgroundenrich";
         formData = MultipartFormProvider('userListId', num2str(user_list_id), ...
@@ -109,26 +94,6 @@ else    % using background
         response = convertCharsToStrings(char(response.Body.Data));
         response = jsondecode(response);
 
-        %{
-        res = response.(gene_set_library);
-        isok = false(length(res),1);
-        for k = 1:length(res)
-            if size(res{k}{6},1) >= minumgene
-                isok(k) = true;
-            end
-        end
-        res = res(isok);
-        T = table;
-        for k = 1:length(res)
-            T = [T; cell2table(res{k}', 'VariableNames', headertxt)];
-        end
-        Ta = table(repmat(gene_set_library, size(T,1), 1), ...
-                'VariableNames',{'GeneSetLibrary'});
-        T2 = [Ta T];
-        T2.TermName=string(T2.TermName);
-        T2(:,end-1:end)=[];
-
-        %}
         T2 = in_response2T(response, gene_set_library, minumgene, pvaluecut);
         output{id} = T2;
     end
@@ -143,8 +108,6 @@ function [T] = in_response2T(response, gene_set_library, minumgene, pvaluecut)
     headertxt = ["Rank", "Term name", "P-value", "Odds ratio", "Combined score",...
         "Overlapping genes", "Adjusted p-value", "Old p-value", "Old adjusted p-value"];
     headertxt = matlab.lang.makeValidName(headertxt);
-
-    % disp(gene_set_library)
 
     res = response.(gene_set_library);
     isok = false(length(res),1);
@@ -172,15 +135,6 @@ end
 
 
 % --------------------------------------------
-
-%{
-ENRICHR_URL = "https://maayanlab.cloud/Enrichr/export";
-query_string = sprintf("?userListId=% d&filename=%s&backgroundType=%s", ...
-    user_list_id, 'example_enrichment', gene_set_library);
-url = ENRICHR_URL + query_string;
-response = webread(url); % jsondecode(convertCharsToStrings(char(webread(url))));
-response = strsplit(convertCharsToStrings(char(response)),'\n');
-%}
 
 
 %{

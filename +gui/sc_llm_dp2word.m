@@ -25,13 +25,15 @@ files = dir(fullfile(selpath, '*DP_*.xlsx'));
 listItems = string({files(~[files.isdir]).name});
 
 if isempty(listItems)
-    fprintf('No *DP_*.xlsx files found in %s\n', selpath);
+    % A dialog, not only the Command Window: the caller's batch run just
+    % ended and the user is waiting for reports.
+    gui.myHelpdlg(parentfig, sprintf('No *DP_*.xlsx files were found in %s.', selpath));
     return;
 end
 
 if gui.i_isuifig(parentfig)
     [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
-        'Select Excel Files:', listItems);
+        'Select Excel Files:', listItems, true);
 else
     [selectedIndex, ok] = listdlg('PromptString', 'Select Excel Files:', ...
         'SelectionMode', 'multiple', ...
@@ -44,6 +46,9 @@ if ~ok, return; end
 selectedfiles = listItems(selectedIndex);
 
 fw = gui.myWaitbar(parentfig);
+closeFw = onCleanup(@() gui.myWaitbar(parentfig, fw, true));
+nwritten = 0;
+failed = strings(0, 1);
 
 for k = 1:length(selectedfiles)
     gui.myWaitbar(parentfig, fw, false, '', ...
@@ -66,12 +71,23 @@ for k = 1:length(selectedfiles)
         end
     catch ME
         fprintf('Could not read %s: %s\n', selectedfiles(k), ME.message);
+        failed(end+1) = selectedfiles(k); %#ok<AGROW>
         continue;
     end
 
-    [done, outfile] = llm.e_DPTableSummary(Tup, Tdn, wordfilename, selpath);
-    % if done, pkg.i_openoutputfile(outfile); end
+    try
+        done = llm.e_DPTableSummary(Tup, Tdn, wordfilename, selpath);
+    catch ME
+        fprintf('Report for %s failed: %s\n', selectedfiles(k), ME.message);
+        done = false;
+    end
+    if done
+        nwritten = nwritten + 1;
+    else
+        failed(end+1) = selectedfiles(k); %#ok<AGROW>
+    end
 end
 
 gui.myWaitbar(parentfig, fw);
+gui.i_reportllmword(parentfig, nwritten, failed, selpath);
 end

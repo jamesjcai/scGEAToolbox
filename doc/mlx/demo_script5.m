@@ -2,7 +2,7 @@
 %% Load example data set, X
 
 cdgea; % set working directory
-[X,genelist]=sc_readfile('example_data/GSM3044891_GeneExp.UMIs.10X1.txt');
+[X,genelist]=sc_readfile(pkg.i_exampledata('GSM3044891_GeneExp.UMIs.10X1.txt'));
 %% Select genes with at least 3 cells having more than 5 reads per cell.
 
 [X,genelist]=sc_selectg(X,genelist,5,3);
@@ -64,7 +64,7 @@ end
 
 X50=X(1:50,:);
 genelist50=genelist(1:50);
-A=sc_grn(X50, 'pcnet');
+A=sc_grn(X50, 'pcrnet');
 
 % Plot constructed network
 %
@@ -73,7 +73,7 @@ G=digraph(A,genelist50);
 LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
 LWidths(LWidths==0)=1e-5;
 figure;
-plot(G,'LineWidth',LWidths);
+p=plot(G,'LineWidth',LWidths);
 p.MarkerSize = 7;
 p.Marker = 's';
 p.NodeColor = 'r';
@@ -90,7 +90,7 @@ G=digraph(A,genelist20);
 LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
 LWidths(LWidths==0)=1e-5;
 figure;
-plot(G,'LineWidth',LWidths);
+p=plot(G,'LineWidth',LWidths);
 p.MarkerSize = 7;
 p.Marker = 's';
 p.NodeColor = 'r';

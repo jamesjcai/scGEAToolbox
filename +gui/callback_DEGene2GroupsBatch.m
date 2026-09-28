@@ -13,16 +13,17 @@ prefixtag = 'DE';
 outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir, FigureHandle);
 if ~done, return; end
 
-% [runenrichr] = gui.i_enrichrprep;
 [runenrichr] = gui.myQuestdlg(FigureHandle, ...
 ['Run Enrichr with top 250 DE genes? Results will ' ...
      'be saved in the output Excel files.'],'');
-if strcmp(runenrichr,'Cancel'), return; end
+if ~ismember(runenrichr, {'Yes', 'No'}), return; end   % Cancel or closed
 
 [paramset] = gui.i_degparamset(false, FigureHandle);
 if isempty(paramset), return; end
 
 fw = gui.myWaitbar(FigureHandle);
+% Closed on every exit: a failure inside the loop below left it open.
+closeFw = onCleanup(@() gui.myWaitbar(FigureHandle, fw, true));
 for k=1:length(CellTypeList)
 
     gui.myWaitbar(FigureHandle, fw, false, '', ...
@@ -83,11 +84,5 @@ if ~isempty(runenrichr) && strcmp(runenrichr, 'Yes')
         gui.sc_llm_enrichr2word(outdir, FigureHandle);
     end
 end
-
-% function in_writetable(Tmf1, filesaved, shtname)
-%     if ~isempty(Tmf1) && istable(Tmf1) && height(Tmf1) > 0
-%         writetable(Tmf1, filesaved, "FileType", "spreadsheet", 'Sheet', shtname);
-%     end
-% end
 
 end   % end of function

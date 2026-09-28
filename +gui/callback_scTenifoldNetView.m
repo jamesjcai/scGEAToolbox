@@ -2,13 +2,13 @@ function callback_scTenifoldNetView(src, ~)
 % CALLBACK_SCTENIFOLDNETVIEW  View a saved scTenifoldNet result.
 %
 % Opens the side-by-side viewer for a pair of GRNs produced by
-% ten.sctenifoldnet or gui.callback_scTenifoldNet1lite, with an optional
+% ten.sctenifoldnet or gui.callback_BuildGRNAllGenes, with an optional
 % third panel for their difference. The networks come either from two .mat
 % files on disk or from two matrices already in the base workspace; the
 % differential regulation table, if there is one, decides which genes are
 % drawn.
 %
-% See also ten.sctenifoldnetview, gui.callback_scTenifoldNet2.
+% See also ten.sctenifoldnetview, gui.callback_CompareGRNAllGenes.
 
 if nargin < 1, src = []; end
 [FigureHandle, ~] = gui.gui_getfigsce(src);

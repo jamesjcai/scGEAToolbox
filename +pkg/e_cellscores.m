@@ -50,8 +50,6 @@ catch
     % Glycobiology collection unavailable; keep the spreadsheet-defined scores.
 end
 
-% T=sortrows(T,"ScoreType");
-
 if ischar(scoretypeid) || isstring(scoretypeid)
     idx = find(matches(T.ScoreType, scoretypeid, 'IgnoreCase', true));
 elseif isnumeric(scoretypeid)
@@ -81,15 +79,15 @@ if sum(isexpressed)<2, error('Too few expressed genes (n < 2).'); end
 [~, methodid] = gui.i_pickscoremethod(methodid);
 if isempty(methodid), return; end
 
-if showwaitbar, fw = gui.gui_waitbar([], [], scoretype); end
+if showwaitbar, fw = gui.myWaitbar([], [], [], scoretype); end
 try
     [score] = sc_cellscore(X, genelist, tgsPos, tgsNeg, methodid);
 catch ME
-    if showwaitbar, gui.gui_waitbar(fw, true); end
+    if showwaitbar, gui.myWaitbar([], fw, true); end
     gui.myErrordlg([], ME.message);
     return;
 end
-if showwaitbar, gui.gui_waitbar(fw); end
+if showwaitbar, gui.myWaitbar([], fw); end
 
 
 fprintf('\n=============\n%s (%s)\n-------------\n', 'Genes', scoretype);
@@ -105,11 +103,5 @@ for k = 1:length(posg)
 end
 fprintf('=============\n*Expressed genes (n = %d)\n', ...
 sum(isexpressed));
-
-% fprintf('\n=============\n%s\n-------------\n','Marker Genes');
-% for k=1:length(posg)
-%     fprintf('%s\n',posg(k));
-% end
-% fprintf('=============\n');
 
 end

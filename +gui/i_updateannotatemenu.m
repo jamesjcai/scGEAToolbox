@@ -9,7 +9,7 @@ function i_updateannotatemenu(app)
 %
 % Right now this greys out the two subtype annotation items - the bundled one
 % unless the data holds a cell type the bundled subtype marker table has
-% markers for, the customized one unless the cells are annotated at all - and
+% markers for, the custom one unless the cells are annotated at all - and
 % says why in the tooltip. Anything else that should depend on what is in the
 % data belongs here too.
 %
@@ -41,7 +41,7 @@ if ~isempty(ctypelist)
 end
 
 % Two different reasons to be greyed out, and the fix differs: annotate the
-% cells, or use the customized marker item just below.
+% cells, or use the custom marker item just below.
 m.Enable = 'off';
 if ~hascelltypes
     m.Tooltip = {sprintf(['Cells are not annotated yet. Annotate cell ' ...
@@ -49,13 +49,13 @@ if ~hascelltypes
         strjoin(primarytypes, ', '))};
 else
     m.Tooltip = {sprintf(['None of the cell types in this dataset has ' ...
-        'bundled subtype markers (available for: %s). Use customized ' ...
+        'bundled subtype markers (available for: %s). Use custom ' ...
         'marker genes instead.'], strjoin(primarytypes, ', '))};
 end
 end
 
 function in_setcustom(app, hascelltypes)
-% The customized item asks nothing of the marker table, so annotated cells are
+% The custom item asks nothing of the marker table, so annotated cells are
 % the whole requirement.
 
 if ~isprop(app, 'AnnotateCellSubtypesUsingCustomizedMarkersMenu'), return; end

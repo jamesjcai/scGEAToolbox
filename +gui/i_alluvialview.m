@@ -1,8 +1,13 @@
-function hFig = i_alluvialview(a, b, nameA, nameB, parentfig, figname)
+function hFig = i_alluvialview(a, b, nameA, nameB, parentfig, figname, buttons)
 %I_ALLUVIALVIEW Sankey/alluvial diagram between two groupings of the same cells.
 %
 %   hFig = gui.i_alluvialview(a, b, nameA, nameB)
 %   hFig = gui.i_alluvialview(a, b, nameA, nameB, parentfig, figname)
+%   hFig = gui.i_alluvialview(a, b, nameA, nameB, parentfig, figname, buttons)
+%
+%   BUTTONS adds caller-specific actions to the figure's toolbar: a struct
+%   array with fields Icon (an image in assets/Images), Tooltip and Callback
+%   (called as Callback(src, event); ANCESTOR(src, 'figure') is this figure).
 %
 %   A and B are per-cell label vectors of equal length - two cell type
 %   annotations, a clustering and an annotation, before and after a merge.
@@ -21,13 +26,17 @@ function hFig = i_alluvialview(a, b, nameA, nameB, parentfig, figname)
 %   the same colour on the left and right of a diagram whose whole point is
 %   that the two vocabularies need not line up.
 %
-%   Click a ribbon or a block for its counts.
+%   Click a ribbon or a block for its counts. A toolbar button swaps the
+%   flow direction, redrawing in place; the pair as currently drawn is kept
+%   in the figure's 'AlluvialPair' appdata (fields A, B, NameA, NameB), so a
+%   caller's button can act on the direction the user is looking at.
 %
 %   Returns the figure handle, or [] if the two vectors cannot be compared.
 %
 %   See also PKG.I_ALLUVIALLAYOUT, PKG.I_ADJUSTEDRANDINDEX,
 %   GUI.CALLBACK_COMPARECELLTYPEANNOTATIONS.
 
+if nargin < 7, buttons = struct('Icon', {}, 'Tooltip', {}, 'Callback', {}); end
 if nargin < 6, figname = 'Annotation Flow'; end
 if nargin < 5, parentfig = []; end
 if nargin < 4 || isempty(nameB), nameB = "B"; end
@@ -43,15 +52,6 @@ if numel(a) ~= numel(b)
 end
 if isempty(a), return; end
 
-[ga, la] = findgroups(a);
-[gb, lb] = findgroups(b);
-M = accumarray([ga, gb], 1, [numel(la), numel(lb)]);
-layout = pkg.i_alluviallayout(M);
-
-nA = numel(la);
-nB = numel(lb);
-cmap = pkg.i_mycolorlines(nA);
-
 hx = gui.myFigure(parentfig);
 hFig = hx.FigHandle;
 hFig.Name = char(figname);
@@ -61,8 +61,37 @@ hFig.NumberTitle = 'off';
 % buttons were handed that one. Drawing into a second axes left the first
 % underneath with its default 0-1 rulers showing through.
 ax = hx.AxHandle;
+
+setappdata(hFig, 'AlluvialPair', struct('A', a, 'B', b, ...
+    'NameA', string(nameA), 'NameB', string(nameB)));
+in_draw(ax, a, b, nameA, nameB);
+
+dt = datacursormode(hFig);
+dt.UpdateFcn = @in_datatip;
+swapBtn = hx.addCustomButton('off', {@in_swap, ax}, ...
+    'noun_directional_arrows_3497928.gif', '');
+swapBtn.Tooltip = in_swaptip(nameA, nameB);
+for k = 1:numel(buttons)
+    hx.addCustomButton('off', buttons(k).Callback, buttons(k).Icon, ...
+        buttons(k).Tooltip);
+end
+hx.show(parentfig);
+end
+
+
+function in_draw(ax, a, b, nameA, nameB)
+% Draw the diagram for A -> B into AX, replacing whatever was there.
 cla(ax, 'reset');
 hold(ax, 'on');
+
+[ga, la] = findgroups(a);
+[gb, lb] = findgroups(b);
+M = accumarray([ga, gb], 1, [numel(la), numel(lb)]);
+layout = pkg.i_alluviallayout(M);
+
+nA = numel(la);
+nB = numel(lb);
+cmap = pkg.i_mycolorlines(nA);
 
 xLeft = 0;
 xRight = 1;
@@ -119,10 +148,26 @@ axis(ax, 'off');
 % Room either side for the labels, which are drawn outside the columns.
 xlim(ax, [-0.32, 1.32]);
 ylim(ax, [-0.03, 1.09]);
+end
 
-dt = datacursormode(hFig);
-dt.UpdateFcn = @in_datatip;
-hx.show(parentfig);
+
+function in_swap(src, ~, ax)
+% Redraw with the two columns exchanged. Ribbons are coloured by their
+% source, so the swap also recolours them: a split read one way is a merge
+% read the other, and the colours follow the reading.
+hFig = ancestor(ax, 'figure');
+P = getappdata(hFig, 'AlluvialPair');
+P = struct('A', P.B, 'B', P.A, 'NameA', P.NameB, 'NameB', P.NameA);
+setappdata(hFig, 'AlluvialPair', P);
+in_draw(ax, P.A, P.B, P.NameA, P.NameB);
+src.Tooltip = in_swaptip(P.NameA, P.NameB);
+end
+
+
+function tip = in_swaptip(nameA, nameB)
+% The tooltip names the direction on screen, so the button says what it is
+% about to reverse rather than leaving the reader to check the headings.
+tip = sprintf('Swap Flow Direction (now: %s -> %s)', nameA, nameB);
 end
 
 

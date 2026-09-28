@@ -7,7 +7,6 @@ if ~isrow(y), y = y.'; end
 data = [X; y];
 if isempty(R0)
     R0 = net.minet(data);
-    % R0 = net.minet_block(data);
 end
 
 % fprintf("Looking for %d genes \n", k);
@@ -34,16 +33,7 @@ end
 % Q = (1 - alphasol) * R - alphasol * diag(J);
 % Function value per feature accoring best solution and Q matrix
 b = logical(xsol.BestX);
-% global_rank = Q * b;
 
-
-%{
-mdl = fitrtree(X',Y,CrossVal="on",Holdout=0.2);
-kfoldLoss(mdl)
-
-mdl2 = fitrtree(X(b,:)',y,CrossVal="on",Holdout=0.2);
-kfoldLoss(mdl2)
-%}
 
 %{
 Obtain top most important features

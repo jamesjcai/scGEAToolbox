@@ -7,7 +7,7 @@ function [hFig, info] = sctenifoldnetview(net1, net2, genes, T, options)
 %   third panel holding net2 minus net1. NET1 and NET2 are either NxN
 %   adjacency matrices or paths to .mat files holding a variable A (the
 %   adjacency matrix) and genes (the Nx1 gene list) - the format written by
-%   ten.sctenifoldnet and gui.callback_scTenifoldNet1lite.
+%   ten.sctenifoldnet and gui.callback_BuildGRNAllGenes.
 %
 %   ten.sctenifoldnetview(net1, net2, genes) supplies the gene list
 %   explicitly. Required when net1/net2 are matrices, optional when they

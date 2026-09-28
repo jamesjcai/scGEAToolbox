@@ -23,8 +23,6 @@ assert(numel(labels) == numel(vars) && numel(vars) == numel(vals), ...
 pos = gui.i_centerdlgpos(parentfig, [dialogWidth, dialogHeight]);
 dialogX = pos(1);
 dialogY = pos(2);
-% d = uifigure('Position', [dialogX, dialogY, dialogWidth, dialogHeight], ...
-%              'Name', titleText, 'WindowStyle', 'modal');
 
 % Create the dialog window
 d = uifigure('Name', titleText);  % , 'WindowStyle', 'modal');

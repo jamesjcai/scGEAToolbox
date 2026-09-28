@@ -48,7 +48,6 @@ if ~prepare_input_only
     x = pyenv;
     try
         pkg.i_add_conda_python_path;
-        % pyenv('Version', x.Executable, 'ExecutionMode', 'OutOfProcess');
     catch ME
         warning(ME.message);
     end
@@ -65,14 +64,12 @@ if ~prepare_input_only
     if status ~= 0
 
         if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
-        % gui.myErrordlg(parentfig, sprintf('%s', cmdout));
         a = sprintf("% s.", cmdout);
         if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
             prepare_input_only = true;
         else
             return;
         end
-        % error('Python scTenifoldXct has not been installed properly.');
     end
     if pkg.i_isvalid(fw)
         gui.myWaitbar(parentfig, fw, false, [], 'Checking Python environment is complete');
@@ -90,20 +87,11 @@ tmpfilelist = {'X.mat', 'X.txt', 'g.txt', 'c.txt', 'output.txt', ...
 pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
 % run cannot leave a previous run's output to be picked up as this one's
 
-% load(fullfile(pw1,'..','assets','Ligand_Receptor','Ligand_Receptor.mat'), ...
-%     'ligand','receptor');
-% validg=unique([ligand receptor]);
-% [y]=ismember(upper(sce.g),validg);
-% X=sce.X(y,:);
-% g=sce.g(y);
-% writematrix(sce.X,'X.txt');
-
 idx = sce.c_cell_type_tx == celltype1 | sce.c_cell_type_tx == celltype2;
 sce = sce.selectcells(idx);  % OK
 sce.c_batch_id = sce.c_cell_type_tx;
 sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
 sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
-% sce=sce.qcfilter;
 
 
 if issparse(sce.X)
@@ -140,8 +128,11 @@ if exist("pcnet_Source.mat", 'file') && exist("pcnet_Target.mat", 'file')
     end
 end
 
+% Opened whatever USEEXIST says: the step-3 update below needs it either way.
+% The cleanup closes it on every exit, a failed run included.
+fw = gui.myWaitbar(parentfig);
+closeFw = onCleanup(@() gui.myWaitbar(parentfig, fw, true));
 if ~useexist
-    fw = gui.myWaitbar(parentfig);
     gui.myWaitbar(parentfig, fw, false, [], 'Step 1 of 3: Building pcnet_Source network...');
     disp('Building pcnet_Source network...');
     X1 = sce.X(:, sce.c_cell_type_tx == celltype1);
@@ -193,17 +184,6 @@ if pkg.i_isvalid(fw)
     end
 end
 
-% rt=java.lang.Runtime.getRuntime();
-% pr = rt.exec(cmdlinestr);
-% [status]=pr.waitFor();
-
-% if twosided
-%     if status==0 && exist('output1.txt','file') && exist('output2.txt','file')
-%         T1=readtable('output1.txt');
-%         T2=readtable('output2.txt');
-%         T={T1,T2};
-%     end
-% else
 if ~prepare_input_only
     if status == 0 && exist('output1.txt', 'file')
         T = readtable('output1.txt');
@@ -216,7 +196,6 @@ if ~prepare_input_only
         error('scTenifoldXct runtime error.');
     end
 end
-% end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 

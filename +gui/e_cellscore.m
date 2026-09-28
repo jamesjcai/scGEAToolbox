@@ -11,18 +11,6 @@ if nargin < 4, showwaitbar=true; end
 cs = [];
 if nargin < 3 || isempty(methodid)
     [~, methodid] = gui.i_pickscoremethod(0, parentfig);
-    % answer = gui.myQuestdlg(parentfig, 'Select algorithm:', ...
-    %     'Select Method', ...
-    %     'UCell [PMID:34285779]', 'AddModuleScore/Seurat', ...
-    %     'UCell [PMID:34285779]');
-    % switch answer
-    %     case 'AddModuleScore/Seurat'
-    %         methodid = 2;
-    %     case 'UCell [PMID:34285779]'
-    %         methodid = 1;
-    %     otherwise
-    %         return;
-    % end
     if isempty(methodid), return; end
 end
 

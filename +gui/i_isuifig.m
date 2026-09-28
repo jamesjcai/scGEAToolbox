@@ -4,10 +4,4 @@ y = false;
 if nargin < 1, return; end
 if isempty(parentfig), return; end
 y = isprop(parentfig,'isUIFigure');
-% y = matlab.ui.internal.isUIFigure(parentfig);
-% if ~isempty(f) && isempty(get(f,'JavaFrame_I'))
-%     bool = true;
-% else
-%     bool = false;
-% end
 end

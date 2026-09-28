@@ -31,23 +31,17 @@ addRequired(p, 'X', @isnumeric);
 addOptional(p, 'type', defaultType, checkType);
 parse(p, X, varargin{:});
 
-if issparse(X), X = full(X); end
+ptype = lower(p.Results.type);
+% PearsonResiduals reads X block by block as it is, sparse or not; the
+% other methods take it dense.
+if issparse(X) && ~strcmp(ptype, 'pearsonresiduals'), X = full(X); end
 
-switch lower(p.Results.type)
+switch ptype
     case 'pearsonresiduals'
         % analytic Pearson residuals
         % https://doi.org/10.1101/2020.12.01.405886
         % https://gist.github.com/hypercompetent/51a3c428745e1c06d826d76c3671797c
-
-        u = (sum(X, 2) * sum(X, 1)) ./ sum(X(:));
-        s = sqrt(u + (u.^2) ./ 100);
-        X = (X - u) ./ s;
-        X(isnan(X)) = 0;
-        n = size(X, 2);
-        % clip to sqrt(n);
-        sn = sqrt(n);
-        X(X > sn) = sn;
-        X(X < -sn) = -sn;
+        X = i_pearsonresiduals(X);
     case 'knnsmoothing'
         % K-nearest neighbor smoothing for high-throughput single-cell RNA-Seq data
         % https://doi.org/10.1101/217737
@@ -80,6 +74,41 @@ switch lower(p.Results.type)
         X = sqrt(X) + sqrt(X + 1);
     otherwise
         error('sc_transform:InvalidType', 'Unknown transformation type: %s', p.Results.type);
+end
+end
+
+
+function R = i_pearsonresiduals(X)
+% Analytic Pearson residuals, (x - u)/sqrt(u + u^2/100) with
+% u = rowsum*colsum/total, NaN (where u = 0) set to 0 and clipped to
+% +/- sqrt(number of cells).
+%
+% The result is dense by nature -- a zero count has residual -u/s -- so
+% one genes x cells matrix is unavoidable. Everything else is not. This
+% used to FULL() the input and then hold U, S and X - U as further dense
+% genes x cells arrays: about five at once, over 30 GB at 20000 x 50000.
+% Now the output is allocated once and filled a block of cells at a time
+% from X as given (a sparse X stays sparse), with the same arithmetic on
+% every element.
+[G, C] = size(X);
+rs = full(sum(X, 2));
+cs = full(sum(X, 1));
+tot = sum(rs);
+sn = sqrt(C);
+% U is 0 -- and the residual 0/0 = NaN -- exactly where a gene or a cell
+% has no counts at all, so those rows and columns are zeroed directly
+% rather than by scanning every element for NaN. MIN/MAX then clip in one
+% pass; with no NaN left they give what the two masked assignments did.
+zeroRow = rs == 0;
+R = zeros(G, C);
+step = max(1, floor(1.6e7/max(G, 1)));    % ~128 MB of temporaries per block
+for c0 = 1:step:C
+    cols = c0:min(C, c0 + step - 1);
+    u = (rs * cs(cols)) ./ tot;
+    r = (full(X(:, cols)) - u) ./ sqrt(u + (u.^2) ./ 100);
+    r(zeroRow, :) = 0;
+    r(:, cs(cols) == 0) = 0;
+    R(:, cols) = min(max(r, -sn), sn);
 end
 end
 

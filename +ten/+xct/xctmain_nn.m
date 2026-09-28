@@ -136,12 +136,6 @@ ng = size(X_s, 1);
 if size(X_t, 1) ~= ng || numel(g) ~= ng
     error('xctmain_nn: X_s, X_t and g must all have the same number of rows.');
 end
-% if ng > 3000
-%     warning('xctmain_nn:largeGeneSet', ...
-%         ['%d genes → L matrix will be %d × %d (%.0f MB single). ' ...
-%          'Consider subsetting to top HVGs to reduce memory.'], ...
-%         ng, 2*ng, 2*ng, (2*ng)^2*4/1e6);
-% end
 
 if verbose
     fprintf('[xctmain_nn] Source: %d genes × %d cells\n', ng, size(X_s,2));

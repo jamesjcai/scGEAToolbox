@@ -153,7 +153,7 @@ end
 
 % ---- Standardise, with the observed cells' mean and sd ------------------
 geneMean = full(mean(Xobs, 2));
-geneStd = full(std(Xobs, 0, 2));
+geneStd = sqrt(pkg.e_rowvar(Xobs));    % std(Xobs, 0, 2), fast when sparse
 geneStd(geneStd < eps) = 1;
 Xobs = single(full((Xobs - geneMean)./geneStd)).';
 Xsim = single(full((Xsim - geneMean)./geneStd)).';

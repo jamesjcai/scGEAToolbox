@@ -25,9 +25,6 @@ if dim==3
         'phate2d', 'phate3d', 'metaviz2d', 'metaviz3d'};
     end
 
-    % 'MetaViz [PMID:36774377] 2D 🐢',...
-    % 'MetaViz [PMID:36774377] 3D 🐢'};
-
 
 sce = SingleCellExperiment;
 validmethodtag = fieldnames(sce.struct_cell_embeddings);

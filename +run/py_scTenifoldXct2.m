@@ -59,9 +59,6 @@ if ~prepare_input_only
     [status, cmdout] = system(cmdlinestr, '-echo');
     if status ~= 0
         if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, true); end
-        % waitfor(errordlg(sprintf('%s',cmdout)));
-        % error(cmdout);
-        % error('Python scTenifoldXct has not been installed properly.');
         a = sprintf("% s.", cmdout);
         if strcmp('Yes', gui.myQuestdlg(parentfig, a+" Continue with script.py preparation?"))
             prepare_input_only = true;
@@ -87,14 +84,6 @@ tmpfilelist = {'X1.mat', 'X2.mat', 'g1.txt', 'c1.txt', 'g2.txt', 'c2.txt', 'outp
 pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
 % run cannot leave a previous run's output to be picked up as this one's
 
-    % load(fullfile(pw1,'..','assets','Ligand_Receptor','Ligand_Receptor.mat'), ...
-    %     'ligand','receptor');
-    % validg=unique([ligand receptor]);
-    % [y]=ismember(upper(sce.g),validg);
-    % X=sce.X(y,:);
-    % g=sce.g(y);
-    % writematrix(sce.X,'X.txt');
-
 
 in_prepareX(sce1, 1);
 in_prepareX(sce2, 2);
@@ -103,33 +92,25 @@ fw = gui.myWaitbar(parentfig);
 gui.myWaitbar(parentfig, fw, false, [], ...
         'Step 2 of 4: Building S1 network...', 0.5);
 
-    % fw = gui.gui_waitbar([], [], 'Step 2 of 4: Building S1 networks...');
 try
         in_prepareA(sce1, 1);
     catch ME
         if pkg.i_isvalid(fw)
-            % gui.gui_waitbar(fw, [], 'Building S1 networks is incomplete');
             gui.myWaitbar(parentfig, fw, true, [], 'Building S1 networks is incomplete');
         end
-        gui.myErrordlg(parentfig, ME.message);
-        return;
+        rethrow(ME);   % the caller reports it; returning [] here also got a 'none found' dialog
     end
-    % gui.gui_waitbar(fw, [], 'Building S1 networks is complete');
 
 gui.myWaitbar(parentfig, fw, false, [], ...
         'Step 3 of 4: Building S1 network...', 0.75);
-    % fw = gui.gui_waitbar([], [], 'Step 3 of 4: Building S2 networks...');
 try
         in_prepareA(sce2, 2);
     catch ME
         if pkg.i_isvalid(fw)
             gui.myWaitbar(parentfig, fw, true, [], 'Building S2 networks is incomplete');
         end
-        gui.myErrordlg(parentfig, ME.message);
-        return;
+        rethrow(ME);   % the caller reports it; returning [] here also got a 'none found' dialog
     end
-    % gui.gui_waitbar(fw, [], 'Building S2 network is complete');
-    % fw = gui.gui_waitbar([], [], 'Step 4 of 4: Running scTenifoldXct.py...');
 gui.myWaitbar(parentfig, fw, false, [], ...
         'Step 4 of 4: Running scTenifoldXct.py...', 0.9);
 
@@ -152,22 +133,15 @@ if ~prepare_input_only
     catch ME
         if pkg.i_isvalid(fw)
             gui.myWaitbar(parentfig, fw, true, [], 'Running scTenifoldXct.py is incomplete');
-            % gui.gui_waitbar(fw, [], 'Running scTenifoldXct.py is incomplete.');
         end
-        gui.myErrordlg(parentfig, ME.message);
-        return;
+        rethrow(ME);   % the caller reports it; returning [] here also got a 'none found' dialog
     end
 end
-    % rt=java.lang.Runtime.getRuntime();
-    % pr = rt.exec(cmdlinestr);
-    % [status]=pr.waitFor();
 
 if pkg.i_isvalid(fw)
         if prepare_input_only
-            % gui.gui_waitbar(fw, [], 'Input preparation is complete.');
             gui.myWaitbar(parentfig, fw, false, [], 'Input preparation is complete.');
         else
-            % gui.gui_waitbar(fw, [], 'Running scTenifoldXct2.py is complete.');
             gui.myWaitbar(parentfig, fw, false, [], 'Running scTenifoldXct2.py is complete.');
         end
     end
@@ -188,14 +162,9 @@ if ~prepare_input_only
     else
         if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
         error('scTenifoldXct2 runtime error.');
-        % gui.myErrordlg(parentfig, 'scTenifoldXct2 runtime error.');
     end
     end
 
-    % if status == 0 && exist('output.txt', 'file')
-    %     T = readtable('output.txt');
-    %     iscomplete = true;
-    % end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 
@@ -213,7 +182,6 @@ function in_prepareX(sce, id)
         sce.c_batch_id = sce.c_cell_type_tx;
         sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
         sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
-        % sce=sce.qcfilter;
         if issparse(sce.X)
             X = single(full(sce.X));
         else
@@ -237,7 +205,6 @@ function in_prepareA(sce, id)
         A1 = net.pcrnet(X1, 3, false, true, false, false, pkg.i_usegpu(X1));
         disp('A1 network built.')
         A1 = A1 ./ max(abs(A1(:)));
-        % A=0.5*(A1+A1.');
         A = ten.e_filtadjc(A1, 0.75, false);
         save(sprintf('%d/pcnet_Source.mat', id), 'A', '-v7.3');
 
@@ -246,48 +213,8 @@ function in_prepareA(sce, id)
         A2 = net.pcrnet(X2, 3, false, true, false, false, pkg.i_usegpu(X2));
         disp('A2 network built.');
         A2 = A2 ./ max(abs(A2(:)));
-        % A=0.5*(A2+A2.');
         A = ten.e_filtadjc(A2, 0.75, false);
         save(sprintf('%d/pcnet_Target.mat', id), 'A', '-v7.3');
     end
-
-    % function in_prepareA(sce, A1, A2, id)
-    %     if isempty(A1)
-    %         if useexist && exist(sprintf('%d/usr_Source.mat', id), 'file')
-    %             disp('Loading existing A1 network...');
-    %             load(sprintf('%d/usr_Source.mat', id), 'A');
-    %             A1 = A;
-    %         else
-    %             disp('Building A1 network...')
-    %             A1 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype1));
-    %             disp('A1 network built.')
-    %         end
-    %     else
-    %         disp('Using A1 provided.')
-    %     end
-    %     A1 = A1 ./ max(abs(A1(:)));
-    %     % A=0.5*(A1+A1.');
-    %     A = ten.e_filtadjc(A1, 0.75, false);
-    %     save(sprintf('%d/pcnet_Source.mat', id), 'A', '-v7.3');
-    %
-    %     if isempty(A2)
-    %         if useexist && exist(sprintf('%d/usr_Target.mat', id), 'file')
-    %             disp('Loading existing A2 network...');
-    %             load(sprintf('%d/usr_Target.mat', id), 'A');
-    %             A2 = A;
-    %         else
-    %             disp('Building A2 network...');
-    %             A2 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype2));
-    %             disp('A2 network built.');
-    %         end
-    %     else
-    %         disp('Using A2 provided.');
-    %     end
-    %     A2 = A2 ./ max(abs(A2(:)));
-    %     % A=0.5*(A2+A2.');
-    %     A = ten.e_filtadjc(A2, 0.75, false);
-    %     save(sprintf('%d/pcnet_Target.mat', id), 'A', '-v7.3');
-    %     clear A A1 A2
-    % end
 
 end

@@ -2,13 +2,19 @@
 i_chroma_query.py  —  Query GEOcellar ChromaDB Cloud and print JSON results.
 
 Usage:
-    python i_chroma_query.py <topic> <chroma_api_key> [n_results]
+    CHROMA_API_KEY=... CHROMA_QUERY_TOPIC=... python i_chroma_query.py [n_results]
+    python i_chroma_query.py <topic> <chroma_api_key> [n_results]   (older form)
+
+The key and the topic are read from the environment: on the command line
+the key is visible to every process on the machine (ps, Task Manager), and
+a quote in the topic broke the shell command chroma_query.m built.
 
 Outputs a JSON array of study objects to stdout.
 Requires: chromadb, sentence-transformers
 """
 
 import json
+import os
 import sys
 
 import chromadb
@@ -20,14 +26,18 @@ COLLECTION = "geo"
 
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: i_chroma_query.py <topic> <chroma_api_key> [n_results]",
-              file=sys.stderr)
+    topic = os.environ.get("CHROMA_QUERY_TOPIC")
+    chroma_api_key = os.environ.get("CHROMA_API_KEY")
+    if topic and chroma_api_key:
+        n_results = int(sys.argv[1]) if len(sys.argv) > 1 else 20
+    elif len(sys.argv) >= 3:
+        topic = sys.argv[1]
+        chroma_api_key = sys.argv[2]
+        n_results = int(sys.argv[3]) if len(sys.argv) > 3 else 20
+    else:
+        print("Usage: CHROMA_API_KEY=... CHROMA_QUERY_TOPIC=... "
+              "i_chroma_query.py [n_results]", file=sys.stderr)
         sys.exit(1)
-
-    topic         = sys.argv[1]
-    chroma_api_key = sys.argv[2]
-    n_results     = int(sys.argv[3]) if len(sys.argv) > 3 else 20
 
     client = chromadb.HttpClient(
         ssl=True,

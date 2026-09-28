@@ -24,7 +24,6 @@ organ = p.Results.organ;
 
 oldpth = pwd;
 cleanupCwd = onCleanup(@() cd(oldpth));
-% pw1=fileparts(which(mfilename));
 pw1 = fileparts(mfilename('fullpath'));
 if strcmpi(organ, "all")
     pth = fullfile(pw1, '..', 'external', 'R_clustermole');
@@ -90,7 +89,6 @@ for j = 1:length(celltypev)
     g = strsplit(markergenev(j), ',');
     g = g(1:end-1);
     g = upper(unique(g));
-    % [~,idx]=ismember(g,genelist);
     Z = zeros(NC, 1);
     ng = zeros(NC, 1);
     for i = 1:length(g)
@@ -112,7 +110,6 @@ for j = 1:length(celltypev)
     end
 end
 T = table();
-% t=table(celltypev);
 for k = 1:NC
     [c, idx] = sort(S(:, k), 'descend');
     T = [T, table(celltypev(idx), c, 'VariableNames', ...

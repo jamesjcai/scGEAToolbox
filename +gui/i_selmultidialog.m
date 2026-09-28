@@ -41,10 +41,8 @@ if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
 end
 
-    %if length(items) > 1e4
         idx = gui.i_shuttleselect(items, preselected_items, parentfig);
         return;
-    %end
 end
 
 

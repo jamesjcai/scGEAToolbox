@@ -15,10 +15,8 @@ if ~isQuantumInstalled
     return;
 end
 
-extprogname = 'scgeatool_QUBOFSAnalysis';
-preftagname = 'externalwrkpath';
-[wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
-if isempty(wrkdir), return; end
+% No working folder: nothing here writes one. It used to be asked for all
+% the same, and answering Yes to its "Overwrite?" deleted the files in it.
 
 answer = gui.myQuestdlg(FigureHandle, 'Select a dependent variable y. Continue?','');
 if ~strcmp(answer,'Yes'), return; end
@@ -34,14 +32,19 @@ k = gui.i_inputnumk(20, 2, sce.NumGenes, ...
 'Number of features (genes)', FigureHandle);
 if isempty(k), return; end
 
-[Xt] = gui.i_transformx(sce.X, true, 5, FigureHandle);
+[Xt] = gui.i_transformx(sce.X, true, "pearson_residuals", FigureHandle);
 if isempty(Xt), return; end
 
-gui.i_resetrngseed(src, [], false);
+if ~gui.i_resetrngseed(src, [], false), return; end   % cancelled
 fw = gui.myWaitbar(FigureHandle);
-
-b = qtm.qubofs(Xt, thisx, k);
-
+try
+    b = qtm.qubofs(Xt, thisx, k);
+catch ME
+    % The bar used to stay open over the app after a failure.
+    gui.myWaitbar(FigureHandle, fw, true);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
+end
 gui.myWaitbar(FigureHandle, fw);
 
 selected_genes = sce.g(b);

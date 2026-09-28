@@ -25,6 +25,12 @@ classdef SingleCellExperiment < handle & matlab.mixin.Copyable
         % factory, because the field names are open-ended and a literal
         % removes a class-load-time dependency.
         struct_modalities = struct();
+        % Reduced representations too wide to be embeddings, one row per
+        % cell: HARMONY holds the batch-corrected principal components
+        % GUI.CALLBACK_HARMONY computes, which CLUSTERCELLS clusters on. Kept
+        % apart from STRUCT_CELL_EMBEDDINGS so the 2-D/3-D embedding pickers
+        % never offer them. Subset with the cells, like the embeddings.
+        struct_cell_reductions = struct();
     end
 
     properties (Dependent)
@@ -50,7 +56,6 @@ methods
 
         % Convert to single sparse if supported (R2025a+)
         if isMATLABReleaseOlderThan('R2025a')
-            % warning("Single-precision sparse not supported. Keeping double precision.");
         else
             X = single(X); % Works in R2025a+
         end
@@ -120,7 +125,7 @@ methods
     end
 
     obj = assigncelltype(obj, speciesid, keepclusterid, keepold)
-    obj = clustercells(obj, k, methodid, forced, sx)
+    obj = clustercells(obj, k, methodid, forced, sx, opts)
     obj = embedcells(obj, methodid, forced, usehvgs, ndim, numhvg, whitelist, showwaitbar)
     obj = estimatecellcycle(obj, forced, methodid)
     obj = estimatepotency(obj, speciesid, forced)
@@ -128,7 +133,6 @@ methods
     obj = qcfilterwhitelist(obj, libszcutoff, mtratio, min_cells_nonzero, gnnumcutoff, whitelist)
     obj = sortcells(obj, idx);
     exportToJsonl(obj, outfile, dataset_id, titleText)
-    sce2 = toSCE2(obj)
 
     function obj = removecells(obj, idx)
         try
@@ -179,8 +183,6 @@ methods
     end
 
     function r = title(obj)
-        %        r=sprintf('%d x %d\n[genes x cells]',...
-        %            size(obj.X,1),size(obj.X,2));
         r = sprintf('%d x %d', ...
             size(obj.X, 1), size(obj.X, 2));
     end
@@ -422,10 +424,6 @@ methods
         if nargin < 4 || isempty(min_cells_nonzero), min_cells_nonzero = 15; end
         if nargin < 3 || isempty(mtratio), mtratio = 0.15; end
         if nargin < 2 || isempty(libsize), libsize = 1000; end
-        %        case 'Relaxed (keep more cells/genes)'
-        %            definput = {'500','0.20','10'};
-        %        case 'Strigent (keep less cells/genes)'
-        %            definput = {'1000','0.15','15'};
         [obj.X, obj.g] = sc_rmdugenes(obj.X, obj.g);
         [~, keptg, keptidxv] = sc_qcfilter(obj.X, obj.g, ...
             libsize, mtratio, ...
@@ -659,6 +657,13 @@ methods (Access = private)
                         obj.struct_cell_embeddings.(a{k})(idx, :);
                 end
             end
+            a = fieldnames(obj.struct_cell_reductions);
+            for k = 1:length(a)
+                if ~isempty(obj.struct_cell_reductions.(a{k}))
+                    obj.struct_cell_reductions.(a{k}) = ...
+                        obj.struct_cell_reductions.(a{k})(idx, :);
+                end
+            end
             a = fieldnames(obj.struct_cell_clusterings);
             for k = 1:length(a)
                 if ~isempty(obj.struct_cell_clusterings.(a{k}))
@@ -690,6 +695,12 @@ methods (Access = private)
             for k = 1:length(a)
                 if ~isempty(obj.struct_cell_embeddings.(a{k}))
                     obj.struct_cell_embeddings.(a{k})(idx, :) = [];
+                end
+            end
+            a = fieldnames(obj.struct_cell_reductions);
+            for k = 1:length(a)
+                if ~isempty(obj.struct_cell_reductions.(a{k}))
+                    obj.struct_cell_reductions.(a{k})(idx, :) = [];
                 end
             end
             a = fieldnames(obj.struct_cell_clusterings);

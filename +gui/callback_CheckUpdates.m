@@ -1,12 +1,6 @@
 function callback_CheckUpdates(src, ~)
 
-% toolboxPath = fileparts(fileparts(mfilename('fullpath')));
-% versionfile = fullfile(toolboxPath, 'VERSION.mat');
-% if exist(versionfile,'file')
-%    delete(versionfile);
-% end
 [FigureHandle] = gui.gui_getfigsce(src);
-% Col = webread('https://api.github.com/repos/jamesjcai/scGEAToolbox')
 try
     [majneedupdate, v_old, v_new] = pkg.i_majvercheck;
 catch ME
@@ -26,7 +20,6 @@ if majneedupdate
         v_new, v_old));
     if strcmp(answer, 'Yes')
         web('https://scgeatoolbox.readthedocs.io/en/latest/quick_installation.html');
-        % gui.gui_showrefinfo('Quick Installation', FigureHandle);
     end
 
     % else
@@ -80,10 +73,6 @@ if majneedupdate
     % end
 else
     gui.myHelpdlg(FigureHandle, sprintf('scGEAToolbox (%s) is up to date.', v_old));
-    % answer=gui.myQuestdlg(FigureHandle, 'Check for minor updates?','');
-    % if strcmp(answer,'Yes')
-    %    pkg.i_minvercheck(FigureHandle);
-    % end
 end
 
 end

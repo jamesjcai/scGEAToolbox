@@ -13,7 +13,6 @@ if isfile(xfilelocal)
 
     if ~isempty(tokens)
         versionStr = tokens{1}{1};
-        % fprintf('Extracted version: %s\n', versionStr);
     else
         warning('Version string not found in the file.');
     end

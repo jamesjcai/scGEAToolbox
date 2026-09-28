@@ -85,6 +85,11 @@ Options: ``--norm libsize|deseq``, ``--log1p``, ``--hvg``,
 ``--k <int>`` (default 6), ``--cluster-type <method>``, ``--min-cells <int>``
 (default 3), ``--min-genes <int>`` (default 200).
 
+The output keeps the raw counts of every gene that passed QC. Normalization,
+``--log1p`` and ``--hvg`` (the 2000 most variable genes, ranked on the raw
+counts) shape only the embedding, which is stored under its usual name
+(``umap3d``, ``tsne2d``, ...) so that ``cluster`` can use it.
+
 **filter**, **norm**, **embed**, **cluster** -- the same steps individually:
 
 .. code-block:: bash
@@ -97,6 +102,10 @@ Options: ``--norm libsize|deseq``, ``--log1p``, ``--hvg``,
 ``cluster`` works on the embedding by default; ``--use-expression`` clusters on
 the expression matrix instead, which is what the ``sc3``, ``simlr``, ``soptsc``
 and ``sinnlrr`` methods need.
+
+``embed`` and ``grn`` normalize raw counts by default and skip that step on a
+matrix ``norm`` has already normalized. ``deg`` and ``dvg`` model counts and
+refuse normalized input: run them on the output of ``filter`` or ``run``.
 
 Analysis
 --------
@@ -131,6 +140,12 @@ Options: ``--method splinefit|analytic|brennecke``, ``--direction mean|deviation
 Options: ``--method pcrnet|genie3|pearson|mi|xicor|distcorr``,
 ``--genes <genelist.txt>`` to restrict the network to named genes,
 ``--top-k <int>`` to write only the strongest edges, ``--norm``, ``--log1p``.
+``scgea help`` lists every method name the CLI accepts.
+
+``A(i, j)`` is the edge from gene *i* to gene *j*, so the CSV's ``source`` is the
+regulator; a symmetric network lists each pair once. A ``.mat`` output holds
+``A`` and ``genelist``, plus the top-k edge list as ``edges`` when ``--top-k``
+is given.
 
 **trajectory** -- pseudotime:
 

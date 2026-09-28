@@ -29,11 +29,9 @@ set(0, 'CurrentFigure', hFig);
 tiledlayout(1, 2, 'TileSpacing', 'compact', ...
 'Padding', 'compact')
 
-% h1=subplot(1,2,1);
 h1 = nexttile;
 [p1] = drawnetwork(G1, h1);
 
-% h2=subplot(1,2,2);
 h2 = nexttile;
 [p2] = drawnetwork(G2, h2);
 p2.XData = p1.XData;
@@ -49,16 +47,11 @@ hx.addCustomButton('off', @in_callback_ChangeCutoff, 'carpenter_16dp_000000_FILL
 hx.addCustomButton('off', @in_callback_SaveAdj, 'floppy-disk-arrow-in.jpg', 'Export & Save Data');
 hx.addCustomButton('on',  @in_callback_RefreshAll, "refresh.jpg", "Refresh View");
 
-% if exist('suptitle.m', 'file')
-%    hFig.Position(3) = hFig.Position(3) * 1.8;
-%    suptitle(figname);
-% else
 hFig.Position(3) = hFig.Position(3) * 1.8;
 if ~isempty(figname)
         figname = strrep(figname, '_', '\_');
         sgtitle(figname);
     end
-% end
 
 hx.show(parentfig);
 
@@ -102,26 +95,6 @@ function in_callback_SaveAdj(~, ~)
         end
     end
 
-    % function ChangeBox(~, ~)
-    %     if h1.Box
-    %         box(h1, 'off');
-    %         box(h2, 'off');
-    %         if axistrig
-    %             axis(h1, 'on');
-    %             axis(h2, 'on');
-    %             axistrig = ~axistrig;
-    %         else
-    %             axis(h1, 'off');
-    %             axis(h2, 'off');
-    %         end
-    %     else
-    %         box(h1, 'on');
-    %         box(h2, 'on');
-    %         axis(h1, 'on');
-    %         axis(h2, 'on');
-    %     end
-    % end
-
 function in_callback_ChangeFontSize(~, ~)
         i_changefontsize(p1);
         i_changefontsize(p2);
@@ -135,15 +108,11 @@ function in_callback_ChangeFontSize(~, ~)
     end
 
 function in_callback_ChangeWeight(~, ~)
-        % a=3:10;
-        % w=a(randi(length(a),1));
         w = w + 1;
         if w > 10, w = 2; end
         i_changeweight(p1, w);
         i_changeweight(p2, w);
         function i_changeweight(p, b)
-            % G.Edges.LWidths = abs(b*G.Edges.Weight/max(abs(G.Edges.Weight)));
-            % p.LineWidth = G.Edges.LWidths;
             p.LineWidth = abs(b*p.LineWidth/max(abs(p.LineWidth)));
         end
     end
@@ -153,26 +122,15 @@ function in_callback_ChangeLayout(~, ~)
         a = ["auto", "layered", "subspace", "force", "circle"];
         l = l + 1;
         if l > 5, l = 1; end
-        % disp(a(l))
         switch a(l)
             case "force"
                 p1.layout(a(l), 'Iterations', 500, ...
                     'WeightEffect', 'none', ...
                     'UseGravity', false);
-                %                p2.layout(a(l),'Iterations',500,...
-                %                 'WeightEffect','none',...
-                %                 'UseGravity',false);
 
-                % p2.layout(a(l),'Iterations',2500,'UseGravity','direct');
             otherwise
                 p1.layout(a(l));
-                % p2.layout(a(l));
         end
-
-        %        a=mean([p1.XData; p2.XData]);
-        %        p1.XData=a; p2.XData=a;
-        %        a=mean([p1.YData; p2.YData]);
-        %        p1.YData=a; p2.YData=a;
 
         p2.XData = p1.XData;
         p2.YData = p1.YData;
@@ -193,7 +151,6 @@ function in_callback_ChangeDirected(~, ~)
             if isa(G, 'digraph')
                 A = adjacency(G, 'weighted');
                 G = graph(0.5*(A + A.'), G.Nodes.Name);
-                % p=plot(h,G);
                 [p] = drawnetwork(G, h);
             end
             p.XData = x;
@@ -210,7 +167,7 @@ function in_callback_ChangeCutoff(~, ~)
             '0.65', '0.70', '0.75', '0.80', '0.85', ...
             '0.90', '0.95 (show 5% of edges)'};
         if gui.i_isuifig(parentfig)
-            [indx, tf] = gui.myListdlg(hFig, list, '');
+            [indx, tf] = gui.myListdlg(hFig, list, '', [], false);
         else
             [indx, tf] = listdlg('ListString', list, ...
                 'SelectionMode', 'single', 'ListSize', [220, 300]);
@@ -232,13 +189,6 @@ function in_callback_ChangeCutoff(~, ~)
 
 function [p] = drawnetwork(G, h)
         p = plot(h, G);
-        % layout(p,'force');
-        %         if isa(G,'digraph')
-        %             G.Nodes.NodeColors = outdegree(G)-indegree(G);
-        %         else
-        %             G.Nodes.NodeColors = degree(G);
-        %         end
-        %         p.NodeCData = G.Nodes.NodeColors;
         n = size(G.Edges, 1);
         cc = repmat([0, 0.4470, 0.7410], n, 1);
         cc(G.Edges.Weight < 0, :) = repmat([0.8500, 0.3250, 0.0980], ...
@@ -249,18 +199,11 @@ function [p] = drawnetwork(G, h)
         if any(i)
             cc = repmat([0, 0, 0], G.numnodes, 1);
             cc(i, :) = repmat([1, 0, 0], sum(i), 1);
-            % p.NodeLabelColor=cc;
         end
         p.NodeFontSize = 2 * p.NodeFontSize;
-        % title(h,'scGRN');
 
-        %            if length(unique(p.LineWidth))==1
-        %             p.LineWidth = p.LineWidth./p.LineWidth;
-        %            else
-        %                disp('do this')
         G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
         p.LineWidth = G.Edges.LWidths;
-        %           end
 
     end
 
@@ -270,22 +213,23 @@ function in_callback_AnimateCutoff(~, ~)
         f = waitbar(0, 'Cutoff = 0.05', 'Name', 'Edge Pruning...', ...
             'CreateCancelBtn', 'setappdata(gcbf,''canceling'',1)');
         setappdata(f, 'canceling', 0);
+        % Closed on every exit: closing the network window during a pause
+        % made the next redraw throw and left this bar, Cancel button and
+        % all, on screen.
+        closeBar = onCleanup(@() delete(f(isvalid(f))));
 
         m = length(listc);
         for k = 1:m
-            if getappdata(f, 'canceling')
-                break
+            if ~isvalid(f) || getappdata(f, 'canceling') || ~isvalid(hFig)
+                break   % Cancel keeps the current cutoff: that is the "select"
             end
 
             cutoff = listc(k);
-            % pkg.progressbar(k/m) % Update progress bar
             waitbar(k/m, f, sprintf('Cutoff = %g', cutoff));
             p1 = i_replotg(p1, G1, h1, cutoff);
             p2 = i_replotg(p2, G2, h2, cutoff);
             pause(2);
         end
-        % close(f)
-        delete(f)
     end
 
 function [p, G] = i_replotg(p, G, h, cutoff)

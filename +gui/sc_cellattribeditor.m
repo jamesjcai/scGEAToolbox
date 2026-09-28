@@ -49,7 +49,7 @@ if ~addnew    % edit
     listitems = listitems(~cellfun(@isempty, listitems));
 
         if gui.i_isuifig(parentfig)
-            [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select Cell Attribute:');
+            [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select Cell Attribute:', [], false);
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select Cell Attribute:'}, ...
@@ -109,21 +109,10 @@ if ~addnew    % edit
             return;
     end
 
-%    if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
-%            'It may take a while to load values. Continue?'))
-%        return;
-%    end
-    % tic;
     if gui.i_isuifig(parentfig)
-        %        x = gui.myInputdlg({sprintf('Attribute Name: %s\n%s',clabel, 'Attribute Values:')}, ...
-        %                          'Attribute Editor', {char(string(thisc))}, parentfig);
-
-        % assignin("base","thisc",thisc);
-        % assignin("base","clabel",clabel);
 
         x = gui.myTextareadlg(parentfig, {'Attribute Name', 'Attribute Values'},...
                       'Attribute Editor', {clabel, string(thisc)}, [false, true]);
-        % assignin("base","x",x);
         if ~isempty(x)
             x(1)=[];
         end
@@ -132,7 +121,6 @@ if ~addnew    % edit
                           'Attribute Editor', [15 80], {char(string(thisc))});
 
     end
-    % toc;
 
 else    % add new
 
@@ -161,19 +149,6 @@ else    % add new
                       'Attribute Editor', [1 80; 15 80]);
     end
 
-    %{
-    if gui.i_isuifig(parentfig)
-        % x = gui.myInputdlg({'Attribute Name','Attribute Values'},...
-        %              'Attribute Editor', {''}, parentfig); % Assuming default is empty cell
-        % x = gui.myTextareadlg(parentfig, '', 'Attribute Name'); % Assuming default is empty cell
-        x = gui.myTextareadlg(parentfig, {'Attribute Name','Attribute Values'},...
-                      'Attribute Editor', {'New_Attribute', ("Value_"+string(1:sce.NumCells))'});
-    else
-        x = inputdlg({'Attribute Name','Attribute Values'},...
-                      'Attribute Editor', [1 80; 15 80]);
-    end
-    %}
-    % {'new_attrib', char(string([1:sce.NumCells]'))});
 end
 
 if isempty(x), return; end

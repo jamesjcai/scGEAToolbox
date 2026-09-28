@@ -47,22 +47,16 @@ switch answer
         return;
 end
 
-%{
-answer = gui.myQuestdlg(FigureHandle, 'In the heatmap, rearrange the order of gene programs to form clusters?', ...
-    '');
-switch answer
-    case 'Yes'
-        docluster = true;
-    case 'No'
-        docluster = false;
-    otherwise
-        return;
-end
-%}
-
 
 fw = gui.myWaitbar(FigureHandle);
-[M, ~] = pkg.e_cellscorecorrmat(sce.X, sce.g, gsets, 2, FigureHandle);
+try
+    [M, ~] = pkg.e_cellscorecorrmat(sce.X, sce.g, gsets, 2, FigureHandle);
+catch ME
+    % Without this the bar stayed open over the app after a failure.
+    gui.myWaitbar(FigureHandle, fw, true);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
+end
 labels = strrep(string(T.ScoreType),'_','\_');
 
 % Order on the matrix being displayed. This used to be
@@ -78,28 +72,29 @@ labels2 = labels(idx);
 gui.myWaitbar(FigureHandle,fw);
 
 
-figure;
+% One window, a tab per order: two bare figures stacked over the main app.
+hx = gui.myFigure(FigureHandle);
+delete(hx.AxHandle);
+tabgp = uitabgroup(hx.FigHandle);
 isupper = logical(triu(ones(size(M)),0));
 M(isupper) = NaN;
-h = heatmap(M,'MissingDataColor','w');
+h = heatmap(uitab(tabgp, 'Title', 'Original order'), M, 'MissingDataColor', 'w');
 % Both axes. Only the rows were named, so reading which pair a cell
 % belongs to meant counting columns.
 h.YDisplayLabels = labels;
 h.XDisplayLabels = labels;
 colormap(h, 'parula');
 title(h,'Gene programs in original order');
-% h.Colormap = flipud(h.Colormap);
-% imagesc(M);
 
 
-figure
 isupper = logical(triu(ones(size(M2)),0));
 M2(isupper) = NaN;
-h2 = heatmap(M2,'MissingDataColor','w');
+h2 = heatmap(uitab(tabgp, 'Title', 'Reordered'), M2, 'MissingDataColor', 'w');
 h2.YDisplayLabels = labels2;
 h2.XDisplayLabels = labels2;
 colormap(h2, 'parula');
 title(h2,'Gene programs are reordered to show any clusters');
+hx.show(FigureHandle);
 
 
 function [done, scorefile] = in_getscorfile

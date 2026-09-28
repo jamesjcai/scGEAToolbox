@@ -41,6 +41,7 @@ switch answer
 end
 
 
+try
 a=0+sce.X(sce.g==g1,:)>0;
 b=0+sce.X(sce.g==g2,:)>0;
 
@@ -56,7 +57,12 @@ end
 capturedText = evalc('pkg.e_chi2binarytest(a,b);');
 
 Xm = sc_impute(sce.X);
-
+catch ME
+    % The bar used to stay open over the app after a failure here.
+    gui.myWaitbar(FigureHandle, fw, true);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+    return;
+end
 
 gui.myWaitbar(FigureHandle, fw);
 
@@ -65,11 +71,6 @@ scatter(Xm(sce.g==g1,:),Xm(sce.g==g2,:));
 xlabel(g1);
 ylabel(g2);
 
-% if gui.i_isuifig(FigureHandle)
-    % gui.myInputdlg({'Test Info:'}, 'Output Viewer', {char(capturedText)}, FigureHandle);
-%    gui.myTextareadlg(FigureHandle, {'Test Info:'}, 'Output Viewer', {capturedText}, true);
-% else
 inputdlg('Test Info:', 'Output Viewer', [15, 80], {char(capturedText)});
-% end
 
 end

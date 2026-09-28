@@ -32,14 +32,8 @@ switch answer
             return;
         end
 
-        [Xt] = gui.i_transformx(sce.X, true, 9, FigureHandle);
+        [Xt] = gui.i_transformx(sce.X, true, "magic", FigureHandle);
         if isempty(Xt), return; end
-
-        % if isscalar(glist)
-        % answer='No';
-        % else
-        %    answer = gui.myQuestdlg(FigureHandle, 'Plot all in the same figure?','');
-        % end
 
         % if strcmp(answer, 'Yes')
         %     [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);

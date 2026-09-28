@@ -16,18 +16,9 @@ answer = gui.myQuestdlg(parentfig, 'What is the variable type?', '', ...
 {'Categorical/Discrete', ...
 'Numerical/Continuous', 'Unknown'}, deft);
 if isempty(answer)
-    answer = 'Unknown';
+    % Closed: a cancel. It used to become 'Unknown', which the app treats
+    % as numerical, so a dismissed dialog went on to recolor the cells.
+    answer = '';
     return;
 end
 
-% n=max(c);
-% if n<40
-%     f=0.5*(n-1)./n;
-%     f=1+f.*(1:2:2*n);
-%     cb=colorbar('Ticks',f,'TickLabels',cellstr(cL));
-% else
-%     %c=thisc;
-%     set(h,'CData',thisc);
-%     cb=colorbar;
-%     %cb=colorbar('Ticks',[]);
-% end

@@ -1,15 +1,13 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.5.2 20-Sep-2026
+% Version 26.6.0 28-Sep-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
 %   online_landing            - online_landing is a script.
 %   sc_analyticfit            - SC_ANALYTICFIT  Closed-form replacement for the Spline-DV 3-D spline curve.
-%   sc_annotatecells          - SC_ANNOTATECELLS Assign cell types by any available method, through one call.
 %   sc_causalcccnet           - SC_CAUSALCCCNET  Local approximation of a causalCCC/MIIC network.
 %   sc_cellcyclescore         - Score cell cycle phases
 %   sc_cellscore              - SC_CELLSCORE  Cell-level gene signature scoring.
-%   sc_celltypeanno           - sc_celltypeanno is a function.
 %   sc_cluster_s              - sc_cluster_s - cluster cells using cell embeding s
 %   sc_cluster_x              - sc_cluster_x - cluster cells using UMI matrix X
 %   sc_csubtypeanno           - SC_CSUBTYPEANNO Annotate the subtypes of one primary cell type.
@@ -23,6 +21,7 @@
 %   sc_genestats              - SC_GENESTATS  Compute per-gene statistics into a tidy table
 %   sc_geosketch              - SC_GEOSKETCH Geometric sketching subsample of cells.
 %   sc_grn                    - SC_GRN Construct single-cell gene regulatory network (scGRN)
+%   sc_grnsketch              - SC_GRNSKETCH  Sketch a genome-wide GRN as a map of gene modules.
 %   sc_grnview                - SC_GRNVIEW  Display a gene regulatory network as a graph GUI.
 %   sc_grnview2               - SC_GRNVIEW2  Display two gene regulatory networks side-by-side.
 %   sc_gsettest               - SC_GSETTEST  Competitive gene-set tests for a ranked gene list.
@@ -31,6 +30,7 @@
 %   sc_impute                 - Imputation
 %   sc_infercnv               - SC_INFERCNV  Infer large-scale copy number variation from scRNA-seq.
 %   sc_knngraph               - Generate KNN group network from cell embeddings
+%   sc_louvain                - sc_louvain - cluster cells by Louvain community detection on a kNN graph
 %   sc_malignscore            - SC_MALIGNSCORE  Score and label cells as malignant from a CNV profile.
 %   sc_meld                   - SC_MELD Relative likelihood that each cell came from each sample.
 %   sc_mergedata              - sc_mergedata is a function.

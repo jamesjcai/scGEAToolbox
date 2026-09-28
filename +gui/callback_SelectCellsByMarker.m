@@ -1,5 +1,7 @@
 function callback_SelectCellsByMarker(src, ~)
-
+% The extracted cells replace the dataset in this window; the menu handler
+% takes the Undo snapshot, so Ctrl+Z brings the rest back. They used to open
+% in a second scgeatoolApp window, over this one.
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
@@ -38,18 +40,10 @@ function do_multiple
                 otherwise
                     return;
             end
-            [ax, bx] = view(findall(FigureHandle,'type','axes'));
             fw = gui.myWaitbar(FigureHandle);
             scex = copy(sce).selectcells(idx);  % OK
-
-            % if isa(src, 'matlab.apps.AppBase')
-                a = scgeatoolApp(scex);
-                view(a.UIAxes, [ax, bx]);
-            % else
-            %    scgeatool(scex);
-            %    view(ax, bx);
-            % end
             gui.myWaitbar(FigureHandle, fw);
+            gui.i_replacesce(src, scex, sce.NumCells);
 
         end
     end
@@ -61,14 +55,13 @@ function do_single
 
        if gui.i_isuifig(FigureHandle)
            [indx, tf] = gui.myListdlg(FigureHandle, gsorted, ...
-                'Select a gene');
+                'Select a gene', [], false);
         else
             [indx, tf] = listdlg('PromptString', {'Select a gene', '', ''}, ...
                 'SelectionMode', 'single', ...
                 'ListString', gsorted, 'ListSize', [220, 300]);
        end
         if tf == 1
-            [ax, bx] = view(findall(FigureHandle,'type','axes'));
             tg = gsorted(indx);
             c = sce.X(sce.g == tg, :);
             answer = gui.myQuestdlg(FigureHandle, sprintf('Extract %s+ or %s- cells?', tg, tg), ...
@@ -87,7 +80,11 @@ function do_single
                 scex.c_batch_id(idx1) = sprintf('%s+', tg);
                 scex.c_batch_id(idx2) = sprintf('%s-', tg);
                 scex.c = scex.c_batch_id;
-                scgeatoolApp(scex);
+                % Every cell is kept, only relabelled, so there is nothing
+                % to report the way a subset reports its cell count.
+                src.sce = scex;
+                [src.c, src.cL] = findgroups(string(scex.c));
+                src.in_RefreshAll(true, false);
                 return;
             elseif strcmp(answer, 'Cancel')
                 return;
@@ -96,9 +93,8 @@ function do_single
             end
             fw = gui.myWaitbar(FigureHandle);
             scex = copy(sce).selectcells(idx); % OK
-            a = scgeatoolApp(scex);
-            view(a.UIAxes, [ax, bx]);
             gui.myWaitbar(FigureHandle, fw);
+            gui.i_replacesce(src, scex, sce.NumCells);
         end
     end
 end

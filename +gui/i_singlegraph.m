@@ -30,10 +30,9 @@ if ~isMATLABReleaseOlderThan('R2025a')
     try
         switch parentfig.Theme.BaseColorStyle
             case "light"
-                h1.ColorOrder = baseColors;
+                h1.ColorOrder = orderedcolors("gem");
             case "dark"
                 h1.ColorOrder = fliplightness(h1.ColorOrder);
-                % disp('fliplightness applied.');
         end
     catch
         % parent has no Theme; keep default ColorOrder
@@ -55,22 +54,21 @@ hx.addCustomButton('off', @SendToGephiLite, 'www.jpg', 'Open in Gephi Lite');
 
 title(h1, figname);
 hx.show(parentfig);
-% gui.gui_showrefinfo('Network Legend');
 
 oldidx = 0;
 oldG1 = [];
 
     function in_networkvis_curvy(~, ~)
         fw = gui.myWaitbar(hFig);
-        gui.i_networkvis(G1, [p1.XData' p1.YData'], true, ...
-            p1.NodeFontSize, hFig);
+        gui.myFigure.drawInto(hFig, @() gui.i_networkvis(G1, ...
+            [p1.XData' p1.YData'], true, p1.NodeFontSize, hFig));
         gui.myWaitbar(hFig, fw);
     end
 
     function in_networkvis_linear(~, ~)
         fw = gui.myWaitbar(hFig);
-        gui.i_networkvis(G1, [p1.XData' p1.YData'], false, ...
-            p1.NodeFontSize, hFig);
+        gui.myFigure.drawInto(hFig, @() gui.i_networkvis(G1, ...
+            [p1.XData' p1.YData'], false, p1.NodeFontSize, hFig));
         gui.myWaitbar(hFig, fw);
     end
 
@@ -155,8 +153,6 @@ oldG1 = [];
     end
 
     function ChangeWeight(~, ~)
-        % a=3:10;
-        % w=a(randi(length(a),1));
         w = w + 1;
         if w > 10, w = 2; end
         p1.LineWidth = rescale(p1.LineWidth, 1, w);
@@ -192,7 +188,6 @@ oldG1 = [];
         elseif isa(G1, 'graph') && ~isempty(oldG1) && isa(oldG1, 'digraph')
             G1 = oldG1;
             p1 = drawnetwork(G1, h1);
-            % [p1, G1] = i_changedirected(p1, oldG1, h1);
         end
 
         function [p, G] = i_changedirected(p, G, h)
@@ -201,7 +196,6 @@ oldG1 = [];
             if isa(G, 'digraph')
                 A = adjacency(G, 'weighted');
                 G = graph(0.5*(A + A.'), G.Nodes.Name);
-                % p=plot(h,G);
                 [p] = drawnetwork(G, h);
             end
             p.XData = x;
@@ -217,7 +211,7 @@ oldG1 = [];
             '0.90', '0.95 (show 5% of edges)'};
         if gui.i_isuifig(hFig)
             [indx, tf] = gui.myListdlg(hFig, list, ...
-                'Select a cutoff:'); % Using empty string for prompt
+                'Select a cutoff:', [], false); % Using empty string for prompt
         else
             [indx, tf] = listdlg('ListString', list, ...
                 'SelectionMode', 'single', ...
@@ -240,27 +234,17 @@ oldG1 = [];
                 otherwise
                     return;
             end
-            % [p2]=i_replotg(p2,G2,h2,cutoff);
         end
     end
 
 
     function [p] = drawnetwork(G, h)
-        % G.Edges.Weight = rand(length(G.Edges.Weight),1);
         p = plot(h, G, 'ButtonDownFcn', @startDragFcn);
         layout(p,'force');
-        %         if isa(G,'digraph')
-        %             G.Nodes.NodeColors = outdegree(G)-indegree(G);
-        %         else
-        %             G.Nodes.NodeColors = degree(G);
-        %         end
-        %         p.NodeCData = G.Nodes.NodeColors;
         cc = repmat([0, 0.4470, 0.7410], G.numedges, 1);
         cc(G.Edges.Weight < 0, :) = repmat([0.8500, 0.3250, 0.0980], ...
             sum(G.Edges.Weight < 0), 1);
         p.EdgeColor = cc;
-        %       p.EdgeCData=ones(G.numedges,1);
-        %       p.EdgeCData(G.Edges.Weight<0)=2;
 
         ix = ismember(string(upper(G.Nodes.Name)), tfgenes);
 
@@ -274,23 +258,9 @@ oldG1 = [];
             p.NodeLabelColor = cc;
         end
 
-        % p.NodeFontSize = 2 * p.NodeFontSize;
-
         % title(h,sprintf('%d nodes',G.numnodes));
         % https://www.mathworks.com/matlabcentral/answers/296070-change-label-font-in-graph-plots
-        %{
-        nl = p.NodeLabel;
-        p.NodeLabel = '';
-        xd = get(p, 'XData');
-        yd = get(p, 'YData');
-        text(xd, yd, nl, 'FontSize',p.NodeFontSize,...
-            'FontWeight','bold',...
-            'HorizontalAlignment','left', ...
-            'VerticalAlignment','middle',...
-            'BackgroundColor','w','Margin',0.1);
-        %}
         if ~isempty(G.Edges.Weight)
-            % G.Edges.LWidths = abs(w*G.Edges.Weight/max(G.Edges.Weight));
             G.Edges.LWidths = rescale(G.Edges.Weight, 1, w);
             p.LineWidth = G.Edges.LWidths;
         end
@@ -315,10 +285,8 @@ oldG1 = [];
             catch ME
                 disp(ME.message);
             end
-            % p2=i_replotg(p2,G2,h2,cutoff);
             drawnow;
         end
-        % close(f)
         delete(f)
     end
 
@@ -333,11 +301,9 @@ oldG1 = [];
         else
             G = digraph(A, G.Nodes.Name);
         end
-        % p=plot(h,G);
         [p] = drawnetwork(G, h);
         p.XData = x;
         p.YData = y;
-        % h=gca;
         title(a)
     end
 
@@ -352,7 +318,7 @@ oldG1 = [];
 % Function to drag the point
     function draggingFcn(~, ~, hObj)
         % Current cursor position in data coordinates
-        cp = get(gca, 'CurrentPoint');
+        cp = get(ancestor(hObj, 'axes'), 'CurrentPoint');
         % Update the y-data of the nearest point
         yData = get(hObj, 'YData');
         xData = get(hObj, 'XData');
@@ -362,7 +328,6 @@ oldG1 = [];
         if oldidx == 0 % ~dataengated
             idx = dsearchn([xData' yData'], [cp(1,1) cp(1,2)]);
             oldidx = idx;
-            % dataengated = true;
         else
             idx = oldidx;
         end
@@ -374,10 +339,8 @@ oldG1 = [];
 
 % Function to stop dragging
     function stopDragFcn(~, ~)
-        % fig = gcbf;
         set(hFig, 'WindowButtonMotionFcn', '');
         set(hFig, 'WindowButtonUpFcn', '');
-        % dataengated = false;
         oldidx = 0;
     end
 end
@@ -454,8 +417,6 @@ height = 2;      % Height of the triangle
 X_ = dx * markerSize * [-baseLength/2, baseLength/2, 0]; % X-coordinates (before rotation)
 Y_ = dy * markerSize * [0, 0, height]; % Y-coordinates (before rotation)
 
-% assignin("base", "A", A);
-
 c = 1;
 for k = 1:length(x0)
     if isnan(x0(k)), continue; end
@@ -475,7 +436,7 @@ end
 % Callback function to update marker size when zooming
 function updatePatchSize(patchObj, x, y)
     markerSize = 0.08;
-    ax = gca;
+    ax = ancestor(patchObj, 'axes');
     originalUnits = ax.Units; % Store original unit
     ax.Units = 'pixels';
     axPos = ax.Position;

@@ -27,7 +27,7 @@ function [T, info] = sc_fgsea(genelist, stat, opts)
 %
 %   USAGE:
 %     Tdeg = sc_deg(X1, X2, genelist);
-%     T = sc_fgsea(Tdeg.gene, Tdeg.tScore);
+%     T = sc_fgsea(Tdeg.gene, Tdeg.avg_log2FC);
 %
 %   INPUTS:
 %     genelist - gene symbols. When STAT is omitted the list is taken to be
@@ -59,7 +59,12 @@ function [T, info] = sc_fgsea(genelist, stat, opts)
 %     info - struct with the membership matrix, the gene universe and the
 %            statistic actually used.
 %
-%   See also SC_GSETTEST, PKG.E_GETENRICHRSETS, RUN.R_FGSEA.
+%   Like SC_GSETTEST, this permutes gene labels, so it assumes the genes are
+%   independent and understates the FDR when they are not. RUN.ML_GSEA
+%   permutes sample labels instead; use it when the design has replicate
+%   samples to permute.
+%
+%   See also SC_GSETTEST, RUN.ML_GSEA, PKG.E_GETENRICHRSETS, RUN.R_FGSEA.
 
 arguments
     genelist

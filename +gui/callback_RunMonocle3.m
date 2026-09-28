@@ -12,8 +12,18 @@ if isempty(wrkdir)
 end
 
 
-a = findall(FigureHandle, 'type', 'axes');
-h = findall(a, 'type', 'scatter');
+% The app keeps its cell scatter in src.h. findall returned every scatter
+% on the window, and h.BrushData then threw for none or for more than one.
+if isa(src, 'matlab.apps.AppBase') && isprop(src, 'h') && pkg.i_isvalid(src.h)
+    h = src.h;
+else
+    h = findall(findall(FigureHandle, 'type', 'axes'), 'type', 'scatter');
+    if isempty(h)
+        gui.myErrordlg(FigureHandle, 'No cell plot to select root cells from.');
+        return;
+    end
+    h = h(1);
+end
 ptsSelected = logical(h.BrushData.');
 if ~any(ptsSelected)
     answer = gui.myQuestdlg(FigureHandle, 'Use brush to select root cell(s). Ready?','');

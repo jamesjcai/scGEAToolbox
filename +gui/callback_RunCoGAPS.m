@@ -28,16 +28,20 @@ if useR
 end
 
 % Select genes (CoGAPS on all genes is slow; HVGs are recommended).
-[k, usehvgs] = gui.i_gethvgnum(sce, FigureHandle);
+[k, genemode] = gui.i_gethvgnum(sce, FigureHandle);
 if isempty(k), return; end
-if usehvgs
+if genemode == "all"
+    Xsub = sce.X;
+    gsub = sce.g;
+else
     [~, Xsub, gsub] = sc_hvg(sce.X, sce.g);
     k = min(k, size(Xsub, 1));
     Xsub = Xsub(1:k, :);
     gsub = gsub(1:k);
-else
-    Xsub = sce.X;
-    gsub = sce.g;
+    if genemode == "hvg+markers"
+        [Xsub, gsub] = pkg.i_appendgenes(Xsub, gsub, ...
+            pkg.i_getmarkerwhitelist(sce.g, sce.X), sce.X, sce.g);
+    end
 end
 
 nPatterns = gui.i_inputnumk(8, 2, 50, 'Number of patterns', FigureHandle);
@@ -76,7 +80,7 @@ try
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-    rethrow(ME);
+    return;   % reported; a rethrow here also printed "Error while evaluating"
 end
 gui.myWaitbar(FigureHandle, fw);
 

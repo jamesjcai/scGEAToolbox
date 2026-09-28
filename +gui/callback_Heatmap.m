@@ -8,9 +8,6 @@ function callback_Heatmap(src, ~)
 [thisc, ~] = gui.i_selectnclass(sce,[],[],[],FigureHandle);
 if isempty(thisc), return; end
 
-% [c, cL, noanswer] = gui.i_reordergroups(thisc);
-% if noanswer, return; end
-
 [glist] = gui.i_selectngenes(sce, [], FigureHandle);
 if isempty(glist)
     gui.myHelpdlg(FigureHandle, 'No gene selected.', '');

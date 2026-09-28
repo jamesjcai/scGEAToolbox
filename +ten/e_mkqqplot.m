@@ -1,7 +1,6 @@
-function e_mkqqplot(T)
+function hFig = e_mkqqplot(T)
 
 
-% T = T(2:end,:);
 pd = makedist('Gamma', 'a', 0.5, 'b', 2);
 
 hx=gui.myFigure;
@@ -17,7 +16,7 @@ h = qqplot(a, T.FC, pd);
 [~, idx] = sort(T.FC);
 sorted_g = T.genelist(idx);
 
-dt = datacursormode;
+dt = datacursormode(hFig);
 dt.UpdateFcn = {@i_myupdatefcn1x, sorted_g};
 hx.addCustomButton('off', @in_callback_savetable, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.show();
@@ -26,14 +25,12 @@ assignin("base","h",h)
 
 
 h1=h(1);
-% h.DataTipTemplate.DataTipRows = T.genelist(idx);
 for k=0:5
     % T.genelist{end-k}
     % h1.XData(end-k)
     % h1.YData(end-k)
      % datatip(h, 'DataIndex', idx(k));
-     text(h1.XData(end-k), h1.YData(end-k), sorted_g{end-k}, 'Rotation', 45);
-     % annotation("textarrow", h1.XData(end-k), h1.YData(end-k),'String', "aa");
+     text(a, h1.XData(end-k), h1.YData(end-k), sorted_g{end-k}, 'Rotation', 45);
 end
 
 
@@ -53,10 +50,10 @@ function in_callback_savetable(~, ~)
                     if isequal(file, 0) || isequal(path, 0)
                         return;
                     else
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar([]);
                         filename = fullfile(path, file);
                         writetable(T, filename, 'FileType', 'text');
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar([], fw);
                     end
                 case 'Excel file'
 
@@ -64,10 +61,10 @@ function in_callback_savetable(~, ~)
                     if isequal(file, 0) || isequal(path, 0)
                         return;
                     else
-                        fw = gui.gui_waitbar;
+                        fw = gui.myWaitbar([]);
                         filename = fullfile(path, file);
                         writetable(T, filename, 'FileType', 'spreadsheet');
-                        gui.gui_waitbar(fw);
+                        gui.myWaitbar([], fw);
                     end
             end
         end
@@ -80,7 +77,6 @@ function txt = i_myupdatefcn1x(~, event_obj, g)
 % Customizes text of data tips
 % pos = event_obj.Position;
 idx = event_obj.DataIndex;
-% i_plotsiglegene(idx,g);
 if iscell(g(idx))
     txt = g(idx);
 else

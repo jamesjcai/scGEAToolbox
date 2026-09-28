@@ -5,9 +5,6 @@ X {mustBeNumeric,mustBeReal}
 t (:,1) {mustBeNumeric,mustBeReal}
 end
 
-% [t, idx] = sort(t);
-% X = X(idx, :);
-
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'fun_locfit');
 

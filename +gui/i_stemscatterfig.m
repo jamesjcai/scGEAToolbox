@@ -23,9 +23,10 @@ hx.addCustomButton('on', @in_callback_heatscatterplot,'icon-mat-blur-on-10.gif',
 hx.show(parentfig);
 
 function in_callback_heatscatterplot(~, ~)
-        gui.i_heatscatterfig(sce, cs, posg, csname, hFig);
-        % delete(h1);
-        % h1 = gui.i_stemscatter(sce.s, cs);
+        % The heat scatter plot and this one switch to each other in one window.
+        gui.myFigure.drawInto(hFig, ...
+            @() gui.i_heatscatterfig(sce, cs, posg, csname, parentfig), ...
+            KeepCurrent=false);
     end
 
 
@@ -53,7 +54,8 @@ function in_callback_geneheatmapx(~, ~)
 
         [thisc] = gui.i_select1class(sce,[],[],[],hFig);
         if ~isempty(thisc)
-            gui.i_geneheatmap(sce, thisc, posg, hFig);
+            gui.myFigure.drawInto(hFig, ...
+                @() gui.i_geneheatmap(sce, thisc, posg, hFig));
         end
     end
 
@@ -65,7 +67,8 @@ function in_callback_genedotplot(~, ~)
         [c, cL] = findgroups(string(thisc));
         idx = matches(posg, sce.g, 'IgnoreCase', true);
         if any(idx)
-            gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx));
+            gui.myFigure.drawInto(hFig, ...
+                @() gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx)));
         else
             gui.myHelpdlg(hFig, 'No genes in this data set.')
         end

@@ -25,8 +25,11 @@ fw = gui.myWaitbar(FigureHandle, [], false, 'Computing DE results...');
 cleanupFw = onCleanup(@() i_closewaitbar(fw));
 
 try
-    T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, true, FigureHandle);
+    % guiwaitbar false: this callback's bar already covers the run. With
+    % true, sc_deg opened a second bar that stayed up if it failed midway.
+    T = sc_deg(sce.X(:, i1), sce.X(:, i2), sce.g, 1, false, FigureHandle);
 catch ME
+    i_closewaitbar(fw);   % before the error, not under it
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
@@ -74,15 +77,17 @@ views(3) = struct('Name', sprintf('Down-regulated (%d)', height(Tdn)), 'Table', 
 gui.TableViewerApp(views, FigureHandle, outfile, plotAction);
 
 
+% The windows these buttons open take the table's place on screen, with a
+% Back button to it, rather than stacking a third window over the app.
 function in_callback_generatevolcano(~, figtab)
-    e_volcano(T, Tup, Tdn, figtab);
+    gui.i_openinstead(figtab, @() e_volcano(T, Tup, Tdn, figtab));
 end
 
 function in_callback_gsettest_fromtable(~, figtab)
     % T here is the processed table from pkg.in_DETableProcess, which keeps
     % every measured gene -- the universe the competitive null needs.
-    gui.i_rungsettest(string(T.gene), T.avg_log2FC, figtab, ...
-        [outfile, '_GeneSet'], 'avg_log2FC');
+    gui.i_openinstead(figtab, @() gui.i_rungsettest(string(T.gene), ...
+        T.avg_log2FC, figtab, [outfile, '_GeneSet'], 'avg_log2FC'));
 end
 
 function in_callback_enrichr_fromtable(~, figtab)
@@ -124,10 +129,16 @@ function in_callback_runenrichr(srcx, ~)
        'Run enrichment analysis with up-regulated DE genes?', ...
        hFig);
 
+    % Both lists' results go to one window, a view each, in place of the
+    % volcano plot: one window per list stacked two over the app.
+    enrichviews = struct('Name', {}, 'Table', {});
     if ~isempty(outbackgroundlist)
-        gui.callback_RunEnrichr(src, [], outgenelist, ...
+        Tenr = gui.callback_RunEnrichr(src, [], outgenelist, ...
             enrichrtype, ...
             outbackgroundlist, "Up", outdir);
+        if istable(Tenr) && height(Tenr) > 0
+            enrichviews(end+1) = struct('Name', 'Up-regulated genes', 'Table', Tenr);
+        end
     end
 
     [outgenelist, outbackgroundlist, enrichrtype] = ...
@@ -136,8 +147,14 @@ function in_callback_runenrichr(srcx, ~)
        hFig);
 
     if ~isempty(outbackgroundlist)
-        gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
+        Tenr = gui.callback_RunEnrichr(src, [], outgenelist, enrichrtype, ...
             outbackgroundlist, "Down", outdir);
+        if istable(Tenr) && height(Tenr) > 0
+            enrichviews(end+1) = struct('Name', 'Down-regulated genes', 'Table', Tenr);
+        end
+    end
+    if ~isempty(enrichviews)
+        gui.i_openinstead(hFig, @() gui.TableViewerApp(enrichviews, hFig));
     end
 end
 

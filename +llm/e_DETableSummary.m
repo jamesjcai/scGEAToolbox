@@ -49,7 +49,6 @@ if ~isempty(TbpUpEnrichr) || ~isempty(TmfUpEnrichr)
     T = [T1; T2];
     T.Properties.VariableNames={'Gene Ontology Term','Genes'};
 
-    % T.Genes = strrep(T.Genes,',', ', ');
     C = T.Genes;
     C_new = cellfun(@(x) strrep(x, ',', ', '), C, 'UniformOutput', false);
     T.Genes = C_new;
@@ -134,9 +133,6 @@ titstr = sprintf('%s Down-regulation', infotagstr);
 i_todoc(doc, titstr, feedbk_dn);
 close(doc);
 done = true;
-
-% outfile2 = char("Res2_"+matlab.lang.makeValidName(infotagstr));
-% pkg.formatStringToWord(feedbk_up, outfile2);
 
 
 function i_todoc(doc, titstr, text)

@@ -96,11 +96,15 @@ switch provider
                 return;
             end
         case 'Gemini'
-            loadenv(apikeyfile,"FileType","env");
-            apiKey = getenv("GEMINI_API_KEY");
+            % CALLGEMINI takes the key FILE and reads the key from it. This
+            % passed the key itself, which then failed ISFILE, so the key
+            % was never loaded and the Gemini check always failed.
             try
-                response = llm.callGemini(apiKey, prompt, model);
-                % response = llm.geminiGenerateContent(prompt);
+                [ok, response] = llm.callGemini(apikeyfile, prompt, model);
+                if ~ok
+                    fprintf('Gemini returned an error.\n');
+                    return;
+                end
              catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
                 return;

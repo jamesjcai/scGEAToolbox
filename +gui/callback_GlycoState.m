@@ -43,11 +43,28 @@ if isempty(setnames)
     return;
 end
 
+% A heatmap, not a radar plot: the collection is two dozen modules, and a
+% two-dozen-axis polygon is a shape rather than a reading. This is the same
+% view GUI.CALLBACK_TFACTIVITY gives its score matrix, which is the closest
+% existing analysis in the toolbox.
+answer = gui.myQuestdlg(FigureHandle, [ ...
+    "View the module scores as a heatmap?"
+    ""
+    "Cells are grouped by an attribute you pick, so each module reads as a " + ...
+    "band across the groups."]);
+showHeatmap = strcmp(answer, 'Yes');
+
 % How many of each module's genes were found is not decoration: a module
 % scored off three genes out of forty is a different object from one scored
-% off all forty, and the score alone does not say which it is.
-gui.i_viewtable(table(setnames, ncommon, ...
-    VariableNames = ["module", "genesFound"]), FigureHandle);
+% off all forty, and the score alone does not say which it is. With the
+% heatmap, each row's label carries its count, instead of a table window
+% of its own beside it: the two stacked three windows over the app.
+if showHeatmap
+    hTbl = FigureHandle;
+else
+    hTbl = gui.i_viewtable(table(setnames, ncommon, ...
+        VariableNames = ["module", "genesFound"]), FigureHandle);
+end
 
 cellid = string(sce.c_cell_id);
 % makeUniqueStrings around makeValidName: the curated collection's names
@@ -59,19 +76,12 @@ T = array2table(cs', RowNames = matlab.lang.makeUniqueStrings(cellid), ...
         matlab.lang.makeValidName(setnames)));
 T.Properties.DimensionNames{1} = 'Cell_ID';
 gui.i_exporttable(T, true, 'Tglycostate', 'GlycoStateTable', ...
-    [], [], FigureHandle);
+    [], [], hTbl);
 
-% A heatmap, not a radar plot: the collection is two dozen modules, and a
-% two-dozen-axis polygon is a shape rather than a reading. This is the same
-% view GUI.CALLBACK_TFACTIVITY gives its score matrix, which is the closest
-% existing analysis in the toolbox.
-answer = gui.myQuestdlg(FigureHandle, [ ...
-    "View the module scores as a heatmap?"
-    ""
-    "Cells are grouped by an attribute you pick, so each module reads as a " + ...
-    "band across the groups."]);
-if strcmp(answer, 'Yes')
-    gui.i_scoreheatmap(cs, cellstr(setnames), sce, FigureHandle);
+if showHeatmap
+    rowlabels = string(setnames(:)) + " (" + ...
+        pkg.i_plural(ncommon(:), 'gene') + ")";
+    gui.i_scoreheatmap(cs, cellstr(rowlabels), sce, FigureHandle);
 end
 end
 

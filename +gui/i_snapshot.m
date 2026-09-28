@@ -21,8 +21,11 @@ function i_snapshot(src, label)
 % arrays it actually touches -- measured at 117 MB for a 20000 x 10000
 % dataset at 5% density, taking 0.04 s.
 %
-% One level only. A stack would hold a copy of X per entry, and one step
-% back covers the accident this is here for.
+% One level of undo, plus the snapshot this one replaces kept in PREV. It
+% is taken before the handler's dialogs, so a cancelled handler would
+% otherwise overwrite the way back with a copy of unchanged data; see
+% GUI.I_EFFECTIVEUNDO. PREV does not chain further: one step back still
+% covers the accident this is here for, and each level holds a copy of X.
 %
 % Kept in APPDATA on the figure rather than in a new app property, so the
 % binary .mlapp needs no extra component. It lives and dies with the
@@ -37,9 +40,14 @@ if ~isa(src, 'matlab.apps.AppBase'), return; end
 if ~isprop(src, 'UIFigure') || ~pkg.i_isvalid(src.UIFigure), return; end
 if isempty(src.sce) || src.sce.NumCells == 0, return; end
 
+prev = gui.i_effectiveundo(src.UIFigure, src.sce);
+if ~isempty(prev) && isfield(prev, 'prev')
+    prev.prev = [];   % one level down, no further
+end
 setappdata(src.UIFigure, 'sceundo', struct( ...
     'sce', copy(src.sce), ...
     'label', label, ...
-    'isredo', false));
+    'isredo', false, ...
+    'prev', prev));
 
 end

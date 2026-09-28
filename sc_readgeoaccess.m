@@ -40,12 +40,10 @@ end
 
 if ~(isscalar(c) || length(c) >= 3)
     disp(url)
-    % warning('Check GEO supplementary file list.');
     c = c(1);
 end
 
 barcodes = [];
-% assignin("base","c",c);
 
 if ~readatacseqdata && ...
     any(contains(c, 'atac','IgnoreCase',true))
@@ -59,8 +57,6 @@ if length(c) >= 3
         any(contains(c, 'image','IgnoreCase',true))
         error('Imported data detected as Spatial Transcriptome Data. The read function expects scRNA-seq data.')
     end
-    % switch length(c)
-    %     case 3
     c1 = c(contains(c, 'mtx'));
     if isempty(c1), error('MTX file not found.'); end
     f1 = i_setupfile(c1);
@@ -108,7 +104,6 @@ elseif isscalar(c)
             c1 = c(contains(c, 'tsv'));
             if isempty(c1)
                 txtnotfound = true;
-                % error('TXT/CSV/TSV file not found.');
             end
         end
     end
@@ -135,7 +130,7 @@ elseif isscalar(c)
                 files=gunzip(f1,tempdir);
                 f1=files{1};
                 [X, g, barcodes] = sc_readh5adfile(f1);
-            elseif strcmpi(f1(end-2:end), '.h5ad')
+            elseif endsWith(f1, '.h5ad', 'IgnoreCase', true)   % was f1(end-2:end): 3 chars vs 5, never true
                 [X, g, barcodes] = sc_readh5adfile(f1);
             end
         else
@@ -153,7 +148,7 @@ elseif isscalar(c)
                 files=gunzip(f1,tempdir);
                 f1=files{1};
                 [X, g, barcodes] = sc_read10xh5file(f1);
-            elseif strcmpi(f1(end-2:end), '.h5')
+            elseif endsWith(f1, {'.h5', '.hdf5'}, 'IgnoreCase', true)
                 [X, g, barcodes] = sc_read10xh5file(f1);
             end
         end
@@ -161,16 +156,6 @@ elseif isscalar(c)
 
 end
 
-
-% if sum(upper(extractBefore(g,8))=='GRCH38_')>10
-%     warning('Gene names contain prefix GRCH38_.');
-%     try
-%         g=extractAfter(g,8);
-%     catch ME
-%         warning('Gene names contain prefixes.');
-%         rethrow(ME);
-%     end
-% end
 
 
 if length(g) == size(X, 1)
@@ -190,9 +175,6 @@ fprintf(['The data was downloaded from the National Center', ...
     ' for Biotechnology Information Gene Expression Omnibus (GEO) ', ...
         'with the accession ID %s.\n'], acc);
 
-    % function i_tryh5(c)
-    %     c1=c(contains(c,'tsv'));
-    % end
     if ~isempty(barcodes)
         sce.c_cell_id = barcodes;
     end

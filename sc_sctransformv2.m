@@ -1,4 +1,4 @@
-function [R, params, Xcorrected] = sc_sctransformv2(X)
+function [R, params, Xcorrected] = sc_sctransformv2(X, opts)
 % SC_SCTRANSFORMV2  Pure-MATLAB port of sctransform::vst(vst.flavor = "v2").
 %
 % Faithful reproduction of Seurat/sctransform's SCTransform v2 Pearson
@@ -11,6 +11,20 @@ function [R, params, Xcorrected] = sc_sctransformv2(X)
 %
 % INPUT
 %   X : G x C raw UMI counts (genes x cells)
+%
+% NAME-VALUE OPTIONS (sctransform::vst's step-1 subsampling)
+%   NumGenes : genes whose NB model is fitted in step 1, drawn by density of
+%              log10 geometric mean so every expression level is represented
+%              (vst's n_genes, default 2000). The regression then carries the
+%              fit to every gene.
+%   NumCells : cells used for the step-1 fits (vst's n_cells, which
+%              vst.flavor="v2" sets to 2000). Inf for both fits every
+%              overdispersed gene on every cell, as this port did before.
+%   Seed     : seed of the private random stream the two samples are drawn
+%              from (default 1448145, Seurat's seed.use). The global stream
+%              is not touched, and a given seed gives the same result.
+%   On data with at most NumGenes step-1 genes and NumCells cells nothing is
+%   sampled and the result is what fitting everything gives.
 % OUTPUT
 %   R          : G x C Pearson residuals (genes failing min_cells -> NaN row)
 %   params     : struct with intermediate quantities (theta, intercept, mu, ...)
@@ -25,6 +39,10 @@ function [R, params, Xcorrected] = sc_sctransformv2(X)
 % 195/200, and corrected counts match to 99.7% of entries exactly. The
 % Poisson/overdispersed call agrees on every gene. Theta is the loosest
 % part, at a log10 correlation of 0.967, for the reason below.
+% The step-1 subsampling (NumGenes, NumCells) came later, following vst.
+% Against fitting every gene on every cell it gave, on the 7243 x 8260
+% example, 196/200 of the top-200 genes by residual variance and a median
+% per-gene residual correlation of 0.999985, in 6.2 s instead of 88 s.
 %
 % This replaced two earlier attempts, sctransform.m and sctransform_fast.m,
 % which regularized only theta and did so with a smoothing spline rather
@@ -35,6 +53,13 @@ function [R, params, Xcorrected] = sc_sctransformv2(X)
 % correlation is dominated by the counts and hides an error in the residual
 % scale, which is exactly what regularizing the intercept as well as the
 % dispersion fixes. Judge a change here on gene ranking, not correlation.
+
+arguments
+    X {mustBeNumeric}
+    opts.NumGenes (1,1) double {mustBePositive} = 2000
+    opts.NumCells (1,1) double {mustBePositive} = 2000
+    opts.Seed (1,1) double {mustBeInteger, mustBeNonnegative} = 1448145
+end
 
 X = double(full(X));
 [G, C] = size(X);
@@ -61,16 +86,42 @@ kept = genes_cell_count >= min_cells;  % genes carried through vst
 low_mean = amean < 0.001;
 all_poisson = kept & ((odfac <= 0) | low_mean);
 
-% Step-1 training genes: kept & overdispersed
-step1 = kept & (odfac > 0);
+% Step-1 training genes, as sctransform::vst picks them: a sample of cells,
+% the genes detected in at least MIN_CELLS of those, a density-weighted
+% sample of those genes, and finally only the overdispersed ones. The
+% geometric mean and the overdispersion test use all cells, as vst does;
+% only the model fits see the sampled cells. Fitting every overdispersed
+% gene on every cell -- all this port did before -- took 96 s of 103 s on
+% the 7243 x 8260 example.
+stream = RandStream('twister', 'Seed', opts.Seed);
+if opts.NumCells < C
+    cells1 = sort(randperm(stream, C, opts.NumCells));
+    genes1 = sum(X(:, cells1) > 0, 2) >= min_cells;
+else
+    cells1 = 1:C;
+    genes1 = kept;
+end
+if opts.NumGenes < nnz(genes1)
+    cand = find(genes1);
+    pick = datasample(stream, cand, opts.NumGenes, 'Replace', false, ...
+        'Weights', i_densityweights(lgm(cand)));
+    genes1 = false(G, 1);
+    genes1(pick) = true;
+end
+step1 = genes1 & kept & (odfac > 0);
 
 % ----- step 1: per-gene offset NB fit (glmGamPoi substitute) --------------
 theta1 = nan(G, 1);
 b0_1   = nan(G, 1);
 idx1 = find(step1);
+umi1 = umi(cells1);
+X1 = X(:, cells1);
+mean_cell_sum1 = mean(umi1);
+amean1 = mean(X1, 2);                  % starting values only; equal to AMEAN
+gvar1 = var(X1, 0, 2);                 % and GVAR when no cells are sampled
 for t = 1:numel(idx1)
     g = idx1(t);
-    [b0_1(g), theta1(g)] = fit_nb_offset(X(g, :), umi, amean(g), gvar(g), mean_cell_sum);
+    [b0_1(g), theta1(g)] = fit_nb_offset(X1(g, :), umi1, amean1(g), gvar1(g), mean_cell_sum1);
 end
 
 % method-of-moments Poisson override (diff_theta < 1e-3 -> theta = Inf)
@@ -140,7 +191,8 @@ R(kept_idx, :) = Rk;
 
 params = struct('theta_fit', theta_fit, 'intercept_fit', int_fit, ...
     'mu', mu, 'kept_idx', kept_idx, 'lgm', lgm, 'bw', bw, ...
-    'min_var', min_var, 'theta1', theta1, 'intercept1', intercept1);
+    'min_var', min_var, 'theta1', theta1, 'intercept1', intercept1, ...
+    'step1_genes', idx1, 'step1_cells', cells1);
 
 % ----- corrected counts (sctransform::correct_counts) ---------------------
 % Only on request: it is a second dense matrix the size of the input.
@@ -258,6 +310,18 @@ end
 % -------------------------------------------------------------------------
 function s = robust_scale(x)
 s = (x - median(x)) / (mad(x, 1) * 1.4826 + eps);
+end
+
+% -------------------------------------------------------------------------
+function w = i_densityweights(x)
+% sctransform's step-1 gene sampling weights, 1/(density of X + eps): R's
+% density(x, bw = "nrd") on its default 512-point grid (cut = 3),
+% interpolated back to each gene.
+x = x(:);
+bw = 1.06 * min(std(x), iqr7(x) / 1.34) * numel(x)^(-1/5);
+grid = linspace(min(x) - 3*bw, max(x) + 3*bw, 512);
+dens = ksdensity(x, grid, 'Bandwidth', bw);
+w = 1 ./ (interp1(grid, dens, x) + eps);
 end
 
 % =========================================================================

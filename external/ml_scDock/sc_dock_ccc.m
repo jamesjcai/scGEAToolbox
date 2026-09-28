@@ -128,9 +128,12 @@ end
 % Map cell-type name -> ct_mean column index
 ct2col = containers.Map(cellstr(cell_types), num2cell(1:n_ct));
 
-% Map gene names to row indices (for fast lookup)
-[~, g_idx_map_keys, g_idx_map_vals] = unique(g, 'stable');
-gene2row = containers.Map(cellstr(g(g_idx_map_keys)), g_idx_map_vals);
+% Map gene names to row indices (for fast lookup). A duplicated name maps to
+% its first row. The values are UNIQUE's second output, the row of each
+% name's first occurrence -- not its third, which has one entry per gene and
+% so outnumbers the keys whenever any name repeats.
+[~, firstRow] = unique(g, 'stable');
+gene2row = containers.Map(cellstr(g(firstRow)), num2cell(firstRow));
 
 % -------------------------------------------------------------------------
 % Filter LR pairs to genes present in data

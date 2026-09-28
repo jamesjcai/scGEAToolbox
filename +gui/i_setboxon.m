@@ -1,4 +1,4 @@
-function i_setboxon(~, ~, hFig)
+function i_setboxon(src, ~, hFig)
 %{
     ax = get(gca, 'FontSize') - 1;
     if ax <= 5, ax = 15; end
@@ -7,7 +7,7 @@ function i_setboxon(~, ~, hFig)
     %      if ax<=0.5, ax=3; end
     %      set(gca,'LabelFontSizeMultiplier')
 %}
-if nargin < 3, hFig = gcf; end
+if nargin < 3, hFig = ancestor(src, 'figure'); end
 axesHandles = findall(hFig, 'Type', 'axes');
 if ~isempty(axesHandles)
 
@@ -22,13 +22,9 @@ if ~isempty(axesHandles)
         if strcmp(ax.Box, 'on')
             set(ax, 'Fontsize', paraset{1}, 'LineWidth', paraset{2});
             box(ax, 'off');
-            % ax.XAxis.Visible="off";
-            % ax.YAxis.Visible="off";
         else
             set(ax, 'Fontsize', paraset{1}, 'LineWidth', paraset{2});
             box(ax,'on');
-            % ax.XAxis.Visible="on";
-            % ax.YAxis.Visible="on";
         end
     end
 else

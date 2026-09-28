@@ -2,7 +2,7 @@
 %% Load example data set, X
 
 cdgea; % set working directory
-load example_data/markergeneident_demo X genelist s_tsne
+load(pkg.i_exampledata('markergeneident_demo.mat'), 'X', 'genelist', 's_tsne');
 % s_tsne is precomputed tSNE embedding
 %% Automatically cluster cells and explore cell type
 
@@ -12,7 +12,7 @@ gui.sc_celltypeexplorer_auto(X, genelist, s_tsne, "species", "mouse");
 % To generate the figure: (1) run gui.sc_celltypeexplorer(X,genelist,s_tsne,"species","mouse") 
 % (2) brush and select cell cluster
 
-openfig('example_data/markergeneident_demo.fig');
+openfig(pkg.i_exampledata('markergeneident_demo.fig'));
 %% Group cells into clusters (k=6)
 
 figure;
@@ -47,7 +47,7 @@ view([-31.03 77.60])
 Tct = run.ml_alona(X, genelist, cluster_kmedoids, 'species', 'mouse');
 %% Another demo with example data of mouse pancreas cells
 
-load example_data/new_example_sce.mat sce
+load(pkg.i_exampledata('new_example_sce.mat'), 'sce');
 gui.sc_celltypeexplorer(sce.X, sce.g, sce.s, "species", "mouse");
 pause(3)
 %% Use the SCGEATOOL interactive tool

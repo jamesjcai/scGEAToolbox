@@ -7,14 +7,25 @@ if ~gui.gui_showrefinfo('CellBender [PMID:37550580]', FigureHandle), return; end
 if ~gui.i_setpyenv([],[],FigureHandle)
     return;
 end
-v = pyrun("import torch; v = torch.__version__.split('+')[0]", "v");
+% In a try: with no PyTorch in the environment this threw straight out of
+% the menu callback.
+try
+    v = pyrun("import torch; v = torch.__version__.split('+')[0]", "v");
+catch ME
+    gui.myErrordlg(FigureHandle, ['PyTorch could not be loaded in the ' ...
+        'selected Python environment: ' ME.message], ME.identifier);
+    return;
+end
 v = string(v);
-tf = isVersionInRange(v,"1.10","1.13");
+torchlo = "1.10";
+torchhi = "1.13";
+tf = isVersionInRange(v, torchlo, torchhi);
 if ~tf
-    % error('Unsupported PyTorch version: %s. Please use a version between 1.13 and 2.1.', v);
+    % The message now states the range the check applies. It used to say
+    % 1.13 to 2.1 while rejecting everything above 1.13.
     gui.myWarndlg(FigureHandle, ...
-        sprintf('Unsupported PyTorch version: %s. Please use a version between 1.13 and 2.1.', v),...
-        'Runtime Error', true);
+        sprintf('Unsupported PyTorch version: %s. Please use a version between %s and %s.', ...
+        v, torchlo, torchhi), 'Runtime Error', true);
     return;
 end
 
@@ -37,23 +48,22 @@ if ~exist(input_h5,"file")
     return;
 end
 
-% [ok] = gui.i_confirmscript('Run CellBender to remove ambient RNA?', ...
-%     'py_cellbender', 'python');
-% if ~ok, return; end
-
 
 fw=gui.myWaitbar(FigureHandle, [], false, 'Running CellBender...');
 
 try
     [output_h5] = run.py_cellbender(input_h5, wkdir);
 catch ME
+    % Reported: this used to close the bar and say nothing at all.
     gui.myWaitbar(FigureHandle, fw, true);
+    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end
+% Closed before either result dialog. Passing a message here took
+% myWaitbar's update branch, so the bar stayed up after every run.
+gui.myWaitbar(FigureHandle, fw, isempty(output_h5));
 
 if ~isempty(output_h5)
-    gui.myWaitbar(FigureHandle, fw, [], sprintf('Processing complete. Output saved to: %s', output_h5));
-
     answer=gui.myQuestdlg(FigureHandle, sprintf('Output saved to %s. Open the folder %s?', ...
         output_h5, wkdir), '');
 else

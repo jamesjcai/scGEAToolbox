@@ -16,13 +16,13 @@ pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
 % run cannot leave a previous run's output to be picked up as this one's
 
 % if ~strcmp(unique(sce.c_cell_type_tx), "undetermined")
-pkg.e_writeh5(full(sce.X), sce.g, 'input.h5', sce.c_cell_type_tx, sce.c_batch_id);
-% else
-%    pkg.e_writeh5(full(sce.X), sce.g, 'input.h5');
-% end
+% Cell IDs become the Seurat colnames; script.R falls back to C1..Cn without them
+cellid = string(sce.c_cell_id(:));
+if numel(cellid) ~= sce.NumCells || any(ismissing(cellid) | cellid == "")
+    cellid = [];
+end
+pkg.e_writeh5(full(sce.X), sce.g, 'input.h5', sce.c_cell_type_tx, sce.c_batch_id, cellid);
 
-% sc_writefile('input.txt',sce.X,sce.g);
-%    if isdebug, return; end
 Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
 if isempty(Rpath)
     error('R environment has not been set up.');
@@ -30,6 +30,12 @@ end
 codefullpath = fullfile(codepath,'script.R');
 pkg.i_runrcode(codefullpath, Rpath);
 
+% output.Rds was deleted above, so its absence means R failed; COPYFILE
+% would only return 0, which the caller used to ignore.
+if ~isfile('output.Rds')
+    error('run:r_saveSeuratRds:noOutput', ...
+        'R did not write the Seurat file. The R output in the Command Window should say why.');
+end
 [status] = copyfile('output.Rds', filename, 'f');
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 end

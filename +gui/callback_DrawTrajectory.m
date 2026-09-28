@@ -47,6 +47,7 @@ if ~isempty(cur_f_traj) && pkg.i_isvalid(cur_f_traj) && isgraphics(cur_f_traj, '
             case 'Yes'
                 if ~isempty(refreshFn)
                     refreshFn(true, true);  % in_RefreshAll(app, keepview=true, keepcolr=true)
+                    scatter_h = src.h;      % the refresh rebuilt the scatter
                 end
             case 'No'
             otherwise
@@ -69,7 +70,12 @@ justload = false;
 switch answer
     case 'splinefit'
         dim = 1;
-        [t, xyz1] = pkg.i_pseudotime_by_splinefit(sce.s, dim, false);
+        try
+            [t, xyz1] = pkg.i_pseudotime_by_splinefit(sce.s, dim, false);
+        catch ME
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+            return;
+        end
         pseudotimemethod = 'splinefit';
 
     case 'princurve'
@@ -77,7 +83,7 @@ switch answer
             [t, xyz1] = pkg.i_pseudotime_by_princurve(sce.s, false);
             pseudotimemethod = 'princurve';
         catch ME
-            gui.myErrordlg(FigureHandle, "Runtime error.");
+            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
             return;
         end
 
@@ -85,19 +91,19 @@ switch answer
         if license('test', 'curve_fitting_toolbox') && ~isempty(which('cscvn'))
             % If current embedding is 3D, offer to switch to 2D first
             if ~isempty(scatter_h) && pkg.i_isvalid(scatter_h) && ~isempty(scatter_h.ZData)
-                switch gui.myQuestdlg(FigureHandle, ...
-                        ['This function does not work for 3D ' ...
-                        'embedding. Continue to switch to 2D?'])
-                    case 'Yes'
-                        if ~isempty(switchTo2DFn)
-                            switchTo2DFn();
-                        end
-                    otherwise
-                        return;
+                % The app's switch asks "Switch to 2D?" itself; asking here
+                % first as well put two questions in a row.
+                if ~isempty(switchTo2DFn)
+                    switchTo2DFn();
+                    scatter_h = src.h;   % the switch redraws it
                 end
             end
-            % Re-check: if still 3D after switch attempt, bail
-            if ~isempty(scatter_h) && pkg.i_isvalid(scatter_h) && ~isempty(scatter_h.ZData), return; end
+            % Still 3D: the switch was declined (or unavailable). Say why.
+            if ~isempty(scatter_h) && pkg.i_isvalid(scatter_h) && ~isempty(scatter_h.ZData)
+                gui.myHelpdlg(FigureHandle, ['Manual drawing needs a 2D ' ...
+                    'embedding. Switch to 2D, then draw the curve.']);
+                return;
+            end
 
             answer2 = gui.myQuestdlg(FigureHandle, ...
                 'Draw trajectory curve or load saved curve and pseudotime?', ...
@@ -120,6 +126,12 @@ switch answer
                         t               = loadedData.t;
                         xyz1            = loadedData.xyz1;
                         pseudotimemethod = loadedData.pseudotimemethod;
+                        if numel(t) ~= sce.NumCells
+                            gui.myErrordlg(FigureHandle, sprintf(['The saved ' ...
+                                'pseudotime has %d values; this data has %d cells.'], ...
+                                numel(t), sce.NumCells), '');
+                            return;
+                        end
                     else
                         gui.myErrordlg(FigureHandle, 'Not a valid .mat file.', '');
                         return;
@@ -139,17 +151,29 @@ switch answer
                     fig2.WindowStyle = "modal";
                     hold(ax2, "on");
                     x = []; y = [];
-                    while true
-                        [xi, yi, button] = ginput(1);
-                        if isempty(button) || button == 13
-                            break;
+                    try
+                        while true
+                            [xi, yi, button] = ginput(1);
+                            if isempty(button) || button == 13
+                                break;
+                            end
+                            x = [x; xi]; %#ok<AGROW>
+                            y = [y; yi]; %#ok<AGROW>
+                            plot(ax2, xi, yi, 'ro', 'MarkerSize', 8, 'LineWidth', 2);
                         end
-                        x = [x; xi];
-                        y = [y; yi];
-                        plot(ax2, xi, yi, 'ro', 'MarkerSize', 8, 'LineWidth', 2);
+                    catch
+                        % The drawing window was closed mid-pick: a cancel.
+                        if pkg.i_isvalid(fig2), close(fig2); end
+                        return;
                     end
                     pause(1);
                     fx.closeFigure;
+                    if numel(x) < 2
+                        % cscvn needs two points; one or none threw here.
+                        gui.myWarndlg(FigureHandle, ...
+                            'Click at least two points to draw a curve.');
+                        return;
+                    end
 
                     hold(UIAxes, "on");
                     for k = 1:length(x)
@@ -226,8 +250,10 @@ if ~strcmp(answer, 'manual')
             t1.String = 'End';
             t2.String = 'Start';
             t = 1 - t;
-        case 'Cancel'
-            return;
+        case 'No'
+            % keep as drawn
+        otherwise
+            return;   % Cancel, or the dialog closed
     end
 end
 

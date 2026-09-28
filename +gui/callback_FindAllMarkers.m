@@ -53,7 +53,6 @@ end
 
 function in_MarkerGeneHeatmap(sce, FigureHandle)
 mfolder = fileparts(mfilename('fullpath'));
-% unique(sce.c_cluster_id)
 
 answer = gui.myQuestdlg(FigureHandle, "Only consider known (PangloaDB) marker genes?","");
 if strcmp(answer, 'Yes')
@@ -82,8 +81,6 @@ if isscalar(unique(thisc))
     gui.myWarndlg(FigureHandle, "All cells are in the same group.");
     return;
 end
-% [c, cL, noanswer] = gui.i_reordergroups(thisc, [], FigureHandle);
-% if noanswer, return; end
 
 % Which cell types go on the heatmap. Every level of the grouping variable
 % used to go on it, and an annotation with thirty types -- or with a
@@ -107,10 +104,10 @@ end
 
 [c] = findgroups(thisc);
 answer = gui.myQuestdlg(FigureHandle, 'Generate marker gene heatmap', ...
-'Select Method', {'Method 1 (DE 🐇)', 'Method 2 (scGeneFit 🐢)', ...
-'Method 3 (LASSO 🐢🐢)'}, 'Method 1 (DE 🐇)');
+'Select Method', {'Method 1 (DE)', 'Method 2 (scGeneFit 🐢)', ...
+'Method 3 (LASSO 🐢🐢)'}, 'Method 1 (DE)');
 switch answer
-    case 'Method 1 (DE 🐇)'
+    case 'Method 1 (DE)'
         methodid = 1;
     case 'Method 2 (scGeneFit 🐢)'
         methodid = 2;
@@ -122,11 +119,6 @@ end
 
 fw = gui.myWaitbar(FigureHandle);
 
-% speciestag = gui.i_selectspecies(2, false, FigureHandle);
-% if isempty(speciestag)
-%     requirerefresh = false;
-%     return;
-% end
 speciestag = "human";
 load(fullfile(mfolder, ...
 '..', 'assets', 'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');

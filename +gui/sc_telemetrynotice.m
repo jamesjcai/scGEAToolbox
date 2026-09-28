@@ -1,5 +1,4 @@
 function [pval, tf] = sc_telemetrynotice
-% setpref('scgeatoolbox', 'useronboardingtoolbar', true);
 
 group = "scgeatoolbox";
 pref =  "sharediagnosticsusage";
@@ -29,10 +28,6 @@ resetGuard = onCleanup(@() setappdata(r, flag, false));
 
 [pval,tf] = uigetpref(group,pref,title,quest,pbtns,...
 "CheckboxState",1,"DefaultButton","No");
-
-% "ExtraOptions","Cancel");
-% p = uisetpref('clearall')
-% setpref(group,pref,'ask')
 
 %{
 fig = uifigure; % ("Position",[100 100 300 300]);

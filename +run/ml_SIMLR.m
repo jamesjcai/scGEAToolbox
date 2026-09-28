@@ -45,10 +45,4 @@ end
 [C, ~, ~, s, ~] = SIMLR_ori(X', k, 10, 0, 0);
 C = C';
 
-% [C, S, F, s,alpha] = SIMLR_pearson(X',k,10,0,0);
-%    figure;
-%    gscatter(ydata(:,1),ydata(:,2),y);
-% figure;
-% scatter(s(:,1),s(:,2),20,C,'filled')
-
 end

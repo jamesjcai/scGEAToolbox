@@ -11,34 +11,37 @@ function [fx, v1] = sc_splashscreen(fx, r, ~)
 %   (third arg) - Accepted but ignored; retained for signature compatibility.
 %
 % Outputs:
-%   fx         - Handle to the splash screen (a gui.SplashScreen object when
-%                Java/AWT is available, otherwise a MATLAB figure).
+%   fx         - Handle to the splash screen: a gui.SplashScreen (Java),
+%                a gui.NetSplashScreen (.NET), or a MATLAB figure.
 %   v1         - Application version string.
 %
-% When a Java runtime with AWT is available, this uses the original
-% Java/Swing gui.SplashScreen, which renders the image and text natively and
-% looks sharp. On MATLAB installations without a bundled JRE, it falls back
-% to gui.sc_simplesplash, a pure-MATLAB (figure-based) splash.
+% Three implementations, tried in order:
+%   1. gui.SplashScreen, the original Java/Swing splash, when a Java
+%      runtime with AWT is available.
+%   2. gui.NetSplashScreen, a frameless Windows .NET splash, for Windows
+%      installations without Java (MATLAB R2026b ships no JRE).
+%   3. gui.sc_simplesplash, a figure-based splash, everywhere else and
+%      whenever one of the above fails.
 
 if nargin < 2, r = 0.0; end
 if nargin < 1, fx = []; end
 
 if isempty(fx)
-    % Initialize. Prefer the sharp Java/Swing splash when AWT is available;
-    % fall back to the figure-based splash on any failure or without Java.
-    if usejava("awt")
-        try
+    try
+        if usejava("awt")
             [fx, v1] = in_javasplash();
-        catch
+        elseif ispc && NET.isNETSupported
+            [fx, v1] = in_netsplash();
+        else
             [fx, v1] = gui.sc_simplesplash();
         end
-    else
+    catch
         [fx, v1] = gui.sc_simplesplash();
     end
 else
     % Update progress on whichever splash type is active.
     v1 = '';
-    if isa(fx, "gui.SplashScreen")
+    if isa(fx, "gui.SplashScreen") || isa(fx, "gui.NetSplashScreen")
         fx.ProgressRatio = r;
     else
         gui.sc_simplesplash(fx, r);
@@ -51,30 +54,9 @@ function [fx, v1] = in_javasplash()
 % everything that reaches Java (image path, drawn text, color spec) because
 % the underlying java.io.File / Graphics.drawString calls expect char.
 v1 = pkg.i_get_versionnum;
-mfolder = fileparts(mfilename('fullpath'));
-splashdir = fullfile(mfolder, '..', 'assets', 'Images', 'splash_folder');
+splashpng = in_pickimage();
 
-a = dir(splashdir);
-a = a(~[a.isdir]); % keep files only
-if isempty(a)
-    error('Splash images not found in: %s', splashdir);
-end
-
-d = datetime('today');
-seed = year(d) * 10000 + month(d) * 100 + day(d);
-% Save and restore the caller's random stream. Seeding the picture-of-the-day pick is
-% fine; leaving the session parked on that seed is not -- it then
-% governs every later tsne, umap and clustering call in the session.
-rngState = rng();
-restoreRng = onCleanup(@() rng(rngState));
-rng(seed);
-idx = randi(numel(a));
-splashpng = fullfile(splashdir, a(idx).name);
-if ~isfile(splashpng)
-    error('Splash image file not found: %s', splashpng);
-end
-
-fx = gui.SplashScreen('', splashpng, ...
+fx = gui.SplashScreen('', char(splashpng), ...
     'ProgressBar', 'on', ...
     'ProgressPosition', 5, ...
     'ProgressRatio', 0.0);
@@ -82,7 +64,28 @@ fx.addText(30, 50, 'SCGEATOOL', 'FontSize', 18, 'Color', [1 1 1]);
 fx.addText(30, 73, sprintf('Version %s', v1), ...
     'FontSize', 14, 'Color', [0.7 0.7 0.7]);
 fx.addText(350, 280, 'Loading...', 'FontSize', 13, 'Color', 'white');
+in_holdsplash();
+end
 
+function [fx, v1] = in_netsplash()
+% Build the .NET splash, laid out like the Java one.
+v1 = pkg.i_get_versionnum;
+fx = gui.NetSplashScreen(in_pickimage());
+fx.addText(30, 50, "SCGEATOOL", FontSize=18, Color=[1 1 1]);
+fx.addText(30, 73, "Version " + v1, FontSize=14, Color=[0.7 0.7 0.7]);
+fx.addText(350, 280, "Loading...", FontSize=13, Color="white");
+in_holdsplash();
+end
+
+function splashpng = in_pickimage()
+% Picture of the day, shared with gui.sc_simplesplash.
+splashpng = i_splashimage();
+if splashpng == ""
+    error('gui:sc_splashscreen:noImage', 'No splash images found in assets/Images/splash_folder.');
+end
+end
+
+function in_holdsplash()
 % Keep the splash on screen long enough to be seen, even when the app
 % initializes quickly (the caller deletes it as soon as startup finishes).
 minSplashSeconds = 1.5;

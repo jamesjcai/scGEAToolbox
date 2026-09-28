@@ -36,21 +36,17 @@ else
         {'Use this', 'Use another', 'Cancel'}, 'Use this');
     switch answer
         case 'Use this'
-            % done = true;
         case 'Use another'
             if ~ix_setpath
                 return;
             end
-            % done = true;
             gui.myHelpdlg(parentfig, ...
                 'Scimilarity model path is set successfully.');
             return;
         case {'Cancel', ''}
             selectedDir = '';
-            % done = false;
         otherwise
             selectedDir = '';
-            % done = false;
     end
 end
 

@@ -3,32 +3,40 @@ function requirerefresh = callback_AssignCellTypeFromAttrib(src)
 %
 %   requirerefresh = gui.callback_AssignCellTypeFromAttrib(src)
 %
-% Picks a per-cell table, then asks which of its columns holds the cell type
-% annotation and writes it to sce.c_cell_type_tx. Use this when an imported
-% Seurat/RDS or H5AD object carried its annotation under a column name the
-% reader did not recognize.
+% Asks which column of this dataset's own cell attributes
+% (sce.list_cell_attributes) holds the cell type annotation and writes it to
+% sce.c_cell_type_tx. Use this when an imported Seurat/RDS or H5AD object
+% carried its annotation under a column name the reader did not recognize.
 %
-% The default source is this dataset's own sce.list_cell_attributes. Unlike the
-% View/Export Cell Attribute Table, the standard fields are deliberately left
-% out: offering the existing CellType column would let the picker rank it first
-% and assign cell type from itself. A table in the base workspace with one row
-% per cell, or a delimited text file, can be used instead.
+% Unlike the View/Export Cell Attribute Table, the standard fields are
+% deliberately left out: offering the existing CellType column would let the
+% picker rank it first and assign cell type from itself. A column held in a
+% table file or workspace variable is brought in first with Edit > Add/Edit
+% Cell Attributes, which reads both.
 %
 % see also: gui.i_pickcelltypecolumn, pkg.i_guesscelltypecol,
-%           gui.i_readtablefile, gui.callback_ViewCellAttributeTable, sc_readrdsfile
+%           gui.sc_cellattribeditor, gui.callback_ViewCellAttributeTable, sc_readrdsfile
 
 requirerefresh = false;
 
 [parentfig, sce] = gui.gui_getfigsce(src);
 if isempty(sce) || sce.NumCells == 0, return; end
 
+% The menu item names its source, Annotate > Import Annotations > from a Cell
+% Attribute Column, so there is no source picker: an empty table is reported
+% here, before anything else is asked, rather than falling through to a file
+% or workspace prompt the user did not ask for.
+t = in_attributetable(sce);
+srcname = 'the cell attribute table';
+if width(t) == 0
+    gui.myWarndlg(parentfig, in_noattributesreason(sce));
+    return;
+end
+
 % Restoring a stashed annotation is one of the uses of this callback, so the
 % labels it replaces are stashed too and the round trip works in both
-% directions. Ask before any of the pickers open.
+% directions. Ask before the column picker opens.
 if ~gui.i_confirmoverwritecelltype(parentfig, sce), return; end
-
-[t, srcname] = in_picksourcetable(sce, parentfig);
-if isempty(t), return; end
 
 % Score the columns before anything is put on screen, so that when nothing
 % qualifies the warning is the only window that opens.
@@ -51,6 +59,17 @@ stashname = pkg.i_stashcelltypehistory(sce);
 sce.c_cell_type_tx = ctype;
 gui.myGuidata(parentfig, sce, src);
 requirerefresh = true;
+
+% Recolor the main plot by the labels just assigned. The menu handler in
+% scgeatoolApp.mlapp ignores the returned REQUIREREFRESH, so without this the
+% points keep whatever grouping they carried before and the assignment looks
+% as though it did nothing. GUI.CALLBACK_ANNOTATECELLS does the same.
+if isa(src, 'matlab.apps.AppBase')
+    [src.c, src.cL] = findgroups(string(src.sce.c_cell_type_tx));
+    src.sce.c = src.c;
+    src.in_RefreshAll(true, false);
+    src.ix_labelclusters(true);
+end
 
 msg = sprintf('Cell type assigned from %s, column "%s" (%d types).', ...
     srcname, colname, numel(unique(ctype)));
@@ -86,58 +105,20 @@ else
 end
 end
 
-function [t, srcname] = in_picksourcetable(sce, parentfig)
-t = [];
-srcname = '';
-ncells = sce.NumCells;
+function msg = in_noattributesreason(sce)
+% Say why there is nothing to pick from, and where a column can come from.
 
-% Metadata imported from Seurat/RDS lives on the SCE itself as cell attributes,
-% so offer those first; the workspace and file options are for tables brought in
-% separately.
-scetag = '';
-tsce = in_attributetable(sce);
-if ~isempty(tsce)
-    scetag = sprintf('Use this dataset''s own cell attributes (%d columns)', ...
-        width(tsce));
-end
-
-% The two external sources are named, and their table picked, the same way as
-% in GUI.SC_CELLATTRIBEDITOR: one entry each rather than one entry per
-% workspace variable. The flat list read better when a qualifying table
-% happened to be in the workspace, but it changed shape with whatever was
-% there, and when nothing qualified it silently offered nothing at all -
-% GUI.I_PICKWORKSPACETABLE says which variables it found and why they did not
-% qualify.
-loadtag = 'Read a column from a table file (CSV, TSV or TXT)';
-wstag = 'Read a column from a table variable in the workspace';
-items = {loadtag, wstag};
-if ~isempty(scetag)
-    items = [{scetag}, items];
-end
-
-% The instruction goes in the prompt label, which wraps; the Title stays
-% short because the window title bar clips without saying so.
-prompt = ['Where are the per-cell columns that hold the cell type ', ...
-    'annotation?'];
-if gui.i_isuifig(parentfig)
-    [indx, tf] = gui.myListdlg(parentfig, items, 'Cell Type Source', [], ...
-        false, true, [480, 200], prompt);
+hint = ['Add one with Edit > Add/Edit Cell Attributes, which can read it ' ...
+    'from a table file or a workspace variable, then try again.'];
+if isempty(sce.list_cell_attributes)
+    msg = ['This dataset has no cell attributes beyond the standard fields. ' hint];
+elseif numel(sce.list_cell_attributes) == 2
+    msg = sprintf(['The only cell attribute of this dataset does not have ' ...
+        'one value per cell (%d cells). %s'], sce.NumCells, hint);
 else
-    [indx, tf] = listdlg('PromptString', {prompt}, 'SelectionMode', 'single', ...
-        'ListString', items, 'ListSize', [460, 120]);
-end
-if tf ~= 1 || isempty(indx), return; end
-
-% scetag is '' when the dataset carries no cell attributes, in which case it is
-% not in items either, so the case simply never matches.
-switch items{indx}
-    case scetag
-        t = tsce;
-        srcname = 'cell attributes';
-    case loadtag
-        [t, srcname] = gui.i_readtablefile(parentfig, ncells);
-    case wstag
-        [t, srcname] = gui.i_pickworkspacetable(parentfig, ncells);
+    msg = sprintf(['None of the %d cell attributes of this dataset has one ' ...
+        'value per cell (%d cells). %s'], ...
+        numel(sce.list_cell_attributes)/2, sce.NumCells, hint);
 end
 end
 

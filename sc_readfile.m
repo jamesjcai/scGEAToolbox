@@ -34,7 +34,6 @@ defaultType = 'tsv';
 validTypes = {'tsv', 'mtx', 'h5'};
 checkType = @(x) any(validatestring(x, validTypes));
 
-% addRequired(p,'X',@isnumeric);
 addOptional(p, 'type', defaultType, checkType);
 parse(p, varargin{:});
 

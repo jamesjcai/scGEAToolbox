@@ -1,9 +1,4 @@
-function i_linksubplots(~, ~)
-% evalin('base', 'h=findobj(gcf,''type'',''axes'');');
-% evalin('base', 'hlink = linkprop(h,{''CameraPosition'',''CameraUpVector''});');
-% evalin('base', 'rotate3d on');
-
-% evalin('base', 'linkprop(findobj(gcf,''type'',''axes''), {''CameraPosition'',''CameraUpVector''});');
+function i_linksubplots(src, ~)
 
 % The linkprop function allows for more granular control by linking
 % specific properties across graphics objects. This is useful when you
@@ -12,7 +7,8 @@ function i_linksubplots(~, ~)
 % % Link the x-axes of both subplots
 % linkaxes([ax1, ax2], 'x');
 
-h=gcf;
+% gcf never returns a uifigure; use the clicked button's own figure.
+h = ancestor(src, 'figure');
 hlink = linkprop(findobj(h,'type','axes'), {'CameraPosition','CameraUpVector'});
 setappdata(h,'UserData',hlink);
 % When using linkprop, maintain a reference to the link object (hlink) in

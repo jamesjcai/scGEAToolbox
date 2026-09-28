@@ -21,7 +21,6 @@ else
 end
 
 if gui.i_isuifig(parentfig)
-    % answer = gui.myInputdlg(prompt, dlgtitle, definput, parentfig);
     answer = gui.i_inputdlg(prompt, definput, parentfig);
 else
     answer = inputdlg(prompt, dlgtitle, dims, definput);

@@ -1,5 +1,15 @@
 function [glist, setname, Col, ctag] = i_selectMSigDBGeneSets(species, ...
     colnoly, parentfig)
+%I_SELECTMSIGDBGENESETS Pick an MSigDB collection, then gene sets from it.
+%   [glist, setname, Col, ctag] = gui.i_selectMSigDBGeneSets(species, colnoly, parentfig)
+%   SPECIES is 'human'/'hs' or 'mouse'/'mm'; empty asks the user. With
+%   COLNOLY true it stops after the collection: Col is the decoded JSON and
+%   ctag its tag ('H', 'C2', 'M5', ...). Otherwise the user picks one or more
+%   gene sets: setname is a cell array of their names and glist a cell array
+%   holding each set's genes as a string array.
+%
+%   This replaces gui.i_selectMSigDBGeneSet, a single-choice copy whose
+%   gene-set list showed the collection names instead of the sets.
 
 if nargin < 3, parentfig = []; end
 if nargin < 1, species = 'human'; end
@@ -9,6 +19,11 @@ glist = [];
 setname = [];
 Col = [];
 ctag = [];
+
+if isempty(species)
+    species = gui.i_selectspecies(2, false, parentfig);
+    if isempty(species), return; end
+end
 
 switch lower(species)
     case {'human', 'hs'}
@@ -20,10 +35,6 @@ switch lower(species)
             'C6: oncogenic signature gene sets', ...
             'C7: immunologic signature gene sets', ...
             'C8: cell type signature gene sets'};
-        % urllist={'http://www.gsea-msigdb.org/gsea/msigdb/download_file.jsp?filePath=/msigdb/release/2022.1.Hs/h.all.v2023.2.Hs.json',...
-        %     'http://www.gsea-msigdb.org/gsea/msigdb/download_file.jsp?filePath=/msigdb/release/2022.1.Hs/c1.all.v2023.2.Hs.json',...
-        %     'http://www.gsea-msigdb.org/gsea/msigdb/download_file.jsp?filePath=/msigdb/release/2022.1.Hs/c2.all.v2023.2.Hs.json',...
-        %     'http://www.gsea-msigdb.org/gsea/msigdb/download_file.jsp?filePath=/msigdb/release/2022.1.Hs/c3.all.v2023.2.Hs.json'};
 
         urllist = {'https://scgeatool.github.io/data/msigdb/h.all.v2023.2.Hs.json', ...
             'https://scgeatool.github.io/data/msigdb/c1.all.v2023.2.Hs.json', ...
@@ -46,10 +57,13 @@ switch lower(species)
             'https://scgeatool.github.io/data/msigdb/m3.all.v2023.2.Mm.json', ...
             'https://scgeatool.github.io/data/msigdb/m5.all.v2023.2.Mm.json', ...
             'https://scgeatool.github.io/data/msigdb/m8.all.v2023.2.Mm.json'};
+    otherwise
+        error('gui:i_selectMSigDBGeneSets:species', ...
+            'MSigDB gene sets are available for human and mouse only, not "%s".', species);
 end
 
 if gui.i_isuifig(parentfig)
-    [indx1, tf1] = gui.myListdlg(parentfig, listitems, 'Select MSigDB Collection:');
+    [indx1, tf1] = gui.myListdlg(parentfig, listitems, 'Select MSigDB Collection:', [], false);
 else
     [indx1, tf1] = listdlg('PromptString', ...
         {'Select MSigDB Collection:'}, ...
@@ -65,30 +79,17 @@ if pkg.i_isnetavl ~= 1
 end
 
 
-    % tmpf=tempname;
-    % websave(tmpf,urllist{indx1},weboptions('ContentType','json'));
-    % fid = fopen(tmpf);
-    % raw = fread(fid,inf);
-    % str = char(raw');
-    % fclose(fid);
-    % val = jsondecode(str);
-
 Col = webread(urllist{indx1});
 ctag = listitems{indx1};
 ctag = extractBefore(ctag, ':');
 setnames = fields(Col);
 
 if colnoly
-        return;
-    end
-
-    % idx=gui.i_selmultidialog(a);
-    % string(val.(a{idx}).geneSymbols);
-
-    %%
+    return;
+end
 
 if gui.i_isuifig(parentfig)
-    [idx, tf] = gui.myListdlg(parentfig, setnames, 'Select gene set:');
+    [idx, tf] = gui.myListdlg(parentfig, setnames, 'Select gene set:', [], true);
 else
     [idx, tf] = listdlg('PromptString', ...
         {'Select gene set:'}, ...
@@ -97,9 +98,9 @@ else
         'ListSize', [260, 300]);
 end
 if tf == 1
-        setname = setnames(idx);
-        glist = cell(length(idx), 1);
-        for k=1:length(idx)
-            glist{k} = string(Col.(setnames{idx(k)}).geneSymbols);
-        end
+    setname = setnames(idx);
+    glist = cell(length(idx), 1);
+    for k = 1:length(idx)
+        glist{k} = string(Col.(setnames{idx(k)}).geneSymbols);
     end
+end

@@ -1,9 +1,6 @@
 function [x] = myTextareadlg(parentfig, prompts, title, defaultvals, editable)
 
 
-%    x = inputdlg({'Attribute Name','Attribute Values'},...
-%                  'Attribute Editor', [1 80; 15 80]);
-
 dlgSize = [450, 300]; % [Width, Height]
 dlgPos = gui.i_centerdlgpos(parentfig, dlgSize);
 

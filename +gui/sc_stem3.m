@@ -12,7 +12,6 @@ for k = 1:numgene
     bigY(k, :) = 1:nz;
     bigZ(k, :) = X(k, :);
 end
-% figure;
 
 stem3(bigX, bigY, bigZ, 'marker', 'none');
 if ~isempty(Y)
@@ -36,12 +35,3 @@ set(gca, 'XTick', 1:numgene);
 set(gca, 'XTickLabel', genelist(1:numgene));
 
 
-%                 figure;
-%                 stem3(app.X(idx(1:50),:),'marker','none');
-%                 view(139,35)
-%                 ylabel('Genes');
-%                 xlabel('Cells');
-%                 zlabel('Expression');
-%                 set(gca,'YTick',1:30);
-%                 set(gca,'YTickLabel',table2array(app.T(1:30,1)));
-%                 ylim([0 31]);

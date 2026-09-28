@@ -3,8 +3,6 @@ function callback_ScatterCorrPlot(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-% [axx, bxx] = view(findall(FigureHandle,'type','axes'));
-
 answer = gui.myQuestdlg(FigureHandle, 'Select an independent variable. Continue?','');
 if ~strcmp(answer,'Yes'), return; end
 

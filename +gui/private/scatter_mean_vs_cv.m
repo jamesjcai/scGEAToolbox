@@ -25,7 +25,6 @@ if dofit
     warnState = warning('off', 'curvefit:fit:noStartPoint');
     restoreWarn = onCleanup(@() warning(warnState));
     [fr] = fit(xData, yData, ft, fo);
-    % rangev=log10([min(xData) max(xData)]);
     rangev = log10(xlim());
     rangev(2) = log10(quantile(xData, 0.99));
     ab = coeffvalues(fr);
@@ -36,10 +35,7 @@ if dofit
     j = 10.^-(0.5 * log10(i));
     plot(i, j, '-rv');
     j = 10.^(0.5 * log10(ab(2)./i+ab(1)));
-    % plot(i,j,'-gs');
-    % plot(log10(sort(xData)),fr(sort(xData)),'g-');
 
-    %i=logspace(rangev(1),rangev(2));
     j = 10.^(0.5 * log10(ab(2)./i+ab(1)));
     plot(i, j, '-gs');
     legend({'Genes', 'Poisson distribution', ...

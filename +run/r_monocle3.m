@@ -19,7 +19,6 @@ pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
 
 if issparse(X), X = full(X); end
 save('input.mat', 'X', 'idx', 'ndim', '-v7.3');
-% pkg.e_writeh5(X, [], 'input.h5');
 Rpath = getpref('scgeatoolbox', 'rexecutablepath',[]);
 if isempty(Rpath)
     error('R environment has not been set up.');

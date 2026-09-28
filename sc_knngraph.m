@@ -65,7 +65,6 @@ end
 hold(ax, "on");
 for i = 1:size(Graph, 2)
     for j = 1:size(Graph, 1)
-        % if i~=Graph(j,i)
         if A(i, Graph(j, i)) > 0
             if size(s, 2) >= 3
                 line(ax, s([i, Graph(j, i)], 1), ...
@@ -81,7 +80,3 @@ end
 hold(ax, "off");
 end
 
-% G=graph(W);
-% d = distances(G);
-% [diameter, long_ind] = max(d(:));
-% [a,b] = ind2sub(size(d), long_ind)

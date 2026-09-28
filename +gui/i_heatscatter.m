@@ -14,7 +14,6 @@ else
     is2d = true;
 end
 
-% c(c < 0) = 0;
 sz = 5;
 
 if is2d

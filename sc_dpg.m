@@ -34,7 +34,6 @@ function [T, Zx, Zy] = sc_dpg(X, Y, g, setmatrx, setnames, setgenes, ranknorm, b
 %
 % See also: sc_deg, sc_dvg, pkg.e_getgenesets
 
-% X = log1p(sc_norm(X));
 if nargin < 7, ranknorm    = false; end
 if nargin < 8, bgsubtract  = false; end
 if nargin < 6

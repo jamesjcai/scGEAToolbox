@@ -52,6 +52,8 @@ for ks = 1:n
 end
 
 tabgp.SelectionChangedFcn=@displaySelection;
+% The tab the locfit curves are drawn in, rebuilt on every request.
+fittab = gobjects(0);
 
 hx.addCustomButton('off', @in_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.addCustomButton('off', @in_addregress, 'plotpicker-renko.gif', 'Add Regression Line...');
@@ -87,7 +89,8 @@ function displaySelection(~,event)
         txt = t.Title;
         % disp("Viewing gene " + txt);
         [~,idx]=ismember(txt,tabnamelist);
-        focalg = tabnamelist(idx);
+        % The curves tab is not one gene; keep the last gene selected.
+        if idx > 0, focalg = tabnamelist(idx); end
     end
 
 function in_BoxOnOff(~,~)
@@ -190,25 +193,28 @@ function in_addlocfitx(~, ~)
             otherwise
                 return;
         end
-        f = figure;
-        f.Position(3)=f.Position(3)*1.8;
-        hold on
+        % A tab in this window, not a new window.
+        delete(fittab(isvalid(fittab)));
+        fittab = uitab(tabgp, 'Title', 'Locfit curves');
+        axf = axes('Parent', fittab);
+        hold(axf, 'on');
         [sortedx, idxx]=sort(thisx(:));
         Y_fit = Y_fit(idxx,:);
 
         Pk = [];
         for k = 1:size(Y_fit, 2)
             if zs
-                Pk = [Pk, plot(sortedx, zscore(Y_fit(:, k)), '-', 'LineWidth', 3)];
+                Pk = [Pk, plot(axf, sortedx, zscore(Y_fit(:, k)), '-', 'LineWidth', 3)];
             else
-                plot(thisx(:), Y(:,k), '.', 'markersize', 1);
-                Pk = [Pk, plot(sortedx, Y_fit(:, k), '-', 'LineWidth', 3)];
+                plot(axf, thisx(:), Y(:,k), '.', 'markersize', 1);
+                Pk = [Pk, plot(axf, sortedx, Y_fit(:, k), '-', 'LineWidth', 3)];
             end
         end
-        box on
+        box(axf, 'on');
         tabnamelist_a = strrep(tabnamelist_a,'_','\_');
-        legend(Pk, tabnamelist_a, 'location', 'eastoutside');
-        xlim([0, max(thisx(:))]);
+        legend(axf, Pk, tabnamelist_a, 'location', 'eastoutside');
+        xlim(axf, [0, max(thisx(:))]);
+        tabgp.SelectedTab = fittab;
     end
 
 function in_addregress(~, ~)

@@ -45,7 +45,6 @@ if ~ispref('scgeatoolbox', preftagname)
         rpathdefult = '';
     end
     [done] = ix_setrenv(rpathdefult);
-    % setpref('scgeatoolbox',preftagname,s);
 else
     s = getpref('scgeatoolbox', preftagname);
     if isempty(s)
@@ -89,7 +88,6 @@ if done
 end
 
 function [done] = ix_setrenv(deflt)
-        % selpath = uigetdir;
         done = false;
         if ispc
             [file, path] = uigetfile('Rscript.exe', 'Select R Interpreter', deflt);
@@ -101,7 +99,6 @@ function [done] = ix_setrenv(deflt)
             return;
         else
             disp(['User selected: ', fullfile(path, file)]);
-            % fullfile(path)
             try
                 setpref('scgeatoolbox', preftagname, fullfile(path));
             catch ME

@@ -21,7 +21,6 @@ else
 end
 
 [~, b]=fileparts(tempname);
-% fx = sprintf('input_page_%s.html', char(randi([97, 122], 1, 8)));
 fx = sprintf('input_page_%s.html', b);
 outfile = fullfile(wkdir, fx);
 
@@ -39,8 +38,6 @@ fprintf(fid, '%s\n', a(1:idx-1));
 fprintf(fid, '<textarea name=list rows=10 id=text-area cols=63>');
 
 n = min([length(genelist), genenum]);
-
-% n=length(genelist);
 
 if ~isempty(genelist)
     if isstring(genelist)

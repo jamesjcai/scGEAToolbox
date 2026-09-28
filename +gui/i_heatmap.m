@@ -5,7 +5,7 @@ if nargin<4, parentfig = []; end
 [c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
 if noanswer, return; end
 [~, gidx] = ismember(glist, sce.g);
-[Xt] = gui.i_transformx(sce.X, true, 3, parentfig);
+[Xt] = gui.i_transformx(sce.X, true, "libsize_log1p", parentfig);
 if isempty(Xt), return; end
 
 Y = Xt(gidx, :);
@@ -16,7 +16,6 @@ Yori = Y(:, cidx);
 if isempty(dim) || isempty(methodid), return; end
 [Y] = gui.i_norm4heatmap(Yori, dim, methodid);
 
-% szgn = grpstats(c, c, @numel);
 szgn = splitapply(@numel, c, c);
 a = zeros(1, max(c));
 b = zeros(1, max(c));
@@ -24,15 +23,6 @@ for kx = 1:max(c)
     a(kx) = sum(c <= kx);
     b(kx) = round(sum(c == kx)./2);
 end
-
-% figure;
-% heatmap(Y)
-% assignin('base','Y',Y);
-% assignin('base','g',glist) ;
-% heatmap(Y,'YDisplayLabels',glist, ...
-%     'XDisplayLabels',strings(size(Y,2),1), ...
-%     'GridVisible',false,'ColorScaling','scaled',...
-%     'ColorbarVisible',false)
 
 hx=gui.myFigure(parentfig);
 hFig=hx.FigHandle;
@@ -64,26 +54,15 @@ MX = glist;
 c = c(cidx);
 Z = zeros(length(glist), length(cL));
 
+% The columns on screen, as indices into SCE's cells. C is in drawn order,
+% so anything that goes back to SCE.X has to take its cells in this order
+% too; IN_CALLBACK_SORTGROUPS permutes it with YORI.
+colorder = cidx(:).';
+
 % Where each column block sits now, in terms of the groups GUI.I_REORDER-
 % GROUPS handed over. IN_CALLBACK_SORTGROUPS permutes the display and
 % keeps this in step, so "Unsorted" has an order to go back to.
 ordnow = (1:length(cL)).';
-
-% for k = 1:length(cL)
-%     Z(:, k) = mean(Y(:, c == k), 2);
-% end
-
-% [Z] = gui.i_norm4heatmap(Z);
-
-% figure;
-% h2=heatmap(strrep(cL,'_','\_'),MX,Z);
-% h2.Title = 'Marker Gene Heatmap';
-% h2.XLabel = 'Group';
-% h2.YLabel = 'Marker Gene';
-% h2.Colormap = parula;
-% h2.GridVisible = 'off';
-% h2.CellLabelColor='none';
-% h2.ColorLimits=[min(Z(:)), max(Z(:))];
 
 function in_callback_changenorm(~, ~)
         % HFIG, not PARENTFIG: the button is on the heatmap figure, and
@@ -139,6 +118,7 @@ function in_callback_sortgroups(~, ~)
         ordnow = ordnow(p);
         Yori = Yori(:, neworder);
         Y = Y(:, neworder);
+        colorder = colorder(neworder);
 
         szgn = splitapply(@numel, c, c);
         a = zeros(1, max(c));
@@ -162,24 +142,37 @@ function in_drawmap()
             'b',      b, ...
             'szgn',   szgn, ...
             'fliped', fliped);
-        h = gui.i_drawgroupmap(gca, h, drawspec);
+        h = gui.i_drawgroupmap(hx.AxHandle, h, drawspec);
     end
 
 function in_callback_renamecat(~, ~)
         tg = gui.i_inputgenelist(string(cL), true, hFig);
         if isempty(tg), return; end
         if length(tg) == length(cL)
-            set(gca, 'XTick', a-b);
-            set(gca, 'XTickLabel', tg(:))
+            % Redrawn rather than relabelled in place: the groups are on
+            % the Y axis once the map is flipped, and setting XTickLabel
+            % wrote the new names over the gene labels there.
             cL = tg;
+            in_drawmap();
         else
             gui.myErrordlg(hFig, 'Wrong input.');
         end
     end
 
-function in_callback_resetcolor(~, ~)
-        set(gca, 'FontSize', 10);
-        colormap default
+function in_callback_resetcolor(src, ~)
+        % Shared by the main map and the two summary maps, so the target is
+        % the clicked window's plot, not gca -- which on a summary window
+        % would lay a new empty axes over the chart. A heatmap chart keeps
+        % its own Colormap and starts from parula.
+        fig = ancestor(src, 'figure');
+        target = fig.CurrentAxes;
+        if isempty(target), return; end
+        set(target, 'FontSize', 10);
+        if isa(target, 'matlab.graphics.chart.HeatmapChart')
+            target.Colormap = parula;
+        else
+            colormap(target, 'default');
+        end
     end
 
 
@@ -193,7 +186,10 @@ function in_callback_savetable(~, ~)
             'Save Data to Workspace');
     end
 
-function in_callback_exporttable(~, ~, T, needwait, defname)
+function in_callback_exporttable(src, ~, T, needwait, defname)
+        % Used by the summary maps: after the file dialog, raise the window
+        % whose Save button was clicked, not the main app (PARENTFIG).
+        srcfig = ancestor(src, 'figure');
         if nargin < 5, defname = []; end
         if nargin < 4, needwait = false; end
         if ~isempty(defname)
@@ -201,7 +197,7 @@ function in_callback_exporttable(~, ~, T, needwait, defname)
         else
             [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
         end
-        if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
+        gui.i_raisefig(srcfig);
         if isequal(file, 0) || isequal(path, 0)
             return;
         else
@@ -213,7 +209,7 @@ function in_callback_exporttable(~, ~, T, needwait, defname)
             end
             drawnow;
             if needwait
-                gui.myHelpdlg(hFig, ...
+                gui.myHelpdlg(srcfig, ...
                     sprintf('Result has been saved in %s', filename));
             end
         end
@@ -221,6 +217,10 @@ function in_callback_exporttable(~, ~, T, needwait, defname)
 
 
 function in_callback_summarymap(~, ~)
+        gui.myFigure.drawInto(hFig, @in_summarymap);
+    end
+
+function in_summarymap()
         for ky = 1:length(cL)
             Z(:, ky) = mean(Y(:, c == ky), 2);
         end
@@ -229,45 +229,43 @@ function in_callback_summarymap(~, ~)
 
         [mx,idx]=unique(MX,'stable');
         z = Z(idx,:);
-        h = heatmap(gui.i_escapeunderscore(cL), mx, z);
-        h.Title = 'Marker Gene Heatmap';
-        h.XLabel = 'Group';
-        h.YLabel = 'Marker Gene';
-        h.Colormap = parula;
-        h.GridVisible = 'off';
-        h.CellLabelColor = 'none';
+        % HS, not H: these callbacks share the parent's workspace, and H
+        % is the main map's image, which IN_DRAWMAP deletes on the next
+        % flip, sort or renormalization -- taking this chart with it.
+        hs = heatmap(hx1.FigHandle, gui.i_escapeunderscore(cL), mx, z);
+        hs.Title = 'Marker Gene Heatmap';
+        hs.XLabel = 'Group';
+        hs.YLabel = 'Marker Gene';
+        hs.Colormap = parula;
+        hs.GridVisible = 'off';
+        hs.CellLabelColor = 'none';
         t = array2table(z, 'VariableNames', cL, 'RowNames', mx);
-        % writetable(t,'aaa.csv','WriteRowNames',true);
         hx1.addCustomButton('off', {@in_callback_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
         hx1.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
-        % disp('https://software.broadinstitute.org/morpheus/')
         hx1.show(hFig);
     end
 
 function in_callback_summarymapT(~, ~)
+        gui.myFigure.drawInto(hFig, @in_summarymapT);
+    end
+
+function in_summarymapT()
             for ky = 1:length(cL)
                 Z(:, ky) = mean(Y(:, c == ky), 2);
             end
 
         hx2=gui.myFigure(parentfig);
-        % assignin("base","Z",Z);
-        % assignin("base","MX",MX);
-        % assignin("base","cL",cL);
-        % matlab.lang.makeUniqueStrings(MX)
 
         [mx,idx]=unique(MX,'stable');
         z = Z(idx,:);
-        h = heatmap(mx, gui.i_escapeunderscore(cL), z.');
-        h.Title = 'Marker Gene Heatmap';
-        h.YLabel = 'Group';
-        h.XLabel = 'Marker Gene';
-        h.Colormap = parula;
-        h.GridVisible = 'off';
-        h.CellLabelColor = 'none';
+        hs = heatmap(hx2.FigHandle, mx, gui.i_escapeunderscore(cL), z.');
+        hs.Title = 'Marker Gene Heatmap';
+        hs.YLabel = 'Group';
+        hs.XLabel = 'Marker Gene';
+        hs.Colormap = parula;
+        hs.GridVisible = 'off';
+        hs.CellLabelColor = 'none';
         t = array2table(z.', 'VariableNames', mx, 'RowNames', cL);
-        %         s = struct(h);
-        %         s.XAxis.TickLabelRotation=45;
-        % writetable(t,'aaa.csv','WriteRowNames',true);
         hx2.addCustomButton('off', {@in_callback_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
         hx2.addCustomButton('off', {@gui.i_pickcolormap, c}, 'color-wheel.jpg', 'Pick new color map...');
         hx2.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
@@ -276,7 +274,10 @@ function in_callback_summarymapT(~, ~)
 
 function in_callback_dotplotx(~, ~)
         try
-            gui.i_dotplot(sce.X, sce.g, c, cL, MX);
+            % C is in drawn order, so the cells must be too: SCE.X in its
+            % own order gave every group another group's cells.
+            gui.myFigure.drawInto(hFig, ...
+                @() gui.i_dotplot(sce.X(:, colorder), sce.g, c, cL, MX));
         catch ME
             gui.myErrordlg(hFig, ME.message, ME.identifier);
         end

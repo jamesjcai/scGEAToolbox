@@ -224,7 +224,6 @@ end
 if ~iscellstr(g) && ~isstring(g)
     error('g must be a cell array of strings.');
 end
-% if ~all(isfield(Ttfgn.Properties.VariableNames, {'tf', 'target', 'mor'}))
 if ~all(contains({'tf', 'target', 'mor'}, Ttfgn.Properties.VariableNames))
     error('Ttfgn must contain the fields: tf, target, and mor.');
 end
@@ -356,7 +355,6 @@ switch methodid
             if n_t > 0
                 w      = t2(ki, idx2)';        % signed mor weights
                 w_norm = w / sum(abs(w));       % L1-normalise within regulon
-                % NES = √n · Σ(w̃_i · z_i)
                 cs(ki, :) = sqrt(n_t) * sum(w_norm .* Z2(idx2, :), 1);
                 numtargetgenes(ki) = n_t;
             end

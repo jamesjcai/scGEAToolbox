@@ -1,6 +1,16 @@
-function i_qcviolin(X, genelist, parentfig)
+function i_qcviolin(X, genelist, parentfig, groups, groupname)
+%I_QCVIOLIN Violin plots of the three cell QC metrics.
+%
+%   gui.i_qcviolin(X, genelist, parentfig) plots genes detected, library
+%   size and mitochondrial percentage over all cells, side by side.
+%
+%   gui.i_qcviolin(X, genelist, parentfig, groups, groupname) plots one
+%   violin per group instead, the three metrics stacked so the groups have
+%   the width. GROUPS has one entry per cell; GROUPNAME labels the x-axis.
 
-if nargin<3, parentfig=[]; end
+if nargin < 3, parentfig = []; end
+if nargin < 4, groups = []; end
+if nargin < 5, groupname = ''; end
 
 i = startsWith(genelist, 'mt-', 'IgnoreCase', true);
 nftr = full(sum(X > 0, 1));
@@ -8,49 +18,50 @@ lbsz = full(sum(X, 1));
 lbsz_mt = full(sum(X(i, :), 1));
 cj = 100 * (lbsz_mt ./ lbsz);
 
+metrics = {nftr, lbsz, cj};
+titles = {sprintf('nFeature\\_RNA\n(# of genes)'), ...
+    sprintf('nCount\\_RNA\n(# of reads)'), ...
+    sprintf('percent.mt\n(mitochondrial content)')};
+
 hx = gui.myFigure(parentfig, true);
 
-%{
-fx = hx.FigHandle;
-% ax = hx.AxHandle;
-tiledlayout(fx, "horizontal");
-
-ax1 = nexttile;
-violinplot(ax1, nftr);
-title(ax1, sprintf('nFeature\\_RNA\n(# of genes)'));
-box(ax1, "on");
-
-ax2 = nexttile;
-violinplot(ax2, lbsz);
-title(ax2, sprintf('nCount\\_RNA\n(# of reads)'));
-box(ax2, "on");
-
-ax3 = nexttile;
-violinplot(ax3, cj);
-title(ax3, sprintf('percent.mt\n(mitochondrial content)'));
-box(ax3, "on");
-%}
-
-% if ~isempty(parentfig)
-%     px_new = gui.i_getchildpos(parentfig, hFig);
-% else
-%     px_new=[];
-% end
-
-subplot(1, 3, 1)
-gui.i_violinplot_base(nftr, [], 'showdata', false);
-title(sprintf('nFeature\\_RNA\n(# of genes)'));
-box on;
-
-subplot(1, 3, 2)
-gui.i_violinplot_base(lbsz, [], 'showdata', false);
-title(sprintf('nCount\\_RNA\n(# of reads)'));
-box on;
-
-subplot(1, 3, 3)
-gui.i_violinplot_base(cj, [], 'showdata', false);
-title(sprintf('percent.mt\n(mitochondrial content)'));
-box on;
+if isempty(groups)
+    for k = 1:3
+        subplot(1, 3, k)
+        gui.i_violinplot_base(metrics{k}, [], 'showdata', false);
+        title(titles{k});
+        box on;
+    end
+else
+    % Three stacked rows and long rotated group names do not fit the
+    % default figure: the axes were squeezed to a line. Make it taller,
+    % pack the tiles, and label the groups under the bottom row only.
+    groupedFigureHeight = 760;
+    widthPerGroup = 55;
+    widthMargin = 200;
+    fx = hx.FigHandle;
+    numGroups = numel(unique(string(groups)));
+    fx.Position(3) = max(fx.Position(3), ...
+        min(widthPerGroup*numGroups + widthMargin, 1400));
+    fx.Position(4) = groupedFigureHeight;
+    t = tiledlayout(fx, 3, 1, TileSpacing="compact", Padding="compact");
+    % Underscores would be read as TeX subscripts in the tick labels.
+    cats = strrep(string(groups(:)), '_', ' ');
+    for k = 1:3
+        ax = nexttile(t);
+        gui.i_violinplot_base(metrics{k}(:), cats, 'showdata', false);
+        ylabel(ax, titles{k});
+        box(ax, "on");
+        if k < 3
+            ax.XTickLabel = [];
+        else
+            xtickangle(ax, -45);
+        end
+    end
+    if strlength(string(groupname)) > 0
+        xlabel(t, strrep(string(groupname), '_', ' '));
+    end
+end
 
 hx.show(parentfig);
 

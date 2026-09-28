@@ -53,26 +53,16 @@ if ~nocustome
 end
 
 if ~noattrib
-    % if istable(sce.table_attributes)
-    %     if size(sce.table_attributes, 1) == sce.NumCells
-    %         listitems = [listitems, 'SCE Attribute Table...'];
-    %     end
-    % end
 end
 
-% if ~(ismcc || isdeployed)
 listitems = [listitems, 'Load Variable from File...'];
-% end
 
 if isempty(listitems), return; end
 
 
-% listitems={'Current Class (C)','Cluster ID','Batch ID',...
-%            'Cell Type','Cell Cycle Phase'};
-
 
  if gui.i_isuifig(parentfig)
-    [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select state/grouping variable:');
+    [indx2, tf2] = gui.myListdlg(parentfig, listitems, 'Select state/grouping variable:', [], false);
  else
     [indx2, tf2] = listdlg('PromptString', ...
         {'Select state/grouping variable:'}, ...
@@ -115,13 +105,23 @@ if tf2 == 1
                 switch answer1
                     case 'Re-compute'
                         needestimate = true;
-                    case 'Cancel'
-                        return;
+                        in_snapshotowner(sce, parentfig);
+                    case 'Use existing'
+                        % nothing to compute
+                    otherwise
+                        return;   % Cancel, or the dialog closed
                 end
             end
             if needestimate
                 fw = gui.myWaitbar(parentfig);
-                sce = sce.estimatecellcycle(true, 1);
+                try
+                    sce = sce.estimatecellcycle(true, 1);
+                catch ME
+                    gui.myWaitbar(parentfig, fw, true);
+                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
+                    thisc = [];
+                    return;
+                end
                 gui.myWaitbar(parentfig, fw);
             end
             thisc = sce.c_cell_cycle_tx;
@@ -164,9 +164,6 @@ if tf2 == 1
                 string(sce.list_cell_attributes(1:2:end)));
             thisc = sce.list_cell_attributes{idx*2};
 
-            % nx=length(baselistitems);
-            % clabel = sce.list_cell_attributes{2 * (indx2 - nx) - 1};
-            % thisc = sce.list_cell_attributes{2 * (indx2 - nx)};
     end
 end
 
@@ -174,20 +171,9 @@ end
 function [c, x] = i_pickvariable
         c = [];
         x = '';
-        %     a=evalin('base','whos');
-        %     b=struct2cell(a);
-        %     v=false(length(a),1);
-        %     for k=1:length(a)
-        %         if max(a(k).size)==sce.NumCells && min(a(k).size)==1
-        %             v(k)=true;
-        %         end
-        %     end
-        %     if any(v)
-        % valididx=ismember(b(4,:),'double');
-        % a=a(valididx);
 
         if gui.i_isuifig(parentfig)
-            [indx, tf] = gui.myListdlg(parentfig, b(1, :), 'Select workspace variable:');
+            [indx, tf] = gui.myListdlg(parentfig, b(1, :), 'Select workspace variable:', [], false);
         else
             [indx, tf] = listdlg('PromptString', {'Select workspace variable:'}, ...
                 'liststring', b(1, :), 'SelectionMode', 'single', 'ListSize', [220, 300]);
@@ -197,7 +183,6 @@ function [c, x] = i_pickvariable
             c = evalin('base', a(indx).name);
             x = a(indx).name;
         end
-        %    end
 end
 
         function [c, x] = i_pickattribute
@@ -208,7 +193,7 @@ end
 
         if gui.i_isuifig(parentfig)
             [indx, tf] = gui.myListdlg(parentfig, att, ...
-                'Select a SCE attribute variable:');
+                'Select a SCE attribute variable:', [], false);
         else
             [indx, tf] = listdlg('PromptString', {'Select a SCE attribute variable:'}, ...
                 'liststring', att, 'SelectionMode', 'single', 'ListSize', [220, 300]);
@@ -224,4 +209,18 @@ end
     end
 
 
+end
+
+function in_snapshotowner(sce, parentfig)
+% Re-computing overwrites the phases on SCE, a handle, and they may have come
+% from Seurat or an import. When SCE is the app's own dataset, keep the old
+% state for Undo. Snapshot here rather than in the handlers that open this
+% picker: picking a state never writes, and a snapshot per pick would spend
+% the single undo level on nothing.
+if isempty(parentfig) || ~isprop(parentfig, 'RunningAppInstance'), return; end
+app = parentfig.RunningAppInstance;
+if isempty(app) || ~isprop(app, 'sce') || ~isa(app.sce, 'SingleCellExperiment'), return; end
+if app.sce == sce
+    gui.i_snapshot(app, 'Estimate Cell Cycle Phase');
+end
 end

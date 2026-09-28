@@ -14,12 +14,6 @@ if ~issparse(X) && ~isa(X, ct)
     catch ME
         if (strcmp(ME.identifier, 'MATLAB:array:SizeLimitExceeded'))
             disp('Converting X to sparse.');
-            % tic
-            % S=spalloc(size(X,1),size(X,2),nnz(X));
-            % idx=find(X>0);
-            % S(idx)=X(idx);
-            % toc
-            % X=S;
             a = floor(size(X)./2);
             x1 = sparse(cf(X(1:a(1), 1:a(2))));
             x2 = sparse(cf(X(a(1)+1:end, 1:a(2))));

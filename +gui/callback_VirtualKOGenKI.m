@@ -7,7 +7,7 @@ gsorted = natsort(sce.g);
 if isempty(gsorted), return; end
 
 if gui.i_isuifig(FigureHandle)
-    [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene');
+    [indx2, tf] = gui.myListdlg(FigureHandle, gsorted, 'Select a KO gene', [], false);
 else
     [indx2, tf] = listdlg('PromptString', {'Select a KO gene'}, ...
         'SelectionMode', 'single', 'ListString', ...
@@ -32,11 +32,8 @@ preftagname = 'externalwrkpath';
 if isempty(wkdir), return; end
 
 try
-    % fw = gui.myWaitbar(FigureHandle);
     [T] = run.py_GenKI(sce.X, sce.g, idx, wkdir);
-    % gui.myWaitbar(FigureHandle, fw);
 catch ME
-    % gui.myWaitbar(FigureHandle, fw);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end

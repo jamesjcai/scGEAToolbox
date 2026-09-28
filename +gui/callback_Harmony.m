@@ -41,12 +41,10 @@ fw = gui.myWaitbar(FigureHandle);
 try
     if usepcs
         ndim = size(sce.s, 2);
-        Xn = log1p(sc_norm(sce.X)).';
-        if issparse(Xn)
-            Xn = full(Xn);
-        end
-        [~, pcs] = pca(Xn, 'NumComponents', ...
-            min(50, min(size(Xn)) - 1));
+        % The same components CLUSTERCELLS clusters on (HVGs, log1p,
+        % scaled, 30 PCs), so the corrected ones kept below can stand in
+        % for them. This used to be a PCA of all genes, unscaled, 50 PCs.
+        pcs = pkg.e_cellpcs(sce.X, sce.g);
 
         % The uncorrected PCs are kept rather than overwritten, because
         % the no-op check below has to compare what Harmony was GIVEN with
@@ -89,6 +87,12 @@ if isempty(s) || unchanged
 end
 
 sce.s = s;
+% Kept so that clustering after this runs on the corrected components.
+% Without them CLUSTERCELLS recomputes PCs from the uncorrected X, and the
+% clusters split by batch again however well the UMAP looks.
+if usepcs
+    sce.struct_cell_reductions.harmony = pcsCorrected;
+end
 gui.myGuidata(FigureHandle, sce, src);
 done = true;
 

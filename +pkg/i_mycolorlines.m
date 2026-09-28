@@ -30,4 +30,3 @@ end
 % end
 
 
-% a = pkg.distinguishable_colors(kc);

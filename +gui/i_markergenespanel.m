@@ -1,5 +1,9 @@
-function i_markergenespanel(X, genelist, s, markerlist, numfig, N, ax, bx, sptltxt)
+function i_markergenespanel(X, genelist, s, markerlist, numfig, N, ax, bx, sptltxt, parentfig)
+% I_MARKERGENESPANEL Expression of each marker on the embedding, N per page.
+%   One window, one tab per page of N (9 or 16) genes. AX and BX are the
+%   view azimuth and elevation to apply to 3-D plots.
 
+if nargin < 10, parentfig = []; end
 if nargin < 9, sptltxt = ''; end
 if nargin < 8, bx = []; end
 if nargin < 7, ax = []; end
@@ -12,68 +16,36 @@ if ~ismember(N, [9, 16]) || numfig < 1 || numfig > 10
     error('error');
 end
 
+% Pages were separate windows, cascaded over the main app.
+hx = gui.myFigure(parentfig);
+delete(hx.AxHandle);
+tabgp = uitabgroup(hx.FigHandle);
 for kkk = 1:numfig
-    figurec;
+    tab = uitab(tabgp, 'Title', sprintf('Page %d', kkk));
+    tl = tiledlayout(tab, sqrt(N), sqrt(N));
     for kk = 1:min([N, n - (kkk - 1) * N])
-        if N == 16
-            subplot(4, 4, kk);
-        elseif N == 9
-            subplot(3, 3, kk)
-        end
-        sc_scattermarker(X, genelist, s, ...
-            markerlist(kk+N*(kkk - 1)), 2, 5, false);
-        if ~isempty(ax) && ~isempty(bx)
-            view(ax, bx);
-        end
+        in_drawgene(nexttile(tl), markerlist(kk+N*(kkk - 1)));
     end
     if ~isempty(sptltxt)
-        sgtitle(sptltxt);
+        title(tl, sptltxt);
     end
 end
-end
+hx.show(parentfig);
 
-
-% FIGUREC - create a figure window in a non-overlapping (cascading)
-%           location
-%
-% USAGE:
-%
-% figurec
-% figurec(...)
-% h=figurec
-% h=figurec(...)
-%
-% FIGUREC acts just like the Matlab FIGURE command, with all arguments
-% passed through, except that the new figure is created a little to the
-% right and down from the highest numbered figure currently existing, so
-% that they won't overlap. If moving the location would push the figure too
-% close to the edge of the screen, then the new figure is created in the
-% default location as usual. (Subsequent figures will again be cascaded.)
-%
-% EXAMPLE:
-%
-% close all;for n=1:20;figurec('color',rand(1,3));plot(0,0);title('Sample');end
-function varargout = figurec(varargin)
-f = findobj(0, 'type', 'figure'); % list of existing figures
-ss = get(0, 'ScreenSize'); % pixel size of entire screen
-h = figure(varargin{:}); % create figure using pass-through arguments
-hp = get(h, 'pos'); % size of new figure when created
-if ~isempty(f)
-    f = f(1);
-    u = get(f, 'units');
-    set(f, 'units', 'pixels')
-    p = get(f, 'pos');
-    set(f, 'units', u)
-    % if moving won't push too far, move; else leave in default location
-    if p(1) + 50 + hp(3) <= ss(3) && p(2) >= 5
-        u = get(h, 'units');
-        ss = get(0, 'screensize');
-        set(h, 'units', 'pixels')
-        set(h, 'pos', [p(1) + 50, p(2) - 50, hp(3:4)]);
-        set(h, 'units', u)
+    function in_drawgene(h1, targetg)
+        % SC_SCATTERMARKER's method 2, drawn into H1 rather than gca.
+        c = full(X(strcmp(genelist, targetg), :));
+        if size(s, 2) > 2
+            scatter3(h1, s(:, 1), s(:, 2), s(:, 3), 5, c, 'filled');
+        else
+            scatter(h1, s(:, 1), s(:, 2), 5, c, 'filled');
+        end
+        set(h1, 'XTickLabel', [], 'YTickLabel', [], 'ZTickLabel', []);
+        grid(h1, "on");
+        title(h1, targetg);
+        subtitle(h1, gui.i_getsubtitle(c));
+        if ~isempty(ax) && ~isempty(bx)
+            view(h1, ax, bx);
+        end
     end
-end
-if nargout > 0
-    varargout{1} = h;
-end
 end

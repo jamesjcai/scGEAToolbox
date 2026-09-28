@@ -59,8 +59,16 @@ data = sqrt(data);
 warnState = warning();
 restoreWarn = onCleanup(@() warning(warnState));
 
+% That same randPCA also opens its randomized branch with rng('default')
+% and never puts the stream back, so one PHATE run left the whole session
+% parked on seed 0 -- every later stochastic step, t-SNE, UMAP, k-means, a
+% bootstrap or the user's own code, drawing from that instead of the seed
+% they set. Restored here for the same reason as the warning state above:
+% the defect is in third-party code, the fix belongs in code we own.
+rngState = rng();
+restoreRng = onCleanup(@() rng(rngState));
+
 s = phate(data, 't', 20, 'ndim', ndim, 'k', 10, 'npca', min([100, size(X,2)]));
-% s = phate(data, 'ndim', ndim);
 
 %%
 if plotit
@@ -88,28 +96,22 @@ if plotit
             xlabel 'PHATE1'
             ylabel 'PHATE2'
             title 'PHATE'
-            %             h = colorbar;
-            %             set(h,'xtick',1:5);
-            %             ylabel(h, 'time');
         case 3
             scatter3(s(:, 1), s(:, 2), s(:, 3), 10, C, 'filled');
-            % colormap(jet)
-            % set(gca,'xticklabel',[]);
-            % set(gca,'yticklabel',[]);
-            % set(gca,'zticklabel',[]);
-            % axis tight
             xlabel 'PHATE1'
             ylabel 'PHATE2'
             zlabel 'PHATE3'
             title 'PHATE 3D'
-            %           h = colorbar;
-            %           set(h,'xtick',1:5);
-            %           ylabel(h, 'time');
-            %           view([-170 15]);
     end
     if ~isempty(genelist)
         dt = datacursormode;
         dt.UpdateFcn = {@i_myupdatefcn1, genelist};
     end
 end
+end
+
+function txt = i_myupdatefcn1(~, event_obj, g)
+% Data-tip text: the gene under the cursor. Local because the shared
+% copies live in private/ folders that +run cannot see.
+txt = {g(event_obj.DataIndex)};
 end

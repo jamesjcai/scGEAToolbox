@@ -50,6 +50,7 @@ if ~isempty(out_dir) && ~isfolder(out_dir)
 end
 
 summary_ct = {};
+errs = strings(0, 1);
 
 for k = 1:numel(results)
     r = results(k);
@@ -67,8 +68,9 @@ for k = 1:numel(results)
     genes_dn   = r.Tdn.gene(1:min(top_n, height(r.Tdn)));
 
     % ---- Run Enrichr ------------------------------------------------
-    Tlist_up = i_run(genes_up, background, genesets);
-    Tlist_dn = i_run(genes_dn, background, genesets);
+    [Tlist_up, errUp] = i_enrichrrun(genes_up, background, genesets, 'llm:run_enrichr:apiFailed');
+    [Tlist_dn, errDn] = i_enrichrrun(genes_dn, background, genesets, 'llm:run_enrichr:apiFailed');
+    errs = [errs; string(errUp); string(errDn)]; %#ok<AGROW>
     fprintf(' done.\n');
 
     % ---- Save to Excel ----------------------------------------------
@@ -84,19 +86,23 @@ for k = 1:numel(results)
     end
 
     % ---- Build summary struct for JSON output -----------------------
-    up_struct = i_make_summary(Tlist_up, lib_labels);
-    dn_struct = i_make_summary(Tlist_dn, lib_labels);
+    up_struct = i_enrichrsummary(Tlist_up, lib_labels);
+    dn_struct = i_enrichrsummary(Tlist_dn, lib_labels);
 
     summary_ct{end+1} = struct( ...
         'cell_type',  char(ct), ...
         'n_genes_up', numel(genes_up), ...
         'n_genes_dn', numel(genes_dn), ...
         'up',         up_struct, ...
-        'dn',         dn_struct); %#ok<AGROW>
+        'dn',         dn_struct, ...
+        'enrichr_error', i_joinErrors({errUp, errDn})); %#ok<AGROW>
 end
 
 % ---- Print JSON summary for agent -----------------------------------
-summary = struct('cell_types', {summary_ct});
+% STATUS: 'completed', 'partial' (some Enrichr calls failed) or 'failed'
+% (all did), each cell type carrying ENRICHR_ERROR, so an API outage is not
+% read as "nothing enriched".
+summary = struct('status', i_enrichrstatus(errs), 'cell_types', {summary_ct});
 summaryJson = jsonencode(summary, 'PrettyPrint', true);
 fprintf('\n%%ENRICHR_SUMMARY_BEGIN%%\n%s\n%%ENRICHR_SUMMARY_END%%\n', summaryJson);
 
@@ -116,17 +122,11 @@ end
 end
 
 
-% ---- Run Enrichr, return {} if gene list is empty -------------------
-function Tlist = i_run(genes, background, genesets)
-Tlist = cell(numel(genesets), 1);
-if isempty(genes)
-    return;
-end
-try
-    Tlist = run.ml_Enrichr(genes, background, genesets);
-catch ME
-    warning('llm:run_enrichr:apiFailed', 'Enrichr API error: %s', ME.message);
-end
+function msg = i_joinErrors(errs)
+% The distinct non-empty messages, '' when there are none.
+e = string(errs);
+e = unique(e(e ~= ""));
+msg = char(strjoin(e, "; "));
 end
 
 
@@ -142,28 +142,5 @@ for i = 1:numel(Tlist)
         warning('llm:run_enrichr:writeFailed', ...
             'Could not write sheet %s: %s', sheet, ME.message);
     end
-end
-end
-
-
-% ---- Condense each Enrichr table to top-10 rows for JSON -----------
-function s = i_make_summary(Tlist, lib_labels)
-s = struct();
-for i = 1:numel(Tlist)
-    T = Tlist{i};
-    fname = matlab.lang.makeValidName(lib_labels(i));
-    if isempty(T) || ~istable(T) || height(T) == 0
-        s.(fname) = {};
-        continue;
-    end
-    n = min(10, height(T));
-    rows = {};
-    for j = 1:n
-        rows{end+1} = struct( ...
-            'term',    char(T.TermName(j)), ...
-            'p_adj',   T.AdjustedP_value(j), ...
-            'genes',   char(T.OverlappingGenes{j})); %#ok<AGROW>
-    end
-    s.(fname) = rows;
 end
 end

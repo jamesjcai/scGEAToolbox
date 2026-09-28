@@ -10,15 +10,9 @@ celllist = [];
 if exist(matrixmtxfile, 'file') ~= 2
     error(message('FileNotFound'));
 end
-%tic
 fprintf('Reading mtx file %s...', matrixmtxfile);
 X = pkg.i_mmread(matrixmtxfile);
 X = pkg.e_uint2sparse(X);
-% try
-%     X=full(X);
-% catch
-%
-% end
 fprintf('...done.\n');
 if isempty(featurestxtfile)
     genelist = [];
@@ -49,6 +43,4 @@ if nargout > 2 && ~isempty(barcodestxtfile)
     celllist = string(T.Var1);
     fprintf('...done.\n');
 end
-%assert(isequal(size(X,1),length(genelist)))
-%toc
 end

@@ -22,9 +22,6 @@ catch ME
 end
 
 keptidxv{1} = keptidx;
-%if removemtgenes
-%    [X,genelist]=sc_rmmtgenes(X,genelist);
-%end
 oldsz = 0;
 newsz = 1;
 c = 1;
@@ -59,7 +56,6 @@ if sum(idx) > 0
     f_mtreads = lbsz_mt ./ lbsz;
     keptidx = f_mtreads < mtratio;
     if sum(~keptidx) > 0
-        %Xobj.data=Xobj.data(:,keptidx);
         Xobj.data(:, ~keptidx) = [];
         if verbose
             fprintf('Removed %s with mt-read ratio >=%f (or %f%%).\n', ...

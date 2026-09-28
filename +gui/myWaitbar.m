@@ -17,7 +17,6 @@ end
 
 if ~gui.i_isuifig(parentfig)
         if nargin < 2 || isempty(fw)
-            % hFig = gcf;
             hFig = get(groot,'CurrentFigure');
             fw = waitbar(0, 'Processing your data...','Visible','off', ...
                 'Units','pixels');
@@ -51,7 +50,6 @@ if ~gui.i_isuifig(parentfig)
                 toc;
                 fw = waitbar(1, fw, mesg);
                 pause(1);
-                % fprintf('.......................done.\n');
             end
             if pkg.i_isvalid(fw), close(fw); end
         end
@@ -59,9 +57,6 @@ if ~gui.i_isuifig(parentfig)
     else
 
         if nargin < 2 || isempty(fw)
-            % hFig = gcf;
-            % hFig = get(groot,'CurrentFigure');
-            % hUiFigHandle = findall(0, 'Type', 'figure', 'BeingDeleted', 'off');
 
             fw = uiprogressdlg(parentfig, 'Title', 'Please wait...', ...
                 'Message', mesg);
@@ -88,7 +83,6 @@ if ~gui.i_isuifig(parentfig)
                 fw.Value = 1;
                 fw.Message = mesg;
                 pause(1);
-                % fprintf('.......................done.\n');
             end
             if pkg.i_isvalid(fw), close(fw); end
         end

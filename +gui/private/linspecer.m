@@ -88,7 +88,6 @@ if ~isempty(varargin) > 0 % you set a parameter?
                 warning('qualitiative is not possible for greater than 12 items, please reconsider');
                 else
                     if N > 9
-                        %     warning(['Default may be nicer for ' num2str(N) ' for clearer colors use: whitebg(''black''); ']);
                     end
             end
 
@@ -127,7 +126,6 @@ end
     set1JL = brighten(colorBrew2mat({[228, 26, 28]; [55, 126, 184]; [77, 175, 74]; [255, 127, 0]; [255, 237, 111] * .85; [166, 86, 40]; [247, 129, 191]; [153, 153, 153]; [152, 78, 163]}'));
     set1 = brighten(colorBrew2mat({[55, 126, 184] * .85; [228, 26, 28]; [77, 175, 74]; [255, 127, 0]; [152, 78, 163]}), .8);
 
-    % colorblindSet = {[215,25,28];[253,174,97];[171,217,233];[44,123,182]};
     colorblindSet = {[215, 25, 28]; [253, 174, 97]; [171, 217, 233] * .8; [44, 123, 182] * .8};
 
     set3 = dim(set3, .93);

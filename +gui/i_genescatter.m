@@ -42,9 +42,6 @@ function in_callback_HighlightSelectedGenes(~,~)
 if ~isempty(glist)
     [y,idx]=ismember(glist, T.gene);
     idx=idx(y);
-    % idv = zeros(1, length(hvgidx));
-    % idv(idx)=1;
-    % h.BrushData = idv;
     for k=1:length(idx)
         dt = datatip(h,'DataIndex',idx(k));
     end

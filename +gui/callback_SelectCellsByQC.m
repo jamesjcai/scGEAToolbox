@@ -7,8 +7,6 @@ requirerefresh = false;
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-% 'SC_QCFILTER (QC Preserves Lowly-expressed Cells/Genes)',...
-
 oldcn = sce.NumCells;
 oldgn = sce.NumGenes;
 
@@ -32,7 +30,7 @@ listitems = {'SC_QCFILTER (Basic QC for Cells/Genes)', ...
         'Abundant lncRNAs vs. Number of Genes'};
 
 if gui.i_isuifig(FigureHandle)
-    [indx, tf] = gui.myListdlg(FigureHandle, listitems, 'Select Filter');
+    [indx, tf] = gui.myListdlg(FigureHandle, listitems, 'Select Filter', [], false);
 else
     [indx, tf] = listdlg('PromptString', {'Select Filter'}, ...
         'SelectionMode', 'single', ...
@@ -41,26 +39,23 @@ else
 end
 
 if tf ~= 1
-   % requirerefresh = false;
     return;
 end
 
-hasDuplicates = numel(unique(sce.g)) < numel(sce.g);
-if hasDuplicates
-    [requirerefresh, sce] = gui.gui_rmdugenes(sce, FigureHandle);
-end
-
-%    sceXori = sce.X;
-%    scegori = sce.g;
-
+    % Taken before the duplicate-gene merge below, which edits SCE in place:
+    % after it, "Cancel Changes" restored a copy that kept the merge.
     if sce.NumCells*sce.NumGenes < 4e8
         sceori = copy(sce);
-        % disp('Ready for reversible.');
     else
         answer = gui.myQuestdlg(FigureHandle, 'You are about to change the SCE data. This cannot be undone.');
         if ~strcmp(answer, 'Yes'), return; end
         sceori = [];
     end
+
+hasDuplicates = numel(unique(sce.g)) < numel(sce.g);
+if hasDuplicates
+    [requirerefresh, sce] = gui.gui_rmdugenes(sce, FigureHandle);
+end
 
     switch listitems{indx}
         case {'SC_QCFILTER (Basic QC for Cells/Genes)',...
@@ -70,7 +65,6 @@ end
                 [whitelist] = gui.i_selectwhitelist(sce, FigureHandle);
                 if isnumeric(whitelist)
                     if whitelist==0
-                        % requirerefresh=false;
                         return;
                     end
                 end
@@ -88,7 +82,6 @@ end
                 case 'Strigent (remove more cells/genes)'
                     definput = {'1000', '0.15', '15', '500'};
                 otherwise
-                    % requirerefresh = false;
                     return;
             end
 
@@ -106,7 +99,6 @@ end
             end
 
             if isempty(answer)
-                % requirerefresh = false;
                 return;
             end
             try
@@ -119,7 +111,6 @@ end
                 assert((min_cells_nonzero >= 0 && min_cells_nonzero <= 1) || (min_cells_nonzero > 1 && min_cells_nonzero < sce.NumCells));
                 assert((numgenes > 0) && (numgenes < intmax));
             catch
-                % requirerefresh = false;
                 gui.myErrordlg(FigureHandle, 'Invalid input(s).');
                 return;
             end
@@ -131,33 +122,35 @@ end
                 sce = sce.qcfilterwhitelist(libsize, mtratio, ...
                     min_cells_nonzero, numgenes, whitelist);
             catch ME
-                if (strcmp(ME.identifier,'MATLAB:array:SizeLimitExceeded'))
-                if issparse(sce.X)
+                % Any error other than running out of memory on a full
+                % matrix used to fall through silently, leaving a possibly
+                % half-filtered SCE and "No cells and genes are removed".
+                if strcmp(ME.identifier, 'MATLAB:array:SizeLimitExceeded') && ~issparse(sce.X)
+                    memerror = true;
+                else
                     gui.myWaitbar(FigureHandle, fw, true);
                     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-                    % requirerefresh = false;
+                    in_restore();
                     return;
-                else
-                    memerror = true;
-                end
                 end
             end
 
 
             if memerror
-                % disp('Making X sparse.');
-                if ~isa(sce.X, 'double')
-                    [sce.X] = pkg.e_uint2sparse(sce.X);
-                else
-                    sce.X = sparse(sce.X);
+                try
+                    if ~isa(sce.X, 'double')
+                        [sce.X] = pkg.e_uint2sparse(sce.X);
+                    else
+                        sce.X = sparse(sce.X);
+                    end
+                catch ME
+                    % Likely here, on the path taken only after running out
+                    % of memory; the bar used to stay up over the app.
+                    gui.myWaitbar(FigureHandle, fw, true);
+                    gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                    in_restore();
+                    return;
                 end
-
-                % disp('Using lite version of QC.');
-                % Xobj=refwrap(sce.X);
-                % sce.X=[];
-                % [g]=pkg.sc_qcfilter_objc(Xobj,sce.g,libsize,mtratio,...
-                %         min_cells_nonzero,numgenes);
-                % sce.X=Xobj.data;
 
                 % [X,g]=sc_qcfilter_lite(sce.X,sce.g,libsize,mtratio,...
                 %        min_cells_nonzero,numgenes);
@@ -169,7 +162,7 @@ end
                 catch ME
                     gui.myWaitbar(FigureHandle, fw, true);
                     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-                    % requirerefresh = false;
+                    in_restore();
                     return;
                 end
             end
@@ -196,8 +189,6 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             % According to the applied criteria for the quality control of cells and genes, the dataset was finally composed of 12,113 genes and 2,990 cells.
 
             gui.myWaitbar(FigureHandle, fw);
-            %   [Xmajor,Xminor,gmajor,gminor]=pkg.e_makeshadowmat(sce.X,sce.g);
-            %   [X1,g1]=pkg.e_shadowmatqc(Xmajor,Xminor,gmajor,gminor);
 
         case 'Remove Empty Genes'
 
@@ -320,7 +311,6 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         case '(d) Remove Genes Without Approved Symbols'
             speciestag = gui.i_selectspecies(2, false, FigureHandle);
             if isempty(speciestag)
-                % requirerefresh = false;
                 return;
             end
             load(fullfile(mfolder, ...
@@ -337,12 +327,10 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                         sce = sce.selectgenesbyindex(~idx);
                         gui.myWaitbar(FigureHandle, fw);
                     otherwise
-                        % requirerefresh = false;
                         return;
                 end
             else
                 gui.myHelpdlg(FigureHandle, 'No genes found.');
-                % requirerefresh = false;
                 return;
             end
             % Filter protein-coding genes based on HGNC approval status and remove all non-coding genes and pseudogenes.
@@ -351,7 +339,6 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
         case 'Remove Genes (a)+(b)+(c)+(d)'
             speciestag = gui.i_selectspecies(2, false, FigureHandle);
             if isempty(speciestag)
-                % requirerefresh = false;
                 return;
             end
             load(fullfile(mfolder, ...
@@ -365,7 +352,6 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
                 sce = sce.selectgenesbyindex(~idx);
             end
         case '------------------------------------------------'
-            % requirerefresh = false;
             return;
         case 'Remove Cells with No MALAT1 Expression'
             disp('MALAT1 expression indicates cell quality in single-cell RNA sequencing data');
@@ -447,8 +433,6 @@ fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total
             return;
     end
 
-    % if ismember(indx,[7 8 9])
-    % if ismember(listitems{idx},{'','',''})
 if needremove
         if issparse(idx), idx = full(idx); end
         if ~isempty(idx) && any(~idx)
@@ -461,14 +445,14 @@ if needremove
                 case 'Highlight'
                     highlightindex = zeros(1, length(idx));
                     highlightindex(~idx) = 1;
-                    % requirerefresh = false;
+                    in_restore();   % undo a duplicate-gene merge, if any
+                    return;         % not "No cells and genes are removed"
                 case 'Cancel'
                     return;
                 otherwise
                     return;
             end
         else
-            % requirerefresh = false;
             return;
         end
     end
@@ -520,4 +504,13 @@ newgn = sce.NumGenes;
         requirerefresh = true;
     end
 gui.myGuidata(FigureHandle, sce, src);
+
+    function in_restore()
+        % Put the copy taken before any edit back into the app: the SCE is
+        % a handle, so a failed or partial filter has already changed it.
+        if ~isempty(sceori)
+            sce = copy(sceori);
+            gui.myGuidata(FigureHandle, sce, src);
+        end
+    end
 end

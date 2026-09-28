@@ -27,11 +27,6 @@ end
 done = false;
 CellTypeList = []; i1=[]; i2=[]; cL1=[]; cL2=[]; outdir=[];
 
-% if isscalar(unique(sce.c_cell_type_tx))
-%     warning('Only one cell type or cell type is undetermined.','');
-%     return;
-% end
-
 [CellTypeSorted] = pkg.e_sortcatbysize(sce.c_cell_type_tx);
 [CellTypeList] = in_selectcelltypes(CellTypeSorted, parentfig);
 if isempty(CellTypeList), return; end
@@ -42,11 +37,6 @@ if strcmp(clabel,'Cell Type')
     gui.myHelpdlg(parentfig, ('Cannot select ''Cell Type'' as grouping varialbe.'));
     return;
 end
-
-% [i1, i2, cL1, cL2] = gui.i_select2smplgrps(sce, false, parentfig);
-% if (isscalar(i1) && i1 ==0 ) || (isscalar(i2) && i2 == 0) || isempty(cL1) || isempty(cL2)
-%     return;
-% end
 
 [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, parentfig);
 if ~done, return; end
@@ -116,16 +106,11 @@ end
 
 function [CellTypeList]=in_selectcelltypes(CellTypeSorted, parentfig)
 CellTypeList=[];
-% pause(1);
-% [idx] = gui.i_selmultidialog(CellTypeSorted, CellTypeSorted);
-% if isempty(idx), return; end
-% if idx == 0, return; end
-% CellTypeList = CellTypeSorted(idx);
 
 if gui.i_isuifig(parentfig)
     [indx2, tf2] = gui.myListdlg(parentfig, CellTypeSorted, ...
         'Select cell types', ...
-        CellTypeList);
+        CellTypeList, true);
 else
     [indx2, tf2] = listdlg('PromptString', ...
     {'Select Cell Types:'}, ...
@@ -192,7 +177,7 @@ end
 
         if gui.i_isuifig(parentfig)
             [indx2, tf2] = gui.myListdlg(parentfig, listitems, ...
-            'Select grouping variable:');
+            'Select grouping variable:', [], false);
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select grouping variable:'}, ...
@@ -209,12 +194,10 @@ end
                     thisc = sce.c_cluster_id;
                 case 'Batch ID' % batch id
                     thisc = sce.c_batch_id;
-                % case 'Cell Type' % cell type
-                %    thisc = sce.c_cell_type_tx;
                 case 'Cell Cycle Phase' % cell cycle
                     thisc = sce.c_cell_cycle_tx;
                 case 'Workspace Variable...'
-                    thisc = i_pickvariable(parentfig);
+                    thisc = i_pickvariable();   % nested: takes no arguments
             end
         end
 
@@ -223,7 +206,7 @@ end
 
             if gui.i_isuifig(parentfig)
                 [indx, tf] = gui.myListdlg(parentfig, b(1,:), ...
-                'Select grouping variable:');
+                'Select grouping variable:', [], false);
             else
                 [indx, tf] = listdlg('PromptString', {'Select variable:'}, ...
                     'liststring', b(1, :), ...
@@ -240,6 +223,10 @@ end
 
     function [i1, i2, cL1, cL2, done] = in_twogrpsencoding(thisc, parentfig)
         done = false;
+        % Assigned up front: the two error returns below left them unset,
+        % so after the error dialog the caller threw "Output argument not
+        % assigned".
+        i1 = []; i2 = []; cL1 = []; cL2 = [];
         [ci, cLi] = findgroups(string(thisc));
         listitems = natsort(cLi);
         n = length(listitems);
@@ -257,7 +244,7 @@ end
             if gui.i_isuifig(parentfig)
                 [indxx, tfx] = gui.myListdlg(parentfig, listitems, ...
                     'Select two groups', ...
-                    listitems([n-1, n]));
+                    listitems([n-1, n]), true);
             else
                 [indxx, tfx] = listdlg('PromptString', {'Select two groups:'}, ...
                     'SelectionMode', 'multiple', ...

@@ -39,11 +39,12 @@ end
 % ok is the guard: it stays false on the early-return paths below.
 ok = false;
 
+out = "";
 try
     if quiet
         % The clients print progress on every call; capture it so a loop of
         % a hundred prompts does not bury the caller's own output.
-        [~, done, res] = evalc('i_dispatch(prompt, provider, model)');
+        [out, done, res] = evalc('i_dispatch(prompt, provider, model)');
     else
         [done, res] = i_dispatch(prompt, provider, model);
     end
@@ -53,7 +54,15 @@ catch ME
 end
 
 if ~done
+    % The client says why on its way out -- "Error in chat completion:
+    % <reason>", or an error struct in RES. Quiet mode captured that line
+    % and threw it away, so a 401 or a wrong model name reached the caller
+    % only as "reported a failed request".
     txt = "The " + provider + " client reported a failed request.";
+    detail = i_failureDetail(out, res);
+    if strlength(detail) > 0
+        txt = txt + " " + detail;
+    end
     return
 end
 
@@ -65,6 +74,22 @@ txt = strtrim(txt);
 ok = strlength(txt) > 0;
 if ~ok
     txt = "The " + provider + " client returned an empty response.";
+end
+end
+
+
+function detail = i_failureDetail(out, res)
+% The client's own account of a failure: an error struct's message, else
+% the last printed line that mentions an error.
+detail = "";
+if isstruct(res) && isfield(res, 'message')
+    detail = string(res.message);
+    return
+end
+lines = splitlines(string(out));
+hit = lines(contains(lines, "error", 'IgnoreCase', true));
+if ~isempty(hit)
+    detail = strtrim(hit(end));
 end
 end
 

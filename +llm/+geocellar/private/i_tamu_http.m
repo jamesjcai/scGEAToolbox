@@ -1,5 +1,7 @@
 function [txt, stop] = i_tamu_http(chat, msgs, cfg, logFcn, passName)
 % Direct HTTP call to TAMU API, bypassing openAIChat's SSE parser.
+% The reply is read by llm.geocellar.i_parsecompletion, which throws when it
+% holds no completion rather than returning an empty one.
 apiKey = char(cfg.OpenAIAPIKey);
 url    = [regexprep(char(chat.BaseURL), '/$', '') '/chat/completions'];
 model  = char(chat.ModelName);
@@ -26,22 +28,6 @@ opts = weboptions( ...
 );
 
 responseText = webwrite(url, reqBody, opts);
-
-if startsWith(strtrim(responseText), '<')
-    error('llm:geocellar:tamuHtml', 'TAMU returned HTML error page.');
-end
-
-try
-    data = jsondecode(responseText);
-    txt  = string(data.choices(1).message.content);
-    stop = string(data.choices(1).finish_reason);
-    logFcn(sprintf("%s [direct]: %d chars.", passName, strlength(txt)));
-    return;
-catch
-    % response was streaming/SSE, not a single JSON; fall through to SSE parser below
-end
-
-txt  = i_parse_sse(responseText);
-stop = "stop";
-logFcn(sprintf("%s [direct SSE]: %d chars.", passName, strlength(txt)));
+[txt, stop] = llm.geocellar.i_parsecompletion(responseText);
+logFcn(sprintf("%s [direct]: %d chars.", passName, strlength(txt)));
 end

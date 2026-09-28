@@ -22,13 +22,20 @@ parse(p, X, k, varargin{:});
 
 if p.Results.usehvgs
     disp('Using 2000 HVGs.')
-    [~, X] = sc_splinefit(X, [], true, false);
-    X = X(1:min([size(X, 1), 2000]), :);
+    % SC_ANALYTICFIT scores each gene against the closed-form
+    % gamma-Poisson curve implied by the library sizes, the same
+    % ranker SINGLECELLEXPERIMENT.EMBEDCELLS uses. It returns gene
+    % names rather than a sorted matrix, so the rows are picked out
+    % by name. The names are synthetic and unique here, and gene
+    % order does not matter to any of the clustering backends.
+    g = "gene_" + string((1:size(X, 1)).');
+    T = sc_analyticfit(X, g);
+    nkeep = min(height(T), 2000);
+    X = X(ismember(g, T.genes(1:nkeep)), :);
 end
 
 switch p.Results.type
     case 'simlr'
-        % disp('To specify k, use RUN_SIMLR(X,k).');
         [c] = run.ml_SIMLR(X, k, true);
     case 'soptsc'
         % Symmetric NMF for cell clustering
@@ -36,10 +43,8 @@ switch p.Results.type
         % disp('To specify k, use RUN_SOPTSC(X,''k'',k).');
         [c] = run.ml_SoptSC(X, 'k', k, 'donorm', true);
     case 'sc3'
-        %disp('To specify k, use SC_SC3(X,k).');
         [c] = run.ml_SC3(X, k);
     case 'sinnlrr'
-        % disp('To specify k, use RUN_SINNLRR(X,k).');
         [c] = run.ml_SinNLRR(X, k);
 end
 end

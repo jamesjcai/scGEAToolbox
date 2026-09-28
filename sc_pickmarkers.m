@@ -36,8 +36,13 @@ switch methodid
             markerlist{k} = i_pickmarkerslasso(X, genelist, c, k, topn);
         end
     case 4 % Slowest method
+        % Transformed once for all groups. I_PICKMARKERS used to call
+        % SC_TRANSFORM itself, so the whole matrix was transformed again
+        % for every group.
+        Xt = sc_transform(X);
+        [zRest, zPair] = i_rankzscores(Xt, c);
         for k = 1:max(c)
-            a = i_pickmarkers(X, genelist, c, k);
+            a = i_pickmarkers(zRest, zPair, genelist, c, k);
             markerlist{k} = a(1:topn);
         end
     otherwise
@@ -68,79 +73,52 @@ end
 end
 
 
-function [markerlist, A] = i_pickmarkers(X, genelist, idv, id)
+function [zRest, zPair] = i_rankzscores(X, idv)
+% RANKSUM's z for every gene and every comparison I_PICKMARKERS makes.
+%   ZREST(:, k)    ranksum(X(:, idv ~= k), X(:, idv == k)), the rest first
+%   ZPAIR(:, a, b) ranksum(X(:, idv == a), X(:, idv == b))
+% One call covers every group against the rest, and each pair is computed
+% once: swapping RANKSUM's two samples only flips the sign of z. This used
+% to be a PARFOR over genes calling RANKSUM K^2 times (5 groups x 2000
+% genes x 3000 cells: 31.7 s without a parallel pool).
+K = max(idv);
+[~, ~, z] = pkg.e_ranksumrows(X, idv, "approximate");
+zRest = -z;                                  % group first -> rest first
+zPair = zeros(size(X, 1), K, K);
+for a = 1:K
+    for b = a + 1:K
+        pair = idv == a | idv == b;
+        [~, ~, z] = pkg.e_ranksumrows(X(:, pair), 1 + (idv(pair) == b), "approximate");
+        zPair(:, a, b) = z(:, 1);
+        zPair(:, b, a) = -z(:, 1);
+    end
+end
+end
+
+
+function [markerlist, A] = i_pickmarkers(zRest, zPair, genelist, idv, id)
 % IDV - cluster ids of cells
 % ID  - the id of the cluster, for which marker genes are being identified.
+% ZREST, ZPAIR - RANKSUM z-scores from I_RANKZSCORES.
 % see also: run.celltypeassignation
 % Demo:
 % gx=sc_pickmarkers(X,genelist,cluster_id,2);
 % run.celltypeassignation(gx)
-X = sc_transform(X);
 K = max(idv);
-idx = idv == id;
-
-x1 = X(:, idx);
-x0 = X(:, ~idx);
-T = i_sc_deg(x0, x1, genelist);
-totn = sum(~idx);
-A = zeros(size(X, 1), K);  % preallocate: col 1 = all-vs-rest, cols 2..K = per-group
-A(:, 1) = T.z_val;
+totn = sum(idv ~= id);
+A = zeros(size(zRest, 1), K);  % col 1 = all-vs-rest, cols 2..K = per-group
+A(:, 1) = zRest(:, id);
 col = 1;
 for k = 1:K
     if k ~= id
         fprintf('Comparing group #%d with group #%d (out of %d)\n', ...
             id, k, K - 1);
-        x0 = X(:, idv == k);
-        T = i_sc_deg(x0, x1, genelist);
         w = sum(idv == k) ./ totn;
         col = col + 1;
-        A(:, col) = w * T.z_val;
+        A(:, col) = w * zPair(:, k, id);     % group k first, as ranksum(x0, x1)
     end
 end
 A = A(:, 1:col);
-% [~,idx]=sort(sum(A,2));
-% A(isnan(A))=0;
-% [~,idx]=sort(vecnorm(A,2,2),'descend');  % NaN messed up
-% [~,idx]=sort(-vecnorm(A,2,2));  % NaN is ignored
 [~, idx] = sort(sum(A, 2, 'omitnan'));
 markerlist = genelist(idx);
-end
-
-function [T] = i_sc_deg(X, Y, genelist)
-ng = size(X, 1);
-assert(isequal(ng, size(Y, 1)));
-
-p_val = ones(ng, 1);
-avg_logFC = ones(ng, 1);
-pct_1 = ones(ng, 1);
-pct_2 = ones(ng, 1);
-z_val = ones(ng, 1);
-parfor k = 1:ng
-    x = X(k, :);
-    y = Y(k, :);
-    [xp, ~, xt] = ranksum(x, y, 'method', 'approximate');
-    p_val(k) = xp;
-    z_val(k) = xt.zval;
-    avg_logFC(k) = log2(mean(x) ./ mean(y));
-    pct_1(k) = sum(x > 0) ./ length(x);
-    pct_2(k) = sum(y > 0) ./ length(y);
-end
-
-% PKG.E_FDR replaces the two-branch block that used to sit here. Its MAFDR
-% branch and its PKG.E_FDR_BH branch are the same algorithm on clean input
-% -- they agree to 2e-16 -- but they disagree whenever the p-values carry
-% NaN, which is what RANKSUM returns for a gene with no counts in either
-% group and what a per-cell-type run produces in bulk. One drops those from
-% the family, the other counts them, so the same command gave a different
-% answer depending on whether the Bioinformatics Toolbox was installed.
-p_val_adj = pkg.e_fdr(p_val);
-sortid = (1:length(genelist))';
-if size(genelist, 2) > 1
-    gene = genelist';
-else
-    gene = genelist;
-end
-T = table(sortid, gene, p_val, avg_logFC, ...
-    pct_1, pct_2, p_val_adj, z_val);
-% T=sortrows(T,'p_val_adj','ascend');
 end

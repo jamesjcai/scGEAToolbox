@@ -38,6 +38,12 @@ end
 if isempty(direction), return; end
 prefixtag = [prefixtag, erase(dirlabels.FileTag, '_')];
 
+% And the p-value source, for the same reason: a permutation run and a
+% standard run threshold different p-values.
+[numPerm, permTag] = gui.i_dvpermutations(FigureHandle, dvmethod);
+if isempty(numPerm), return; end
+prefixtag = [prefixtag, erase(permTag, '_')];
+
 a=sce.NumGenes;
 [sce] = gui.i_selectinfogenes(sce, [], FigureHandle);
 b=sce.NumGenes;
@@ -47,11 +53,12 @@ fprintf('%s removed.\n', pkg.i_plural(a-b, 'gene'));
 outdir] = gui.i_batchmodeprep(sce, prefixtag, wrkdir, FigureHandle);
 if ~done, return; end
 
-% [runenrichr] = gui.i_enrichrprep;
 [runenrichr] = gui.myQuestdlg(FigureHandle, 'Run Enrichr with top 250 DV genes? Results will be saved in the output Excel files.','');
-if strcmp(runenrichr,'Cancel'), return; end
+if ~ismember(runenrichr, {'Yes', 'No'}), return; end   % Cancel or closed
 
 fw = gui.myWaitbar(FigureHandle);
+% Closed on every exit: a failure inside the loop below left it open.
+closeFw = onCleanup(@() gui.myWaitbar(FigureHandle, fw, true));
 for k=1:length(CellTypeList)
 
     gui.myWaitbar(FigureHandle, fw, false, '', ...
@@ -73,7 +80,7 @@ for k=1:length(CellTypeList)
         continue;
     end
 
-    [T] = sc_dvg(sce1, sce2, cL1, cL2, dvmethod, direction);
+    [T] = sc_dvg(sce1, sce2, cL1, cL2, dvmethod, direction, NumPermutations=numPerm);
 
     outfile = sprintf('%s_%s_vs_%s_%s.xlsx', ...
         prefixtag,...
@@ -93,28 +100,7 @@ for k=1:length(CellTypeList)
         Tup = T(T.DiffSign > 0 & isok, :);
         Tdn = T(T.DiffSign < 0 & isok, :);
 
-        [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2, direction);
-
-        % Item = T.Properties.VariableNames';
-        % Item = [Item; {'# of cells in sample 1';'# of cells in sample 2'}];
-        %
-        % Description = {'gene name';'log mean in sample 1';...
-        %     'log CV in sample 1'; 'dropout rate in sample 1';...
-        %     'distance to curve 1';'p-value of distance in sample 1';...
-        %     'FDR of distance in sample 1';'log mean in sample 2';...
-        %     'log CV in sample 2'; 'dropout rate in sample 2';...
-        %     'distance to curve 2'; 'p-value of distance in sample 2';...
-        %     'FDR of distance in sample 2'; 'Difference in distances';...
-        %     'Sign of difference';'p-value of DV test';...
-        %     sprintf('%d',sce1.NumCells); sprintf('%d',sce2.NumCells)};
-        % if length(Item) == length(Description)
-        %     Tnt = table(Item, Description);
-        % else
-        %     assignin("base","Item", Item);
-        %     assignin("base","Description", Description);
-        %     Tnt = table(Item);
-        %     warning('Variables must have the same number of rows.');
-        % end
+        [T, Tnt] = pkg.in_DVTableProcess(T, cL1, cL2, direction, numPerm);
 
 
         try

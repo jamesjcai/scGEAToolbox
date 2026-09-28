@@ -45,10 +45,6 @@ if exist(outfile,'file')
     [~, sortid] = sort(idx);
     pred = string(t.copykat_pred);
     pred = pred(sortid);
-    % y = zeros(sce.NumCells, 1);
-    % y(pred == "aneuploid") = 1;
-    % y(pred == "diploid") = 0;
-    % y = y(sortid);
 else
     error('run.r_copykat:noOutput', ...
         ['R finished but did not write %s to %s. The R console ', ...

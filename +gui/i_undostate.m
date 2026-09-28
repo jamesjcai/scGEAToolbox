@@ -21,12 +21,10 @@ if ~isa(src, 'matlab.apps.AppBase'), return; end
 if ~isprop(src, 'UndoMenu') || ~pkg.i_isvalid(src.UndoMenu), return; end
 
 m = src.UndoMenu;
-s = [];
-if pkg.i_isvalid(src.UIFigure)
-    s = getappdata(src.UIFigure, 'sceundo');
-end
+% The same snapshot Undo would restore, so the label names it.
+s = gui.i_effectiveundo(src.UIFigure, src.sce);
 
-if isempty(s) || ~isstruct(s) || ~isfield(s, 'sce') || isempty(s.sce)
+if isempty(s)
     m.Enable = 'off';
     m.Text = 'Undo';
     return;

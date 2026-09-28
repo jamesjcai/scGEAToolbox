@@ -21,7 +21,7 @@ else
 end
 
 if ~isempty(answer1)
-    fw = gui.gui_waitbar;
+    fw = gui.myWaitbar([]);
     try
         tmpd = tempdir;
         if strcmpi(answer1(end-2:end), '.gz')
@@ -50,10 +50,10 @@ if ~isempty(answer1)
         [X, genelist, celllist] = sc_readtsvfile(f);
         ftdone = true;
     catch ME
-        gui.gui_waitbar(fw, true);
+        gui.myWaitbar([], fw, true);
         errordlg(ME.message);
         return;
     end
-    gui.gui_waitbar(fw);
+    gui.myWaitbar([], fw);
 end
 end

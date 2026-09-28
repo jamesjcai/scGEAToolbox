@@ -30,7 +30,6 @@ end
 [c, ord] = sort(c(:));
 Y = Y(:, ord);
 
-% szgn = grpstats(c, c, @numel);
 szgn = splitapply(@numel, c, c);
 a = zeros(1, max(c));
 b = zeros(1, max(c));
@@ -40,6 +39,9 @@ for k = 1:max(c)
 end
 rowlabels = gui.i_escapeunderscore(rowlabels);
 hx=gui.myFigure(parentfig);
+% Every draw below, including the button callbacks, targets this axes:
+% after a dialog the current axes can be another window's.
+ax = hx.AxHandle;
 
 %{
 h = heatmap(Y,'YDisplayLabels', rowlabels, ...
@@ -52,17 +54,17 @@ h.XDisplayLabels = repmat({''}, 1, size(h.XDisplayData, 1));  % Remove X-axis la
 % h.ColorbarVisible = 'off';
 %}
 
-h = imagesc(Y);
-set(gca, 'XTick', a-b);
-set(gca, 'XTickLabel', cL);
-set(gca, 'YTick', 1:length(rowlabels));
-set(gca, 'YTickLabel', rowlabels);
-set(gca, 'TickLength', [0, 0]);
-box on
+h = imagesc(ax, Y);
+set(ax, 'XTick', a-b);
+set(ax, 'XTickLabel', cL);
+set(ax, 'YTick', 1:length(rowlabels));
+set(ax, 'YTickLabel', rowlabels);
+set(ax, 'TickLength', [0, 0]);
+box(ax, 'on');
 
 szc = cumsum(szgn);
 for k = 1:length(szc)
-    xline(szc(k)+0.5, 'y-');
+    xline(ax, szc(k)+0.5, 'y-');
 end
 
 hx.addCustomButton('off', @i_renamecat, 'edit.jpg', 'Rename groups...');
@@ -73,45 +75,44 @@ fliped = false;
 
 function in_update
 if fliped
-    h = imagesc(Y');
-    set(gca, 'YTick', a-b);
-    set(gca, 'YTickLabel', cL);
-    % set(gca,'YTickLabelRotation',90);
-    set(gca, 'XTick', 1:length(rowlabels));
-    set(gca, 'XTickLabel', rowlabels);
-    set(gca, 'XTickLabelRotation', 90);
-    set(gca, 'TickLength', [0, 0]);
+    h = imagesc(ax, Y');
+    set(ax, 'YTick', a-b);
+    set(ax, 'YTickLabel', cL);
+    set(ax, 'XTick', 1:length(rowlabels));
+    set(ax, 'XTickLabel', rowlabels);
+    set(ax, 'XTickLabelRotation', 90);
+    set(ax, 'TickLength', [0, 0]);
 else
-    h = imagesc(Y);
-    set(gca, 'XTick', a-b);
-    set(gca, 'XTickLabel', cL);
-    % set(gca,'XTickLabelRotation',0);
-    set(gca, 'YTick', 1:length(rowlabels));
-    set(gca, 'YTickLabel', rowlabels);
-    set(gca, 'TickLength', [0, 0]);
+    h = imagesc(ax, Y);
+    set(ax, 'XTick', a-b);
+    set(ax, 'XTickLabel', cL);
+    set(ax, 'YTick', 1:length(rowlabels));
+    set(ax, 'YTickLabel', rowlabels);
+    set(ax, 'TickLength', [0, 0]);
 end
 end
 
 function i_flipxy(~, ~)
-% delete(h);
 fliped = ~fliped;
 in_update;
 end
 
 function i_renamecat(~, ~)
-tg = gui.i_inputgenelist(string(cL), true, parentfig);
+% The dialog belongs to this plot window, so closing it raises this window
+% rather than the main app.
+tg = gui.i_inputgenelist(string(cL), true, hx.FigHandle);
 if isempty(tg), return; end
 if length(tg) == length(cL)
     cL = tg;
     in_update;
 else
-    gui.myErrordlg(parentfig, 'Wrong input.');
+    gui.myErrordlg(hx.FigHandle, 'Wrong input.');
 end
 end
 
 function i_resetcolor(~, ~)
-set(gca, 'FontSize', 10);
-colormap default
+set(ax, 'FontSize', 10);
+colormap(ax, 'default')
 end
 
 end

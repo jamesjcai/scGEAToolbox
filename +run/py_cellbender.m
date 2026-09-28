@@ -24,8 +24,6 @@ else
     cd(wkdir);
 end
 
-% fw = gui.gui_waitbar([], [], 'Checking Python environment...');
-
 x = pyenv;
 try
     pkg.i_add_conda_python_path;
@@ -41,9 +39,6 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
-    % if pkg.i_isvalid(fw)
-    %    gui.gui_waitbar(fw, true);
-    % end
     error('%s', cmdout);
 end
 if nargin < 1, input_h5 = []; end
@@ -62,15 +57,7 @@ pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
 % input_h5 = """"+input_h5+"""";
 
 writelines(input_h5,"input.txt");
-% save('input.mat', '-v7.3', 'input_h5');
 disp('Input file written.');
-
-% if pkg.i_isvalid(fw)
-%    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
-%    pause(0.5);
-%    gui.gui_waitbar(fw, [], [], 'Running CellBender...');
-% end
-% fw = gui.gui_waitbar([],[],'Running Scrublet...');
 
 try
     canUseGPU = gpuDeviceCount > 0;
@@ -91,10 +78,6 @@ disp(cmdlinestr)
 if status == 0 && exist('output_filtered.h5', 'file')
     output_h5 = fullfile(pwd, 'output_filtered.h5');
 end
-
-% if status == 0 && pkg.i_isvalid(fw)
-%    gui.gui_waitbar(fw, [], 'CellBender is complete');
-% end
 
 % if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 

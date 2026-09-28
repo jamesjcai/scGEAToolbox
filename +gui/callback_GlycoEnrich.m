@@ -39,9 +39,9 @@ if isempty(T)
 end
 
 in_warnaboutdepth(info, groupBy, FigureHandle);
-gui.i_viewtable(T, FigureHandle);
+hTbl = gui.i_viewtable(T, FigureHandle);
 gui.i_exporttable(T, true, 'Tglycoenrich', 'GlycoEnrichTable', ...
-    [], [], FigureHandle);
+    [], [], hTbl);
 end
 
 

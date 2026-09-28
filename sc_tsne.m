@@ -5,8 +5,6 @@ function s = sc_tsne(X, ndim, donorm, dolog1p)
 % s_phate=run.PHATE(X,3,true);
 % s_umap=run.UMAP(X,3);
 narginchk(1, 4)
-% validateattributes(ndim, {'numeric'}, ...
-%     {'scalar', 'integer', '>=', 2, '<=', 3});
 
 if nargin < 2, ndim = 3; end
 if nargin < 3, donorm = true; end
@@ -15,7 +13,6 @@ if nargin < 4, dolog1p = true; end
 % if nargin<5, bygene=false; end   % when BYGENE=true, the matrix X will be transposed and the output will be tSNE for genes rather than cells.
 % if nargin<6, genelist=[]; end
 
-% if bygene, X=X.'; end
 if donorm
     X = sc_norm(X);
     disp('Library-size normalization...done.')
@@ -33,9 +30,6 @@ if issparse(X), X = full(X); end
 
 % The following transpose is necessary to make the input dim right.
 data = X.';
-%if ncells>500
-%	data = svdpca(data, 50, 'random');
-%end
 if ngenes > 500
     if ndim < 10
         s = tsne(data, 'NumDimensions', ndim, ...

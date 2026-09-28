@@ -25,7 +25,7 @@ function [Tm, srcname] = i_getcustommarkers(parentfig, sce, dlgtitle)
 
 Tm = [];
 srcname = "";
-if nargin < 3 || isempty(dlgtitle), dlgtitle = 'Customized Marker Genes'; end
+if nargin < 3 || isempty(dlgtitle), dlgtitle = 'Custom Markers'; end
 if nargin < 2, sce = []; end
 if nargin < 1, parentfig = []; end
 

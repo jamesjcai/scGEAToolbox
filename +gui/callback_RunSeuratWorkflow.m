@@ -16,9 +16,11 @@ if ~ok, return; end
 if isempty(ndim), return; end
 fw = gui.myWaitbar(FigureHandle);
 try
-    [sce] = run.r_seurat(sce, ndim, wkdir, true);
+    % isdebug false: with true, input.mat, output.h5 and g.txt were left
+    % in the working folder after every run.
+    [sce] = run.r_seurat(sce, ndim, wkdir, false);
 catch ME
-    gui.myWaitbar(FigureHandle, fw);
+    gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
     return;
 end

@@ -2,10 +2,8 @@ function callback_CrossTabulation(src, ~)
 
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 
-% [thisc1, clabel1, thisc2, clabel2] = gui.i_select2class(sce, true, FigureHandle);
 [thisc1, clabel1, thisc2, clabel2] = gui.i_select2states(sce, true, FigureHandle);
 
-% [answer] = gui.myQuestdlg(FigureHandle, 'Manually order groups?', '');
 if isempty(thisc1), return; end
 
 iscon1 = i_iscontinuous(thisc1);
@@ -17,10 +15,10 @@ if ~isempty(thisc2) && (iscon1 || iscon2)
         hx = gui.myFigure(FigureHandle);
         axbar = hx.AxHandle;
         if isempty(axbar), axbar = gca; end
-        scatter(ax, thisc1, thisc2, 5, 'filled', 'MarkerFaceAlpha', 0.3);
+        scatter(axbar, thisc1, thisc2, 5, 'filled', 'MarkerFaceAlpha', 0.3);
         xlabel(axbar, strrep(clabel1, '_', '\_'));
         ylabel(axbar, strrep(clabel2, '_', '\_'));
-        title(ax, sprintf('%s vs %s', clabel1, clabel2));
+        title(axbar, sprintf('%s vs %s', clabel1, clabel2));
         [rho, pval] = corr(double(thisc1(:)), double(thisc2(:)), ...
             'Type', 'Spearman', 'Rows', 'complete');
         subtitle(axbar, sprintf('Spearman \\rho=%.3f, p=%.2e', rho, pval));
@@ -92,8 +90,10 @@ end
 
 
 fw = gui.myWaitbar(FigureHandle);
+% Closed on every exit: a failure while the window below is built used to
+% leave the bar open over the app.
+closeFw = onCleanup(@() gui.myWaitbar(FigureHandle, fw, true));
 
-% sizesorted = false;
 labelsx='';
 labelsy='';
 T=[];
@@ -139,7 +139,6 @@ for k=1:2
     clabelall{k} = clabel;
     llabelall{k} = llabel;
     tab{k} = uitab(tabgp, 'Title', sprintf('Tab%d',k));
-    % tab{k} = uitab(tabgp, 'Title', sprintf('%s-%s',clabel,llabel));
     ax0{k} = axes('parent',tab{k});
     ax{k,1} = subplot(2,1,1);
     ax{k,2} = subplot(2,1,2);
@@ -234,15 +233,6 @@ function in_callback_togglepie(~, ~)
     end
 
 function in_crossplot(thiscA, thiscB)
-        % t = table(thiscA, thiscB);
-        % t = sortrows(t, [1, 2]);
-        % thiscA = t.thiscA;
-        % thiscB = t.thiscB;
-
-        % iscategorical(thiscA)
-        % iscategorical(thiscB)
-        % categories(thiscA)
-        % categories(thiscB)
 
         thiscB = reordercats(thiscB, flipud(categories(thiscB)));
 
@@ -302,7 +292,11 @@ function in_plot1(kp1, idxp1, stxtp1)
         ylabel(axh, '# of cells')
         subtitle(axh, stxtp1);
         labelsy1 = gui.i_escapeunderscore(labelsyall{kp1});
-        lgd = legend(axh, b, labelsy1, 'Location', 'bestoutside');
+        % BAR draws series 1 at the foot of the stack and LEGEND lists it
+        % first, i.e. at the top of the key, so an unflipped key reads in
+        % the opposite direction to the bar it describes. Flip both together
+        % and the key reads top to bottom in the same order as the stack.
+        lgd = legend(axh, flip(b), flip(labelsy1), 'Location', 'bestoutside');
         title(lgd, strrep(llabelall{kp1}, '_', '\_'));
     end
 
@@ -323,7 +317,8 @@ function in_plot2(kp2, idxp2)
         ylim(axh, [0, 1]);
         if isempty(hleg), return; end
         labelsy2 = gui.i_escapeunderscore(labelsyall{kp2});
-        lgd = legend(axh, hleg, labelsy2, 'Location', 'bestoutside');
+        % Top-to-bottom, as in IN_PLOT1.
+        lgd = legend(axh, flip(hleg), flip(labelsy2), 'Location', 'bestoutside');
         title(lgd, strrep(llabelall{kp2}, '_', '\_'));
     end
 

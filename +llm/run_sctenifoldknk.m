@@ -134,19 +134,18 @@ for k = 1:numel(cell_types)
     X = log1p(X);
 
     useGPU = pkg.i_usegpu(X);
-    useparallel = ~useGPU;
 
     A0 = [];
     try
         disp('Constructing gene regulatory network...')
-        A0 = net.pcrnet(X, 3, false, true, useparallel, ~useparallel, useGPU);
+        A0 = net.pcrnet(X, 3, false, true, false, false, useGPU);
     catch ME
         fprintf('FAILED (network construction): %s\n', ME.message);
         i_log(out_dir, sprintf('FAILED "%s" (pcrnet): %s', ct_k, ME.message));
         continue;
     end
 
-    nlinks = nnz(A0(idx, :) ~= 0);
+    nlinks = nnz(A0(:, idx) ~= 0);   % outgoing edges, which ten.i_knk removes
     if nlinks == 0
         fprintf('Skipping "%s": KO gene (%s) has no links in network.\n', ct_k, kogene);
         i_log(out_dir, sprintf('SKIP "%s": %s has no links', ct_k, kogene));

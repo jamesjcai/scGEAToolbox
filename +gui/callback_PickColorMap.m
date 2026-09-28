@@ -12,11 +12,7 @@ if nargin < 4 || isempty(showdlg), showdlg = false; end
 if nargin < 3 || isempty(showzero), showzero = false; end
 
 
-    % disp(sprintf('Using %d colors',n));
-    % n = max([n, 3]);
 folder = fileparts(mfilename('fullpath'));
-    % a = strfind(folder, filesep);
-    % folder = extractBefore(folder, a(end)+1);
 if ~(ismcc || isdeployed)
     % Every cbrewer call below is evaluated eagerly into CO, so the path
     % entry is only needed for the duration of this function.
@@ -27,9 +23,6 @@ CT = cbrewer('seq', 'Blues', max([n, 3]));
 
 cx = autumn(n);
 cx(1, :) = [.8, .8, .8];
-    % a=lines(kc);
-    % rng("shuffle");
-    % b=a(randperm(size(a,1)),:);
 ukraineflag = [0, 87, 183; 255, 215, 0] ./ 255;
 mycmap = pkg.i_mycolormap(n);
 co = {cx, lines(n), parula(n), summer(n), ...
@@ -70,10 +63,9 @@ if showdlg
     end
 
 colormap(FigureHandle, abs(co{indx}));
-    % fprintf('Set colormap to %s.\n', cn{indx});
 
 if showzero
-        cm = colormap;
+        cm = colormap(FigureHandle);   % not gca, which can be another window
         cm(1, :) = [.8, .8, .8];
         colormap(FigureHandle, cm);
     end

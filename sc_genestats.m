@@ -40,19 +40,16 @@ elseif iscellstr(g)
 end
 g = g(:);  % ensure column
 
-% --- Convert sparse to dense if needed ---
-if issparse(X)
-    try
-        X = full(X);
-    catch
-        warning('Could not convert sparse matrix to full; computations may be slow.');
-    end
-end
-
 % --- Compute statistics ---
-dropr = 1 - sum(X > 0, 2) ./ size(X, 2);
-u     = mean(X, 2, 'omitnan');
-cv    = std(X, 0, 2, 'omitnan') ./ u;
+% On X as given. This used to FULL() a sparse X first -- 8 GB at 20000
+% genes x 50000 cells -- only to take row statistics, which the sparse
+% forms give directly; the per-gene vectors are made full instead.
+% PKG.E_ROWVAR, not STD/VAR along dim 2: on a sparse matrix those walk
+% every zero (7.0 s against 0.23 s at 20000 genes x 30000 cells); the
+% values agree to ~1e-12 relative, and a constant row still gives 0.
+dropr = full(1 - sum(X > 0, 2) ./ size(X, 2));
+u     = full(mean(X, 2, 'omitnan'));
+cv    = sqrt(pkg.e_rowvar(X, "omitnan")) ./ u;
 
 % --- Assemble result table ---
 T = table(g, u, cv, dropr, ...

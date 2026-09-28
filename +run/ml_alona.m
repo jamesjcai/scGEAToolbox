@@ -1,5 +1,27 @@
 function [T] = ml_alona(X, genelist, clusterid, varargin)
-
+%ML_ALONA Score PanglaoDB cell types against each cluster.
+%
+%   T = ML_ALONA(X, GENELIST, CLUSTERID) returns, per cluster, the ranked
+%   cell types and their CTA scores. Markers come from the HUMAN or MOUSE
+%   sheet of assets/PanglaoDB/celltypes.xlsx.
+%
+%   T = ML_ALONA(..., 'species', "mouse") picks the sheet.
+%   T = ML_ALONA(..., 'bestonly', false) keeps up to ten rows per cluster
+%   instead of the top one.
+%
+%   This used to be two near-identical functions. ML_ALONA read the text
+%   files under external/fun_alona_panglaodb and ML_ALONA_NEW the workbook;
+%   the scoring loop was the same in both, and on the same input they
+%   ranked the types identically, differing only in the fourth significant
+%   figure of the score because the two marker tables are not quite the
+%   same vintage. The workbook version survived. Two options went with the
+%   text-file version, both already unreachable: 'subtype', whose work
+%   SC_CSUBTYPEANNO now does against cellsubtypes.xlsx, and zebrafish,
+%   which no caller could request -- CLI.CMD_CELLTYPES rejects any species
+%   but human and mouse, and the cell-type callbacks all offer those two.
+%   The text files stay where they are; PKG.I_GET_PANGLAODBMARKERS,
+%   PKG.E_PRIMARYMARKERS, RUN.R_CLUSTERMOLE and others still read them.
+%
 % https://alona.panglaodb.se/
 % https://academic.oup.com/database/article/doi/10.1093/database/baz046/5427041
 % REF: PanglaoDB: a web server for exploration of mouse and human single-cell RNA sequencing data
@@ -21,27 +43,14 @@ p = inputParser;
 addRequired(p, 'X', @isnumeric);
 addRequired(p, 'genelist', @isstring);
 addRequired(p, 'clusterid', @isnumeric);
-addOptional(p, 'species', "human", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["human", "mouse", "zebrafish"]));
-addOptional(p, 'organ', "all", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["all", "heart", "immunesystem", "brain", "pancreas"]));
-addOptional(p, 'subtype', "all", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["all", "tcells", "neurons"]));
+addOptional(p, 'species', "human", @(x) (isstring(x) | ischar(x)) & ismember(lower(string(x)), ["human", "mouse"]));
 addOptional(p, 'bestonly', true, @islogical);
 parse(p, X, genelist, clusterid, varargin{:});
 species = p.Results.species;
-% organ=p.Results.organ;
-subtype = p.Results.subtype;
 bestonly = p.Results.bestonly;
 
+pth = fullfile(cdgea, 'assets', 'PanglaoDB', 'celltypes.xlsx');
 
-oldpth = pwd;
-cleanupCwd = onCleanup(@() cd(oldpth));
-pw1 = fileparts(mfilename('fullpath'));
-
-if strcmpi(subtype, "all")
-    pth = fullfile(pw1, '..', 'external', 'fun_alona_panglaodb');
-else
-    pth = fullfile(pw1,  '..', 'external', 'fun_alona_subtypes');
-end
-cd(pth);
 if issparse(X)
     try
         X = full(X);
@@ -53,58 +62,9 @@ end
 % X=sc_norm(X,"type","deseq");
 % warning on
 genelist = upper(genelist);
-switch lower(species)
-    case 'human'
-        % stag='hsHPA';
-        stag = 'hs';
-    case 'mouse'
-        stag = 'mm';
-    case 'zebrafish'
-        stag = 'dr';
-end
-if strcmp(subtype, 'all')
-    markerfile = sprintf('marker_%s.mat', stag);
-    if exist(markerfile, 'file')
-        load(markerfile, 'Tw', 'Tm');
-    else
-        % disp('Preparing marker.mat...');
-        Tw = readtable(sprintf('markerweight_%s.txt', stag));
-        Tm = readtable(sprintf('markerlist_%s.txt', stag), ...
-            'ReadVariableNames', false, 'Delimiter', '\t');
-        save(markerfile, 'Tw', 'Tm');
-    end
-else
-    subtype = lower(subtype);
-    markerfile = sprintf('marker_%s_%s.mat', stag, subtype);
-    if exist(markerfile, 'file')
-        load(markerfile, 'Tw', 'Tm');
-    else
-        % disp('Preparing marker.mat...');
-        Tw = readtable(sprintf('markerweight_%s_%s.txt', stag, subtype));
-        Tm = readtable(sprintf('markerlist_%s_%s.txt', stag, subtype), ...
-            'ReadVariableNames', false, 'Delimiter', '\t');
-        save(markerfile, 'Tw', 'Tm');
-    end
-end
 
-
-% switch lower(species)
-%     case 'human'
-%         Tw=readtable('markerweight_hs.txt');
-%         Tm=readtable('markerlist_hs.txt','ReadVariableNames',false,'Delimiter','\t');
-%         if exist('xxmarkerlist_hs_custom.txt','file')
-%             T2=readtable('xxmarkerlist_hs_custom.txt','ReadVariableNames',false,'Delimiter','\t');
-%             Tm=[Tm;T2];
-%         end
-%     case 'mouse'
-%
-%         Tw=readtable('markerweight_mm.txt');
-%         Tm=readtable('markerlist_mm.txt','ReadVariableNames',false,'Delimiter','\t');
-%         if exist('xxmarkerlist_mm_custom.txt','file')
-%             T2=readtable('xxmarkerlist_mm_custom.txt','ReadVariableNames',false,'Delimiter','\t');
-%             Tm=[Tm;T2];
-%         end
-% end
+Tm = readtable(pth,'FileType','spreadsheet','Sheet',species);
+Tw = pkg.e_markerweight(Tm);
 
 wvalu = Tw.Var2;
 wgene = string(upper(Tw.Var1));
@@ -121,12 +81,8 @@ X = log1p(X(idx1, :));
 wvalu = wvalu(idx2);
 wgene = wgene(idx2);
 
-% celltypev=string(Tm.Var1);
-% [celltypev,idx]=unique(celltypev);
-% Tm=Tm(idx,:);
-
-celltypev = string(Tm.Var1);
-markergenev = string(Tm.Var2);
+celltypev = string(Tm.CellType);
+markergenev = string(Tm.PositiveMarkers);
 NC = max(clusterid);
 
 S = zeros(length(celltypev), NC);
@@ -141,14 +97,10 @@ for j = 1:length(celltypev)
     y = matches(g, genelist);
     if ~any(y), continue; end
     g = g(y);
-    % [~,idx]=ismember(g,genelist);
     Z = zeros(NC, 1);
     ng = zeros(NC, 1);
     for i = 1:length(g)
-        % if any(g(i)==wgene) && any(g(i)==genelist)
         gidx = g(i) == genelist;
-        % if any(gidx)
-        % if matches(g(i),validG)
         wi = wvalu(g(i) == wgene);
         for k = 1:NC
             z = X(gidx, clusterid == k);
@@ -156,7 +108,6 @@ for j = 1:length(celltypev)
             Z(k) = Z(k) + z * wi;
             ng(k) = ng(k) + 1;
         end
-        % end
     end
     for k = 1:NC
         if ng(k) > 0
@@ -167,7 +118,6 @@ for j = 1:length(celltypev)
     end
 end
 T = table();
-% t=table(celltypev);
 for k = 1:NC
     [c, idx] = sort(S(:, k), 'descend');
     if ~isempty(validG)

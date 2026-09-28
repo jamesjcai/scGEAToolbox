@@ -7,11 +7,6 @@ function [T, Xsorted_completed, gsorted_completed, ...
 % >> [X]=sc_norm(X,'type','libsize');
 % >> [T]=sc_splinefit(X,genelist,true,true);
 
-% if nargin<2 || isempty(genelist)
-%     genelist=string(1:size(X,1))';
-%     genelist=strcat("gene_",genelist);
-% end
-
 if nargin < 5, removenan = false; end
 if nargin < 4, plotit = false; end
 if nargin < 3, sortit = true; end
@@ -45,21 +40,7 @@ else
     Xsorted_completed = Xsorted;
 end
 
-% lgu=zscore(lgu);
-% dropr=zscore(dropr);
-% lgcv=zscore(lgcv);
-
-% [~,i]=max(lgcv);
-
 xyz = [lgu, lgcv, dropr];
-
-% [~,j]=sort(pdist2(xyz,xyz(i,:)));
-% xyz=xyz(j,:)';
-% lgu=lgu(j);
-% dropr=dropr(j);
-% lgcv=lgcv(j);
-
-% xyz=[lgu dropr lgcv]';
 
 % s = cumsum([0;sqrt(diff(lgu(:)).^2 + diff(dropr(:)).^2 ...
 %     + diff(lgcv(:)).^2)]);
@@ -86,9 +67,6 @@ belowCurve = (y - xyz1(:, 2)) < 0;
 d(aboveRange) = d(aboveRange) ./ 100;
 d(belowRange) = d(belowRange) ./ 10;
 d(belowCurve) = d(belowCurve) ./ 100;
-
-% D = pdist2(xyz, xyz1);
-% d = min(D, [], 2);
 
 % The three lines above are a heuristic down-weighting, not a
 % transformation: a gene whose mean falls outside the fitted range, or
@@ -121,12 +99,9 @@ if ~isempty(gsorted)
 else
     T = table(lgu, lgcv, dropr, d, pval, fdr, nearidx);
 end
-% 'variablenames',{'Genes','Log10_Mean','Dropout_Rate','Log10_CV','Deviation_3DFeature'});
 
 % T.d(T.dropr > (1 - 0.05)) = 0; % ignore genes with dropout rate > 0.95
 % T.d(T.dropr < (0.01)) = 0;     % ignore genes with dropout rate < 0.01 (removes ribosomal and mitochondrial genes)
-
-% disp('NOTE: Genes with dropout rate > 0.95 are excluded.');
 
 if ~isempty(removedT) && istable(removedT)
     removedT.Properties.VariableNames = T.Properties.VariableNames;

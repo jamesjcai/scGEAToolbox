@@ -2,7 +2,6 @@ function callback_ShowGeneExprGroup(src, ~)
 
 
   [FigureHandle, sce] = gui.gui_getfigsce(src);
-% [axx, bxx] = view(findall(FigureHandle,'type','axes'));
 
     allowunique = false;
     % Several grouping variables may be picked; they cross into one composite

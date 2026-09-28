@@ -1,8 +1,6 @@
 function [celltypes, T] = py_panhumanpy(sce, wkdir, ...
     isdebug, prepare_input_only)
 
-% cell_type = run.py_panhumanpy(sce, 'C:\Users\jcai\Downloads', true, true);
-
 celltypes = [];
 if nargin < 4, prepare_input_only = false; end
 if nargin < 3, isdebug = true; end
@@ -19,9 +17,6 @@ else
     disp('Using working directory provided.');
     cd(wkdir);
 end
-% winopen(wkdir);
-
-% fw = gui.gui_waitbar([], [], 'Checking Python environment...');
 
 x = pyenv;
 try
@@ -46,7 +41,6 @@ if ~prepare_input_only
         end
     end
 
-% try
 pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
 tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
         'input.h5ad', 'output.h5ad'};

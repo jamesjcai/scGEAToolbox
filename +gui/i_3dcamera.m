@@ -1,18 +1,23 @@
 function [pt] = i_3dcamera(tb, prefix, flatview, parentfig, parentax)
+%I_3DCAMERA Toolbar button that records a rotating video of a 3-D plot.
+%   pt = gui.i_3dcamera(tb, prefix, flatview, parentfig, parentax) adds a
+%   push tool to toolbar TB. PREFIX starts the video file name, FLATVIEW
+%   picks the camera path (true: a lower, flatter orbit), PARENTFIG is the
+%   window dialogs are centred on and PARENTAX the axes rotated -- when it is
+%   empty, the current axes at the moment of the click.
+%
+%   This replaces gui.gui_3dcamera, a near-copy without PARENTAX. This one
+%   used to ignore FLATVIEW, overwriting it with RAND>0.5 on every click (so
+%   the camera path was a coin flip, drawn from the global random stream),
+%   and it opened the result with WINOPEN, which exists only on Windows.
 
 if nargin < 5, parentax = []; end
 if nargin < 4, parentfig = []; end
-if nargin < 3, flatview = false; end
+if nargin < 3 || isempty(flatview), flatview = false; end
 if nargin < 2, prefix = ''; end
 if nargin < 1
     hFig = gcf;
-    % tb = findall(hFig, 'Type', 'uitoolbar');
     tb = uitoolbar('Parent', hFig);
-    if isscalar(tb)
-        tb = uitoolbar(hFig);
-    else
-        tb = tb(1);
-    end
 end
 % Raising is about keeping focus on a window the user is already looking
 % at. FIGURE() also forces Visible on, so doing it to a hidden figure
@@ -43,7 +48,13 @@ pt.ClickedCallback = @camera3dmp4;
         answer = gui.myQuestdlg(parentfig, 'Make video snapshot?');
         if ~strcmp(answer, 'Yes'), return; end
 
-        [caz, cel] = view(parentax);
+        ax = parentax;
+        if isempty(ax) || ~isvalid(ax)
+            ax = gca;
+        end
+        fig = ancestor(ax, 'figure');
+
+        [caz, cel] = view(ax);
         OptionZ.FrameRate = 15;
         OptionZ.Duration = 5.5;
         OptionZ.Periodic = true;
@@ -61,192 +72,93 @@ pt.ClickedCallback = @camera3dmp4;
         warnState = warning();
         restoreWarn = onCleanup(@() warning(warnState));
         warning('off', 'all');
-        flatview = rand>0.5;
         if flatview
-            ax = [-20, 50; -110, 65; -190, 80; -290, 60; -380, 40];
+            views = [-20, 50; -110, 65; -190, 80; -290, 60; -380, 40];
         else
-            ax = [-20, 10; -110, 10; -190, 80; -290, 10; -380, 10];
+            views = [-20, 10; -110, 10; -190, 80; -290, 10; -380, 10];
         end
         try
-            xui_CaptureFigVid(ax, fname, OptionZ, parentfig, parentax);
+            i_captureFigVid(views, fname, OptionZ, fig, ax);
         catch
             % video export is optional; restore view and continue if codec missing
         end
-        view(parentax,caz,cel);
-        pause(1);
-        winopen(tempdir);
-        pause(1);
-        vfile = sprintf('%s.mp4', fname);
-        if exist(vfile, 'file')
+        view(ax, caz, cel);
+
+        vfile = '';
+        for ext = [".mp4", ".avi"]
+            if isfile(fname + ext)
+                vfile = char(fname + ext);
+                break;
+            end
+        end
+        if isempty(vfile)
+            gui.myWarndlg(parentfig, 'No video was written (video codec not available?).');
+        elseif ispc
+            winopen(tempdir);
+            pause(1);
             winopen(vfile);
         else
-            vfile = sprintf('%s.avi', fname);
-            if exist(vfile, 'file')
-                winopen(vfile);
-            end
+            gui.myHelpdlg(parentfig, sprintf('Video saved to %s', vfile));
         end
     end
 
 end
 
 
-    function xui_CaptureFigVid(ViewZ, FileName, OptionZ, parentfig, parentax)
+function i_captureFigVid(ViewZ, FileName, OptionZ, fig, ax)
+% Record the axes AX rotating through the view angles VIEWZ (rows of
+% [azimuth, elevation]) to FILENAME. After CaptureFigVid by Alan Jennings
+% (Air Force Institute of Technology): OptionZ.FrameRate, .Duration (spaces
+% the views over that many seconds) and .Periodic (drops the final view so
+% the video loops cleanly). MPEG-4 is written on Windows, the VideoWriter
+% default elsewhere.
+if nargin < 3
+    OptionZ = struct([]);
+end
 
-        if nargin < 3
-            OptionZ = struct([]);
-        end
+% check orientation of ViewZ, should be two columns and >=2 rows
+if size(ViewZ, 2) > size(ViewZ, 1)
+    ViewZ = ViewZ.';
+end
+if size(ViewZ, 2) > 2
+    warning('AJennings:VidWrite', ...
+        'Views should have n rows and only 2 columns. Deleting extraneous input.');
+    ViewZ = ViewZ(:, 1:2);
+end
 
-        % check orientation of ViewZ, should be two columns and >=2 rows
-        if size(ViewZ, 2) > size(ViewZ, 1)
-            ViewZ = ViewZ.';
-        end
-        if size(ViewZ, 2) > 2
-            warning('AJennings:VidWrite', ...
-                'Views should have n rows and only 2 columns. Deleting extraneous input.');
-            ViewZ = ViewZ(:, 1:2); % remove any extra columns
-        end
-
-        if ispc
-            daObj = VideoWriter(FileName, 'MPEG-4'); % my preferred format
-        else
-            daObj=VideoWriter(FileName); % for default video format.
-        end
-        % MPEG-4 CANNOT BE USED ON UNIX MACHINES
-        % set values:
-        % Frame rate
-        if isfield(OptionZ, 'FrameRate')
-            daObj.FrameRate = OptionZ.FrameRate;
-        end
-        if isfield(OptionZ, 'Duration') % space out view angles
-            temp_n = round(OptionZ.Duration*daObj.FrameRate); % number frames
-            temp_p = (temp_n - 1) / (size(ViewZ, 1) - 1); % length of each interval
-            ViewZ_new = zeros(temp_n, 2);
-            for inis = 1:(size(ViewZ, 1) - 1)
-                ViewZ_new(round(temp_p*(inis - 1)+1):round(temp_p*inis+1), :) = ...
-                    [linspace(ViewZ(inis, 1), ViewZ(inis+1, 1), ...
-                    round(temp_p*inis)-round(temp_p*(inis - 1))+1).', ...
-                    linspace(ViewZ(inis, 2), ViewZ(inis+1, 2), ...
-                    round(temp_p*inis)-round(temp_p*(inis - 1))+1).'];
-            end
-            ViewZ = ViewZ_new;
-        end
-        if length(ViewZ) == 2 % only initial and final given
-            ViewZ = [linspace(ViewZ(1, 1), ViewZ(end, 1)).', ...
-                linspace(ViewZ(1, 2), ViewZ(end, 2)).'];
-        end
-        if isfield(OptionZ, 'Periodic') && OptionZ.Periodic
-            ViewZ = ViewZ(1:(end -1), :); % remove last sample
-        end
-        open(daObj);
-        for kathy = 1:size(ViewZ, 1)
-            view(parentax, ViewZ(kathy, :));
-            drawnow;
-            % writeVideo(daObj, getframe(gcf)); %use figure, since axis changes size based on view
-            writeVideo(daObj, getframe(parentfig));
-        end
-        close(daObj);
+if ispc
+    daObj = VideoWriter(FileName, 'MPEG-4');
+else
+    daObj = VideoWriter(FileName);
+end
+if isfield(OptionZ, 'FrameRate')
+    daObj.FrameRate = OptionZ.FrameRate;
+end
+if isfield(OptionZ, 'Duration') % space out view angles
+    temp_n = round(OptionZ.Duration*daObj.FrameRate); % number frames
+    temp_p = (temp_n - 1) / (size(ViewZ, 1) - 1); % length of each interval
+    ViewZ_new = zeros(temp_n, 2);
+    for inis = 1:(size(ViewZ, 1) - 1)
+        ViewZ_new(round(temp_p*(inis - 1)+1):round(temp_p*inis+1), :) = ...
+            [linspace(ViewZ(inis, 1), ViewZ(inis+1, 1), ...
+            round(temp_p*inis)-round(temp_p*(inis - 1))+1).', ...
+            linspace(ViewZ(inis, 2), ViewZ(inis+1, 2), ...
+            round(temp_p*inis)-round(temp_p*(inis - 1))+1).'];
     end
-
-
-    function CaptureFigVid(ViewZ, FileName, OptionZ)
-        % CaptureFigVid(ViewZ, FileName,OptionZ)
-        % Captures a video of the 3D plot in the current axis as it rotates based
-        % on ViewZ and saves it as 'FileName.mpg'. Option can be specified.
-        %
-        % ViewZ:     N-rows with 2 columns, each row are the view angles in
-        %            degrees, First column is azimuth (pan), Second is elevation
-        %            (tilt) values outside of 0-360 wrap without error,
-        %            *If a duration is specified, angles are used as nodes and
-        %            views are equally spaced between them (other interpolation
-        %            could be implemented, if someone feels so ambitious).
-        %            *If only an initial and final view is given, and no duration,
-        %            then the default is 100 frames.
-        % FileName:  Name of the file of the produced animation. Because I wrote
-        %            the program, I get to pick my default of mpg-4, and the file
-        %            extension .mpg will be appended, even if the filename includes
-        %            another file extension. File is saved in the working
-        %            directory.
-        % (OptionZ): Optional input to specify parameters. The ones I use are given
-        %            below. Feel free to add your own. Any or all fields can be
-        %            used
-        % OptionZ.FrameRate: Specify the frame rate of the final video (e.g. 30;)
-        % OptionZ.Duration: Specify the length of video in seconds (overrides
-        %    spacing of view angles) (e.g. 3.5;)
-        % OptionZ.Periodic: Logical to indicate if the video should be periodic.
-        %    Using this removed the final view so that when the video repeats the
-        %    initial and final view are not the same. Avoids having to find the
-        %    interval between view angles. (e.g. true;)
-        %
-        % % % % Example (shown in published results, video attached) % % % %
-        % figure(171);clf;
-        % surf(peaks,'EdgeColor','none','FaceColor','interp','FaceLighting','phong')
-        % daspect([1,1,.3]);axis tight;
-        % OptionZ.FrameRate=15;OptionZ.Duration=5.5;OptionZ.Periodic=true;
-        % CaptureFigVid([-20,10;-110,10;-190,80;-290,10;-380,10],'WellMadeVid',OptionZ)
-        %
-        % Known issues: MPEG-4 video option only available on Windows machines. See
-        % fix where the VideoWriter is called.
-        %
-        % Getframe is used to capture image and current figure must be on monitor 1
-        % if multiple displays are used. Does not work if no display is used.
-        %
-        % Active windows that overlay the figure are captured in the movie.  Set up
-        % the current figure prior to calling the function. If you don't specify
-        % properties, such as tick marks and aspect ratios, they will likely change
-        % with the rotation for an undesirable effect.
-
-        % Cheers, Dr. Alan Jennings, Research assistant professor,
-        % Department of Aeronautics and Astronautics, Air Force Institute of Technology
-        if nargin < 3
-            OptionZ = struct([]);
-        end
-
-        % check orientation of ViewZ, should be two columns and >=2 rows
-        if size(ViewZ, 2) > size(ViewZ, 1)
-            ViewZ = ViewZ.';
-        end
-        if size(ViewZ, 2) > 2
-            warning('AJennings:VidWrite', ...
-                'Views should have n rows and only 2 columns. Deleting extraneous input.');
-            ViewZ = ViewZ(:, 1:2); % remove any extra columns
-        end
-
-        if ispc
-            daObj = VideoWriter(FileName, 'MPEG-4'); % my preferred format
-        else
-            daObj=VideoWriter(FileName); % for default video format.
-        end
-        % MPEG-4 CANNOT BE USED ON UNIX MACHINES
-        % set values:
-        % Frame rate
-        if isfield(OptionZ, 'FrameRate')
-            daObj.FrameRate = OptionZ.FrameRate;
-        end
-        if isfield(OptionZ, 'Duration') % space out view angles
-            temp_n = round(OptionZ.Duration*daObj.FrameRate); % number frames
-            temp_p = (temp_n - 1) / (size(ViewZ, 1) - 1); % length of each interval
-            ViewZ_new = zeros(temp_n, 2);
-            for inis = 1:(size(ViewZ, 1) - 1)
-                ViewZ_new(round(temp_p*(inis - 1)+1):round(temp_p*inis+1), :) = ...
-                    [linspace(ViewZ(inis, 1), ViewZ(inis+1, 1), ...
-                    round(temp_p*inis)-round(temp_p*(inis - 1))+1).', ...
-                    linspace(ViewZ(inis, 2), ViewZ(inis+1, 2), ...
-                    round(temp_p*inis)-round(temp_p*(inis - 1))+1).'];
-            end
-            ViewZ = ViewZ_new;
-        end
-        if length(ViewZ) == 2 % only initial and final given
-            ViewZ = [linspace(ViewZ(1, 1), ViewZ(end, 1)).', ...
-                linspace(ViewZ(1, 2), ViewZ(end, 2)).'];
-        end
-        if isfield(OptionZ, 'Periodic') && OptionZ.Periodic
-            ViewZ = ViewZ(1:(end -1), :); % remove last sample
-        end
-        open(daObj);
-        for kathy = 1:size(ViewZ, 1)
-            view(ViewZ(kathy, :));
-            drawnow;
-            writeVideo(daObj, getframe(gcf)); % use figure, since axis changes size based on view
-        end
-        close(daObj);
-    end
+    ViewZ = ViewZ_new;
+end
+if length(ViewZ) == 2 % only initial and final given
+    ViewZ = [linspace(ViewZ(1, 1), ViewZ(end, 1)).', ...
+        linspace(ViewZ(1, 2), ViewZ(end, 2)).'];
+end
+if isfield(OptionZ, 'Periodic') && OptionZ.Periodic
+    ViewZ = ViewZ(1:(end -1), :); % remove last sample
+end
+open(daObj);
+for kathy = 1:size(ViewZ, 1)
+    view(ax, ViewZ(kathy, :));
+    drawnow;
+    writeVideo(daObj, getframe(fig)); % the figure: the axes change size with the view
+end
+close(daObj);
+end

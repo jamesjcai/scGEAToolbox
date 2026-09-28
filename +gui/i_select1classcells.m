@@ -11,7 +11,6 @@ ptsSelected = [];
         [thisc, clabel] = gui.i_select1state(sce, ...
             false, false, true, false, parentfig);
 
-% [thisc, clabel] = gui.i_select1class(sce,[],[],[],parentfig);
 if isempty(thisc), return; end
 
 answer2 = gui.myQuestdlg(parentfig, sprintf('How to sort members of ''%s''?',clabel), '', ...
@@ -27,7 +26,7 @@ switch answer2
 end
 
 if gui.i_isuifig(parentfig)
-    [indxx, tfx] = gui.myListdlg(parentfig, cLisorted, 'Select groups');
+    [indxx, tfx] = gui.myListdlg(parentfig, cLisorted, 'Select groups', [], true);
 else
     [indxx, tfx] = listdlg('PromptString', {'Select groups'}, ...
         'SelectionMode', 'multiple', ...
@@ -37,7 +36,6 @@ end
 
 if tfx == 1
     ptsSelected = ismember(string(thisc), cLisorted(indxx));
-    % ptsSelected=ismember(ci,indxx);
     if askunselect
         answer = gui.myQuestdlg(parentfig, 'Select or unselect?', '', {'Select', 'Unselect', ...
             'Cancel'}, 'Select');

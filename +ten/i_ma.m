@@ -1,7 +1,69 @@
-function [aln0, aln1] = i_ma(A0, A1, ndim)
+function [aln0, aln1] = i_ma(A0, A1, ndim, laplacian, symmetrize)
 % MA - manifold alignment
+%
+% [aln0, aln1] = ten.i_ma(A0, A1)
+% [aln0, aln1] = ten.i_ma(A0, A1, ndim, laplacian)
+% [aln0, aln1] = ten.i_ma(A0, A1, ndim, laplacian, symmetrize)
+%
+% LAPLACIAN is "normalized" (default) or "unnormalized".
+%
+% SYMMETRIZE (default true) symmetrizes the joint adjacency W; see below for
+% why. FALSE reproduces manifoldAlignment() of the R packages, which works on
+% W as it is: with "unnormalized" the result then matches R up to the sign of
+% each column (which drdist does not see). Only asymmetric input is affected,
+% i.e. scTenifoldKnk, whose knocked-out row makes A1 asymmetric. The reference
+% mode of TEN.SCTENIFOLDKNK uses it; the Laplacian is then not symmetric, so
+% eigs takes the non-symmetric path and the real parts of its modes are kept,
+% as R does with Re().
+%
+% THE DEFAULT CHANGED TO THE NORMALIZED LAPLACIAN (2026-09-24). This used the
+% unnormalized L = D - W, as the reference scTenifoldNet does. Its smallest
+% modes concentrate on weakly connected nodes, so drdist was driven by
+% peripheral genes whose few surviving edges are noise, not by the genes whose
+% wiring changed. The symmetric normalized L = I - D^(-1/2) W D^(-1/2)
+% divides that degree effect out.
+%
+% Measured with the full pipeline (10 bootstrap networks of 500 cells, CP
+% denoising, 1000 genes, 3 seeds), on real Alpha cells split into two halves
+% with 20 genes shuffled across cells in one half:
+%   planted-gene AUROC, PCR networks    0.92 -> 0.93 (full shuffle),
+%                                       0.66 -> 0.69 (30% of cells)
+%   genes at FDR < 0.05 on a null split (no change) 12 -> 5
+% On three real two-condition comparisons (ovarian cancer cells and
+% fibroblasts, co-culture vs monoculture; tumour vs normal) the ranking
+% correlates 0.93-0.96 (Spearman) with the unnormalized one, while null-split
+% hits fall from 10-18 to 0-0.7. The chi2 p-values in ten.i_dr get stricter
+% under the normalized Laplacian: expect fewer genes at FDR < 0.05.
+%
+% The same benchmark is why net.idsnet is not scTenifoldNet's network builder:
+% it builds a network 20-30x faster than PCR, but even with this Laplacian it
+% scored 0.79 against PCR's 0.93 on the planted genes, and on the real data
+% only 14-32% of its top 50 genes matched PCR's.
+%
+% scTenifoldKnk (ten.i_knk, ndim = 2) uses the new default too. On its own
+% denoised networks (1000 genes, three real populations, 40 random knockouts
+% each) the KO gene ranked first in every knockout (85-100% before), the
+% top 50 held 84-96% of the 50 genes losing the most edge weight (53-64%
+% before), and two knockouts' top-50 lists overlapped 26-37% (51-59%
+% before). The price is the tail: across all genes, drdist tracks the
+% removed edge weight at Spearman 0.53-0.59, against 0.92-0.93 before, so a
+% rank-based analysis over the whole Knk list is better served by
+% "unnormalized". Re-measured on 2026-09-25 with the corrected (outgoing)
+% knockout of TEN.I_KNK: the same figures to within a few percent.
+%
+% SYMMETRIZE THE ADJACENCY BEFORE USING "normalized". With SYMMETRIZE =
+% false the normalized Laplacian loses the knockout: on R-pipeline Knk
+% networks its top 50 held 6-11% of the strongest removed edges, against 86%
+% on the same Alpha-cell network symmetrized.
+%
+% The modes returned are eigenvectors of the normalized L itself, not the
+% D^(-1/2)-rescaled random-walk ones; the benchmark above measured these.
+%
+% Pass "unnormalized" to reproduce scTenifoldNet output from before this date.
 
 if nargin < 3, ndim = 30; end
+if nargin < 4, laplacian = "normalized"; end
+if nargin < 5, symmetrize = true; end
 mu = 0.9;
 
 W1 = A0 + 1;
@@ -59,9 +121,24 @@ W = [W1, mu * W12; mu * W12', W2];
 % from the previous one by exactly 0, where sum(abs(W),2) differs by 1.1e-12.
 % That keeps scTenifoldNet's published results bit-identical rather than
 % merely equal to rounding.
-W = 0.5 * (W + W.');
+if symmetrize
+    W = 0.5 * (W + W.');
+end
 D = sum(abs(W));
-L = diag(D) - W;
+switch laplacian
+    case "normalized"
+        s = 1 ./ sqrt(D);
+        L = eye(size(W)) - s.' .* W .* s;
+        if symmetrize
+            L = 0.5 * (L + L.');    % remove rounding asymmetry so eigs takes Lanczos
+        end
+    case "unnormalized"
+        L = diag(D) - W;
+    otherwise
+        error('ten:i_ma:badLaplacian', ...
+            'LAPLACIAN must be "normalized" or "unnormalized". Received "%s".', ...
+            laplacian);
+end
 
 V = i_lomodes(L, ndim);
 
@@ -103,7 +180,8 @@ if isempty(V) || any(isnan(d)) || sum(d >= 1e-8) < ndim
         '%s; recomputing the %d smallest modes with a dense eig (n = %d).', ...
         why, ndim, size(L, 1));
     [V, d] = eig(full(L), 'vector');
-    [d, ind] = sort(d);
+    V = real(V);
+    [d, ind] = sort(real(d));
     V = V(:, ind);
 end
 
@@ -125,7 +203,7 @@ try
 catch
     return
 end
-d = diag(D);
+d = real(diag(D));
 [d, ind] = sort(d);
-V = V(:, ind);
+V = real(V(:, ind));
 end

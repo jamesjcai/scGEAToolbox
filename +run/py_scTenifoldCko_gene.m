@@ -1,8 +1,9 @@
 function [T] = py_scTenifoldCko_gene(sce_ori, celltype1, celltype2, targetg, ...
                                 targettype, wkdir, ...
-                                isdebug, prepare_input_only)
+                                isdebug, prepare_input_only, parentfig)
 
 T = [];
+if nargin < 9, parentfig = []; end
 if nargin < 8, prepare_input_only = false; end
 if nargin < 7, isdebug = true; end
 if nargin < 6, wkdir = []; end
@@ -38,7 +39,6 @@ pw1 = fileparts(mfilename('fullpath'));
 codepth = fullfile(pw1, '..', 'external', 'py_scTenifoldCko');
 
 if isempty(wkdir) || ~isfolder(wkdir)
-    % cd(codepth);
     wkdir = pkg.i_tempdirfile();
     cd(wkdir);
 else
@@ -49,7 +49,7 @@ end
 if ~prepare_input_only
  x = pyenv;
     %{
-    fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+    fw = gui.myWaitbar([], [], [], 'Checking Python environment...');
 
     x = pyenv;
     try
@@ -69,7 +69,7 @@ if ~prepare_input_only
     if status ~= 0
         cd(oldpth);
         if pkg.i_isvalid(fw)
-            gui.gui_waitbar(fw, true);
+            gui.myWaitbar([], fw, true);
         end
         % waitfor(errordlg(sprintf('%s',cmdout)));
         error(cmdout);
@@ -77,7 +77,7 @@ if ~prepare_input_only
     end
 
     if pkg.i_isvalid(fw)
-        gui.gui_waitbar(fw, [], 'Checking Python environment is complete');
+        gui.myWaitbar([], fw, [], 'Checking Python environment is complete');
     end
     %}
 end
@@ -92,72 +92,31 @@ tmpfilelist = {'X1.mat', 'X2.mat', 'g1.txt', 'c1.txt', 'g2.txt', 'c2.txt', 'outp
 pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
 % run cannot leave a previous run's output to be picked up as this one's
 
-    % load(fullfile(pw1,'..','assets','Ligand_Receptor','Ligand_Receptor.mat'), ...
-    %     'ligand','receptor');
-    % validg=unique([ligand receptor]);
-    % [y]=ismember(upper(sce.g),validg);
-    % X=sce.X(y,:);
-    % g=sce.g(y);
-    % writematrix(sce.X,'X.txt');
-
 
 in_prepareX(sce1, 1);
 in_prepareX(sce2, 2);
 
-fw = gui.gui_waitbar([], [], 'Step 2 of 4: Building S1 networks...');
-    % try
-        in_prepareA12(sce1, targetg);
-    % catch ME
-    %     if pkg.i_isvalid(fw)
-    %         gui.gui_waitbar(fw, [], 'Building S1 networks is incomplete');
-    %     end
-    %     errordlg(ME.message);
-    %     return;
-    % end
-gui.gui_waitbar(fw, [], 'Building S1 networks is complete');
-
-fw = gui.gui_waitbar([], [], 'Step 3 of 4: Building S2 networks...');
-    % try
-    %     in_prepareA(sce2, 2);
-    % catch ME
-    %     if pkg.i_isvalid(fw)
-    %         gui.gui_waitbar(fw, [], 'Building S2 network is incomplete');
-    %     end
-    %     errordlg(ME.message);
-    %     return;
-    % end
-pause(3);
-gui.gui_waitbar(fw, [], 'Building S2 network is complete');
-
-fw = gui.gui_waitbar([], [], 'Step 4 of 4: Running scTenifoldXct.py...');
+% One progress bar for the whole run, on the app window. It used to be
+% three unparented bars in a row (one of them just a PAUSE(3)), and a
+% failure left the last one open under the error dialog: the cleanup
+% closes it on every exit, and errors now go to the caller, which reports
+% them once.
+fw = gui.myWaitbar(parentfig, [], [], 'Step 1 of 2: Building networks...');
+closeFw = onCleanup(@() gui.myWaitbar(parentfig, fw, true));
+in_prepareA12(sce1, targetg);
 
 codefullpath = fullfile(codepth,'script_gene.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 
-
 if ~prepare_input_only
+    gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 2: Running scTenifoldCko.py...');
     twosidedtag = 2;
     cmdlinestr = sprintf('"%s" "%s" %d', x.Executable, codefullpath, twosidedtag);
     disp(cmdlinestr)
-    try
-        % [status] = system(cmdlinestr, '-echo');
-        [status] = system(cmdlinestr);
-        % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
-    catch ME
-        if pkg.i_isvalid(fw)
-            gui.gui_waitbar(fw, [], 'Running scTenifoldCko.py is incomplete.');
-        end
-        errordlg(ME.message);
-        return;
-    end
+    % https://www.mathworks.com/matlabcentral/answers/334076-why-does-externally-called-exe-using-the-system-command-freeze-on-the-third-call
+    [status] = system(cmdlinestr);
 end
-if pkg.i_isvalid(fw)
-        if prepare_input_only
-            gui.gui_waitbar(fw, [], 'Input preparation is complete.');
-        else
-            gui.gui_waitbar(fw, [], 'Running scTenifoldCko.py is complete.');
-        end
-    end
+gui.myWaitbar(parentfig, fw);
 
 if ~prepare_input_only
 
@@ -173,10 +132,6 @@ if ~prepare_input_only
     end
     end
 
-    % if status == 0 && exist('output.txt', 'file')
-    %     T = readtable('output.txt');
-    %     iscomplete = true;
-    % end
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 
 
@@ -193,7 +148,6 @@ function in_prepareX(sce, id)
         sce.c_batch_id = sce.c_cell_type_tx;
         sce.c_batch_id(sce.c_cell_type_tx == celltype1) = "Source";
         sce.c_batch_id(sce.c_cell_type_tx == celltype2) = "Target";
-        % sce=sce.qcfilter;
         if issparse(sce.X)
             X = single(full(sce.X));
         else
@@ -222,7 +176,6 @@ function in_prepareA12(sce, targetg)
         A1 = net.pcrnet(X1, 3, false, true, false, false, pkg.i_usegpu(X1));
         disp('A1 network built.')
         A1 = A1 ./ max(abs(A1(:)));
-        % A=0.5*(A1+A1.');
         A = ten.e_filtadjc(A1, 0.75, false);
         save(sprintf('%d/pcnet_Source.mat', 1), 'A', '-v7.3');
 
@@ -255,23 +208,5 @@ function in_prepareA12(sce, targetg)
         end
         save(sprintf('%d/pcnet_Target.mat', 2), 'A', '-v7.3');
     end
-
-    % function in_prepareA(sce, id)
-    %     disp('Building A1 network...')
-    %     A1 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype1));
-    %     disp('A1 network built.')
-    %     A1 = A1 ./ max(abs(A1(:)));
-    %     % A=0.5*(A1+A1.');
-    %     A = ten.e_filtadjc(A1, 0.75, false);
-    %     save(sprintf('%d/pcnet_Source.mat', id), 'A', '-v7.3');
-    %
-    %     disp('Building A2 network...');
-    %     A2 = net.pcrnet(sce.X(:, sce.c_cell_type_tx == celltype2));
-    %     disp('A2 network built.');
-    %     A2 = A2 ./ max(abs(A2(:)));
-    %     % A=0.5*(A2+A2.');
-    %     A = ten.e_filtadjc(A2, 0.75, false);
-    %     save(sprintf('%d/pcnet_Target.mat', id), 'A', '-v7.3');
-    % end
 
 end

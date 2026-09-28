@@ -55,7 +55,6 @@ gui.i_dlgregister(parentfig, fig);
 
 if ~isMATLABReleaseOlderThan("R2025a")
         try
-            % fig.Theme.BaseColorStyle = parentfig.Theme.BaseColorStyle;
             theme(fig, parentfig.Theme.BaseColorStyle);
         catch ME
             disp(ME.message);
@@ -134,8 +133,3 @@ function cancelFcn()
     end
 end
 
-% if strcmp(fig.SelectionType,'normal')
-%     answer = edit.Value;
-% else
-%     answer = [];
-% end

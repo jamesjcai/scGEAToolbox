@@ -25,7 +25,6 @@ if dofit
     hold on
     i = rangev(1):0.05:rangev(2);
     plot(i, fr(i), '-r');
-    %plot( fr, xData, yData );
 end
 grid on
 xlabel('Mean(log(Expr))');

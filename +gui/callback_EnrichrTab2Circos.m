@@ -1,8 +1,6 @@
 function callback_EnrichrTab2Circos(src, ~, tab)
 
 if nargin<3, tab = []; end
-% pw1 = fileparts(mfilename('fullpath'));
-% pth = fullfile(pw1, '..', 'assets', 'myTemplate.pptx');
 
 [FigureHandle] = gui.gui_getfigsce(src);
 
@@ -22,7 +20,7 @@ switch answer1
         b = b(:, valididx);
         a = a(valididx);
         if gui.i_isuifig(FigureHandle)
-            [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), 'Select Enrichr Result Table:');
+            [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), 'Select Enrichr Result Table:', [], false);
         else
             [indx, tf] = listdlg('PromptString', {'Select Enrichr Result Table:'}, ...
                 'liststring', b(1, :), ...
@@ -38,7 +36,6 @@ switch answer1
         switch answer
             case 'Paste Text'
             defaulttxt = sprintf('Term\tGenes\nPathway 1\tMDH1;AFMID;CAT;HYI;ACO1\nPathway 2\tAFMID;CAT;KMO;ALDH8A1;DHTKD1\nPathway 3\tGSTZ1;FAHD1;FAH;ADH5\nPathway 4\tGYS2;GBE1;PGM2\nPathway 5\tTHTPA;NFS1\n');
-            % defaulttxt = sprintf('Term\tGenes\nGlyoxylate and dicarboxylate metabolism\tMDH1;AFMID;CAT;HYI;ACO1\nTryptophan metabolism\tAFMID;CAT;KMO;ALDH8A1;DHTKD1\nTyrosine metabolism\tGSTZ1;FAHD1;FAH;ADH5\nStarch and sucrose metabolism\tGYS2;GBE1;PGM2\nThiamine metabolism\tTHTPA;NFS1\nFatty acid biosynthesis\tOXSM;MCAT\nPyruvate metabolism\tMDH1;GLO1;ADH5\nPeroxisome\tSCP2;CAT;PEX1;NUDT12\nPurine metabolism\tNME7;ENTPD5;ADK;PGM2;PAICS\nPhosphonate and phosphinate metabolism\tCHPT1\nCitrate cycle (TCA cycle)\tMDH1;ACO1\nPentose phosphate pathway\tPGM2;RBKS\nbeta-Alanine metabolism\tALDH6A1;HIBCH\n');
 
             if gui.i_isuifig(FigureHandle)
                 [userInput] = gui.myInputdlg({'Paste table text'}, ...
@@ -59,17 +56,13 @@ switch answer1
                 tab = readtable(a,"FileType","text",'Delimiter','\t', ...
                     'VariableNamingRule', 'modify');
             case 'Open File'
-                if gui.i_isuifig(FigureHandle)
-                    [fname, pathname] = uigetfile(FigureHandle, ...
-                        {'*.txt', 'Enrichr Table Files (*.txt)'; ...
-                        '*.*', 'All Files (*.*)'}, ...
-                        'Pick an Enrichr Table File');
-                else
-                    [fname, pathname] = uigetfile( ...
-                        {'*.txt', 'Enrichr Table Files (*.txt)'; ...
-                        '*.*', 'All Files (*.*)'}, ...
-                        'Pick an Enrichr Table File');
-                end
+                % uigetfile takes no parent figure (a figure passed first
+                % is read as the filter spec); raise the app afterwards.
+                [fname, pathname] = uigetfile( ...
+                    {'*.txt', 'Enrichr Table Files (*.txt)'; ...
+                    '*.*', 'All Files (*.*)'}, ...
+                    'Pick an Enrichr Table File');
+                if pkg.i_isvalid(FigureHandle), figure(FigureHandle); end
                 if isequal(fname, 0), return; end
                 tabfile = fullfile(pathname, fname);
                 % Capture and restore rather than a bare off/on pair: the pair leaves
@@ -94,7 +87,7 @@ if all(ismember({'Term','Genes'}, tab.Properties.VariableNames))
 
 
         if gui.i_isuifig(FigureHandle)
-            [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, 'Select terms:');
+            [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, 'Select terms:', [], true);
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select terms:'}, ...
@@ -111,7 +104,7 @@ if all(ismember({'Term','Genes'}, tab.Properties.VariableNames))
         listitems = tab.TermName;
 
         if gui.i_isuifig(FigureHandle)
-            [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, 'Select terms:');
+            [indx2, tf2] = gui.myListdlg(FigureHandle, listitems, 'Select terms:', [], true);
         else
             [indx2, tf2] = listdlg('PromptString', ...
                 {'Select terms:'}, ...

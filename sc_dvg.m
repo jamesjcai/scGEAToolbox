@@ -1,5 +1,5 @@
 function [T, X1, X2, g, xyz1, xyz2, px1, py1, pz1, px2, py2, pz2] = ...
-        sc_dvg(sce1, sce2, cL1, cL2, method, direction)
+        sc_dvg(sce1, sce2, cL1, cL2, method, direction, options)
 % SC_DVG - Differential variability (DV) analysis between two groups
 %
 % Inputs:
@@ -22,6 +22,13 @@ function [T, X1, X2, g, xyz1, xyz2, px1, py1, pz1, px2, py2, pz2] = ...
 %                    For 'brennecke', the sign of the residual CV^2
 %                    difference.
 %
+% Name-value options:
+%   NumPermutations : 0 (default) or at least 10; 'splinefit' and
+%                'analytic' only. When positive, the pval column comes from
+%                a permutation null instead of the closed-form one;
+%                DiffDist, DiffSign and the ranking are unchanged. See
+%                "Calibration" below.
+%
 % Outputs:
 %   T    : results table sorted by DiffDist descending. DiffDist is the
 %          size of the variability difference; DiffSign is its direction
@@ -29,6 +36,51 @@ function [T, X1, X2, g, xyz1, xyz2, px1, py1, pz1, px2, py2, pz2] = ...
 %   X1, X2, g, xyz1, xyz2, px1, py1, pz1, px2, py2, pz2 :
 %          curve visualization data ('splinefit' and 'analytic'; empty for
 %          'brennecke')
+%
+% Calibration. With the default NumPermutations=0, pval reads every gene's
+% distance against one half-normal null whose scale is the median over all
+% genes (PKG.E_DEVIATIONPVALUE). Real genes do not share one noise scale:
+% it rises with expression, and genes carried by a few contaminating cells
+% are heavy-tailed. On random halves of one cell type in the bundled
+% example data, where nothing differs, 5.8-12.4% of genes came back at
+% p < 0.05 and 63-383 passed BH q < 0.05, across all three methods. Treat
+% those p-values as a ranking aid, not a test.
+%
+% NumPermutations=K reassigns the pooled cells to two groups of the
+% original sizes K times, reruns the same method, and records each gene's
+% distance. Each gene is scaled by the RMS of its own permuted distances,
+% and its scaled distance is read against the scaled permuted distances of
+% all genes pooled. On the same random halves, K=30 gave 4.6-5.5% at
+% p < 0.05 and no BH calls for 'splinefit' and 'analytic'. The cost is
+% K+1 runs of the method, about 30x at K=30. The permutations draw from
+% their own seeded stream, so results are reproducible and the global
+% random state is not touched.
+%
+% What it tests is the statistic as defined: whether a gene's deviation
+% from its own group's curve differs more than relabelling cells explains.
+% When many genes change, the curve itself moves, and an unchanged gene's
+% deviation from it moves too -- measurably so for well-expressed genes,
+% whose own noise is small. The permutation p-value calls those; the
+% default's single wide scale absorbs them. On Poisson fixtures with
+% variance planted in 5-20% of genes (fixtures on which the default is
+% calibrated), BH precision was 0.79-0.98 with permutations against
+% 0.91-1.00 without, and recall 0.90-0.97 against 0.96-1.00.
+%
+% 'brennecke' is excluded: its residual CV^2 is taken against a trend
+% fitted to all genes together, so an effect in some genes moves every
+% gene's residual, and pooling the cells removes that shift. On the
+% planted effect the permutation p-value called 1688 of 2000 genes at
+% precision 0.22.
+
+arguments
+    sce1
+    sce2
+    cL1 = []
+    cL2 = []
+    method = []
+    direction = []
+    options.NumPermutations (1,1) double {mustBeInteger, mustBeNonnegative} = 0
+end
 
 if nargin < 3 || isempty(cL1), cL1 = {'1'}; end
 if nargin < 4 || isempty(cL2), cL2 = {'2'}; end
@@ -36,9 +88,17 @@ if nargin < 5 || isempty(method), method = 'splinefit'; end
 if nargin < 6 || isempty(direction), direction = 'mean'; end
 direction = validatestring(direction, {'mean', 'deviation'}, ...
     mfilename, 'direction', 6);
-
-X1 = []; X2 = []; g = []; xyz1 = []; xyz2 = [];
-px1 = []; py1 = []; pz1 = []; px2 = []; py2 = []; pz2 = [];
+minPermutations = 10;
+if options.NumPermutations > 0 && options.NumPermutations < minPermutations
+    error('sc_dvg:TooFewPermutations', ...
+        ['NumPermutations must be 0 or at least %d; each gene''s null scale ', ...
+        'is estimated from its own permuted distances.'], minPermutations);
+end
+if options.NumPermutations > 0 && strcmpi(method, 'brennecke')
+    error('sc_dvg:PermutationsNotSupported', ...
+        ['NumPermutations is not supported for ''brennecke''. Use ''splinefit'' ', ...
+        'or ''analytic'', or set NumPermutations to 0.']);
+end
 
 if sce1.NumCells < 50 || sce2.NumCells < 50
     warning('One of groups contains too few cells (n < 50). The result may not be reliable.');
@@ -57,6 +117,23 @@ else
     X2_ori = sce2.X;
 end
 
+[T, X1, X2, g, xyz1, xyz2, px1, py1, pz1, px2, py2, pz2] = ...
+    in_dvgcore(X1_ori, X2_ori, g_ori, cL1, cL2, method, direction);
+if options.NumPermutations > 0
+    T.pval = in_permutationpval(T, X1_ori, X2_ori, g_ori, method, direction, ...
+        options.NumPermutations);
+end
+end
+
+function [T, X1, X2, g, xyz1, xyz2, px1, py1, pz1, px2, py2, pz2] = ...
+        in_dvgcore(X1_ori, X2_ori, g_ori, cL1, cL2, method, direction)
+% Score one pair of raw count matrices (genes x cells, rows matching
+% G_ORI) with METHOD. Everything SC_DVG returns comes from here, and the
+% permutation null reruns exactly this on relabelled cells.
+
+X1 = []; X2 = []; g = []; xyz1 = []; xyz2 = [];
+px1 = []; py1 = []; pz1 = []; px2 = []; py2 = []; pz2 = [];
+
 switch lower(method)
     case 'splinefit'
         X1_ori = sc_norm(X1_ori, 'type', 'libsize');
@@ -72,8 +149,16 @@ switch lower(method)
         X2 = X2(idx2, :);
         g2 = g2(idx2);
 
-        assert(isequal(g1, g2));
-        g = g1;
+        % SC_SPLINEFIT drops the genes that are all-zero in its own sample,
+        % so a gene detected in only one group leaves G1 and G2 different
+        % lengths. Keep the genes both fits scored; NEARIDX indexes each
+        % fit's own XYZ, so subsetting rows leaves it valid.
+        [~, ia, ib] = intersect(g1, g2, 'stable');
+        T1 = T1(ia, :);
+        X1 = X1(ia, :);
+        T2 = T2(ib, :);
+        X2 = X2(ib, :);
+        g = g1(ia);
 
         % The spline spans only the genes it was fitted through, so genes
         % sitting on its first or last point are dropped -- see IN_SCOREDV.
@@ -148,6 +233,69 @@ switch lower(method)
 end
 end
 
+function pval = in_permutationpval(T, X1, X2, g, method, direction, numPerm)
+% Permutation-studentized p-value for the distance column of T. See
+% "Calibration" in the help. X1 and X2 are the raw counts the observed run
+% used; their cells are pooled and reassigned to groups of the original
+% sizes NUMPERM times.
+%
+% A distance of 0 is a gene the method discarded (the ends of the spline),
+% so it is left out of that permutation's null and, when observed, gets
+% p = 1. So does a gene with too few permuted distances to scale it.
+
+if strcmpi(method, 'brennecke')
+    magnitude = 'DiffDistAbs';
+else
+    magnitude = 'DiffDist';
+end
+observed = T.(magnitude);
+Xall = [X1, X2];
+numCells1 = size(X1, 2);
+numCells = size(Xall, 2);
+stream = RandStream('mt19937ar', 'Seed', 0);
+
+D = nan(height(T), numPerm);
+for r = 1:numPerm
+    order = randperm(stream, numCells);
+    Tperm = in_dvgcore(Xall(:, order(1:numCells1)), Xall(:, order(numCells1+1:end)), ...
+        g, {'1'}, {'2'}, method, direction);
+    [found, loc] = ismember(T.gene, Tperm.gene);
+    d = nan(height(T), 1);
+    d(found) = Tperm.(magnitude)(loc(found));
+    d(d == 0) = NaN;
+    D(:, r) = d;
+end
+
+% Each gene's scale is the RMS of its own permuted distances. The null
+% values are scaled leaving their own permutation out, so that no value is
+% divided by a scale it helped set.
+sumSq = sum(D.^2, 2, 'omitnan');
+count = sum(isfinite(D), 2);
+minCount = max(5, ceil(numPerm/2));
+usable = count >= minCount & sumSq > 0;
+scale = sqrt(sumSq./count);
+looScale = sqrt((sumSq - D.^2)./(count - 1));
+nullZ = D(usable, :)./looScale(usable, :);
+nullZ = nullZ(isfinite(nullZ));
+
+pval = ones(height(T), 1);
+scored = usable & observed > 0;
+if isempty(nullZ) || ~any(scored)
+    return;
+end
+z = observed(scored)./scale(scored);
+% Share of pooled null values at or above each observed value, with the
+% usual +1 so that no p-value is 0. The null values go first so that the
+% stable sort counts a tie as at-or-above.
+numNull = numel(nullZ);
+[~, ord] = sort([nullZ; z], 'descend');
+isNull = [true(numNull, 1); false(numel(z), 1)];
+nullAbove = cumsum(isNull(ord));
+atOrAbove = zeros(numel(z), 1);
+atOrAbove(ord(~isNull(ord)) - numNull) = nullAbove(~isNull(ord));
+pval(scored) = (1 + atOrAbove)/(numNull + 1);
+end
+
 function [xyz, nearidx] = in_ordercurve(xyz, nearidx)
 % Put foot points in curve order, so that plotting XYZ as a polyline traces
 % the reference curve. The first coordinate is log1p(mu), strictly
@@ -198,11 +346,24 @@ end
 % the ranking, so the fraction called significant is fixed by the shape of
 % DIFFDIST rather than by whether anything differs. On one homogeneous
 % population split at random it called MORE genes than a real contrast did.
-pval = pkg.e_deviationpvalue(DiffDist);
+%
+% IDXX marks the genes whose distance is discarded below (see ZEROATENDS).
+% They get p = 1, and the null is fitted without them. The p-value used to
+% be computed before they were zeroed, so a gene reported with DiffDist 0
+% and DiffSign 0 could carry one of the smallest p-values in the table and
+% pass an FDR cut on PVAL; and the untrusted distances it discards were
+% setting the null scale for every other gene.
+idxx = T1.(8) == 1 | T2.(8) == 1 | T1.(8) == max(T1.(8)) | T2.(8) == max(T2.(8));
+if zeroatends
+    scored = ~idxx;
+else
+    scored = true(size(DiffDist));
+end
+pval = ones(size(DiffDist));
+pval(scored) = pkg.e_deviationpvalue(DiffDist(scored));
 
 T1.Properties.VariableNames = append(T1.Properties.VariableNames, sprintf('_%s', cL1{1}));
 T2.Properties.VariableNames = append(T2.Properties.VariableNames, sprintf('_%s', cL2{1}));
-idxx = T1.(8) == 1 | T2.(8) == 1 | T1.(8) == max(T1.(8)) | T2.(8) == max(T2.(8));
 T1 = T1(:, 1:end-1);
 T2 = T2(:, 2:end);
 T2 = T2(:, 1:end-1);

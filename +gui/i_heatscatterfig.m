@@ -14,7 +14,6 @@ hFig = hx.FigHandle;
 
 gui.i_heatscatter(sce.s, cs, hx.AxHandle);
 colorbar(hx.AxHandle);
-% cb.Label.String =  'Expression Level';
 
 
 zlabel(hx.AxHandle, 'Score value')
@@ -27,13 +26,14 @@ hx.addCustomButton('on', @in_callback_stemplot,'icon-mat-blur-on-10.gif','Show s
 hx.show(parentfig);
 
 function in_callback_stemplot(~,~)
-        gui.i_stemscatterfig(sce, cs, posg, csname, parentfig);
-        % delete(h1);
-        % h1 = gui.i_stemscatter(sce.s, cs);
+        % The stem plot and this one switch to each other in one window.
+        gui.myFigure.drawInto(hFig, ...
+            @() gui.i_stemscatterfig(sce, cs, posg, csname, parentfig), ...
+            KeepCurrent=false);
     end
 
 function in_callback_viewgenenames(~, ~)
-        [passed] = i_checkposg;
+        [passed] = in_callback_checkposg;
         if ~passed, return; end
 
         idx = matches(sce.g, posg, 'IgnoreCase', true);
@@ -44,7 +44,6 @@ function in_callback_viewgenenames(~, ~)
         else
             answer = inputdlg(csname, '', [15, 80], {char(gg)});
         end
-        %        end
     end
 
 function in_callback_saveScoreTable(~, ~)
@@ -53,12 +52,13 @@ function in_callback_saveScoreTable(~, ~)
     end
 
 function in_callback_geneheatmapx(~, ~)
-        [passed] = i_checkposg;
+        [passed] = in_callback_checkposg;
         if ~passed, return; end
 
         [thisc] = gui.i_select1class(sce,[],[],[],hFig);
         if ~isempty(thisc)
-            gui.i_geneheatmap(sce, thisc, posg, parentfig);
+            gui.myFigure.drawInto(hFig, ...
+                @() gui.i_geneheatmap(sce, thisc, posg, parentfig));
         end
     end
 
@@ -70,7 +70,8 @@ function in_callback_genedotplot(~, ~)
         [c, cL] = findgroups(string(thisc));
         idx = matches(posg, sce.g, 'IgnoreCase', true);
         if any(idx)
-            gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx));
+            gui.myFigure.drawInto(hFig, ...
+                @() gui.i_dotplot(sce.X, sce.g, c, cL, posg(idx)));
         else
             gui.myHelpdlg(hFig, 'No genes in this data set.');
         end

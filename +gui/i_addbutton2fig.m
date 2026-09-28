@@ -55,12 +55,10 @@ if isempty(imgFil)
             'CData', ptImage, ...
             'TooltipString', '');
     else
-%        pt = uipushtool(toolbarHdl, 'Separator', sepTag);
 
         if ischar(imgFil) || isstring(imgFil)
             imgPath = fullfile(mfolder, '..', 'assets', 'Images', imgFil);
             if ~isfile(imgPath)
-                % warning('Image file "%s" not found. Using a random icon.', imgPath);
             end
             try
                 [ptImage, map] = imread(imgPath);
@@ -79,9 +77,6 @@ if isempty(imgFil)
             'TooltipString', tooltipTxt, ...
             'Separator', sepTag, 'ClickedCallback', callbackFnc);
 
-        %        pt.CData = ptImage;
-        %        pt.Tooltip = tooltipTxt;
-        %        pt.ClickedCallback = callbackFnc;
     end
 end
 

@@ -5,13 +5,13 @@ function [c_clustid] = sc_cluster_s(s, k, varargin)
 %   clusters and returns a cluster index per cell.
 %
 %   c = SC_CLUSTER_S(s, k, type) selects the method: 'kmeans' (default),
-%   'kmedoids', 'spectclust', 'snndpc' or 'mbkmeans'.
+%   'kmedoids', 'spectclust', 'snndpc', 'mbkmeans' or 'louvain'.
 %
 %   c = SC_CLUSTER_S(..., 'Replicates', r) restarts 'kmeans' and 'mbkmeans'
 %   from R independent seedings and keeps the best (default 5). It does not
 %   apply to the other methods; see the note on 'kmedoids' below.
 %
-% see also: sc_cluster_x
+% see also: sc_cluster_x, sc_louvain, sc_snndpc
 
 %if min(size(s))>3, error('S is coordinates of dimensional
 %reduction.'); end
@@ -20,7 +20,7 @@ if nargin < 2, k = 6; end
 p = inputParser;
 defaultType = 'kmeans';
 validTypes = {'kmeans', 'kmedoids', 'dbscan', ...
-    'spectclust', 'snndpc', 'mbkmeans'};
+    'spectclust', 'snndpc', 'mbkmeans', 'louvain'};
 %
 checkType = @(x) any(validatestring(x, validTypes));
 
@@ -64,6 +64,12 @@ switch p.Results.type
         error('sc_cluster_s:NotImplemented', 'DBSCAN clustering is not yet implemented.');
     case 'snndpc'
         c_clustid = sc_snndpc(s, k);
+    case 'louvain'
+        % Community detection on a shared-nearest-neighbour graph, the
+        % route Seurat and Scanpy take. K is a target rather than a
+        % constraint here: SC_LOUVAIN tunes the resolution towards it, and
+        % warns when the graph will not split that many ways.
+        c_clustid = sc_louvain(s, k);
     case 'mbkmeans'
         [~, ~, c_clustid] = pkg.e_mbkmeans(s, k, [], [], ...
             Replicates=numrep);

@@ -10,9 +10,6 @@ batch = [ones(1, n1), 2 * ones(1, n2)];
 mod = ones(size(batch))';
 normxy = combat([X, Y], batch, mod);
 
-% normxy(normxy<0)=0;
-% normxy=round(normxy);
-
 X = normxy(:, 1:n1);
 Y = normxy(:, n1+1:end);
 end

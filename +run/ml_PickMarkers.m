@@ -15,18 +15,15 @@ if nargin < 4, topn = 10; end
 
 %% new data visualization
 numC = length(unique(c));
-% gene_idxv = [];
 
 [No_gene] = size(X, 1);
 % calculat mean of gene expression
 % gene_mean = zeros(No_gene,numC);
 gene_DE_score = zeros(No_gene, numC);
 
-% gene_value_idx = zeros(No_gene,1);
 cluster_order = zeros(numel(c), 1);
 pos = 1;
 for i = 1:numC
-    % gene_mean(:,i) = mean(X(:,c==i),2);
     idx = find(c == i);
     cluster_order(pos:pos+numel(idx)-1) = idx;
     pos = pos + numel(idx);
@@ -157,4 +154,3 @@ if plotit
 end
 end
 
-% print([folder '\HeatMap_Top' num2str(topn)],'-dpdf','-r300','-fillpage'); %'-dpdf',

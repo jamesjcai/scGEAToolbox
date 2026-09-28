@@ -41,6 +41,11 @@ end
 if nargin < 3, title = ''; end
 if nargin < 2, message = 'Selection'; end
 if nargin < 1, parentfig = []; end
+% Accept the app itself, as GUI.GUI_GETFIGSCE does: scgeatoolApp menu
+% callbacks pass APP, which has no Visible property of its own.
+if isa(parentfig, 'matlab.apps.AppBase') && isprop(parentfig, 'UIFigure')
+    parentfig = parentfig.UIFigure;
+end
 
 if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);

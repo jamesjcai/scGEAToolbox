@@ -1,8 +1,6 @@
 function [c] = i_getrandcolormap
 
 folder = fileparts(mfilename('fullpath'));
-% a = strfind(folder, filesep);
-% folder = extractBefore(folder, a(end)+1);
 if ~(ismcc || isdeployed)
     % Every cbrewer call below is evaluated eagerly into CO, so the path
     % entry is only needed for the duration of this function.
@@ -14,9 +12,6 @@ CT = cbrewer('seq', 'Blues', n);
 
 cx = autumn(n);
 cx(1, :) = [.8, .8, .8];
-% a=lines(kc);
-% rng("shuffle");
-% b=a(randperm(size(a,1)),:);
 ukraineflag = [0, 87, 183; 255, 215, 0] ./ 255;
 mycmap = pkg.i_mycolormap(n);
 co = {cx, lines(n), parula(n), summer(n), ...

@@ -1,127 +1,82 @@
-function [requirerefresh, s] = callback_MergeSCEs(src, sourcetag)
+function [requirerefresh, s] = callback_MergeSCEs(src, ~)
+% CALLBACK_MERGESCES - Merge the open dataset with other SCEs.
+%
+%   [requirerefresh, s] = gui.callback_MergeSCEs(src)
+%
+% Behind Edit > Merge Current Dataset with Others. The open dataset comes
+% first; the others are SCE variables in the base workspace or SCE .mat
+% files. The merged dataset replaces the open one, after a confirmation that
+% says what will replace it.
+%
+% Merging datasets none of which is open yet is File > Import Data, which
+% takes several SCE files or several workspace variables. Both go through
+% GUI.I_MERGESCES, so they ask the same questions and label batches the same
+% way. The second input is ignored; it once chose between the workspace and
+% files, which is now asked here.
+%
+% When src is the app, the merged dataset is installed and the plot redrawn
+% here, and REQUIREREFRESH comes back false: the menu handler in
+% scgeatoolApp.mlapp would otherwise redraw a second time and follow up with
+% a message built from the dataset names in upper case. For any other src,
+% REQUIREREFRESH is true and S lists the merged datasets.
+%
+% see also: gui.i_mergesces, gui.i_pickworkspacesces, gui.i_loadscefiles
+
 requirerefresh = false;
 s = "";
-[FigureHandle] = gui.gui_getfigsce(src);
-
-answer = gui.myQuestdlg(FigureHandle, 'Current SCE will be replaced. Continue?', ...
-'',[],[],'warning');
-if isempty(answer), return; end
-if ~strcmp(answer, 'Yes'), return; end
-
-keepbatchid=true;
-answer = gui.myQuestdlg(FigureHandle, ['Keep original batch IDs of ' ...
-                'cells in the input SCEs?'],'');
-switch answer
-    case 'Yes'
-        keepbatchid=true;
-    case 'No'
-        keepbatchid=false;
-    case 'Cancel'
-        return;
+[parentfig, cursce] = gui.gui_getfigsce(src);
+if isempty(cursce) || cursce.NumCells == 0
+    gui.myWarndlg(parentfig, ['There is no dataset open to merge with. Use ' ...
+        'File > Import Data, which merges several SCE files or workspace ' ...
+        'variables as it reads them.']);
+    return;
 end
 
-switch sourcetag
-    case 1
-        a = evalin('base', 'whos');
-        b = struct2cell(a);
-        valididx = ismember(b(4, :), 'SingleCellExperiment');
-        if sum(valididx) < 1
-            gui.myWarndlg(FigureHandle, 'No SCE variables in Workspace.');
-            return;
-        elseif sum(valididx) < 2
-            gui.myWarndlg(FigureHandle, 'Need at least two SCEs in Workspace.');
-            return;
-        end
-
-        b = b(:, valididx);
-        a = a(valididx);
-
-        if gui.i_isuifig(FigureHandle)
-            [indx, tf] = gui.myListdlg(FigureHandle, b(1, :), 'Select SCEs:');
-        else
-            [indx, tf] = listdlg('PromptString', {'Select SCEs:'}, ...
-                'liststring', b(1, :), ...
-                'SelectionMode', 'multiple', ...
-                'ListSize', [220, 300]);
-        end
-
-
-        if tf == 1
-            if length(indx) < 2
-                gui.myWarndlg(FigureHandle, 'Need at least two selected SCEs.');
-                return;
-            end
-
-            answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge genes?', 'Merging method', ...
-                {'Intersect', 'Union'}, 'Intersect');
-            if ~ismember(answer, {'Union', 'Intersect'}), return; end
-            methodtag = lower(answer);
-            try
-                insce = cell(1, length(indx));
-                s = "";
-                for k = 1:length(indx)
-                    insce{k} = evalin('base', a(indx(k)).name);
-                    s = sprintf('%s,%s', s, a(indx(k)).name);
-                end
-                s = s(2:end);
-                fprintf('>> sce=sc_mergesces({%s},''%s'',true);\n', s, methodtag);
-                fw = gui.myWaitbar(FigureHandle);
-                sce = sc_mergesces(insce, methodtag, keepbatchid);
-                gui.myGuidata(FigureHandle, sce, src);
-                if isa(src, 'matlab.apps.AppBase')
-                    src.sce = sce;
-                end
-                requirerefresh = true;
-            catch ME
-                gui.myWaitbar(FigureHandle, fw, true);
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-                return;
-            end
-            gui.myWaitbar(FigureHandle, fw);
-        else
-            return;
-        end
-    case 2
-        % gui.myWarndlg(FigureHandle, "This function is under development.");
-
+answer = gui.myQuestdlg(parentfig, ['Merge the open dataset with SCE ' ...
+    'variables in the base workspace, or with SCE data files?'], ...
+    'Merge Datasets', {'Workspace Variables', 'SCE Data Files'}, ...
+    'Workspace Variables');
+switch answer
+    case 'Workspace Variables'
+        [others, names] = gui.i_pickworkspacesces(parentfig, ...
+            'Select the datasets to merge with the open one.', cursce);
+    case 'SCE Data Files'
         [fname, pathname] = uigetfile({'*.mat', 'SCE Data Files (*.mat)'; ...
             '*.*', 'All Files (*.*)'}, ...
-            'Select SCE Data Files', 'MultiSelect', 'on');
+            'Select SCE Data Files to Merge with the Open Dataset', ...
+            'MultiSelect', 'on');
         if isequal(fname, 0), return; end
-        if ~iscell(fname)
-            gui.myErrordlg(FigureHandle, "This function needs at least two SCE data files.");
-            return;
-        end
-
-        answer = gui.myQuestdlg(FigureHandle, 'Which set operation method to merge genes?', 'Merging method', ...
-            {'Intersect', 'Union'}, 'Intersect');
-        if ~ismember(answer, {'Union', 'Intersect'}), return; end
-        methodtag = lower(answer);
-
-        fw = gui.myWaitbar(FigureHandle);
-        try
-            scelist = cell(length(fname));
-            s = "";
-            for k = 1:length(fname)
-                scefile = fullfile(pathname, fname{k});
-                load(scefile, 'sce');
-                sce.metadata = [sce.metadata; fname{k}];
-                scelist{k} = sce;
-                s = sprintf('%s, %s', s, fname{k});
-            end
-            s = s(2:end);
-            drawnow;
-            sce = sc_mergesces(scelist, methodtag, keepbatchid);
-            gui.myGuidata(FigureHandle, sce, src);
-            if isa(src, 'matlab.apps.AppBase')
-                src.sce = sce;
-            end
-            requirerefresh = true;
-        catch ME
-            gui.myWaitbar(FigureHandle, fw, true);
-            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-            return;
-        end
-        gui.myWaitbar(FigureHandle, fw);
+        [others, names] = gui.i_loadscefiles(parentfig, pathname, fname);
+    otherwise
+        return;
 end
-end % end of function
+if isempty(others), return; end
+
+insce = [{cursce}, others];
+names = ["current", names];
+sce = gui.i_mergesces(parentfig, insce, names, @in_confirm);
+if isempty(sce), return; end
+
+gui.myGuidata(parentfig, sce, src);
+if ~isa(src, 'matlab.apps.AppBase')
+    requirerefresh = true;
+    s = strjoin(names, ",");
+    return;
+end
+
+src.sce = sce;
+[src.c, src.cL] = findgroups(string(sce.c_batch_id));
+src.sce.c = src.c;
+src.in_RefreshAll(true, false);
+gui.myHelpdlg(parentfig, sprintf(['Merged %d datasets into %d cells and ' ...
+    '%d genes, colored by batch (%d batches).'], numel(insce), ...
+    sce.NumCells, sce.NumGenes, numel(src.cL)));
+
+    function tf = in_confirm(ncells)
+        msg = sprintf(['The merged dataset (%d cells from %s) will replace ' ...
+            'the one open in this window. Edit > Undo brings it back. ' ...
+            'Continue?'], ncells, strjoin(names, ", "));
+        tf = strcmp(gui.myQuestdlg(parentfig, msg, 'Merge Datasets', ...
+            {'Merge', 'Cancel'}, 'Merge', 'warning'), 'Merge');
+    end
+end

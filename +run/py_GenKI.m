@@ -16,7 +16,7 @@ else
 end
 
 
-fw = gui.gui_waitbar([], [], 'Checking Python environment...');
+fw = gui.myWaitbar([], [], [], 'Checking Python environment...');
 
 x = pyenv;
 try
@@ -25,15 +25,6 @@ catch
     % best-effort: fall back to default pyenv if conda path not found
 end
 
-% prgfoldername = 'py_GenKI';
-% narginchk(3, 3);
-% assert(size(X, 1) == length(g));
-
-% T = [];
-% [pyok, wrkpth, x] = run.pycommon(prgfoldername);
-% if ~pyok
-%    error('GenKI (requires Python) has not been installed or set up correctly.')
-% end
 codepth = pkg.i_normalizepath(codepth);
 
 codefullpath = fullfile(codepth,'require.py');
@@ -45,37 +36,11 @@ disp(cmdlinestr)
 [status, cmdout] = system(cmdlinestr, '-echo');
 if status ~= 0
     if pkg.i_isvalid(fw)
-         gui.gui_waitbar(fw, true);
+         gui.myWaitbar([], fw, true);
     end
     error('%s', cmdout);
 end
 
-
-%     pw1=fileparts(mfilename('fullpath'));
-%     wrkpth=fullfile(pw1,'external','py_GenKI');
-%     cd(wrkpth);
-%
-%     fw = gui.gui_waitbar([],[],'Checking Python environment...');
-%     x=pyenv;
-%     try
-%         pkg.i_add_conda_python_path;
-%     catch
-%
-%     end
-%     cmdlinestr=sprintf('"%s" "%s%srequire.py"', ...
-%             x.Executable,wrkpth,filesep);
-%     disp(cmdlinestr)
-%     [status,cmdout]=system(cmdlinestr,'-echo');
-%     if status~=0
-%         gui.gui_waitbar(fw,true);
-%         cd(oldpth);
-%         waitfor(errordlg(sprintf('%s',cmdout)));
-%         error('Python GenKI has not been installed properly.');
-%     end
-%
-%     if pkg.i_isvalid(fw)
-%         gui.gui_waitbar(fw,[],'Checking Python environment is complete');
-%     end
 
 try
     tmpfilelist = {'X.mat', 'g.txt', 'c.txt', 'pcnet_Source.mat', ...
@@ -91,30 +56,29 @@ try
     save('idx.mat', '-v7.3', 'idx');
     writematrix(g, 'g.txt');
     writematrix(ones(size(X, 2), 1), 'c.txt');
-    % disp('Input X g c written.');
 catch ME
     if pkg.i_isvalid(fw)
-         gui.gui_waitbar(fw, true);
+         gui.myWaitbar([], fw, true);
     end
     errordlg(ME.message,'');
     return;
 end
 if pkg.i_isvalid(fw)
-    gui.gui_waitbar(fw, [], [], 'Checking Python environment is complete');
+    gui.myWaitbar([], fw, [], [], 'Checking Python environment is complete');
     pause(0.5);
-    gui.gui_waitbar(fw, [], [], 'Running GenKI...');
+    gui.myWaitbar([], fw, [], [], 'Running GenKI...');
 end
 
 
 if pkg.i_isvalid(fw)
-    gui.gui_waitbar(fw, [], [], 'Building pcnet\_Source network...');
+    gui.myWaitbar([], fw, [], [], 'Building pcnet_Source network...');
 end
 A1 = net.pcrnet(X, 3, false, true, false, false, pkg.i_usegpu(X));
 A1 = A1 ./ max(abs(A1(:)));
 A = ten.e_filtadjc(A1, 0.75, false);
 save('pcnet_Source.mat', 'A', '-v7.3');
 if pkg.i_isvalid(fw)
-    gui.gui_waitbar(fw, [], [], 'pcnet\_Source.mat saved.');
+    gui.myWaitbar([], fw, [], [], 'pcnet_Source.mat saved.');
 end
 
 codefullpath = fullfile(codepth,'script.py');
@@ -124,22 +88,14 @@ disp(cmdlinestr)
 [status] = system(cmdlinestr, '-echo');
 
 if status == 0 && pkg.i_isvalid(fw)
-    gui.gui_waitbar(fw, [], 'py_GenKI is complete');
+    gui.myWaitbar([], fw, [], 'py_GenKI is complete');
 end
 
-
-% fw=gui.gui_waitbar([],[],'Running GenKI...');
 
 %    cmdlinestr=sprintf('"%s" "%s%sscript.py"', ...
 %        x.Executable,wrkpth,filesep);
 %    disp(cmdlinestr)
 %    [status]=system(cmdlinestr,'-echo');
-
-% [status] = run.pycommon2(x, wrkpth, prgfoldername);
-
-% if pkg.i_isvalid(fw)
-%     gui.gui_waitbar(fw,[],'Running GenKI is complete');
-% end
 
 if status == 0 && exist('output.csv', 'file')
     T = readtable('output.csv');

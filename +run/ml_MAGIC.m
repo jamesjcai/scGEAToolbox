@@ -79,8 +79,6 @@ npca = min(100, min(size(X)));
 
 [pc_imputed, U, ~] = run_magic_original(X, 'npca', npca, 'k', 15, 'a', 15, 'make_plot_opt_t', false);
 
-% plot_genes = {'Cdh1', 'Vim', 'Fn1', 'Zeb1'};
-% [M_imputed, genes_found] = project_genes(plot_genes, gene_names, pc_imputed, U);
 M = pc_imputed * U'; % project
 X = M';
 

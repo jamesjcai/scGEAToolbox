@@ -49,21 +49,30 @@ switch typeid
             switch answer1
                 case 'Re-compute'
                     needestimt = true;
-                case 'Cancel'
-                    return;
+                case 'Use existing'
+                    % nothing to compute
+                otherwise
+                    return;   % Cancel, or the dialog closed
             end
         end
+        seeit = 'To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase".';
         if needestimt
             fw = gui.myWaitbar(FigureHandle);
-            sce = sce.estimatecellcycle(true, 1);
+            try
+                sce = sce.estimatecellcycle(true, 1);
+            catch ME
+                gui.myWaitbar(FigureHandle, fw, true);
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                return;
+            end
             needupdate = true;
             gui.myWaitbar(FigureHandle, fw);
             gui.myGuidata(FigureHandle, sce, src);
-            gui.myHelpdlg(FigureHandle, 'Cell cycle phase (c_cell_cycle_tx) added.');
+            % One notice: two in a row do not wait, so the second hid the first.
+            gui.myHelpdlg(FigureHandle, ['Cell cycle phase (c_cell_cycle_tx) added. ', seeit]);
+        else
+            gui.myHelpdlg(FigureHandle, seeit);
         end
-        % y = sce.c_cell_cycle_tx;
-        % attribtag = "cell_cycle";
-        gui.myHelpdlg(FigureHandle, 'To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase"');
         return;
     case 2
         attribtag = "cell_potency";
@@ -93,34 +102,40 @@ else
     switch answer1
         case 'Re-compute'
             needestimt = true;
-        case 'Cancel'
-            return;
+        case 'Use existing'
+            % nothing to compute
+        otherwise
+            return;   % Cancel, or the dialog closed
     end
 end
 if needestimt
+    % Asked before the progress bar opens: asking inside it put the dialog
+    % over an open bar, and a cancel returned with the bar still up.
+    if strcmp(attribtag, 'copykat_prediction')
+        speciesid = gui.i_selectspecies(2, false, FigureHandle);
+        if strlength(speciesid) == 0, return; end
+    end
     fw = gui.myWaitbar(FigureHandle);
-    switch attribtag
-        case 'cell_potency'
-            % sce = sce.estimatepotency(speciestag);
-            % needupdate = true;
-            % [yesx, idx] = ismember('cell_potency', sce.list_cell_attributes(1:2:end));
-            % assert(yesx);
-            % s =  sce.list_cell_attributes{idx+1};
-            s = sc_potency(sce.X, sce.g, speciestag);
-        case 'stemness_index'
-            s = sc_stemness(sce.X, sce.g);
-        case 'dissocation_ratio'
-            s = pkg.sc_dissratio(sce.X, sce.g, true);
-        case 'copykat_prediction'
-            speciesid = gui.i_selectspecies(2, false, FigureHandle);
-            if strlength(speciesid)==0
-                return;
-            end
-            s = run.r_copykat(sce, wkdir, speciesid);
-        case 'scevan_prediction'
-            s = run.r_SCEVAN(sce, wkdir, false, speciestag);
-        otherwise
-            error('Invalid attribtag');
+    try
+        switch attribtag
+            case 'cell_potency'
+                s = sc_potency(sce.X, sce.g, speciestag);
+            case 'stemness_index'
+                s = sc_stemness(sce.X, sce.g);
+            case 'dissocation_ratio'
+                s = pkg.sc_dissratio(sce.X, sce.g, true);
+            case 'copykat_prediction'
+                s = run.r_copykat(sce, wkdir, speciesid);
+            case 'scevan_prediction'
+                s = run.r_SCEVAN(sce, wkdir, false, speciestag);
+            otherwise
+                error('Invalid attribtag');
+        end
+    catch ME
+        % The estimators and the R runners can throw; the bar used to stay up.
+        gui.myWaitbar(FigureHandle, fw, true);
+        gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+        return;
     end
     if isempty(s)
         gui.myWaitbar(FigureHandle, fw, true);

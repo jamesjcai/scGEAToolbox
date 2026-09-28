@@ -1,18 +1,23 @@
 function callback_CompareCellTypeAnnotations(src, ~)
-%CALLBACK_COMPARECELLTYPEANNOTATIONS Show the cell type annotations side by side.
+%CALLBACK_COMPARECELLTYPEANNOTATIONS Compare cell type annotations in a Sankey diagram.
 %
 %   Every annotation channel stashes the labels it replaces as a numbered
 %   'old_cell_type_N' cell attribute (PKG.I_STASHCELLTYPEHISTORY), so a dataset
 %   annotated more than once carries a history. Keeping it is only half the
 %   job: this is how it gets looked at.
 %
-%   Four views, because the useful question differs. The plots answer "where
-%   do these disagree" spatially; the table answers "what did each method call
-%   THIS cell"; the cross-tabulation and the flow diagram both answer "which
-%   types got split or merged", the first exactly and the second at a glance.
+%   The Sankey diagram between two annotations is what opens: which types
+%   got split or merged is the question this is asked most often, and the
+%   flow answers it at a glance. The other views are buttons on its toolbar,
+%   because the useful question differs:
+%     - side-by-side embedding plots, linked by brushing, answer "where do
+%       these disagree", across every annotation, not just the two shown;
+%     - the per-cell table answers "what did each method call THIS cell";
+%     - the cross-tabulation gives the exact counts behind the ribbons, for
+%       the same two annotations the diagram shows.
 %
 %   See also PKG.I_CELLTYPEHISTORY, PKG.I_STASHCELLTYPEHISTORY,
-%   GUI.I_UPDATEANNOTATEMENU.
+%   GUI.I_UPDATEANNOTATEMENU, GUI.I_ALLUVIALVIEW.
 
 [parentfig, sce] = gui.gui_getfigsce(src);
 if isempty(sce) || sce.NumCells == 0, return; end
@@ -26,33 +31,39 @@ if numel(names) < 2
     return;
 end
 
-viewitems = { ...
-    'Side-by-side plots on the cell embedding (linked by brushing)', ...
-    'Table with one row per cell', ...
-    'Cross-tabulate two annotations (what got split or merged)', ...
-    'Sankey flow diagram between two annotations'};
-prompt = sprintf(['This dataset carries %d cell type annotations. ', ...
-    'How should they be shown?'], numel(names));
-[indx, tf] = gui.myListdlg(parentfig, viewitems, 'Cell Type Annotations', ...
-    viewitems{1}, false, true, [480, 200], prompt);
-if tf ~= 1 || isempty(indx), return; end
-
-switch indx
-    case 1
-        in_plotpanels(sce, names, labels, parentfig);
-    case 2
-        in_showtable(sce, names, labels, parentfig);
-    case 3
-        in_crosstab(names, labels, parentfig);
-    case 4
-        in_sankey(names, labels, parentfig);
+% With exactly two there is only one pair, so asking would be a formality.
+if numel(names) == 2
+    pick = [1, 2];
+else
+    pick = in_picktwo(names, parentfig, ['Select exactly two annotations. ', ...
+        'The flow runs from the first to the second.']);
+    if isempty(pick), return; end
 end
+
+% Views opened from the toolbar are parented to the Sankey window, so they
+% open beside the diagram they were asked from, not over the main window.
+% The panel view is drawn into the Sankey window itself, with a Back button.
+% The tables are uifigures and cannot share it, so they open in its place on
+% screen instead, with a Back button to it.
+buttons = struct( ...
+    'Icon', {'brush.gif', ...
+    'data_table_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', ...
+    'view-grid.jpg'}, ...
+    'Tooltip', {'Side-by-side plots of all annotations (linked by brushing)', ...
+    'Table with one row per cell, all annotations', ...
+    'Cross-tabulate these two annotations (exact counts)'}, ...
+    'Callback', { ...
+    @(src, ~) in_plotpanels(sce, names, labels, ancestor(src, 'figure')), ...
+    @(src, ~) in_showtable(sce, names, labels, ancestor(src, 'figure')), ...
+    @(src, ~) in_crosstabshown(ancestor(src, 'figure'))});
+
+gui.i_alluvialview(labels{pick(1)}, labels{pick(2)}, names(pick(1)), ...
+    names(pick(2)), parentfig, 'Cell Type Annotation Flow', buttons);
 end
 
 
 function pick = in_picktwo(names, parentfig, prompt)
-% The two views that compare a PAIR share this picker, so they cannot drift
-% into disagreeing about what "exactly two" means or in which order.
+% Which pair the Sankey diagram shows; the cross-tabulation button reuses it.
 pick = [];
 [indx, tf] = gui.myListdlg(parentfig, cellstr(names), 'Select two', ...
     [], true, true, [420, 260], prompt);
@@ -64,17 +75,6 @@ if tf ~= 1 || numel(indx) ~= 2
     return;
 end
 pick = indx;
-end
-
-
-function in_sankey(names, labels, parentfig)
-% Ribbons from each type in the first annotation to each type in the second.
-pick = in_picktwo(names, parentfig, ['Select exactly two annotations. The ', ...
-    'flow runs from the first to the second.']);
-if isempty(pick), return; end
-
-gui.i_alluvialview(labels{pick(1)}, labels{pick(2)}, names(pick(1)), ...
-    names(pick(2)), parentfig, 'Cell Type Annotation Flow');
 end
 
 
@@ -97,8 +97,8 @@ function in_plotpanels(sce, names, labels, parentfig)
 
 ntypes = cellfun(@(lbl) numel(unique(lbl)), labels);
 titles = names(:) + " (" + pkg.i_plural(ntypes(:), 'type') + ")";
-gui.i_multigroupview(sce, labels, titles, parentfig, ...
-    'Cell Type Annotations');
+gui.myFigure.drawInto(parentfig, @() gui.i_multigroupview(sce, labels, ...
+    titles, parentfig, 'Cell Type Annotations'));
 end
 
 
@@ -119,19 +119,26 @@ for k = 2:numel(labels)
 end
 t.Agree = same;
 
-gui.TableViewerApp(t, parentfig, 'CellTypeAnnotations');
+gui.i_openinstead(parentfig, @() gui.TableViewerApp(t, parentfig, 'CellTypeAnnotations'));
+end
+
+
+function in_crosstabshown(hFig)
+% Cross-tabulate the pair in the direction the Sankey diagram currently
+% draws it - its swap button may have reversed it since it opened - so the
+% rows are always the left column and the columns the right one.
+P = getappdata(hFig, 'AlluvialPair');
+in_crosstab([P.NameA, P.NameB], {P.A, P.B}, hFig);
 end
 
 
 function in_crosstab(names, labels, parentfig)
-% Cross-tabulate two annotations: rows one, columns the other, counts inside.
+% Cross-tabulate two annotations: rows the first, columns the second, counts
+% inside. NAMES and LABELS hold just the pair the Sankey diagram shows.
 
-indx = in_picktwo(names, parentfig, ['Select exactly two annotations. Rows ', ...
-    'will be the first, columns the second.']);
-if isempty(indx), return; end
-
-a = labels{indx(1)};
-b = labels{indx(2)};
+indx = [1, 2];
+a = labels{1};
+b = labels{2};
 [ga, la] = findgroups(a);
 [gb, lb] = findgroups(b);
 M = accumarray([ga(:), gb(:)], 1, [numel(la), numel(lb)]);
@@ -139,7 +146,7 @@ M = accumarray([ga(:), gb(:)], 1, [numel(la), numel(lb)]);
 colnames = matlab.lang.makeUniqueStrings(matlab.lang.makeValidName(lb));
 t = array2table(M, 'VariableNames', colnames);
 t = addvars(t, la(:), 'Before', 1, 'NewVariableNames', {'RowLabel'});
-gui.TableViewerApp(t, parentfig, 'CellTypeCrosstab');
+gui.i_openinstead(parentfig, @() gui.TableViewerApp(t, parentfig, 'CellTypeCrosstab'));
 
 % Exact-label agreement is only meaningful when the two annotations share a
 % vocabulary, which two different methods often do not, so say which it is

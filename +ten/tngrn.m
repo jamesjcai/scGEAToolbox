@@ -104,7 +104,7 @@ if opts.EdgesOnly
     % genes sit adjacent on the 1-D MPS. A caller holding the gene list it
     % passed in has no way to know that, and every one of them matches A
     % to that list by position -- sc_grn -> sc_grnview(A, glist) in
-    % +gui/callback_BuildGeneNetwork.m:41, for instance -- so returning
+    % +gui/callback_BuildGeneNetwork.m, for instance -- so returning
     % chain order labelled every edge with the wrong pair of genes.
     A = i_toinputorder(Q, ordidx);
     Tedges = table();

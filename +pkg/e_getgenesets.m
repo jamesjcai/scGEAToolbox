@@ -71,8 +71,7 @@ setnames=[];
 setgenes=[];
 switch option
     case {1,'MSIGDB','MSigDB Molecular Signatures'}
-        % [Col]=pkg.e_getmsigdbset;
-        [~, ~, Col, ctag] = gui.i_selectMSigDBGeneSet(species,true,parentfig);
+        [~, ~, Col, ctag] = gui.i_selectMSigDBGeneSets(species, true, parentfig);
         if isempty(Col) || isempty(ctag)
             return;
         end
@@ -100,7 +99,6 @@ switch option
                 tgsPos = string(Col.(setnames(k)).geneSymbols);
                 setmatrx(k,:)=ismember(setgenes,tgsPos);
             end
-            % save(sprintf('msigdb_%s',ctag),'setmatrx','setnames','setgenes');
         end
 
     case {'TF',2,'DoRothEA TF Targets'}

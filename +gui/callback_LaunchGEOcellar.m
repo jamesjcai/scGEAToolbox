@@ -53,17 +53,31 @@ if mode <= 3
     if isempty(cfg.OpenAIAPIKey)
         answer = gui.myQuestdlg(FigureHandle, ...
             "No API key found. Would you like to locate your llm_api_key.env file?");
-        if strcmp(answer, "Yes")
-            llm.i_checkllm([], [], FigureHandle);
+        if ~strcmp(answer, "Yes"), return; end
+        % Always show the picker. llm.i_checkllm skipped it whenever the
+        % preference existed, which it usually does by now, pointing at a
+        % file without the key or one that is gone.
+        [file, folder] = uigetfile({'*.env', 'Key files (*.env)'; ...
+            '*.*', 'All Files (*.*)'}, 'Select llm_api_key.env');
+        gui.i_raisefig(FigureHandle);
+        if isequal(file, 0), return; end
+        keyfile = fullfile(folder, file);
+        cfg = llm.geocellar.geocellar_config(keyfile);
+        if isempty(cfg.OpenAIAPIKey)
+            gui.myErrordlg(FigureHandle, sprintf( ...
+                'No API key was found in %s.', keyfile));
+            return;
         end
-        return;
+        setpref('scgeatoolbox', 'llapikeyenvfile', keyfile);
     end
 end
 
 % Set working directory — used as DataDir for downloaded GEO samples
 extprogname = 'GEOcellar';
 preftagname = 'externalwrkpath';
-[wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
+% Reused as is: it holds the GEO samples downloaded by earlier runs, which
+% "Overwrite?" -> Yes used to delete, and No cancelled the launch.
+[wrkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle, true);
 if isempty(wrkdir), return; end
 
 switch mode

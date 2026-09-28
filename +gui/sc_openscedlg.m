@@ -1,5 +1,20 @@
 function [sce, filename] = sc_openscedlg(~, ~, parentfig)
+% Any error from a reader is reported here, once, and returns empty. An
+% error thrown out of this function reached the app's handler uncaught,
+% which also left Import disabled: the app re-enables it only when this
+% returns empty.
 if nargin<3, parentfig = []; end
+try
+    [sce, filename] = in_openscedlg(parentfig);
+catch ME
+    sce = [];
+    filename = [];
+    gui.myErrordlg(parentfig, ME.message, ME.identifier);
+end
+end
+
+
+function [sce, filename] = in_openscedlg(parentfig)
 if ~isempty(parentfig) && pkg.i_isvalid(parentfig) && parentfig.Visible == "on"
     figure(parentfig);
     cleanupObj = onCleanup(@() gui.i_raisefig(parentfig));
@@ -29,7 +44,6 @@ list = {'SCE Data File(s) (*.mat)...', ...
         'Load Example Data...'};
 
 
-    % preftagname ='scimilmodelpath'
 preftagname ='openscedlgindex';
 defaultindx = getpref('scgeatoolbox', preftagname, length(list));
 
@@ -38,7 +52,6 @@ defaultindx = getpref('scgeatoolbox', preftagname, length(list));
         [indx, tf] = gui.myListdlg(parentfig, list, ...
             'Select a source', list(defaultindx), false, true, [300, 450]);
 
-        % parentfig.WindowStyle = 'normal';
     else
         if ~isempty(parentfig)
             figure(parentfig);
@@ -56,11 +69,6 @@ figure(parentfig);
 if tf ~= 1, return; end
 ButtonName = list{indx};
 setpref('scgeatoolbox', preftagname, indx);
-    %         ButtonName = gui.myQuestdlg(parentfig, ('Select Input Data Type', ...
-    %                               'SC_SCATTER', ...
-    %                               'SCE Data .mat', ...
-    %                               '10x Genomics .mtx', ...
-    %                               'TSV/CSV .txt', 'SCE Data .mat');
 
     switch ButtonName
         case 'SCE Data File(s) (*.mat)...'
@@ -71,48 +79,15 @@ setpref('scgeatoolbox', preftagname, indx);
             if pkg.i_isvalid(parentfig) && isa(parentfig, ...
                     'matlab.ui.Figure'), figure(parentfig); end
             if isequal(filenm, 0), return; end
-            if ~iscell(filenm)
-                scefile = fullfile(pathname, filenm);
-                try
-                    fw = gui.myWaitbar(parentfig);
-                    load(scefile, 'sce');
-                catch ME
-                    gui.myWaitbar(parentfig, fw, true);
-                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
-                    return;
-                end
-                gui.myWaitbar(parentfig, fw);
+            % One file is read as it is; several are merged, through the
+            % same dialog as Edit > Merge Current Dataset with Others.
+            [insce, names] = gui.i_loadscefiles(parentfig, pathname, filenm);
+            if isempty(insce), return; end
+            if isscalar(insce)
+                sce = insce{1};
             else
-                if ~in_multifilesgo(parentfig), return; end
-                answer = gui.myQuestdlg(parentfig, ...
-                    'Which set operation method to merge data?', ...
-                    'Merging method', ...
-                    {'Intersect', 'Union'}, 'Intersect');
-                if ~ismember(answer, {'Union', 'Intersect'}), return; end
-                methodtag = lower(answer);
-                fw = gui.myWaitbar(parentfig);
-                try
-                    insce = cell(1, length(filenm));
-                    for k = 1:length(filenm)
-                        filename = fullfile(pathname, filenm{k});
-                        if exist(filename,'file')
-                            gui.myWaitbar(parentfig, fw, false, '', ...
-                                sprintf('Loading %s...', filenm{k}), ...
-                                k./length(filenm));
-                            load(filename, 'sce');
-                            insce{k} = sce;
-                            metainfo = sprintf("Source: % s", filename);
-                            insce{k} = insce{k}.appendmetainfo(metainfo);
-                        end
-                    end
-                        sce = sc_mergesces(insce, methodtag);
-                catch ME
-                    gui.myWaitbar(parentfig, fw, true);
-                    disp(ME.message);
-                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
-                    return;
-                end
-                gui.myWaitbar(parentfig, fw);
+                sce = gui.i_mergesces(parentfig, insce, names);
+                if isempty(sce), return; end
             end
         case '10x Genomics MTX File (*.mtx)...'
             try
@@ -156,6 +131,14 @@ setpref('scgeatoolbox', preftagname, indx);
             if pkg.i_isvalid(parentfig) && isa(parentfig, 'matlab.ui.Figure'), figure(parentfig); end
             if isequal(fname, 0), return; end
             filename = fullfile(pathname, fname);
+            % Asked here, before the progress bar: run.commoncheck_R asks with no
+            % parent, so without this its question opened behind the open bar.
+            if ~ispref('scgeatoolbox', 'rexecutablepath')
+                if strcmp(gui.myQuestdlg(parentfig, 'This needs R, which is not set up. Set it up now?'), 'Yes')
+                    gui.i_setrenv(parentfig);
+                end
+                if ~ispref('scgeatoolbox', 'rexecutablepath'), return; end
+            end
             fw = gui.myWaitbar(parentfig);
             try
                 [sce, metadata] = sc_readrdsfile(filename);
@@ -391,21 +374,23 @@ setpref('scgeatoolbox', preftagname, indx);
 
             if isempty(acc), return; end
             setpref('scgeatoolbox', preftagname1, acc{1});
-            % acc = strtrim(deblank(acc{1}));
-            % acc = strrep(acc,' ','');
             acc = regexprep(acc{1},'[^a-zA-Z0-9,;\-]','');
-            if isempty(acc) || ~strlength(acc) > 4
+            if isempty(acc) || strlength(acc) <= 4
                 gui.i_bringtofront(parentfig);
                 return;
             end
             if contains(acc,'-')
                 accx = pkg.i_expandrange(acc);
+                if isempty(accx) || strlength(string(accx)) == 0 || contains(string(accx), "NaN")   % "GSM1-GSM5" gives "GSMNaN"
+                    gui.myErrordlg(parentfig, sprintf(['Could not expand "%s". ' ...
+                        'Write a range as GSM100-GSM105 or GSM100-105.'], acc));
+                    return;
+                end
                 if strcmp('Yes', gui.myQuestdlg(parentfig, ...
                         sprintf('Expand accession number series to: %s?', accx)))
                     acc = accx;
                 else
                     return;
-                    % acc = regexprep(acc,'[^a-zA-Z0-9,;]','');
                 end
             end
             acc = upper(acc);
@@ -423,7 +408,7 @@ setpref('scgeatoolbox', preftagname, indx);
                         [sce] = pkg.i_multisamplesmerge(accv, false, speciestag, parentfig);
                         gui.myWaitbar(parentfig, fw);
                     catch ME
-                        gui.myWaitbar(parentfig, fw);
+                        gui.myWaitbar(parentfig, fw, true);
                         gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
@@ -439,13 +424,11 @@ setpref('scgeatoolbox', preftagname, indx);
                             return;
                         end
                     catch ME
-                        gui.myWaitbar(parentfig, fw);
+                        gui.myWaitbar(parentfig, fw, true);
                         gui.myErrordlg(parentfig, ME.message, ME.identifier);
                         return;
                     end
                 end
-                %                     metainfo=sprintf("Source: %s",acc);
-                %                     sce=sce.appendmetainfo(metainfo);
             end
         case {'Link to GEO mtx.gz File...', 'Link to GEO txt.gz File...'}
             if contains(ButtonName, 'mtx')
@@ -475,15 +458,22 @@ setpref('scgeatoolbox', preftagname, indx);
             if isempty(answer), return; end
             if ~isempty(answer{1})
                 fw = gui.myWaitbar(parentfig);
-                files = websave(tempname, answer{1});
-                if iscell(files)
-                    f = files{1};
-                else
-                    f = files;
+                % A bad link or no network used to leave the bar up and throw.
+                try
+                    files = websave(tempname, answer{1});
+                    if iscell(files)
+                        f = files{1};
+                    else
+                        f = files;
+                    end
+                    if isempty(f), error('Nothing was downloaded from %s.', answer{1}); end
+                    fprintf('[X, g, b] = sc_read10xh5file(''%s'');\n', f);
+                    [X, g, b, c] = sc_read10xh5file(f);
+                catch ME
+                    gui.myWaitbar(parentfig, fw, true);
+                    gui.myErrordlg(parentfig, ME.message, ME.identifier);
+                    return;
                 end
-                if isempty(f), error('f1'); end
-                fprintf('[X, g, b] = sc_read10xh5file(''%s'');\n', f);
-                [X, g, b, c] = sc_read10xh5file(f);
                 sce = SingleCellExperiment(X, g);
                 metainfo = sprintf("Source: % s", answer{1});
                 sce = sce.appendmetainfo(metainfo);
@@ -499,61 +489,16 @@ setpref('scgeatoolbox', preftagname, indx);
                 return;
             end
         case 'Import SCE Data from Workspace...'
-            a = evalin('base', 'whos');
-            if isempty(a)
-                gui.myHelpdlg(parentfig, 'No SCE in Workspace.');
-                return;
-            end
-            b = struct2cell(a);
-            valididx = ismember(b(4, :), 'SingleCellExperiment');
-            if ~any(valididx)
-                gui.myHelpdlg(parentfig, 'No SCE in Workspace.');
-                return;
-            end
-            a = a(valididx);
-            b = b(1, valididx);
-            [b,idx]=natsort(b);
-            a = a(idx);
-
-            if gui.i_isuifig(parentfig)
-                [indx, tf] = gui.myListdlg(parentfig, b, 'Select SCE variable:');
+            % One variable is imported as it is; several are merged.
+            [insce, names] = gui.i_pickworkspacesces(parentfig, ...
+                'Select an SCE variable, or several to merge.');
+            if isempty(insce), return; end
+            if isscalar(insce)
+                sce = insce{1};
             else
-                [indx, tf] = listdlg('PromptString', {'Select SCE variable:'}, ...
-                    'liststring', b, ...
-                    'SelectionMode', 'multiple', 'ListSize', [220, 300]);
+                sce = gui.i_mergesces(parentfig, insce, names);
+                if isempty(sce), return; end
             end
-            if tf == 1
-                if isscalar(indx)
-                    sce = evalin('base', a(indx).name);
-                elseif length(indx) > 1
-                    answer = gui.myQuestdlg(parentfig, 'Which set operation method to merge genes?', ...
-                        'Merging method', ...
-                        {'Intersect', 'Union'}, 'Intersect');
-                    if ~ismember(answer, {'Union', 'Intersect'}), return; end
-                    methodtag = lower(answer);
-                    try
-                        insce = cell(1, length(indx));
-                        s = "";
-                        for k = 1:length(indx)
-                            insce{k} = evalin('base', a(indx(k)).name);
-                            s = sprintf('%s,%s', s, a(indx(k)).name);
-                        end
-                        s = s(2:end);
-                        fprintf('>> sce=sc_mergesces({%s},''%s'');\n', s, methodtag);
-                        fw = gui.myWaitbar(parentfig);
-                        sce = sc_mergesces(insce, methodtag);
-                    catch ME
-                        gui.myWaitbar(parentfig, fw, true);
-                        disp(ME.message);
-                        gui.myErrordlg(parentfig, ME.message, ME.identifier);
-                        return;
-                    end
-                    gui.myWaitbar(parentfig, fw);
-                end
-            else
-                return;
-            end
-            % promotesave = false;
         case 'Load Example Data...'
             answerstruced = gui.myQuestdlg(parentfig, 'Load processed or raw data?', ...
                     '', {'Processed', 'Raw', 'Cancel'}, 'Processed');
@@ -604,8 +549,6 @@ end
 
 
 function [sce] = in_simulatedata(parentfig)
-        % gui.i_bringtofront(parentfig);
-        % figure(parentfig);
         sce=[];
         definput = {'3000', '5000'};
         prompt = {'Number of genes:', ...

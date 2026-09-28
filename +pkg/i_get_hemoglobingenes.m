@@ -5,5 +5,4 @@ txtfile = fullfile(pw1, '..','assets', 'HGNC', 'hemoglobin.txt');
 t = readtable(txtfile, 'ReadVariableNames',false, ...
 'VariableNamingRule', 'modify');
 g = string(t.Var1);
-% delete(fname);
 end

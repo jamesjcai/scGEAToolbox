@@ -93,21 +93,14 @@ y = double(ptsSelected);
 % regressions below use Y -- so it was pure collateral damage.
 X = sce.X';
 
-% uselasso = true;
-
 try
     if issparse(X), X = full(X); end
-%    assignin("base","X",X);
-%    assignin("base","y",y);
     if uselasso
         [B] = lasso(X, y, 'DFmax', numfig*3, 'MaxIter', 1e3);
         [~, ix] = min(abs(sum(B > 0)-numfig));
         b = B(:, ix);
         idx = b > 0;
     else
-        % mdl = fitglm(X, y, 'Distribution', 'binomial', 'Link', 'logit');
-        % B = mdl.Coefficients.Estimate;
-        % [~, idx] = mink(B, numfig);
         idx = LRDETest(X, y, numfig);
     end
 catch ME
