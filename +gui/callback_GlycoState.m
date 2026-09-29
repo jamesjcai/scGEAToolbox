@@ -8,7 +8,7 @@ function callback_GlycoState(src, ~)
 %   metabolism, glycan degradation and glycan recognition.
 %
 %   Scoring the same collection is also reachable through Analyze > Gene
-%   Program (Cell Score) Analysis, where "Glycobiology" is one of the
+%   Programs > Gene Program (Cell Score) Analysis, where "Glycobiology" is one of the
 %   gene-set collections. This entry exists because it scores the whole
 %   collection in one step and reports how many of each module's genes were
 %   actually found, which is what decides whether a module score means

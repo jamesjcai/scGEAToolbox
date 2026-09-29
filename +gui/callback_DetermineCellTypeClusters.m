@@ -71,7 +71,26 @@ if clusterfirst
     gui.myWaitbar(FigureHandle, fw);
     sce.c = sce.c_cluster_id;
 end
-[c, cL] = findgroups(string(sce.c));
+% Numeric ids are grouped as numbers, so groups are visited 1, 2, ..., 10
+% rather than "1", "10", "11", and the per-type subscripts follow that order.
+if isnumeric(sce.c)
+    [c, cL] = findgroups(sce.c);
+    cL = string(cL);
+else
+    [c, cL] = findgroups(string(sce.c));
+end
+
+% Custom markers are scored against the other groups, all at once, by
+% PKG.E_SCORECUSTOMMARKERS. This used to score each group on its own with
+% PKG.E_DETERMINECELLTYPE, which sums median raw counts, so an abundant
+% transcript present in every cell decided everything: on the mouse
+% pancreas example ambient insulin made it label 6 of 10 true cell types
+% "Beta cells". With a single group there is nothing to score against, so
+% "Annotate As Is" keeps the old scoring.
+scoreRelative = ~usedefaultdb && max(c) > 1;
+if scoreRelative
+    [customScore, customTypes] = pkg.e_scorecustommarkers(sce.X, sce.g, c, Tm);
+end
 
 % Set up live datatip handle if requested and available
 h = [];
@@ -85,6 +104,7 @@ end
 
 if ~manuallyselect, fw = gui.myWaitbar(FigureHandle); end
 
+rawTypes = strings(max(c), 1);
 for ix = 1:max(c)
     if ~manuallyselect
         gui.myWaitbar(FigureHandle, fw, false, '', '', ix/max(c));
@@ -95,6 +115,8 @@ for ix = 1:max(c)
         [Tct] = pkg.i_celltypebrushed(sce.X, sce.g, ...
             sce.s, ptsSelected, ...
             speciestag, organtag, databasetag, bestonly);
+    elseif scoreRelative
+        Tct = in_rankedtypes(customScore(:, ix), customTypes);
     else
         [Tct] = pkg.e_determinecelltype(sce, ptsSelected, wvalu, ...
             wgene, celltypev, markergenev);
@@ -114,13 +136,18 @@ for ix = 1:max(c)
         ctxt = Tct.C1_Cell_Type{1};
     end
 
+    % Number groups within each type (Fibroblasts_{1}, Fibroblasts_{2}, ...)
+    % in the order they are annotated, rather than by group index, so the
+    % subscripts of one type run 1, 2, 3 and the live datatips stay final.
     ctxt_raw = ctxt;
-    ctxt = sprintf('%s_{%d}', ctxt_raw, ix);
+    rawTypes(ix) = string(ctxt_raw);
+    typeOrdinal = nnz(rawTypes(1:ix) == rawTypes(ix));
+    ctxt = sprintf('%s_{%d}', ctxt_raw, typeOrdinal);
     cL(ix) = ctxt;
 
     if ~isempty(h)
         ctxtdisp = strrep(ctxt_raw, '_', '\_');
-        ctxtdisp = sprintf('%s_{%d}', ctxtdisp, ix);
+        ctxtdisp = sprintf('%s_{%d}', ctxtdisp, typeOrdinal);
         cLdisp(ix) = ctxtdisp;
         row = dataTipTextRow('', cLdisp(c));
         h.DataTipTemplate.DataTipRows = row;
@@ -165,4 +192,23 @@ gui.myHelpdlg(FigureHandle, msg + gui.i_stashnotice(stashname));
 
 gui.myGuidata(FigureHandle, sce, src);
 requirerefresh = true;
+end
+
+
+function Tct = in_rankedtypes(score, types)
+% The table PKG.E_DETERMINECELLTYPE returns - C1_Cell_Type, C1_CTA_Score,
+% best first - from one group's relative scores, so the automatic pick and
+% the "choose manually" list read it unchanged. Types none of whose markers
+% are measured are left out. When no list scores above zero the group
+% matches none, and "Unknown" leads, as it did when no marker matched; the
+% manual list still offers the rest beneath it.
+isScored = isfinite(score);
+[s, order] = sort(score(isScored), 'descend');
+names = types(isScored);
+names = cellstr(names(order));
+if isempty(s) || s(1) <= 0
+    names = [{'Unknown'}; names(:)];
+    s = [0; s(:)];
+end
+Tct = table(names(:), s(:), 'VariableNames', {'C1_Cell_Type', 'C1_CTA_Score'});
 end

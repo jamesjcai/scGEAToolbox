@@ -1,13 +1,19 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.6.0 28-Sep-2026
+% Version 26.6.1 29-Sep-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
 %   online_landing            - online_landing is a script.
+%   sc_allenbrainref          - SC_ALLENBRAINREF Mouse whole-brain cell-type reference from the Allen Brain Cell Atlas.
 %   sc_analyticfit            - SC_ANALYTICFIT  Closed-form replacement for the Spline-DV 3-D spline curve.
+%   sc_annotatecells          - SC_ANNOTATECELLS Assign cell types by any available method, through one call.
+%   sc_annotationstability    - SC_ANNOTATIONSTABILITY Choose a clustering resolution by how its cell-type labels behave.
+%   sc_buildcelltyperef       - SC_BUILDCELLTYPEREF Summarise a labelled dataset into a cell-type reference.
 %   sc_causalcccnet           - SC_CAUSALCCCNET  Local approximation of a causalCCC/MIIC network.
 %   sc_cellcyclescore         - Score cell cycle phases
 %   sc_cellscore              - SC_CELLSCORE  Cell-level gene signature scoring.
+%   sc_celltypeanno           - sc_celltypeanno is a function.
+%   sc_celltypeannoref        - SC_CELLTYPEANNOREF Label clusters against a summary-statistic cell-type reference.
 %   sc_cluster_s              - sc_cluster_s - cluster cells using cell embeding s
 %   sc_cluster_x              - sc_cluster_x - cluster cells using UMI matrix X
 %   sc_csubtypeanno           - SC_CSUBTYPEANNO Annotate the subtypes of one primary cell type.

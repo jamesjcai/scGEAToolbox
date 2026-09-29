@@ -1,7 +1,7 @@
 function callback_ShortcutsGuide(src, ~)
 %CALLBACK_SHORTCUTSGUIDE List the keyboard shortcuts of the app's menus.
 %
-%   Behind Help > Shortcuts User Guide. The list is read from the menus'
+%   Behind Help > Keyboard Shortcuts. The list is read from the menus'
 %   own Accelerator properties rather than from a written table: the table
 %   it replaces (a row of assets/Misc/refinfo.txt) had gone stale, naming
 %   items under old labels and missing Ctrl+Z, and a list built from the

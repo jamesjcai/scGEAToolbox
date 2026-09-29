@@ -1,5 +1,26 @@
-Install as a MATLAB Add-On (Recommended)
-=========================================
+============
+Installation
+============
+
+Install from the Command Line (Recommended, R2026b and later)
+=============================================================
+
+1. **Run** the following command in MATLAB:
+
+   .. code-block:: matlab
+
+      mpminstall scgeatoolbox
+
+2. **Launch scGEAToolbox**:
+
+   .. code-block:: matlab
+
+      scgeatool
+
+On MATLAB releases earlier than R2026b, use one of the methods below.
+
+Install as a MATLAB Add-On
+==========================
 
 1. **Open the Add-On Explorer**
    - In MATLAB, go to the **Home** tab.

@@ -8,7 +8,8 @@ function obj = assigncelltype(obj, speciesid, keepclusterid, keepold)
 %   result to c_cell_type_tx.
 %
 %   speciesid      'human' (default) or 'mouse'.
-%   keepclusterid  append '_{k}' to each label. Default true.
+%   keepclusterid  append '_{k}' to each label, k numbering the clusters
+%                  of that type 1, 2, 3, ... Default true.
 %   keepold        stash any existing cell type labels in a new numbered
 %                  'old_cell_type_N' cell attribute before overwriting, so
 %                  an earlier annotation is not silently lost. Default
@@ -21,17 +22,27 @@ if nargin < 4 || isempty(keepold), keepold = true; end
 if nargin < 3 || isempty(keepclusterid), keepclusterid = true; end
 if nargin < 2 || isempty(speciesid), speciesid = 'human'; end
 
-[c, cL] = findgroups(string(obj.c_cluster_id));
+% Numeric ids are grouped as numbers, so the per-type subscripts follow
+% cluster 1, 2, ..., 10 rather than "1", "10", "11".
+if isnumeric(obj.c_cluster_id)
+    [c, cL] = findgroups(obj.c_cluster_id);
+    cL = string(cL);
+else
+    [c, cL] = findgroups(string(obj.c_cluster_id));
+end
 organtag = "all";
 databasetag = "panglaodb";
+rawTypes = strings(max(c), 1);
 for ik = 1:max(c)
     ptsSelected = c == ik;
     [Tct] = pkg.i_celltypebrushed(obj.X, obj.g, ...
         obj.s, ptsSelected, ...
         speciesid, organtag, databasetag);
     ctxt = Tct.C1_Cell_Type{1};
+    rawTypes(ik) = string(ctxt);
     if keepclusterid
-        ctxt = sprintf('%s_{%d}', ctxt, ik);
+        % Numbered within each type, not by cluster index.
+        ctxt = sprintf('%s_{%d}', ctxt, nnz(rawTypes(1:ik) == rawTypes(ik)));
     end
     cL(ik) = ctxt;
 end

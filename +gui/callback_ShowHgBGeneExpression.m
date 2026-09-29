@@ -26,14 +26,14 @@ if any(idx)
     hFig = hx.FigHandle;
 
     cm = uicontextmenu(hFig);
-    m1 = uimenu(cm, 'Text', 'Save HgBGeneExpression...', "MenuSelectedFcn", {@in_callback_saveM, ci});
+    m1 = uimenu(cm, 'Text', 'Save Hemoglobin Scores...', "MenuSelectedFcn", {@in_callback_saveM, ci});
     hFig.ContextMenu = cm;
 
     gui.i_stemscatter(sce.s, ci, hx.AxHandle);
 
     title(hx.AxHandle, ttxt);
     hx.addCustomButton('off', {@in_callback_saveM, ci}, 'floppy-disk-arrow-in.jpg', ...
-        'Save marker gene map...');
+        'Save hemoglobin scores to the workspace...');
     hx.show(FigureHandle);
 else
     gui.myWarndlg(FigureHandle, 'No Hgb-genes found');
@@ -43,7 +43,7 @@ end
 function in_callback_saveM(~, ~, ~)
         if ~(ismcc || isdeployed)
             labels = {'Save C_CELL_ID to variable named:', ...
-                'Save HgBGeneExpression to variable named:'};
+                'Save hemoglobin scores (summed Hb gene counts) to variable named:'};
             vars = {'cell_id', 'c'};
             values = {sce.c_cell_id, ci(:)};
             waitfor(export2wsdlg(labels, vars, values));   % one at a time

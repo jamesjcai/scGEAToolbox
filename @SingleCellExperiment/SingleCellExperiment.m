@@ -31,6 +31,13 @@ classdef SingleCellExperiment < handle & matlab.mixin.Copyable
         % apart from STRUCT_CELL_EMBEDDINGS so the 2-D/3-D embedding pickers
         % never offer them. Subset with the cells, like the embeddings.
         struct_cell_reductions = struct();
+        % Whole-dataset results worth keeping with the data so they are not
+        % recomputed, one field per analysis (ANNOTATIONSTABILITY: the
+        % resolution sweep, see GUI.I_ANNOTATIONSWEEP). Each result records
+        % a fingerprint of the data it was computed on, and its reader
+        % discards it when the data no longer match, so nothing here needs
+        % subsetting with the cells.
+        struct_saved_results = struct();
     end
 
     properties (Dependent)

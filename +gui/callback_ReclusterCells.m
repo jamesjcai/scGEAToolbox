@@ -15,11 +15,11 @@ hasold = isfield(sce.struct_cell_clusterings, methodtag) && ...
     numel(sce.struct_cell_clusterings.(methodtag)) == sce.NumCells;
 
 % SEURAT is Seurat's own FindClusters result, written by the R run behind
-% Analyze > "Embed Cells with Seurat". It cannot be recomputed here, only reused.
+% Cluster > "Embed Cells with Seurat". It cannot be recomputed here, only reused.
 if strcmp(methodtag, 'seurat')
     if ~hasold
         gui.myErrordlg(FigureHandle, ['There is no Seurat clustering to ' ...
-            'use. Run Analyze > Embed Cells with Seurat (R) first; it stores ' ...
+            'use. Run Cluster > Embed Cells with Seurat (R) first; it stores ' ...
             'the clusters Seurat finds.'], '');
         return;
     end
@@ -51,21 +51,50 @@ if ~usingold
     % LOUVAINPC is the Seurat-like route: the resolution, not a preset k,
     % decides the number of clusters, so that is what it asks for first.
     % Asking for k instead tunes the resolution until k clusters come out.
+    % Choosing by annotation takes the resolution SC_ANNOTATIONSTABILITY
+    % recommends; its partition is the one Resolution= would give, so it is
+    % used as it is rather than recomputed. A list, not GUI.MYQUESTDLG:
+    % three choices plus the Cancel it appends is one more than it shows.
     resolution = [];
     if strcmp(methodtag, 'louvainpc')
-        answer2 = gui.myQuestdlg(FigureHandle, ...
-            ['Louvain on principal components. Set the resolution ', ...
-            '(larger gives more clusters), or a target number of clusters?'], ...
-            '', {'Resolution', 'Number of Clusters', 'Cancel'}, 'Resolution');
-        switch answer2
-            case 'Resolution'
+        choices = ["Resolution (larger gives more clusters)", ...
+            "Number of clusters", ...
+            "Choose by annotation (resolution whose cell types are stable)"];
+        [indx, tf] = gui.myListdlg(FigureHandle, choices, ...
+            'Louvain on Principal Components', 1, false, false, [380, 150], ...
+            'How should the number of clusters be set?');
+        if tf ~= 1, return; end
+        switch indx
+            case 1
                 resolution = gui.i_askresolution(FigureHandle);
                 if isempty(resolution), return; end
                 k = [];
-            case 'Number of Clusters'
+            case 2
                 k = i_asknumclusters(sce, FigureHandle);
                 if isempty(k), return; end
+            case 3
+                S = gui.i_annotationsweep(src, FigureHandle, sce);
+                if isempty(S), return; end
+                best = S.T(S.T.Recommended, :);
+                msg = sprintf(['Recommended resolution %.3g: %d clusters.' ...
+                    '\n\nApply reclusters the cells at this resolution; cell ' ...
+                    'types are not changed, so annotate the clusters ' ...
+                    'afterwards. Not Now leaves the clusters as they are; ' ...
+                    'the sweep is saved with the data, so running this ' ...
+                    'again offers it without recomputing.'], ...
+                    S.Resolution, best.NumClusters);
+                if ~strcmp(gui.myQuestdlg(FigureHandle, msg, 'Apply Resolution', ...
+                        {'Apply', 'Not Now'}, 'Apply'), 'Apply')
+                    return;
+                end
+                sce.c_cluster_id = S.ClusterId;
+                sce.struct_cell_clusterings.louvainpc = S.ClusterId;
+                sce.setCellAttribute('annotation_stability', S.Stability);
+                gui.myGuidata(FigureHandle, sce, src);
+                requirerefresh = true;
+                return;
             otherwise
+                % myListdlg with allowmulti=false returns one of the three indices.
                 return;
         end
     else

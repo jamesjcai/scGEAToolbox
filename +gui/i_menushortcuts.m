@@ -2,7 +2,7 @@ function lines = i_menushortcuts(fig)
 %I_MENUSHORTCUTS One line per menu item with a keyboard shortcut.
 %
 %   lines = gui.i_menushortcuts(fig) returns a string column such as
-%   "Ctrl+K   Analyze > Cluster Cells", sorted by key, for every uimenu
+%   "Ctrl+K   Cluster > Cluster Cells", sorted by key, for every uimenu
 %   under FIG whose Accelerator is set. Empty when FIG has none.
 %
 %   See also GUI.CALLBACK_SHORTCUTSGUIDE.
@@ -24,7 +24,7 @@ lines = "Ctrl+" + keys + "   " + paths(order);
 end
 
 function p = in_menupath(m)
-% "Analyze > Cluster Cells": the item's label and its parents', with the
+% "Cluster > Cluster Cells": the item's label and its parents', with the
 % mnemonic ampersands and the trailing ellipsis taken off.
 parts = strings(0, 1);
 while isa(m, 'matlab.ui.container.Menu')

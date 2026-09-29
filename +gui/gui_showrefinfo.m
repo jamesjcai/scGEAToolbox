@@ -36,7 +36,7 @@ txt = replace(txt, "\n", newline);
 txt = regexprep(txt, ';[ \t]*$', '', 'lineanchors');
 
 if nargout == 0
-    % Informational display (e.g. Help > Shortcuts User Guide). A single
+    % Informational display (e.g. Help > Keyboard Shortcuts). A single
     % dismiss button is the right affordance here, not Continue/Cancel.
     gui.myHelpdlg(parentfig, txt, reftarget);
     y = true;

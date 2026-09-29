@@ -1,7 +1,7 @@
 function callback_CellQCViolin(src, ~)
 %CALLBACK_CELLQCVIOLIN Violin plots of the cell QC metrics, over all cells or by group.
 %
-%   Behind View > Cell QC Metrics in Violin Plots. Asks whether to pool all
+%   Behind Plots > Cell QC Metrics in Violin Plots. Asks whether to pool all
 %   cells or plot one violin per group, and for a grouping variable in the
 %   second case.
 %
