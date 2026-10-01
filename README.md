@@ -121,6 +121,8 @@ After installing the toolbox, the main GUI can be run by calling `scGEApp`.
 
 [SCGEATOOL.exe](https://scgeatool.github.io/) is a standalone application running on Windows machines that do not have MATLAB installed. SCGEATOOL is a lightweight and blazing fast desktop application that provides interactive visualization functionality to analyze single-cell transcriptomic data. SCGEATOOL allows you to easily interrogate different views of your scRNA-seq data to quickly gain insights into the underlying biology. SCGEATOOL is a pre-compiled standalone application developed in MATLAB. Pre-compiled standalone releases are meant for those environments without access to MATLAB licenses. Standalone releases provide access to all of the functionality of the SCGEATOOL standard MATLAB release encapsulated in a single application. SCGEATOOL is open-sourced to allow you to experience the added flexibility and speed of the MATLAB environment when needed.
 
+SCGEATOOL is also available from the [Microsoft Store](https://apps.microsoft.com/detail/9n0mrfh4rz0r?hl=en-US&gl=US).
+
 ## Help
 
 If you have any questions or require assistance using scGEAToolbox, please [contact me](https://scgeatool.github.io/#contact).
