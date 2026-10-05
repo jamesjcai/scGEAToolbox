@@ -33,6 +33,12 @@ end
     return;
 end
 
+% An empty saved path is cleared first, so the question below is asked at
+% once. Clearing it further down used to end the call with no dialog, and
+% only a second click got one.
+if ispref('scgeatoolbox', preftagname) && isempty(getpref('scgeatoolbox', preftagname))
+    rmpref('scgeatoolbox', preftagname);
+end
 if ~ispref('scgeatoolbox', preftagname)
     answer = gui.myQuestdlg(parentfig, 'R environment has not been set up. Locate R executable Rscript.exe?');
     if ~strcmp(answer, 'Yes'), return; end

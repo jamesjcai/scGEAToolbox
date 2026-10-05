@@ -92,7 +92,10 @@ src.in_RefreshAll(true, false);
 % and the existing clusters were computed before them. Offer to redo the
 % clustering on them now, while it is obvious why.
 pcsAfter = i_harmonypcs(src.sce);
-if ~isempty(pcsAfter) && ~isequal(pcsBefore, pcsAfter)
+% New corrected PCs mean the native "Correct PCs" path ran, and that path
+% always redraws the cells as a UMAP (GUI.CALLBACK_HARMONY).
+reembedded = ~isempty(pcsAfter) && ~isequal(pcsBefore, pcsAfter);
+if reembedded
     if strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
             ['Re-cluster cells on the batch-corrected principal ' ...
             'components (Louvain, resolution 0.8)?'], ''))
@@ -111,12 +114,22 @@ if ~isempty(pcsAfter) && ~isequal(pcsBefore, pcsAfter)
     end
 end
 
-if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, ...
-        'Update Saved Embedding?', '')), return; end
 dim = size(src.sce.s, 2);
-[methodtag] = gui.i_pickembedmethod(FigureHandle, false, dim);
-if isempty(methodtag), return; end
-if iscell(methodtag), methodtag = cell2mat(methodtag); end
+if reembedded
+    q = sprintf('Save the corrected UMAP as the stored UMAP %dD embedding?', dim);
+else
+    q = 'Update Saved Embedding?';
+end
+if ~strcmp('Yes', gui.myQuestdlg(FigureHandle, q, '')), return; end
+if reembedded
+    % A UMAP goes in the UMAP slot only. The picker below offered tSNE and
+    % PHATE too, so a UMAP could be stored under tsne2d.
+    methodtag = sprintf('umap%dd', dim);
+else
+    [methodtag] = gui.i_pickembedmethod(FigureHandle, false, dim);
+    if isempty(methodtag), return; end
+    if iscell(methodtag), methodtag = cell2mat(methodtag); end
+end
 if ismember(methodtag, fieldnames(src.sce.struct_cell_embeddings))
     src.sce.struct_cell_embeddings.(methodtag) = src.sce.s;
     gui.myHelpdlg(FigureHandle, ...

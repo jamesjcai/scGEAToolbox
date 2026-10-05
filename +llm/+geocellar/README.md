@@ -62,7 +62,7 @@ The GUI callback (`+gui/callback_LaunchGEOcellar.m`) validates the LLM Add-On an
 
 ## Configuration (`geocellar_config`)
 
-All settings are read from environment variables (loaded via `loadenv` from the file registered in the `scgeatoolbox` → `llapikeyenvfile` preference).
+Keys are found by `llm.i_getapikey`, which checks the environment first, then the MATLAB vault (`getSecret`; store a key with `llm.i_storeapikey("CHROMA_API_KEY")`), then the env file registered in the `scgeatoolbox` → `llapikeyenvfile` preference. Other settings come from the environment, then that file. The file is read without being copied into the environment. See "API keys" in [GEOcellar_modes.md](../../GEOcellar_modes.md).
 
 | Variable | Default | Purpose |
 |----------|---------|---------|

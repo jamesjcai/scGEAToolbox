@@ -1,21 +1,28 @@
-function i_feaplotarray(sce, tgene, thisc, uselog, parentfig)
+function i_feaplotarray(sce, tgene, thisc, uselog, parentfig, levelorder, cellpicked)
+% LEVELORDER, optional, is the order the groups were listed in when the
+% user picked them; the panels keep it.
+% CELLPICKED, optional, is a logical mask over SCE's cells; THISC then holds
+% labels for the picked cells only. Expression is normalised on all cells
+% before subsetting, so values match an all-cells plot.
 
+if nargin < 7 || isempty(cellpicked), cellpicked = true(size(sce.X, 2), 1); end
+if nargin < 6, levelorder = []; end
 if nargin < 5, parentfig = []; end
 if nargin < 4, uselog = false; end
 
 [Xt] = gui.i_transformx(sce.X, [], [], parentfig);
 if isempty(Xt), return; end
 
-X = Xt;
+X = Xt(:, cellpicked);
 g = sce.g;
-s = sce.s;
+s = sce.s(cellpicked, :);
 
 if max(findgroups(thisc))>50
     answer = gui.myQuestdlg(parentfig, 'Too many groups. Continue?','',[],[],'warning');
     if ~strcmp(answer, 'Yes'), return; end
 end
 
-[c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
+[c, cL, noanswer] = gui.i_reordergroups(thisc, levelorder, parentfig);
 if noanswer, return; end
 
 cL = gui.i_escapeunderscore(cL(:));

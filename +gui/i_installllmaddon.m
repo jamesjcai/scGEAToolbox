@@ -1,34 +1,38 @@
 function [done] = i_installllmaddon(src, ~)
-% I_INSTALLLLMADDON  Install or upgrade the LLMs-with-MATLAB File Exchange addon.
-%   Checks the installed version against the latest GitHub release. If an
-%   upgrade is available (or the addon is absent), offers to auto-install the
-%   .mltbx from the GitHub release, or falls back to opening the File Exchange
-%   page.
+% I_INSTALLLLMADDON  Install or upgrade the LLMs-with-MATLAB add-on.
+%   Installs the File Exchange package llms_with_matlab with the MATLAB
+%   package manager (mpminstall/mpmupdate), which resolves the latest
+%   version itself. That replaced downloading a .mltbx from the GitHub
+%   release, which stopped working when the releases stopped carrying one
+%   (v4.9.0 has none). If the add-on was installed the old way, as a
+%   .mltbx through the Add-On Explorer, the upgrade uninstalls that copy
+%   first so the path does not hold two. Falls back to the File Exchange
+%   page when the package manager cannot do it.
 
 [parentfig, ~] = gui.gui_getfigsce(src);
 done = false;
 
-ADDON_NAME = 'Large Language Models (LLMs) with MATLAB';
-GITHUB_REPO = 'matlab-deep-learning/llms-with-matlab';
-FEX_URL = ['https://www.mathworks.com/matlabcentral/fileexchange/' ...
-           '163796-large-language-models-llms-with-matlab'];
+PKG_NAME = "llms_with_matlab";
+ADDON_NAME = "Large Language Models (LLMs) with MATLAB";
+FEX_URL = "https://www.mathworks.com/matlabcentral/fileexchange/" + ...
+    "163796-large-language-models-llms-with-matlab";
+LICENSE_NOTE = "The add-on comes under its own license terms, " + ...
+    "which are placed in its installation folder.";
 
-% --- Installed state ---------------------------------------------------------
-[isInstalled, installedVersion] = i_getInstalledVersion(ADDON_NAME);
-
-% --- Latest version from GitHub ----------------------------------------------
-[latestVersion, mltbxUrl] = i_fetchLatestRelease(GITHUB_REPO);
+% --- Installed state and latest version -------------------------------------
+[installedVersion, isPackage, legacyId] = i_getInstalled(PKG_NAME, ADDON_NAME);
+latestVersion = i_getLatestVersion(PKG_NAME, isPackage);
 
 % --- Decide what to do -------------------------------------------------------
-if isInstalled
-    if ~isempty(latestVersion) && ~strcmp(installedVersion, latestVersion)
+if installedVersion ~= ""
+    if latestVersion ~= "" && latestVersion ~= installedVersion
         answer = gui.myQuestdlg(parentfig, ...
             sprintf(['%s is installed (v%s).\n' ...
-                     'A newer version (v%s) is available. Upgrade now?'], ...
-                     ADDON_NAME, installedVersion, latestVersion), ...
+                     'A newer version (v%s) is available. Upgrade now?\n\n%s'], ...
+                     ADDON_NAME, installedVersion, latestVersion, LICENSE_NOTE), ...
             'Addon Update', {'Upgrade', 'Open File Exchange', 'Cancel'}, 'Upgrade');
     else
-        if isempty(latestVersion)
+        if latestVersion == ""
             msg = sprintf(['%s (v%s) is installed.\n' ...
                 '(Could not check for updates — network unavailable.)'], ...
                 ADDON_NAME, installedVersion);
@@ -40,11 +44,12 @@ if isInstalled
         return;
     end
 else
-    if ~isempty(latestVersion)
-        installMsg = sprintf('%s is not installed. Install v%s now?', ...
-            ADDON_NAME, latestVersion);
+    if latestVersion ~= ""
+        installMsg = sprintf('%s is not installed. Install v%s now?\n\n%s', ...
+            ADDON_NAME, latestVersion, LICENSE_NOTE);
     else
-        installMsg = sprintf('%s is not installed. Install now?', ADDON_NAME);
+        installMsg = sprintf('%s is not installed. Install now?\n\n%s', ...
+            ADDON_NAME, LICENSE_NOTE);
     end
     answer = gui.myQuestdlg(parentfig, installMsg, ...
         'Install Addon', {'Install', 'Open File Exchange', 'Cancel'}, 'Install');
@@ -52,92 +57,93 @@ end
 
 switch answer
     case {'Install', 'Upgrade'}
-        done = i_doInstall(parentfig, mltbxUrl, FEX_URL);
+        done = i_doInstall(parentfig, PKG_NAME, isPackage, legacyId, FEX_URL);
     case 'Open File Exchange'
         web(FEX_URL, '-browser');
+    otherwise
+        % Cancel, or the dialog was closed: nothing to do.
 end
 end
 
 
 % -----------------------------------------------------------------------------
-function [isInstalled, version] = i_getInstalledVersion(addonName)
-isInstalled = false;
-version = '';
+function [version, isPackage, legacyId] = i_getInstalled(pkgName, addonName)
+% version is "" when the add-on is absent. isPackage is true for a
+% package-manager install; legacyId is the Add-On identifier of a .mltbx
+% install, which the package manager does not list, and "" otherwise.
+version = "";
+isPackage = false;
+legacyId = "";
 try
-    pkgs = matlab.addons.installedAddons;
-    if isempty(pkgs), return; end
-    idx = strcmp(pkgs.Name, addonName);
-    if any(idx)
-        isInstalled = true;
-        v = pkgs.Version(idx);
-        if iscell(v)
-            version = char(v{1});
-        else
-            version = char(v);
-        end
+    pkg = mpmlist(Name=pkgName);
+    if ~isempty(pkg)
+        version = string(pkg(1).Version);
+        isPackage = true;
+        return;
+    end
+    addons = matlab.addons.installedAddons;
+    idx = find(addons.Name == addonName, 1);
+    if ~isempty(idx)
+        version = string(addons.Version(idx));
+        legacyId = string(addons.Identifier(idx));
     end
 catch
-    % Addon query failed — treat as not installed
+    % Query failed: treat as not installed
 end
 end
 
 
 % -----------------------------------------------------------------------------
-function [version, mltbxUrl] = i_fetchLatestRelease(githubRepo)
-% Query the GitHub releases API for the latest tag and any .mltbx asset.
-version = '';
-mltbxUrl = '';
+function version = i_getLatestVersion(pkgName, isPackage)
+% Ask the package manager what it would install, without installing it.
+% "" when the repository cannot be reached.
+version = "";
 try
-    apiUrl = sprintf('https://api.github.com/repos/%s/releases/latest', githubRepo);
-    opts = weboptions('Timeout', 10, 'ContentType', 'json');
-    data = webread(apiUrl, opts);
-
-    tag = data.tag_name;
-    if startsWith(tag, 'v')
-        tag = tag(2:end);
+    if isPackage
+        pkg = mpmupdate(pkgName, DryRun=true, Prompt=false, Verbosity="quiet");
+    else
+        pkg = mpminstall(pkgName, DryRun=true, Prompt=false, Verbosity="quiet");
     end
-    version = tag;
-
-    % Look for a .mltbx asset in the release
-    assets = data.assets;
-    if isstruct(assets) && ~isempty(assets)
-        for k = 1:numel(assets)
-            name = string(assets(k).name);
-            if endsWith(name, '.mltbx')
-                mltbxUrl = char(assets(k).browser_download_url);
-                break;
-            end
-        end
-    end
+    version = string(pkg(1).Version);
 catch
-    % Network unavailable, no releases, or unexpected JSON shape
+    % Network unavailable or the package is not in the repository
 end
 end
 
 
 % -----------------------------------------------------------------------------
-function done = i_doInstall(parentfig, mltbxUrl, fexUrl)
+function done = i_doInstall(parentfig, pkgName, isPackage, legacyId, fexUrl)
 done = false;
-if ~isempty(mltbxUrl)
-    fw = gui.myWaitbar(parentfig);
-    try
-        tempFile = fullfile(tempdir, 'llms_with_matlab.mltbx');
-        websave(tempFile, mltbxUrl);
-        gui.myWaitbar(parentfig, fw);
-        matlab.addons.install(tempFile, true, 'overwrite');
-        done = true;
-        gui.myHelpdlg(parentfig, ...
-            ['Installation complete. ' ...
-             'You may need to restart MATLAB for changes to take effect.']);
-    catch ME
-        gui.myWaitbar(parentfig, fw);
-        gui.myErrordlg(parentfig, ['Installation failed: ' ME.message]);
-        web(fexUrl, '-browser');
+removedLegacy = false;
+fw = gui.myWaitbar(parentfig);
+try
+    if isPackage
+        pkg = mpmupdate(pkgName, Prompt=false, Verbosity="quiet");
+    else
+        % The package is installed first and the old .mltbx copy removed
+        % only if it gets in the way. It used to be removed first, so a
+        % failed install left neither.
+        try
+            pkg = mpminstall(pkgName, Prompt=false, Verbosity="quiet");
+        catch firstErr
+            if legacyId == "", rethrow(firstErr); end
+            matlab.addons.uninstall(legacyId);
+            removedLegacy = true;
+            pkg = mpminstall(pkgName, Prompt=false, Verbosity="quiet");
+        end
     end
-else
-    % No .mltbx asset in the release — open the File Exchange page
-    gui.myHelpdlg(parentfig, ...
-        'No direct download found. Opening the File Exchange page to install manually.');
+    gui.myWaitbar(parentfig, fw);
+    done = true;
+    gui.myHelpdlg(parentfig, sprintf('Installed %s v%s.', ...
+        pkgName, string(pkg(1).Version)));
+catch ME
+    gui.myWaitbar(parentfig, fw);
+    msg = ['Installation failed: ' ME.message];
+    if removedLegacy
+        msg = [msg newline 'The previously installed copy was removed ' ...
+            'to make way for it; reinstall it from the page that opens.'];
+    end
+    gui.myErrordlg(parentfig, msg);
     web(fexUrl, '-browser');
 end
 end

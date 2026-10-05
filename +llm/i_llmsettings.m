@@ -5,7 +5,7 @@ function [provider, model] = i_llmsettings(overrideModel, overrideProvider)
 %   [provider, model] = LLM.I_LLMSETTINGS(overrideModel, overrideProvider)
 %
 %   Reads the 'llmodelprovider' preference that GUI.I_SETLLMMODEL writes
-%   (Options > Set LLM Provider & Model...), stored as "Provider:Model".
+%   (Setup > Select Large Language Model...), stored as "Provider:Model".
 %   Either half can be overridden; pass "" to take the configured value.
 %
 %   The model half may itself contain colons - Ollama tags look like
@@ -31,7 +31,7 @@ end
 if ~ispref('scgeatoolbox', 'llmodelprovider')
     error('llm:i_llmsettings:NotConfigured', ...
         ['No LLM provider is configured. Set one with ', ...
-         'gui.i_setllmmodel, or the menu Options > Set LLM Provider & ', ...
+         'gui.i_setllmmodel, or the menu Setup > Select Large Language ', ...
          'Model..., then try again.']);
 end
 

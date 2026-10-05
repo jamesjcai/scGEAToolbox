@@ -43,7 +43,7 @@ function in_callback_savetable(~, ~)
                     labels = {'Save T to variable named:'};
                     vars = {'T'};
                     values = {T};
-                    [~, ~] = export2wsdlg(labels, vars, values, ...
+                    gui.i_export2wsdlg(hFig, labels, vars, values, ...
                         'Save Data to Workspace');
                 case 'TXT/CSV file'
                     [file, path] = uiputfile({'*.csv'; '*.*'}, 'Save as');

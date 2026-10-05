@@ -268,7 +268,7 @@ function ExportGeneNames(~, ~)
         labels = {'Save gene names to variable:'};
         vars = {'g'};
         values = {tgenes};
-        export2wsdlg(labels, vars, values, ...
+        gui.i_export2wsdlg(hFig, labels, vars, values, ...
             'Save Data to Workspace');
     end
 

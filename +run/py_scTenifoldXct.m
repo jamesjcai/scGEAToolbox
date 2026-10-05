@@ -135,10 +135,11 @@ closeFw = onCleanup(@() gui.myWaitbar(parentfig, fw, true));
 if ~useexist
     gui.myWaitbar(parentfig, fw, false, [], 'Step 1 of 3: Building pcnet_Source network...');
     disp('Building pcnet_Source network...');
+    % Networks are built on log-normalised expression, as ten.sctenifoldxct
+    % does: on raw counts each cell's sequencing depth reads as co-expression
+    % (tests/xctLogNormTest.m). Python never rebuilds them (rebuild_GRN=False).
     X1 = sce.X(:, sce.c_cell_type_tx == celltype1);
-    A1 = net.pcrnet(X1, 3, false, true, false, false, pkg.i_usegpu(X1));
-    A1 = A1 ./ max(abs(A1(:)));
-    A = ten.e_filtadjc(A1, 0.75, false);
+    A = ten.i_pcnet(ten.i_lognorm(X1), 3, 0.75, false, false, symmetrize=false);
     save('pcnet_Source.mat', 'A', '-v7.3');
     disp('pcnet_Source.mat saved.');
     if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Source is complete'); end
@@ -147,9 +148,7 @@ if ~useexist
     gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet_Target network...');
     disp('Building pcnet_Target network...')
     X2 = sce.X(:, sce.c_cell_type_tx == celltype2);
-    A2 = net.pcrnet(X2, 3, false, true, false, false, pkg.i_usegpu(X2));
-    A2 = A2 ./ max(abs(A2(:)));
-    A = ten.e_filtadjc(A2, 0.75, false);
+    A = ten.i_pcnet(ten.i_lognorm(X2), 3, 0.75, false, false, symmetrize=false);
     save('pcnet_Target.mat', 'A', '-v7.3');
     disp('pcnet_Target network saved.')
     if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Target is complete'); end

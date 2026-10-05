@@ -102,7 +102,7 @@ if ~all(picked)
         numel(levels), numlevels, sce.NumCells, numel(picked));
 end
 
-[c] = findgroups(thisc);
+[c, cnames] = findgroups(thisc);
 answer = gui.myQuestdlg(FigureHandle, 'Generate marker gene heatmap', ...
 'Select Method', {'Method 1 (DE)', 'Method 2 (scGeneFit 🐢)', ...
 'Method 3 (LASSO 🐢🐢)'}, 'Method 1 (DE)');
@@ -143,10 +143,20 @@ catch ME
     return;
 end
 
-glist = string(markerlist{1}(:));
-for k = 2:length(markerlist)
-    glist = [glist; string(markerlist{k}(:))];
+% MARKEROF(i) is the group GLIST(i) was picked as a marker for. The list
+% was handed over as bare gene names, so the export from the heatmap had no
+% way to say which cell type each row belonged to. MARKERLIST{k} is group k
+% of FINDGROUPS(THISC), named by CNAMES(k). The genes are stacked in the
+% order the groups were listed in the dialog, which is the order the
+% heatmap's columns take, so the marker blocks run down the diagonal.
+[~, grouporder] = ismember(string(levels), string(cnames));
+glist = strings(0, 1);
+markerof = strings(0, 1);
+for k = grouporder(:).'
+    gk = string(markerlist{k}(:));
+    glist = [glist; gk]; %#ok<AGROW>
+    markerof = [markerof; repmat(string(cnames(k)), numel(gk), 1)]; %#ok<AGROW>
 end
 gui.myWaitbar(FigureHandle, fw);
-gui.i_heatmap(sce, glist, thisc, FigureHandle);
+gui.i_heatmap(sce, glist, thisc, FigureHandle, markerof, levels);
 end

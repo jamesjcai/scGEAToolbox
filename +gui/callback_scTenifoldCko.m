@@ -11,10 +11,17 @@ sce = copy(sce_ori);
 
 if ~gui.gui_showrefinfo('scTenifoldCko [Unpublished]', FigureHandle), return; end
 
-if ~(isscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2)
-    gui.myErrordlg(FigureHandle, sprintf(['This function requires data in one batch and has' ...
-        ' two cell types.\nisscalar(unique(sce.c_batch_id)) && numel(unique(sce.c_cell_type_tx))==2']),'');
-    return;
+% Two groups are picked further down, and only those cells are kept, so the
+% dataset does not need exactly two cell types up front; that requirement
+% used to stop any ordinary dataset here, before the group picker could be
+% reached. Several samples are allowed after a warning: their cells are
+% pooled, as scTenifoldXct pools them.
+if numel(unique(sce.c_batch_id)) > 1
+    if ~strcmp(gui.myQuestdlg(FigureHandle, ['The data contain more than ' ...
+            'one sample (batch). Their cells will be pooled. Continue?'], ...
+            '', [], [], 'warning'), 'Yes')
+        return;
+    end
 end
 
 numglist = [1 3000 5000];

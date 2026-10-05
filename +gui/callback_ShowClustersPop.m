@@ -18,13 +18,20 @@ if ~strcmp(answer, 'Yes'), return; end
 % Several grouping variables may be picked; they cross into one composite
 % label per cell ("Macrophages | IL"). Downstream treats thisc as a
 % per-cell label vector, so the composite needs no special handling.
-[thisc, ~] = gui.i_selectnclass(sce, true,'','',FigureHandle);
+[thisc, clabel] = gui.i_selectnclass(sce, true,'','',FigureHandle);
 if isempty(thisc), return; end
 [c, cL] = findgroups(string(thisc));
 if max(c)==1
     gui.myHelpdlg(FigureHandle, sprintf('Only one type of cells: %s',cL{1}))
     return;
 end
+
+% Which groups get a panel - the chooser the Dotplot, Heatmap and violin
+% plots use (gui.i_selectgroupsubset), listed by size as the panels are.
+% Every panel still draws all cells behind its group, as before, so the
+% embedding keeps its context and the percentages stay of all cells.
+[picked, levels] = gui.i_selectgroupsubset(thisc, clabel, FigureHandle, "count");
+if isempty(picked), return; end
 
 
    SCEV=cell(max(c),1);
@@ -43,6 +50,7 @@ idxx = cmv;
 
 
 [~, idxx] = sort(cmx, 'descend');
+idxx = idxx(ismember(cL(idxx), levels));
 SCEV = SCEV(idxx);
 
 try
@@ -58,7 +66,7 @@ try
 
     [para] = gui.i_getoldsettings(src, FigureHandle);
 
-    totaln = max(c);
+    totaln = numel(idxx);
     numfig = ceil(totaln/9);
 
     % -------------
@@ -152,9 +160,10 @@ function in_callback_scgeatoolsce(~, ~)
                 cL2=cL(idxx);
                 if isempty(idx), return; end
                 for ik=1:length(idx)
+                    % Saved as shown. A QCFILTER here used to drop cells
+                    % and genes from each file without a word, so a saved
+                    % group could be smaller than the one on screen.
                     scev = copy(sce).selectcells(SCEV{idx(ik)}); % OK
-
-                    scev=scev.qcfilter;
                     outmatfile=sprintf('%s.mat', ...
                         matlab.lang.makeValidName(cL2{idx(ik)}));
                     outmatfile=fullfile(seltpath,outmatfile);
@@ -163,7 +172,11 @@ function in_callback_scgeatoolsce(~, ~)
                     else
                         q=sprintf('Overwrite file %s?',outmatfile);
                     end
-                    if ~strcmp(gui.myQuestdlg(hx.FigHandle, q,''), 'Yes'), return; end
+                    % No skips this file only; Cancel or closing the
+                    % dialog stops. No used to stop every group after it.
+                    answer = gui.myQuestdlg(hx.FigHandle, q, '');
+                    if strcmp(answer, 'No'), continue; end
+                    if ~strcmp(answer, 'Yes'), return; end
                     in_savesce(outmatfile, scev);
                 end
             otherwise

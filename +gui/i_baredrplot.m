@@ -1,7 +1,11 @@
-function [hAx] = i_baredrplot(ax, c, t, parentfig)
+function [hAx] = i_baredrplot(ax, c, t, parentfig, cellpicked)
+% CELLPICKED, optional, is a logical mask over the points of AX's scatter;
+% only those points, and the group labels on them, are kept in the copy,
+% and the limits fit them.
 
 
 hAx = [];
+if nargin < 5, cellpicked = []; end
 if nargin < 4, parentfig = []; end
 if nargin < 3, t = 'tSNE'; end
 if nargin < 2, c = []; end
@@ -45,6 +49,14 @@ end
 set(hAx, 'XColor', 'none', 'YColor', 'none', 'ZColor', 'none');
 grid(hAx, 'off');
 
+% The group labels are data tips, and COPYOBJ brings them along on the
+% copied scatter, so the copy needs no more. They used to be re-created on
+% AX's scatter as well, which put a second set of labels on the main window
+% each time this plot was opened.
+if ~isempty(cellpicked) && ~all(cellpicked)
+    in_keeppicked(cellpicked);
+end
+
 % Get axis limits and figure position
 % ax = gca;
 % ax = hAx;
@@ -69,19 +81,6 @@ end
 is3d = is3d1 & is3d2;
 
 hold(hAx, 'on');
-
-dts = findall(ax, 'Type', 'datatip');
-hscatter = ax.Children(1);
-
-stxtyes=cell(length(hscatter.XData),1);
-
-for k = 1:numel(dts)
-    pos = dts(k).DataIndex;
-    stxtyes{pos} = dts(k).Content{1}; % Define the text for the data tip
-    newdt = datatip(hscatter,'DataIndex', pos);
-end
-row = dataTipTextRow('', stxtyes);
-h.DataTipTemplate.DataTipRows = row;
 
 if is3d    % ======================================== 3D
     % Turn off the default axis display
@@ -153,6 +152,67 @@ xlim(hAx, xLimits);
 ylim(hAx, yLimits);
 hx.show(parentfig);
 
+
+ function in_keeppicked(cellpicked)
+    % Redraw the copied scatter with the picked points only. It is replaced
+    % rather than trimmed: COPYOBJ leaves the copy sharing AX's scatter's
+    % DataTipTemplate, so the copy's label rows cannot be changed without
+    % changing the main window's, and the shared rows still describe every
+    % cell.
+    hold0 = ishold(hAx);
+    hs = findobj(hAx, '-depth', 1, 'Type', 'scatter');
+    if isempty(hs), return; end
+    [~, imax] = max(arrayfun(@(x) numel(x.XData), hs));
+    hs = hs(imax);
+    npts = numel(hs.XData);
+    assert(numel(cellpicked) == npts, ...
+        'i_baredrplot: CELLPICKED must have one entry per plotted point.');
+    cellpicked = cellpicked(:);
+
+    % Labels on picked cells move to those cells' new positions.
+    dts = findall(hs, 'Type', 'datatip');
+    pos = zeros(numel(dts), 1);
+    tiptext = cell(numel(dts), 1);
+    for kd = 1:numel(dts)
+        pos(kd) = dts(kd).DataIndex;
+        tiptext{kd} = dts(kd).Content{1};
+    end
+    newindex = cumsum(cellpicked);
+    keep = cellpicked(pos);
+    pos = newindex(pos(keep));
+    tiptext = tiptext(keep);
+
+    % Per-point values are subset; a single colour or size stays as is.
+    cdata = hs.CData;
+    if size(cdata, 1) == npts, cdata = cdata(cellpicked, :); end
+    sdata = hs.SizeData;
+    if numel(sdata) == npts, sdata = sdata(cellpicked); end
+    style = {'Marker', 'MarkerEdgeColor', 'MarkerFaceColor', ...
+        'MarkerEdgeAlpha', 'MarkerFaceAlpha', 'LineWidth', 'Tag', ...
+        'DisplayName', 'Clipping'};
+    stylevalues = get(hs, style);
+
+    hold(hAx, 'on');
+    if isempty(hs.ZData)
+        ns = scatter(hAx, hs.XData(cellpicked), hs.YData(cellpicked), ...
+            sdata, cdata);
+    else
+        ns = scatter3(hAx, hs.XData(cellpicked), hs.YData(cellpicked), ...
+            hs.ZData(cellpicked), sdata, cdata);
+    end
+    set(ns, style, stylevalues);
+    delete(hs);
+    if ~hold0, hold(hAx, 'off'); end
+
+    stxtyes = cell(nnz(cellpicked), 1);
+    stxtyes(pos) = tiptext;
+    ns.DataTipTemplate.DataTipRows = dataTipTextRow('', stxtyes);
+    for kd = 1:numel(pos)
+        datatip(ns, 'DataIndex', pos(kd));
+    end
+    % Fit the picked cells rather than the whole embedding.
+    set(hAx, 'XLimMode', 'auto', 'YLimMode', 'auto', 'ZLimMode', 'auto');
+ end
 
  function [width, height] = measureText(txt, textOpts, ax)
     hTest = text(ax, 0, 0, txt, textOpts);

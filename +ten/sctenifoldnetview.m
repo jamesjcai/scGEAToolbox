@@ -309,12 +309,22 @@ if ~isfile(fname)
         '%s: file not found: %s', argname, fname);
 end
 meta = load(fname);
-if ~isfield(meta, 'A')
-    error('MATLAB:sctenifoldnetview:noAdjacency', ...
-        '%s: %s has no variable named A.', argname, fname);
+% A is what BUILD GRN saves. scTenifoldNet saves A0 and A1 instead, each
+% in its own file (TEN.SCTENIFOLDNET) or both in one (Build & Compare), so
+% those are accepted too: net1 takes A0 and net2 takes A1 when a file has
+% both, which lets the one comparison file stand in for either argument.
+if strcmp(argname, 'net2')
+    candidates = ["A", "A1", "A0"];
+else
+    candidates = ["A", "A0", "A1"];
 end
-A = meta.A;
-for name = ["genes", "g", "genelist"]
+k = find(isfield(meta, candidates), 1);
+if isempty(k)
+    error('MATLAB:sctenifoldnetview:noAdjacency', ...
+        '%s: %s has no network variable (A, A0 or A1).', argname, fname);
+end
+A = meta.(candidates(k));
+for name = ["genes", "g", "genelist", "glist"]
     if isfield(meta, name)
         g = string(meta.(name));
         g = g(:);

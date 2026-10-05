@@ -64,6 +64,15 @@ function callback_DPGene2Groups(src, ~)
         matlab.lang.makeValidName(string(cL1)), ...
         matlab.lang.makeValidName(string(cL2)));
     
+    % The work folder asked for at the start was never written to; the
+    % table goes there now, as DE and DV write theirs.
+    filesaved = fullfile(wrkdir, [outfile, '.xlsx']);
+    try
+        writetable(T, filesaved, 'FileType', 'spreadsheet', 'Sheet', 'DP_results');
+    catch ME
+        warning(ME.message);
+    end
+
     gui.myWaitbar(FigureHandle, fw, false, '', 'Preparing DP results...', 0.85);
     i_closewaitbar(fw);
     
@@ -108,7 +117,7 @@ function callback_DPGene2Groups(src, ~)
             return;
         end
         
-        outdir = tempdir;
+        outdir = wrkdir;
         Xt = sceX(iy, :);
         images = {};
         
@@ -166,7 +175,7 @@ function callback_DPGene2Groups(src, ~)
             anySaved = anySaved || suc1 || suc2;
         end
         
-        gui.myWaitbar(figtab, fw, false, 'Finishing', 'Preparing PowerPoint export...', 0.99);
+        gui.myWaitbar(figtab, fw, false, 'Finishing', 'Preparing PowerPoint export...');
         if ~allSaved
             if anySaved
                 gui.myHelpdlg(figtab, 'Some figure files could not be saved.');
@@ -177,7 +186,7 @@ function callback_DPGene2Groups(src, ~)
         end
         
         if ~isempty(images)
-            gui.myWaitbar(figtab, fw, false, '', 'Exporting PowerPoint...', 0.995);
+            gui.myWaitbar(figtab, fw, false, '', 'Exporting PowerPoint...');
             gui.i_save2pptx(images, false, fw, figtab);
         end
     end

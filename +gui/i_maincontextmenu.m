@@ -32,9 +32,9 @@ items = {
     'Show Gene Expression...',                 'SelectedGenesMenu',                     false
     'Expand Brushed Cells to Whole Group',     'ExpandHighlightedCellstoGroupMenu',     true
     'Add Brushed Cells to a New Group...',     'AddBrushedCellstoaNewGroupMenu',        true
-    'Merge Brushed Cells to Same Group...',    'MergeBrushedCellstoSameGroupMenu',      true
-    'Annotate Cell Types for Brushed Cells...', 'AnnotateCellTypesforBrushedCellsMenu', true
-    'Find Marker Genes for Brushed Cells...',  'FindMarkerGenesforBrushedCellsMenu',    true
+    'Merge Groups of Brushed Cells...',        'MergeBrushedCellstoSameGroupMenu',      true
+    'Identify Cell Type of Brushed Cells...',  'AnnotateCellTypesforBrushedCellsMenu', true
+    'Find Marker Genes for Selected Cells...', 'FindMarkerGenesforBrushedCellsMenu',    true
     'Delete Brushed Cells...',                 'DeleteBrushedCellsMenu',                true
     'Switch Between 2D/3D Embeddings...',      'SwitchBetween2D3DEmbeddingsMenu',       false
     'Refresh Current View',                    'RefreshCurrentViewMenu',                false

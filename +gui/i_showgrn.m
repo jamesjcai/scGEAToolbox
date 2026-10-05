@@ -45,7 +45,7 @@ else
 end
 
     function in_export(~, ~)
-        export2wsdlg({'Save network to variable named:', ...
+        gui.i_export2wsdlg(hFig, {'Save network to variable named:', ...
             'Save gene list to variable named:'}, {'A', 'g'}, {A, g});
     end
 

@@ -59,8 +59,14 @@ if gui.i_isuifig(parentfig)
 
 if tf2 == 1
         if length(indx2) ~= 2
-            if allowsingle
+            % Exactly one, when one is allowed. Three or more used to be
+            % cut to the first without a word.
+            if allowsingle && isscalar(indx2)
                 [thisc1, clabel1] = i_getidx(indx2(1));
+            elseif allowsingle
+                gui.myWarndlg(parentfig, ...
+                    'Please select one or two variables.','');
+                return;
             else
                 gui.myWarndlg(parentfig, ...
                     'Please select 2 grouping variables.','');

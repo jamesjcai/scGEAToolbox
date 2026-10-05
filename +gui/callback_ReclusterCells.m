@@ -14,8 +14,9 @@ usingold = false;
 hasold = isfield(sce.struct_cell_clusterings, methodtag) && ...
     numel(sce.struct_cell_clusterings.(methodtag)) == sce.NumCells;
 
-% SEURAT is Seurat's own FindClusters result, written by the R run behind
-% Cluster > "Embed Cells with Seurat". It cannot be recomputed here, only reused.
+% SEURAT is Seurat's own FindClusters result, stored by the R run behind
+% Cluster > "Embed Cells with Seurat" and not applied there. It cannot be
+% recomputed here, only applied.
 if strcmp(methodtag, 'seurat')
     if ~hasold
         gui.myErrordlg(FigureHandle, ['There is no Seurat clustering to ' ...

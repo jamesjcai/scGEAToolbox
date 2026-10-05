@@ -52,7 +52,7 @@ end
 gui.myWaitbar(FigureHandle, fw);
 
 if isempty(X)
-    gui.myErrordlg(FigureHandle, "Seurat/sctransform runtime error.");
+    gui.myErrordlg(FigureHandle, "SCTransform returned no result.");
     return;
 end
 
@@ -76,7 +76,8 @@ switch answer
         labels = {'Corrected counts, log1p scale:', 'Pearson residuals:'};
         vars = {'X', 'scale_X'};
         values = {X, scale_X};
-        export2wsdlg(labels, vars, values, 'Save Data to Workspace');
+        gui.i_export2wsdlg(FigureHandle, labels, vars, values, ...
+            'Save Data to Workspace');
     otherwise
         % Cancel, or the dialog was dismissed.
         return;

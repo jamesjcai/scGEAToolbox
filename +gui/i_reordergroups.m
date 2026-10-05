@@ -19,26 +19,38 @@ end
 {'Yes', 'No', 'Cancel'}, 'No');
 if isempty(answer), return; end
 switch answer
-        case 'Yes'
-            if ~isempty(preorderedcL)
-                [newidx] = gui.i_selmultidialog(cL, preorderedcL, parentfig);
-            else
-                [newidx] = gui.i_selmultidialog(cL, natsort(cL), parentfig);
-            end
-            if length(newidx) ~= length(cL)
-                noanswer = true;
-                gui.myWarndlg(parentfig, 'Please select all items.');
-                return;
-            end
-            cx = c;
-            for k = 1:length(newidx)
-                c(cx == newidx(k)) = k;
-            end
-            cL = cL(newidx);
-            noanswer = false;
-        case 'No'
-            noanswer = false;
-        case 'Cancel'
-            noanswer = true;
-    end
+    case 'Yes'
+        if isempty(preorderedcL)
+            preorderedcL = natsort(cL);
+        end
+        [newidx] = gui.i_selmultidialog(cL, preorderedcL, parentfig);
+        if length(newidx) ~= length(cL)
+            gui.myWarndlg(parentfig, 'Please select all items.');
+            return;
+        end
+    case 'No'
+        % No manual order is not FINDGROUPS order: that is plain character
+        % order, "Cluster 10" before "Cluster 2", where every group list
+        % the user has been shown is natural-sorted. PREORDEREDCL, when
+        % given, is the order a list was shown in; levels it leaves out
+        % follow in FINDGROUPS order.
+        if isempty(preorderedcL)
+            [~, newidx] = natsort(cL);
+        else
+            [~, newidx] = ismember(string(preorderedcL), cL);
+            newidx = newidx(newidx > 0);
+            newidx = [newidx(:); setdiff((1:numel(cL)).', newidx(:))];
+        end
+    otherwise
+        % 'Cancel'
+        return;
+end
+
+newidx = newidx(:).';
+cx = c;
+for k = 1:length(newidx)
+    c(cx == newidx(k)) = k;
+end
+cL = cL(newidx);
+noanswer = false;
 end

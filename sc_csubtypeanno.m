@@ -23,7 +23,7 @@ function [sce] = sc_csubtypeanno(sce, cell_type_target, formatid, speciestag, fw
 %   from the subtype markers and the whole population ends up under one
 %   vocabulary. Pass OPTS.CELLSELECTION to hold them out instead.
 %
-%   formatid   0 subtype alone (default), 1 'Type_{Subtype}', 2 'Type (Subtype)'
+%   formatid   0 subtype alone (default), 1 'Type (Subtype)', 2 'Type_{Subtype}'
 %   speciestag 'human' (default) or 'mouse'
 %   fw         waitbar context, [] for none
 %   opts       struct of overrides, any field may be omitted:

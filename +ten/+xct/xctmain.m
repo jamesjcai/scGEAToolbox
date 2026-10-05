@@ -1,6 +1,6 @@
 function [T, emb] = xctmain(X_s, X_t, g, varargin)
 % XCTMAIN  Lightweight spectral cell-cell interaction analysis.
-%   Builds within-type networks with PCNet (ten.i_xctgrn), configured to match
+%   Builds within-type networks with PCNet (ten.i_pcnet), configured to match
 %   the published Python scTenifoldXct so the two are comparable.  For the
 %   full-featured entry point, including the glyco channels, see
 %   ten.sctenifoldxct.
@@ -29,7 +29,7 @@ function [T, emb] = xctmain(X_s, X_t, g, varargin)
 %
 %   Algorithm  (Path B — spectral approximation, adapted from ten.i_ma):
 %     1. Log-normalise counts (library-size then log1p).
-%     2. Build within-type PCNet GRNs via ten.i_xctgrn.
+%     2. Build within-type PCNet GRNs via ten.i_pcnet.
 %     3. Build sparse L-R correspondence matrix W12 from built-in database.
 %     4. Assemble block weight matrix W = [W_s, μW12; μW12', W_t] and its
 %        graph Laplacian L = diag(|W|·1) − W  (identical to ten.i_ma).
@@ -104,8 +104,8 @@ if verbose
 end
 
 % ── Log-normalise (library-size then log1p) ───────────────────────────────
-X_s = i_lognorm(X_s);
-X_t = i_lognorm(X_t);
+X_s = ten.i_lognorm(X_s);
+X_t = ten.i_lognorm(X_t);
 
 % ── Run alignment ─────────────────────────────────────────────────────────
 [T1, E1] = i_align(X_s, X_t, g, lig_db, rec_db, cfg);
@@ -143,8 +143,8 @@ g_up = upper(g);
 
 % ── Step 1: within-type PCNet GRNs ───────────────────────────────────────
 if verbose, fprintf('[xctmain]   Building PCNet GRNs ...\n'); end
-W11 = ten.i_xctgrn(X_s, ncomp, grn_q, verbose, useparallel);   % sparse, ng × ng
-W22 = ten.i_xctgrn(X_t, ncomp, grn_q, verbose, useparallel);   % sparse, ng × ng
+W11 = ten.i_pcnet(X_s, ncomp, grn_q, verbose, useparallel);   % sparse, ng × ng
+W22 = ten.i_pcnet(X_t, ncomp, grn_q, verbose, useparallel);   % sparse, ng × ng
 
 % ── Step 2: L-R correspondence matrix W12 (sparse, ng × ng) ───────────────
 n_lr   = numel(lig_db);
@@ -239,14 +239,3 @@ if any(isname)
 end
 
 end % i_rejectcorrthr
-
-
-function X = i_lognorm(X)
-% I_LOGNORM  Library-size normalisation followed by log1p.
-
-col_sums = sum(X, 1);
-col_sums(col_sums == 0) = 1;    % avoid /0 for empty cells
-X = X ./ col_sums .* median(col_sums);
-X = log1p(X);
-
-end % i_lognorm

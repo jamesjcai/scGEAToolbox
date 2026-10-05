@@ -10,7 +10,8 @@ if ~isok, error('%s', msg); end
 if ~isempty(wkdir) && isfolder(wkdir), cd(wkdir); end
 
 
-if isa(X, 'SingleCellExperiment') && isnumeric(genelist)
+givensce = isa(X, 'SingleCellExperiment') && isnumeric(genelist);
+if givensce
     sce = X;
     ndim = genelist;
 else
@@ -42,8 +43,15 @@ if exist('output.h5', 'file')
     s_umap = h5read('output.h5', '/s_umap');
     c_ident = h5read('output.h5', '/c_ident');
     [c, ~] = findgroups(c_ident);
-    sce.c_cluster_id = c;
-    sce.struct_cell_clusterings.seurat = c_ident;
+    % Seurat's clusters are stored, not applied, when the caller hands in
+    % a dataset: its own clusters stay, and Cluster > Cluster Cells >
+    % "Seurat FindClusters" applies these on request. They used to replace
+    % C_CLUSTER_ID every time the embedding was run. A dataset made here
+    % from a bare matrix has no clusters of its own, so it gets them.
+    sce.struct_cell_clusterings.seurat = c;
+    if ~givensce
+        sce.c_cluster_id = c;
+    end
     sce.c = c;
 
     if ~isfield(sce.struct_cell_embeddings,'umap3d')

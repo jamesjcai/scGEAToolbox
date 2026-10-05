@@ -55,7 +55,6 @@ switch typeid
                     return;   % Cancel, or the dialog closed
             end
         end
-        seeit = 'To see the result, use View -> Cell State (Ctrl + T). Then select "Cell Cycle Phase".';
         if needestimt
             fw = gui.myWaitbar(FigureHandle);
             try
@@ -68,10 +67,17 @@ switch typeid
             needupdate = true;
             gui.myWaitbar(FigureHandle, fw);
             gui.myGuidata(FigureHandle, sce, src);
-            % One notice: two in a row do not wait, so the second hid the first.
-            gui.myHelpdlg(FigureHandle, ['Cell cycle phase (c_cell_cycle_tx) added. ', seeit]);
-        else
-            gui.myHelpdlg(FigureHandle, seeit);
+        end
+        % Show the phases in the main plot, as Assign Cell Type does.
+        if isprop(src, 'sce')
+            [src.c, src.cL] = findgroups(string(sce.c_cell_cycle_tx));
+            src.sce.c = src.c;
+            src.in_RefreshAll(true, false);
+            src.ix_labelclusters(true);
+        end
+        if needestimt
+            gui.myHelpdlg(FigureHandle, ['Cell cycle phase (c_cell_cycle_tx) added. ' ...
+                'Cells are now colored by phase.']);
         end
         return;
     case 2
@@ -81,7 +87,7 @@ switch typeid
         attribtag = "stemness_index";
         in_aaa(attribtag);
     case 4
-        attribtag = 'dissocation_ratio';
+        attribtag = 'dissociation_ratio';
         in_aaa(attribtag);
     case 5
         attribtag = 'copykat_prediction';
@@ -122,7 +128,7 @@ if needestimt
                 s = sc_potency(sce.X, sce.g, speciestag);
             case 'stemness_index'
                 s = sc_stemness(sce.X, sce.g);
-            case 'dissocation_ratio'
+            case 'dissociation_ratio'
                 s = pkg.sc_dissratio(sce.X, sce.g, true);
             case 'copykat_prediction'
                 s = run.r_copykat(sce, wkdir, speciesid);

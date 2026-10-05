@@ -101,7 +101,7 @@ if use_python
     [yesgohead, prepare_input_only] = gui.i_memorychecked(neededmem, FigureHandle);
     if ~yesgohead, return; end
 
-    extprogname = 'py_scTenifoldXct';
+    extprogname = 'py_scTenifoldXct2';
     preftagname = 'externalwrkpath';
     [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
     if isempty(wkdir), return; end
@@ -113,12 +113,16 @@ end
 
 % ── 3. Sample (batch) selection ───────────────────────────────────────────
 [~, cL_batch] = findgroups(string(sce.c_batch_id));
-[j1, j2, ~, ~] = aaa(cL_batch, string(sce.c_batch_id), FigureHandle);
-if isempty(j1) || isempty(j2)
+% The single-sample case is told apart before the picker. It used to be
+% reported after it, so cancelling the picker, or picking other than two,
+% also said "All cells have the same BATCH_ID".
+if numel(cL_batch) < 2
     gui.myWarndlg(FigureHandle, ['All cells have the same BATCH_ID. ' ...
         'Two samples are required.']);
     return;
 end
+[j1, j2, ~, ~] = aaa(cL_batch, string(sce.c_batch_id), FigureHandle);
+if isempty(j1) || isempty(j2), return; end   % cancelled, or AAA said why
 sce1 = copy(sce); sce1.selectcells(j1);
 sce2 = copy(sce); sce2.selectcells(j2);
 
@@ -132,12 +136,13 @@ end
 
 % ── 4. Cell-type selection ────────────────────────────────────────────────
 [~, cL_ct] = findgroups(string(sce.c_cell_type_tx));
-[~, ~, celltype1, celltype2] = aaa(cL_ct, string(sce.c_cell_type_tx), FigureHandle);
-if isempty(celltype1) || isempty(celltype2)
+if numel(cL_ct) < 2
     gui.myWarndlg(FigureHandle, ['All cells are the same type. ' ...
         'Two different cell types are required.']);
     return;
 end
+[~, ~, celltype1, celltype2] = aaa(cL_ct, string(sce.c_cell_type_tx), FigureHandle);
+if isempty(celltype1) || isempty(celltype2), return; end
 celltype1 = string(celltype1);
 celltype2 = string(celltype2);
 
@@ -167,7 +172,7 @@ Tres = [];
 % while they ran. The Python runner opens its own bar.
 fw = [];
 if ~use_python
-    fw = gui.myWaitbar(FigureHandle, [], [], 'Running scTenifoldXct...');
+    fw = gui.myWaitbar(FigureHandle, [], [], 'Running scTenifoldXct2...');
 end
 switch midx
 
@@ -212,9 +217,6 @@ switch midx
         end
 
     case MTHD_PYTHON   % ── Python (original) ──────────────────────────────
-        % Propagate cell-type labels expected by py_scTenifoldXct2
-        sce1.c_cell_type_tx = sce1.c_cell_type_tx;
-        sce2.c_cell_type_tx = sce2.c_cell_type_tx;
         try
             [Tres, ~] = run.py_scTenifoldXct2(sce1, sce2, ct1, ct2, twosided, ...
                 wkdir, true, prepare_input_only, FigureHandle);

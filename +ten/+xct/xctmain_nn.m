@@ -83,7 +83,7 @@ function [T, emb] = xctmain_nn(X_s, X_t, g, varargin)
 %   signed where the reference's is not; see the DEGREE CONVENTION section of
 %   TEN.I_NNEMBED for what that implies.
 %
-%   The GRN is PCNet via ten.i_xctgrn, configured to match core.py's
+%   The GRN is PCNet via ten.i_pcnet, configured to match core.py's
 %   make_pcNet(nComp=5) with no edge filtering. Note that ten.sctenifoldxct
 %   does NOT currently use those settings - it builds its networks with
 %   ncomp=3 and a 0.75 quantile filter - so results from the two entry points
@@ -161,8 +161,8 @@ if verbose
 end
 
 % ── Log-normalise (library-size then log1p) ───────────────────────────────
-X_s = i_lognorm(X_s);
-X_t = i_lognorm(X_t);
+X_s = ten.i_lognorm(X_s);
+X_t = ten.i_lognorm(X_t);
 
 % ── Run ───────────────────────────────────────────────────────────────────
 cfg = struct('n_dim', n_dim, 'mu', mu_, 'ncomp', ncomp, 'grn_q', grn_q, ...
@@ -207,8 +207,8 @@ g_up      = upper(g);
 
 % ── 1. Within-type PCNet GRNs ────────────────────────────────────────────
 if verbose, fprintf('[xctmain_nn]   Building PCNet GRNs ...\n'); end
-W11 = ten.i_xctgrn(X_s, ncomp, grn_q, verbose, useparallel);   % sparse ng × ng
-W22 = ten.i_xctgrn(X_t, ncomp, grn_q, verbose, useparallel);   % sparse ng × ng
+W11 = ten.i_pcnet(X_s, ncomp, grn_q, verbose, useparallel);   % sparse ng × ng
+W22 = ten.i_pcnet(X_t, ncomp, grn_q, verbose, useparallel);   % sparse ng × ng
 
 % ── 2. L-R correspondence matrix (sparse ng × ng) ────────────────────────
 n_lr   = numel(lig_db);
@@ -307,11 +307,3 @@ if any(isname)
 end
 
 end % i_rejectcorrthr
-
-
-function X = i_lognorm(X)
-% I_LOGNORM  Library-size normalisation + log1p.
-cs = sum(X, 1);
-cs(cs == 0) = 1;
-X  = log1p(X ./ cs .* median(cs));
-end % i_lognorm

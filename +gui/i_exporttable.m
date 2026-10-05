@@ -40,11 +40,7 @@ switch answer
             gui.myExport2wsdlg(labels, vars, values, ...
                 'Save Data to Workspace', [], parentfig);
         else
-            if needwait
-                waitfor(export2wsdlg(labels, vars, values));
-            else
-                export2wsdlg(labels, vars, values);
-            end
+            gui.i_export2wsdlg(parentfig, labels, vars, values);
         end
 
 

@@ -181,15 +181,15 @@ try
     glist = T.genes(1:min([a, height(T)]));
     [y, idx] = ismember(glist, sce.g);
     if ~all(y)
-        gui.myErrordlg(FigureHandle, 'Runtime error.');
+        requirerefresh = i_abort(FigureHandle, fw, sceori, src, ...
+            'The ranked genes are not all in the dataset.', '');
         return;
     end
     sce = sce.selectgenesbyindex(idx);
- catch ME
-     gui.myWaitbar(FigureHandle, fw,true);
-     gui.myWarndlg(FigureHandle, ME.message, ME.identifier);
-     return;
- end
+catch ME
+    requirerefresh = i_abort(FigureHandle, fw, sceori, src, ME.message, ME.identifier);
+    return;
+end
 
 % ---- put back anything the gene filters dropped --------------------------
 % Every step above removes genes only, never cells, so the stashed rows
@@ -214,8 +214,7 @@ try
     % columns rather than the ones captured up top.
     sce = sce.qcfilterwhitelist(1000, 0.15, 15, 500, whitelist);
 catch ME
-    gui.myWaitbar(FigureHandle, fw,true);
-    gui.myWarndlg(FigureHandle, ME.message, ME.identifier);
+    requirerefresh = i_abort(FigureHandle, fw, sceori, src, ME.message, ME.identifier);
     return;
 end
 
@@ -266,6 +265,20 @@ gui.myGuidata(FigureHandle, sce, src);
 
 end
 
+
+function requirerefresh = i_abort(FigureHandle, fw, sceori, src, msg, id)
+%I_ABORT Stop part way: close the bar, say why, and undo the filtering.
+%   SCE is a handle and was filtered in place, so the earlier returns left
+%   it half-filtered under a stale plot and the progress bar open. The
+%   pristine copy goes back when there is one; when there is not (a very
+%   large dataset), the caller is told to redraw what is left.
+gui.myWaitbar(FigureHandle, fw, true);
+gui.myWarndlg(FigureHandle, msg, id);
+requirerefresh = isempty(sceori);
+if ~requirerefresh
+    gui.myGuidata(FigureHandle, copy(sceori), src);
+end
+end
 
 function [whitelist, unknown] = i_parsewhitelist(txt, glist)
 %I_PARSEWHITELIST  Free-text gene names -> names as spelled in glist.

@@ -206,7 +206,7 @@ Function               Purpose
 ``sc_causalcccnet``    local approximation of a causalCCC / MIIC network
 =====================  ===================================================
 
-``sc_grn`` methods: ``pcrnet`` (default), ``pcrnet_batch``,
+``sc_grn`` methods: ``pcrnet`` (default), ``pcrnet_batch``, ``pcrnet_legacy``,
 ``pcrnet_denoised``, ``genie3``, ``pearson``, ``xicor``, ``distcorr``, ``mi``,
 ``grnformer``, ``tn``. The older name ``pcnet`` is gone; use ``pcrnet``.
 ``sc_grn`` expects data that is already normalized and transformed -- no branch

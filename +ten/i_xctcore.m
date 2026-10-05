@@ -37,18 +37,18 @@ function [T, grns] = i_xctcore(X, g, ctype, celltype1, celltype2, twosided, cfg)
 %     provenance - logical; when true the output gains channel, glyco_module and
 %                  glyco_weight columns describing the correspondence actually
 %                  used. Left false the schema is exactly the published one.
-%     grn1, grn2 - [] to build each cell type's GRN via TEN.I_XCTGRN as usual,
+%     grn1, grn2 - [] to build each cell type's GRN via TEN.I_PCNET as usual,
 %                  or an ng-by-ng precomputed adjacency (same gene order as g)
 %                  to use for CELLTYPE1/CELLTYPE2 instead, skipping the
-%                  net.pcrnet build for that side. See TEN.I_XCTGRN's
+%                  net.pcrnet build for that side. See TEN.I_PCNET's
 %                  'precomputed' option for what still happens to it (scale,
 %                  optional filter, symmetrize) and why substituting a network
 %                  built by a different method is a real methodological choice.
 %     grn1_processed, grn2_processed - logical; true if the matching grn1/
-%                  grn2 already went through TEN.I_XCTGRN's scale/filter/
+%                  grn2 already went through TEN.I_PCNET's scale/filter/
 %                  symmetrize (e.g. it is a grns.A_s/A_t this function itself
 %                  returned earlier) and that should not be done again - see
-%                  TEN.I_XCTGRN's 'processed' option for why a second pass is
+%                  TEN.I_PCNET's 'processed' option for why a second pass is
 %                  not simply a no-op. Ignored when the matching grn1/grn2 is
 %                  empty. Default false.
 %     candidates - "database" (default) restricts the output to L-R database
@@ -74,7 +74,7 @@ function [T, grns] = i_xctcore(X, g, ctype, celltype1, celltype2, twosided, cfg)
 %     grns - requested via a second output argument (nargout > 1); struct
 %            with fields A_s, A_t (the ng-by-ng adjacency actually used for
 %            CELLTYPE1/CELLTYPE2 - built fresh or cfg.grn1/grn2 passed
-%            through TEN.I_XCTGRN's scale/filter/symmetrize either way) and
+%            through TEN.I_PCNET's scale/filter/symmetrize either way) and
 %            genes (g, for traceability). One pair regardless of TWOSIDED:
 %            both directions align the same two networks, just swapped.
 %            Building this struct costs nothing extra - A_s/A_t already exist
@@ -110,11 +110,11 @@ end
 % GRNs via the shared builder. This function's settings differ from the
 % xctmain path's - ncomp=3 with a 0.75 edge filter, against the reference's
 % ncomp=5 unfiltered - but the code is now the same, so the two cannot drift
-% apart in anything except their arguments. TEN.I_XCTGRN owns the pcrnet call,
+% apart in anything except their arguments. TEN.I_PCNET owns the pcrnet call,
 % the max-normalisation, the filtering and the symmetrisation, and records why
 % parallel and fastersvd are both left off.
 %
-% The GRNs are built on log-normalised expression, as TEN.I_XCTGRN's help
+% The GRNs are built on log-normalised expression, as TEN.I_PCNET's help
 % requires and the reference does (core.py raises "require log data"). X
 % arrives as raw counts from every caller; on raw counts the cells'
 % sequencing depth reads as co-expression, and independent genes came out
@@ -126,7 +126,7 @@ if verbose
         fprintf('[%s] Using precomputed GRN: %s (skipping pcrnet build)\n', tag, celltype1);
     end
 end
-A_s = ten.i_xctgrn(i_lognorm(X_s), 3, 0.75, false, cfg.useparallel, ...
+A_s = ten.i_pcnet(ten.i_lognorm(X_s), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn1, processed=cfg.grn1_processed);
 
 if verbose
@@ -136,7 +136,7 @@ if verbose
         fprintf('[%s] Using precomputed GRN: %s (skipping pcrnet build)\n', tag, celltype2);
     end
 end
-A_t = ten.i_xctgrn(i_lognorm(X_t), 3, 0.75, false, cfg.useparallel, ...
+A_t = ten.i_pcnet(ten.i_lognorm(X_t), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn2, processed=cfg.grn2_processed);
 
 % -- Alignment, one direction at a time -----------------------------------
@@ -242,7 +242,7 @@ if cfg.slv.name == "nn"
     % layers, so its inputs are log-normalised here to keep them off the
     % saturated tails. The spectral path is unaffected: it reads only W.
     [P_s, P_t] = ten.i_alignembed(W, ng, n_dim, solver="nn", ...
-        X_s=i_lognorm(X_s), X_t=i_lognorm(X_t), ...
+        X_s=ten.i_lognorm(X_s), X_t=ten.i_lognorm(X_t), ...
         n_steps=cfg.slv.n_steps, lr=cfg.slv.lr, seed=cfg.slv.seed, ...
         verbose=verbose);
 else
@@ -373,16 +373,3 @@ else
     rec_db = upper(string(T_lr{:, 5}));
 end
 end % i_loadlrdb
-
-
-%% ---- library-size normalisation followed by log1p ----
-function X = i_lognorm(X)
-% Applied to the GRN inputs and the neural solver's network inputs. X itself
-% stays raw because TEN.I_XCTW12 log-normalises its own "outer" inputs.
-
-X = double(X);
-col_sums = sum(X, 1);
-col_sums(col_sums == 0) = 1;    % avoid /0 for empty cells
-X = X./col_sums.*median(col_sums);
-X = log1p(X);
-end % i_lognorm

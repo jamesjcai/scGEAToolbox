@@ -128,6 +128,10 @@ af{6} = text(ax, max(x)+1.4, 3, '25%', 'BackgroundColor', 'none');
 xmax0 = length(cL) + 2.5;   % default right x limit; widened to fit legend labels
 xlim(ax, [0.5, xmax0]);
 ylim(ax, [0.5, max([4, length(txgene)]) - 0.5]);
+% First gene on top, as on a heatmap: the marker heatmap's gene blocks
+% read top to bottom in group order, and a dot plot drawn from it read
+% bottom to top, with the blocks running against its own columns.
+set(ax, 'YDir', 'reverse');
 % colorbar
 % colorbar('northoutside');
 
@@ -193,7 +197,7 @@ function in_callback_savetable(~, ~)
                     labels = {'Save T to variable named:', 'Save D to variable named:'};
                     vars = {'T', 'D'};
                     values = {T, D};
-                    [~, ~] = export2wsdlg(labels, vars, values, ...
+                    gui.i_export2wsdlg(hFig, labels, vars, values, ...
                         'Save Data to Workspace');
                 case 'TXT/CSV file'
                     [file, path] = uiputfile({'*.csv'; '*.*'}, 'Save as');

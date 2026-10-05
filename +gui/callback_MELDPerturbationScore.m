@@ -97,7 +97,7 @@ if ~(ismcc || isdeployed)
     labels = {'Save score values to variable named:', 'Save score table to variable named:'};
     vars = {'MELDScores', 'MELDTable'};
     values = {scoreFull, TFull};
-    export2wsdlg(labels, vars, values);
+    gui.i_export2wsdlg(hx.FigHandle, labels, vars, values);
 else
     gui.i_exporttable(TFull, false, 'MELDTable',[],[],[],hx.FigHandle);
 end

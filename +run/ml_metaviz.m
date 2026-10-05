@@ -94,17 +94,18 @@ S{end+1} = tsne(data, Perplexity = 15, NumDimensions = ndim);
 if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - TSNE 3/3...', 3/nstep); end
 S{end+1} = tsne(data, Perplexity = 50, NumDimensions = ndim);
 
-if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - UMAP 1/3...', 4/nstep); end
-if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - UMAP 2/3...', 4/nstep); end
-if showwaitbar, gui.myWaitbar([], fw, [], [], 'Meta Visualization - UMAP 3/3...', 4/nstep); end
-if ~isMATLABReleaseOlderThan('R2026a')
-    S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=15);
-    S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=30);
-    S{end+1} = umap(full(data), NumDimensions=ndim, NumNeighbors=50);
-else
-    S{end+1} = i_legacyumap(data, ndim, 15);
-    S{end+1} = i_legacyumap(data, ndim, 30);
-    S{end+1} = i_legacyumap(data, ndim, 50);
+umapNeighbors = [15, 30, 50];
+for umapStep = 1:numel(umapNeighbors)
+    if showwaitbar
+        gui.myWaitbar([], fw, [], [], sprintf( ...
+            'Meta Visualization - UMAP %d/3...', umapStep), 4/nstep);
+    end
+    if ~isMATLABReleaseOlderThan('R2026a')
+        S{end+1} = umap(full(data), NumDimensions=ndim, ...
+            NumNeighbors=umapNeighbors(umapStep)); %#ok<AGROW>
+    else
+        S{end+1} = i_legacyumap(data, ndim, umapNeighbors(umapStep)); %#ok<AGROW>
+    end
 end
 
 if dophate

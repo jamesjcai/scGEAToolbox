@@ -88,8 +88,7 @@ function in_callback_SaveAdj(~, ~)
             g2 = string(G2.Nodes.Name);
             vars = {'A1', 'A2', 'G1', 'G2', 'g1', 'g2'}; ...
                 values = {A1, A2, G1, G2, g1, g2};
-            msgfig = export2wsdlg(labels, vars, values);
-            waitfor(msgfig);
+            gui.i_export2wsdlg(hFig, labels, vars, values);
         else
             gui.myErrordlg(hFig, 'This function is not available for standalone application.');
         end

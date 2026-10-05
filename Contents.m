@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.6.1 29-Sep-2026
+% Version 26.6.2 04-Oct-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder

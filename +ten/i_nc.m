@@ -4,7 +4,7 @@ function [XM] = i_nc(X, nsubsmpl, ncom, csubsmpl, usebootstrp, useparallel, pars
 % input: X -  n (genes/features) x m (cells/samples) matrix
 % output XM - k multi-layer network array (n x n x k)
 %
-% Networks are built by TEN.I_XCTGRN, shared with the scTenifoldXct entry
+% Networks are built by TEN.I_PCNET, shared with the scTenifoldXct entry
 % points, with symmetrize=false because the tensor decomposition downstream
 % needs them directed.
 %
@@ -66,7 +66,7 @@ function [XM] = i_nc(X, nsubsmpl, ncom, csubsmpl, usebootstrp, useparallel, pars
 % changes for any existing caller.
 %
 % READ THIS BEFORE EXPECTING A 10x SPEEDUP. The serial loop is not
-% single-threaded: TEN.I_XCTGRN's header records that multithreaded BLAS
+% single-threaded: TEN.I_PCNET's header records that multithreaded BLAS
 % already gives the per-network SVD loop 3.0x on 600 genes and 5.7x on 1856
 % (20 cores, 784 cells). Process-pool workers get ONE computational thread
 % each, so a 10-worker parfor trades that BLAS parallelism for task
@@ -83,7 +83,7 @@ function [XM] = i_nc(X, nsubsmpl, ncom, csubsmpl, usebootstrp, useparallel, pars
 % ran or in what order they finished, which is a stronger guarantee than the
 % serial path has. But it is NOT the same draw the serial path makes: there,
 % subsample k depends on everything the stream consumed before it, including
-% the svds calls inside I_XCTGRN. The two branches are statistically
+% the svds calls inside I_PCNET. The two branches are statistically
 % equivalent and neither is more correct. They are not interchangeable
 % mid-analysis: results from one should not be pooled with results from the
 % other without noting it, exactly as two different seeds would not be.
@@ -127,7 +127,7 @@ if ~useparallel
         % use. q=0.95 and symmetrize=false match makeNetworks' defaults in the
         % reference R package (nComp=3, scaleScores=TRUE, symmetric=FALSE,
         % q=0.95).
-        XM(:, :, k) = ten.i_xctgrn(Xrep, ncom, 0.95, false, false, ...
+        XM(:, :, k) = ten.i_pcnet(Xrep, ncom, 0.95, false, false, ...
             symmetrize=false);
     end
     return
@@ -153,7 +153,7 @@ end
 
 fprintf('Building %d networks in parallel (parseed=%d)...\n', nsubsmpl, parseed);
 parfor k = 1:nsubsmpl
-    XM(:, :, k) = ten.i_xctgrn(Xrep{k}, ncom, 0.95, false, false, ...
+    XM(:, :, k) = ten.i_pcnet(Xrep{k}, ncom, 0.95, false, false, ...
         symmetrize=false);
 end
 end

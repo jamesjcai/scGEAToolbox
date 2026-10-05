@@ -194,7 +194,7 @@ end
     end
 
     function ExportTable(~, ~)
-        gui.i_exporttable(T, true, 'Thvgreslist', 'HVGResultTable');
+        gui.i_exporttable(T, true, 'Thvgreslist', 'HVGResultTable', [], [], hFig);
         % Tdegenelist
         % 'Tviolindata','ViolinPlotTable'
         % 'Thvgreslist', 'HVGResultTable'
@@ -219,7 +219,7 @@ end
             'Save HVG table:'};
         vars = {'g', 'T'};
         values = {tgenes, T};
-        export2wsdlg(labels, vars, values, ...
+        gui.i_export2wsdlg(hFig, labels, vars, values, ...
             'Save Data to Workspace');
     end
 

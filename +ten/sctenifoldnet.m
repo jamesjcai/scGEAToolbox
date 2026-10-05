@@ -98,11 +98,11 @@ if ~(ismcc || isdeployed)
                 addpath(pth);
             else
                 error('sctenifoldnet:missingToolbox', ...
-                    'Tensor Toolbox path not found: %s\nRe-install via Tools > Install Tensor Toolbox.', pth);
+                    'Tensor Toolbox path not found: %s\nRe-install via Setup > Install Tensor Toolbox.', pth);
             end
         else
             error('sctenifoldnet:missingToolbox', ...
-                'Tensor Toolbox is not installed. Install it via Tools > Install Tensor Toolbox.');
+                'Tensor Toolbox is not installed. Install it via Setup > Install Tensor Toolbox.');
         end
     end
 end

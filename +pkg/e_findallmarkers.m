@@ -79,11 +79,7 @@ pctOut = (full(sum(X > 0, 2)) - detIn)./nOut;
 Tcell = cell(mC, 1);
 for kc = 1:mC
     if showwaitbar
-        if kc ~= mC
-            gui.myWaitbar([], fw, [], [], sprintf('Processing %s', cL{kc}), kc/mC);
-        else
-            gui.myWaitbar([], fw, [], [], sprintf('Processing %s', cL{kc}), (kc-1)/mC);
-        end
+        gui.myWaitbar([], fw, [], [], sprintf('Processing %s', cL{kc}), (kc - 1)/mC);
     end
     [t] = in_findmarkers(P(:, kc), avgIn(:, kc), avgOut(:, kc), ...
         pctIn(:, kc), pctOut(:, kc), cL(kc));

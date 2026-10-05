@@ -51,24 +51,35 @@ if mode <= 3
 
     cfg = llm.geocellar.geocellar_config();
     if isempty(cfg.OpenAIAPIKey)
-        answer = gui.myQuestdlg(FigureHandle, ...
-            "No API key found. Would you like to locate your llm_api_key.env file?");
-        if ~strcmp(answer, "Yes"), return; end
-        % Always show the picker. llm.i_checkllm skipped it whenever the
-        % preference existed, which it usually does by now, pointing at a
-        % file without the key or one that is gone.
-        [file, folder] = uigetfile({'*.env', 'Key files (*.env)'; ...
-            '*.*', 'All Files (*.*)'}, 'Select llm_api_key.env');
-        gui.i_raisefig(FigureHandle);
-        if isequal(file, 0), return; end
-        keyfile = fullfile(folder, file);
-        cfg = llm.geocellar.geocellar_config(keyfile);
-        if isempty(cfg.OpenAIAPIKey)
-            gui.myErrordlg(FigureHandle, sprintf( ...
-                'No API key was found in %s.', keyfile));
-            return;
+        answer = gui.myQuestdlg(FigureHandle, sprintf(['No API key found ' ...
+            '(%s). Enter it now and keep it encrypted in the MATLAB vault, ' ...
+            'or locate your llm_api_key.env file?'], cfg.OpenAIAPIKeyName), ...
+            'API Key', {'Enter key', 'Env file...', 'Cancel'}, 'Enter key');
+        switch answer
+            case 'Enter key'
+                llm.i_storeapikey(cfg.OpenAIAPIKeyName);
+                gui.i_raisefig(FigureHandle);
+                cfg = llm.geocellar.geocellar_config();
+                if isempty(cfg.OpenAIAPIKey), return; end
+            case 'Env file...'
+                % Always show the picker. llm.i_checkllm skipped it whenever
+                % the preference existed, which it usually does by now,
+                % pointing at a file without the key or one that is gone.
+                [file, folder] = uigetfile({'*.env', 'Key files (*.env)'; ...
+                    '*.*', 'All Files (*.*)'}, 'Select llm_api_key.env');
+                gui.i_raisefig(FigureHandle);
+                if isequal(file, 0), return; end
+                keyfile = fullfile(folder, file);
+                cfg = llm.geocellar.geocellar_config(keyfile);
+                if isempty(cfg.OpenAIAPIKey)
+                    gui.myErrordlg(FigureHandle, sprintf( ...
+                        'No API key was found in %s.', keyfile));
+                    return;
+                end
+                setpref('scgeatoolbox', 'llapikeyenvfile', keyfile);
+            otherwise
+                return;
         end
-        setpref('scgeatoolbox', 'llapikeyenvfile', keyfile);
     end
 end
 

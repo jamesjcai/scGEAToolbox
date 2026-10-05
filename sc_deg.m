@@ -66,11 +66,13 @@ switch methodid
         p_val = pk(:, 1);
         stats = wk(:, 1);
     case 2  % Two-sample t-test
+        updateEvery = max(1, round(ng/100));
         for k = 1:ng
-            if guiwaitbar && k / ng > 0.618
-                gui.myWaitbar(parentfig, fw, false, '', '', k / ng);
+            if guiwaitbar && mod(k - 1, updateEvery) == 0
+                gui.myWaitbar(parentfig, fw, false, '', '', (k - 1)/ng);
             end
-            [~, px, ~, tx] = ttest2(X(k, :), Y(k, :));
+            % TTEST2 rejects sparse input (TCDF's BETAINC needs full).
+            [~, px, ~, tx] = ttest2(full(X(k, :)), full(Y(k, :)));
             p_val(k)  = px;
             stats(k)  = tx.tstat;
         end

@@ -2,14 +2,21 @@ function i_installtensortoolbox(src, ~)
 
 [parentfig] = gui.gui_getfigsce(src);
 
-if exist(['@tensor', filesep, 'tensor.m'], 'file') == 2
+% TEN.CHECK_TENSOR_TOOLBOX also finds a copy this function saved earlier
+% (the tensor_toolbox_path preference) and puts it on the path. Looking at
+% the path alone missed it in every new session, and offered to download
+% it again.
+try
+    ten.check_tensor_toolbox;
     gui.myHelpdlg(parentfig, 'Tensor Toolbox is already installed.');
     return;
+catch
+    % Not installed: offer it below.
 end
 
 answer = gui.myQuestdlg(parentfig, ...
-    ['Tensor Toolbox for MATLAB (Sandia Labs) is required but not installed. ' ...
-     'Download and install automatically (requires internet)?'], ...
+    ['Tensor Toolbox for MATLAB (Sandia Labs) is not installed. ' ...
+     'Download and install it automatically (requires internet)?'], ...
     'Tensor Toolbox', ...
     {'Download', 'Visit Website', 'Cancel'}, 'Download');
 

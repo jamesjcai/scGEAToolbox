@@ -222,8 +222,7 @@ hx.show(parentfig);
         labels{end} = 'Save gene list to variable named:';
         vars{end} = 'g';
         values{end} = nodename;
-        msgfig = export2wsdlg(labels, vars, values);
-        uiwait(msgfig);
+        gui.i_export2wsdlg(hFig, labels, vars, values);
     end
 
     function lgd = in_buildlegend()

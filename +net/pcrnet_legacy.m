@@ -1,0 +1,124 @@
+function [A] = pcrnet_legacy(X, ncom, fastersvd, dozscore, UseParallel, guiwaitbar, UseGPU)
+% Construct GRN using principal component regression (PCR), original implementation
+%
+% A = net.pcrnet_legacy(X)
+% A = net.pcrnet_legacy(X, ncom)
+% A = net.pcrnet_legacy(X, ncom, fastersvd, dozscore, UseParallel, guiwaitbar, UseGPU)
+%
+% X           - genes x cells expression matrix (LogNormalized recommended)
+% ncom        - number of principal components (default: 3)
+% fastersvd   - use lmsvd instead of svds (default: false)
+% dozscore    - z-score genes before regression (default: true)
+% UseParallel - use parfor loop (default: false)
+% guiwaitbar  - show GUI progress bar, serial only (default: false)
+% UseGPU      - use CUDA GPU via gpuArray (default: false; overrides fastersvd)
+%
+% The net.pcrnet shipped up to release v26.4.2: one leave-one-out SVD per
+% gene. Kept for reference and benchmarking. net.pcrnet now ports Daniel
+% Osorio's pcNet() from scTenifoldNet 1.4.1, which gives the same network
+% from one eigendecomposition and is much faster; use that one.
+%
+% ref: https://rdrr.io/cran/dna/man/PCnet.html
+%      https://github.com/cran/dna/blob/master/src/rpcnet.c
+%
+% See also net.pcrnet.
+
+arguments
+    X double
+    ncom(1, 1) {mustBeNumeric} = 3
+    fastersvd(1, 1) logical = false
+    dozscore(1, 1) logical = true
+    UseParallel(1, 1) logical = false
+    guiwaitbar(1, 1) logical = false
+    UseGPU(1, 1) logical = false
+end
+
+opts.maxit = 150;
+
+% GPU: move data to device before any computation; forces serial path
+if UseGPU
+    if gpuDeviceCount < 1
+        warning('net:pcrnet_legacy:NoGPU', 'No CUDA GPU found; falling back to CPU.');
+        UseGPU = false;
+    else
+        UseParallel = false;   % parfor + gpuArray not supported
+        fastersvd   = false;   % lmsvd does not support gpuArray
+    end
+end
+
+% Ensure toolbox root is on worker path so +net package is visible
+if UseParallel
+    rootdir = fileparts(fileparts(mfilename('fullpath')));
+    addpath(rootdir);
+end
+
+X = X.';
+if dozscore
+    X = zscore(X);
+end
+if UseGPU
+    % full() is required: sparse gpuArray does not support the two-index
+    % slicing X(:, cols) used in the loop below. X is cells-by-genes here, so
+    % densifying costs csubsmpl*ngene*8 bytes -- 32 MB at 500 cells x 8000
+    % genes -- which is negligible next to the g-by-g adjacency.
+    X = gpuArray(full(X));
+end
+n = size(X, 2);
+A = 1 - eye(n);
+
+% Precompute column index mask to avoid copying X and deleting a column
+idx_all = 1:n;
+
+if UseParallel
+    B = A(:, 1:end-1);
+    % Capture and restore rather than a bare off/on pair: the pair leaves
+    % warnings disabled for the rest of the session if anything between the
+    % two lines throws, and its 'on' re-enables warnings the caller may have
+    % silenced deliberately instead of restoring what they had.
+    warnState = warning();
+    restoreWarn = onCleanup(@() warning(warnState));
+    warning('off', 'all');
+    parfor k = 1:n
+        y = X(:, k);
+        cols = [idx_all(1:k-1), idx_all(k+1:end)];
+        Xi = X(:, cols);
+        if fastersvd
+            [~, ~, coeff] = lmsvd(Xi, ncom, opts);
+        else
+            [~, ~, coeff] = svds(Xi, ncom);
+        end
+        score = Xi * coeff;
+        nrm2 = sum(score .* score);
+        Beta = sum(y .* (score ./ nrm2));
+        B(k, :) = coeff * Beta';
+    end
+    for k = 1:n
+        A(k, A(k, :) == 1) = B(k, :);
+    end
+else
+    if guiwaitbar
+        fw = gui.myWaitbar([]);
+    end
+    for k = 1:n
+        if guiwaitbar
+            gui.myWaitbar([], fw, [], [], '', (k - 1)/n);
+        end
+        y = X(:, k);
+        cols = [idx_all(1:k-1), idx_all(k+1:end)];
+        Xi = X(:, cols);
+        if fastersvd
+            [~, ~, coeff] = lmsvd(Xi, ncom, opts);
+        else
+            [~, ~, coeff] = svds(Xi, ncom);
+        end
+        score = Xi * coeff;
+        nrm2 = sum(score .* score);
+        Beta = sum(y .* (score ./ nrm2));
+        A(k, A(k, :) == 1) = coeff * Beta';
+    end
+    if guiwaitbar, gui.myWaitbar([], fw); end
+end
+if UseGPU
+    A = gather(A);
+end
+end

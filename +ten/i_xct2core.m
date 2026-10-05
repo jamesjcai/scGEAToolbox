@@ -23,7 +23,7 @@ function T = i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg)
 %     w12mode    - "lr" (cognate pairs) or "outer" (reference outer product)
 %     alpha      - mean/variance blend for w12mode="outer"
 %     grnoffset  - constant added to every GRN element; see TEN.I_XCTBLOCK
-%     useparallel- pass a parfor down to net.pcrnet; see TEN.I_XCTGRN
+%     useparallel- pass a parfor down to net.pcrnet; see TEN.I_PCNET
 %     tag        - string used to prefix progress messages
 %     candidates - "database" (default) restricts the output to L-R database
 %                  matches, as published. "all" instead ranks EVERY gene
@@ -38,13 +38,13 @@ function T = i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg)
 %     topN       - how many top pairs to report when candidates="all"
 %                  (default 200). Ignored when candidates="database".
 %     grn_s1, grn_t1, grn_s2, grn_t2 - [] to build that cell type/sample's GRN
-%                  via TEN.I_XCTGRN as usual, or an ng-by-ng precomputed
+%                  via TEN.I_PCNET as usual, or an ng-by-ng precomputed
 %                  adjacency (same gene order as sce1.g/sce2.g) to use
 %                  instead, skipping the net.pcrnet build for that one. s1/s2
 %                  match SCE1/SCE2; s/t match CELLTYPE1/CELLTYPE2 as passed to
 %                  this call (i.e. before any twosided direction swap - the
 %                  swap reorders which bundle plays source/target, not which
-%                  network was built for which cell type). See TEN.I_XCTGRN's
+%                  network was built for which cell type). See TEN.I_PCNET's
 %                  'precomputed' option for what still happens to each (scale,
 %                  filter, symmetrize) and TEN.SCTENIFOLDXCT's grn1/grn2 for
 %                  why substituting a network built by a different method is a
@@ -105,21 +105,21 @@ end
 
 % -- GRNs -----------------------------------------------------------------
 % Same shared builder and settings as ten.sctenifoldxct: ncomp=3 with a 0.75
-% edge filter, on log-normalised expression. TEN.I_XCTGRN owns the pcrnet call, the max-normalisation, the
+% edge filter, on log-normalised expression. TEN.I_PCNET owns the pcrnet call, the max-normalisation, the
 % filtering and the symmetrisation.
 if verbose
     fprintf('[%s] Sample 1 GRNs: %s\n', tag, i_grnsource(cfg.grn_s1, cfg.grn_t1));
 end
-A_s1 = ten.i_xctgrn(i_lognorm(X_s1), 3, 0.75, false, cfg.useparallel, ...
+A_s1 = ten.i_pcnet(ten.i_lognorm(X_s1), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_s1, processed=cfg.grn_s1_processed);
-A_t1 = ten.i_xctgrn(i_lognorm(X_t1), 3, 0.75, false, cfg.useparallel, ...
+A_t1 = ten.i_pcnet(ten.i_lognorm(X_t1), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_t1, processed=cfg.grn_t1_processed);
 if verbose
     fprintf('[%s] Sample 2 GRNs: %s\n', tag, i_grnsource(cfg.grn_s2, cfg.grn_t2));
 end
-A_s2 = ten.i_xctgrn(i_lognorm(X_s2), 3, 0.75, false, cfg.useparallel, ...
+A_s2 = ten.i_pcnet(ten.i_lognorm(X_s2), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_s2, processed=cfg.grn_s2_processed);
-A_t2 = ten.i_xctgrn(i_lognorm(X_t2), 3, 0.75, false, cfg.useparallel, ...
+A_t2 = ten.i_pcnet(ten.i_lognorm(X_t2), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_t2, processed=cfg.grn_t2_processed);
 
 % One bundle per sample, so the direction swap is a single operation and the
@@ -331,17 +331,6 @@ X = single(X);
 Xs = X(:, sce.c_cell_type_tx == c1);
 Xt = X(:, sce.c_cell_type_tx == c2);
 end % i_fromsce
-
-
-%% ---- library-size normalisation followed by log1p ----
-function X = i_lognorm(X)
-% For the GRN inputs, which TEN.I_XCTGRN requires log-normalised: on raw
-% counts the cells' sequencing depth reads as co-expression. The matrices
-% themselves stay raw because TEN.I_XCTW12 normalises its own inputs.
-cs = sum(X, 1);
-cs(cs == 0) = 1;
-X = log1p(X./cs.*median(cs));
-end % i_lognorm
 
 
 %% ---- indices of database pairs present in the gene list ----

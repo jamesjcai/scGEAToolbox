@@ -63,7 +63,7 @@ end
 
 fw = gui.myWaitbar(FigureHandle);
 try
-    [t_mono3, s_mono3, ~, q_mono3] = run.r_monocle3(sce.X, idx, ndim, wrkdir, isdebug);
+    [t_mono3, s_mono3] = run.r_monocle3(sce.X, idx, ndim, wrkdir, isdebug);
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
@@ -76,8 +76,9 @@ if isempty(t_mono3) || length(t_mono3) ~= sce.NumCells
 end
 
 sce.setCellAttribute('monocle3_pseudotime', t_mono3);
-
-sce.setCellAttribute('monocle3_qvalue', q_mono3);
+% The fourth output of RUN.R_MONOCLE3 is graph_test's q-value, one per
+% GENE, so it is not stored: it used to go in as a cell attribute,
+% where its length matched nothing.
 
 if ndim == 2
     sce.struct_cell_embeddings.('monocle2d') = s_mono3;

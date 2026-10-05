@@ -24,7 +24,7 @@ function tf = i_usegpu(X, threshold)
 %
 % The old 5e5 default meant any run past 1,000 genes at 500 cells took the
 % slow path, which is exactly the regime scTenifoldNet's subsampling uses
-% (TEN.I_NC calls TEN.I_XCTGRN with csubsmpl=500 and no way to opt out).
+% (TEN.I_NC calls TEN.I_PCNET with csubsmpl=500 and no way to opt out).
 %
 % NOTE the measurements vary only n, at fixed 500 cells. numel() conflates
 % genes and cells, so a caller with few genes and very many cells is not

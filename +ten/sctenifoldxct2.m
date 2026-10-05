@@ -35,7 +35,7 @@ function [T] = sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided, vararg
 %                 having kept its own inline block assembly; it now shares
 %                 TEN.I_XCTBLOCK with the other entry points.
 %     'useparallel' - build the GRNs with a parfor (default: false, and usually
-%                 the slower choice; see TEN.I_XCTGRN)
+%                 the slower choice; see TEN.I_PCNET)
 %
 %   Precomputed-GRN Name-Value pairs:
 %     'grn_s1'   - ng-by-ng adjacency to use for CT1 in SCE1, instead of
@@ -48,17 +48,17 @@ function [T] = sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided, vararg
 %     'grn_t2'   - same, for CT2 in SCE2.
 %                  Any of the four may be supplied independently. Passing one
 %                  skips that sample/cell-type's pcrnet call, but the matrix
-%                  still goes through TEN.I_XCTGRN's scale/filter/symmetrize,
+%                  still goes through TEN.I_PCNET's scale/filter/symmetrize,
 %                  so mu and grnoffset stay meaningful. Substituting a network
 %                  built by a different method changes what this differential
 %                  test is comparing, not just how it got there - see
-%                  TEN.I_XCTGRN and TEN.SCTENIFOLDXCT's grn1/grn2, which this
+%                  TEN.I_PCNET and TEN.SCTENIFOLDXCT's grn1/grn2, which this
 %                  mirrors for the two-sample case.
 %     'grn_s1_processed', 'grn_t1_processed', 'grn_s2_processed',
 %     'grn_t2_processed' - true if the matching grn_* is itself a grns.A_s/
 %                  A_t TEN.SCTENIFOLDXCT previously returned - skips scale/
 %                  filter/symmetrize a second time, which is NOT a no-op for
-%                  the q=0.75 filter (default false; see TEN.I_XCTGRN's
+%                  the q=0.75 filter (default false; see TEN.I_PCNET's
 %                  'processed' option).
 %
 %   Discovery-mode Name-Value pairs:

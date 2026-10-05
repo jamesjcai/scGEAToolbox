@@ -125,8 +125,7 @@ oldG1 = [];
                 g1 = string(G1.Nodes.Name);
                 vars = {'A', 'G', 'g'}; ...
                     values = {A1, G1, g1};
-                msgfig = export2wsdlg(labels, vars, values);
-                uiwait(msgfig);
+                gui.i_export2wsdlg(hFig, labels, vars, values);
             case 'File'
                 [file, path] = uiputfile({'*.txt'; '*.*'}, 'Save as');
                 % if pkg.i_isvalid(hFig) && isa(hFig, 'matlab.ui.Figure'), figure(hFig); end

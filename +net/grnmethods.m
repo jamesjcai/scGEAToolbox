@@ -33,7 +33,7 @@ function T = grnmethods()
 rows = {
     % Key, Label, Summary, Build, ExtraArgs, InMenus, Transform, RawCountsNote, SecondsPerPair
     %
-    % The three PCR rows transpose: net.pcrnet's row k holds the
+    % The PCR rows transpose: net.pcrnet's row k holds the
     % coefficients that predict gene k, so its rows are targets. The
     % scTenifold tools rely on that orientation (ten.i_knk reads A(k, j) as
     % the effect of j on k) and call net.pcrnet directly, so it stays as it
@@ -93,6 +93,13 @@ rows = {
     "pcrnet_batch", "PCR (batch pagesvd)", ...
     "principal component regression, batched pagesvd", ...
     @(X, ~) net.pcrnet_batch(X).', ...
+    "", false, "pearson_residuals", "", NaN
+
+    % The one-SVD-per-gene net.pcrnet shipped up to v26.4.2; same network,
+    % much slower. For benchmarking against the pcrnet row.
+    "pcrnet_legacy", "PCR (original, per-gene SVD)", ...
+    "principal component regression, one SVD per gene (slow)", ...
+    @(X, ~) net.pcrnet_legacy(X, 3, false, true, false, false, pkg.i_usegpu(X)).', ...
     "", false, "pearson_residuals", "", NaN
 
     % donorm = false, as for genie3: net.pcrnet_denoised re-normalises and

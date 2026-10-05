@@ -17,6 +17,14 @@ outdir] = gui.i_batchmodeprep(sce, prefixtag, ...
             wrkdir, FigureHandle, {'_DE', '_DV', '_DP'});
 if ~done, return; end
 
+% Enrichr is a web service, so it is asked for, as the DE and DV batch
+% callbacks ask. It used to run in both phases unconditionally.
+runenrichr = gui.myQuestdlg(FigureHandle, ...
+    ['Run Enrichr with top 250 DE and DV genes? Results will ' ...
+     'be saved in the output Excel files.'], '');
+if ~ismember(runenrichr, {'Yes', 'No'}), return; end   % Cancel or closed
+runenrichr = strcmp(runenrichr, 'Yes');
+
 answer = gui.myQuestdlg(FigureHandle, "Set DE gene filter parameters?", ...
 "DE Genes", {'Yes','No, use previous','Cancel'}, 'Yes');
 if isempty(answer) || strcmp(answer, 'Cancel'), return; end
@@ -81,9 +89,15 @@ for k=1:length(CellTypeList)
         try
             gui.e_tupdn2xlsx(Tup, Tdn, T, filesaved);
             writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
-            gui.e_enrichrxlsx(Tup, Tdn, T, filesaved);
         catch ME
             warning(ME.message);
+        end
+        if runenrichr
+            try
+                gui.e_enrichrxlsx(Tup, Tdn, T, filesaved);
+            catch ME
+                warning(ME.message);
+            end
         end
     end
 
@@ -159,9 +173,15 @@ for k=1:length(CellTypeList)
         try
             gui.e_tupdn2xlsx(Tup,Tdn,T,filesaved);
             writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
-            gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
         catch ME
             warning(ME.message);
+        end
+        if runenrichr
+            try
+                gui.e_enrichrxlsx(Tup,Tdn,T,filesaved);
+            catch ME
+                warning(ME.message);
+            end
         end
 end
 
@@ -219,8 +239,25 @@ for c = 1:length(ctag)
     end
 end
 
+% The Note sheet goes in every DP file. It was written once, after the
+% loops, into FILESAVED -- which by then named only the last cell type's
+% file, so every other DP workbook went without it.
 Tnt = table(ctag, ccat);
-writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
+for k = 1:length(CellTypeList)
+    outfile = sprintf('%s_DP_%s_vs_%s_%s.xlsx', ...
+        prefixtag, ...
+        matlab.lang.makeValidName(string(cL1)), ...
+        matlab.lang.makeValidName(string(cL2)), ...
+        matlab.lang.makeValidName(string(CellTypeList{k})));
+    filesaved = fullfile(outdir, outfile);
+    if isfile(filesaved)
+        try
+            writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
+        catch ME
+            warning(ME.message);
+        end
+    end
+end
 
 gui.myWaitbar(FigureHandle, fw);
 
@@ -232,9 +269,15 @@ gui.myWaitbar(FigureHandle, fw);
 % answer = gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
 % if strcmp(answer,'Yes'), winopen(outdir); end
 
-items = {'LLM Summarize', 'Open Output Folder'};
+% The LLM summary reads the Enrichr sheets, so it is offered only when
+% Enrichr ran.
+if runenrichr
+    items = {'LLM Summarize', 'Open Output Folder'};
+else
+    items = {'Open Output Folder'};
+end
 selected = gui.myChecklistdlg(FigureHandle, items, ...
-'Title', 'Select Items','DefaultSelection', [1 2]);
+'Title', 'Select Items','DefaultSelection', 1:numel(items));
 if isempty(selected), return; end
 
 if any(contains(selected, 'LLM Summarize'))

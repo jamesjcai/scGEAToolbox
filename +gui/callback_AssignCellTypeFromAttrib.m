@@ -108,7 +108,7 @@ end
 function msg = in_noattributesreason(sce)
 % Say why there is nothing to pick from, and where a column can come from.
 
-hint = ['Add one with Edit > Add/Edit Cell Attributes, which can read it ' ...
+hint = ['Add one with Edit > Add/Edit/Delete Cell Attributes, which can read it ' ...
     'from a table file or a workspace variable, then try again.'];
 if isempty(sce.list_cell_attributes)
     msg = ['This dataset has no cell attributes beyond the standard fields. ' hint];

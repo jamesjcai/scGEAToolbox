@@ -1,6 +1,7 @@
 function [needupdatesce, T] = callback_RunPanhumanpy(src, ~)
 
 needupdatesce = false;
+T = [];   % the app always asks for T, and the early returns set none
 [y, prepare_input_only] = gui.i_memorychecked([], []);
 if ~y, return; end
 
@@ -20,6 +21,13 @@ extprogname = 'py_panhumanpy';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
 if isempty(wkdir), return; end
+
+% panhumanpy matches upper-case symbols, so the run needs them, but SCE is
+% the app's live handle: upper-casing it in place renamed every gene for
+% the rest of the session (mouse Actb became ACTB), on the prepare-only
+% path too. Restored on any return, as GUI.CALLBACK_RUNSCIMILARITY does.
+originalGeneList = sce.g;
+restoreGeneList = onCleanup(@() i_restoregenelist(sce, originalGeneList));
 sce.g = upper(sce.g);
 
 
@@ -59,4 +67,9 @@ else
         numel(unique(string(c))), sce.NumCells);
     gui.myHelpdlg(FigureHandle, msg + gui.i_stashnotice(stashname));
 end
+end
+
+function i_restoregenelist(sce, g)
+% Put back the gene list the callback upper-cased for panhumanpy.
+sce.g = g;
 end

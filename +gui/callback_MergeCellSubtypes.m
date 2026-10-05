@@ -110,8 +110,16 @@ switch sourcetag
 end % end of sourcetag
 
 
+% Said before the try. A data file is loaded without the size filter the
+% workspace list applies, and a wrong-size one used to hit a bare ASSERT.
+if insce.NumCells ~= sum(selecteidx)
+    gui.myErrordlg(FigureHandle, sprintf(['The source has %d cells but ' ...
+        '%d cells are to be labelled. Import needs an SCE holding the ' ...
+        'same cells as this one.'], insce.NumCells, sum(selecteidx)));
+    return;
+end
+
 try
-    assert(insce.NumCells == sum(selecteidx));
 
     % A matching cell count is not a matching set of cells. When both sides
     % carry cell IDs, line the incoming labels up on those rather than on

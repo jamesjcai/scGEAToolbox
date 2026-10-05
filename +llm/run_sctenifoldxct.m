@@ -12,7 +12,8 @@ function results = run_sctenifoldxct(sample_id, celltype1, celltype2, data_dir, 
 %     Direction 2: celltype2 (ligand source) -> celltype1 (receptor target)
 %
 %   Method (Ma et al., Cell Systems 2023. PMID:36787742):
-%     1. Build partial-correlation GRNs for each cell type via net.pcrnet
+%     1. Build a PCNet GRN (principal-component regression) for each cell
+%        type on log-normalized expression, via ten.i_pcnet
 %     2. Assemble block weight matrix with L-R database correspondences
 %     3. Spectral manifold alignment via graph Laplacian eigenvectors
 %     4. Rank L-R pairs by embedding distance (small dist = strong interaction)

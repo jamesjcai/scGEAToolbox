@@ -1,25 +1,23 @@
-function [done] = i_checkllm(apikeyfile, provider, parentfig)
+function [done, tested] = i_checkllm(apikeyfile, provider, ~)
+% The third argument, the parent figure, is unused since the env-file
+% picker moved to gui.i_setllmmodel; it stays for existing callers.
 
 done = false;
 
-if nargin<3, parentfig = []; end
 if nargin<2, provider = []; end
 if nargin<1, apikeyfile = []; end
 
-if isempty(apikeyfile)
-    preftagname = 'llapikeyenvfile';
-    if ~ispref('scgeatoolbox', preftagname)
-        if ~strcmp('Yes', gui.myQuestdlg(parentfig, 'Locate llm_api_key.env?')), return; end
-        [file, path] = uigetfile('llm_api_key.env', 'Select File');
-        if isequal(file, 0), return; end
-        apikeyfile = fullfile(path, file);
-        setpref('scgeatoolbox', preftagname, apikeyfile);
-        gui.myHelpdlg(parentfig, "llm_api_key.env is located successfully.");
-    else
-        apikeyfile = getpref('scgeatoolbox', preftagname);
-    end
+% No env file is required: keys can also come from the environment or the
+% MATLAB vault (llm.i_getapikey). With no file and no preference, those two
+% are all that is searched.
+if isempty(apikeyfile) && ispref('scgeatoolbox', 'llapikeyenvfile')
+    apikeyfile = getpref('scgeatoolbox', 'llapikeyenvfile');
 end
-fprintf('Using apikeyfile %s\n', apikeyfile);
+if isempty(apikeyfile), apikeyfile = ""; end
+fileValues = llm.i_readkeyfile(apikeyfile);
+if strlength(apikeyfile) > 0
+    fprintf('Using apikeyfile %s\n', apikeyfile);
+end
 
 
 preftagname = 'llmodelprovider';
@@ -37,6 +35,11 @@ fprintf('Using LLM model: %s\n', model);
 
 prompt = "What model are you?";
 
+% The switch below sends a test prompt for these providers only. Any other
+% falls through to DONE = TRUE untested, which the caller used to report
+% as a success; TESTED lets it say so instead.
+tested = ismember(string(provider), ["Ollama", "OpenAI", "TAMUAIChat", "Gemini"]);
+
 switch provider
         case 'Ollama'
             try
@@ -48,8 +51,7 @@ switch provider
             end
             disp(feedbk);
         case 'OpenAI'
-            loadenv(apikeyfile, "FileType", "env");
-            apikey = getenv("OPENAI_API_KEY");
+            apikey = llm.i_getapikey(["OPENAI_API_KEY", "OpenAI_API_KEY"], fileValues);
             if isempty(apikey), return; end
             try
                 chat = openAIChat("", APIKey=apikey, ...
@@ -61,10 +63,8 @@ switch provider
             end
             disp(feedbk);
         case 'TAMUAIChat'
-
-            loadenv(apikeyfile, "FileType", "env");
             OPEN_WEBUI_API_ENDPOINT = "https://chat-api.tamu.ai";
-            OPEN_WEBUI_API_KEY = getenv("TAMUAI_API_KEY");
+            OPEN_WEBUI_API_KEY = llm.i_getapikey("TAMUAI_API_KEY", fileValues);
 
             if isempty(OPEN_WEBUI_API_KEY), return; end
             chat_url = sprintf('%s/api/chat/completions', OPEN_WEBUI_API_ENDPOINT);

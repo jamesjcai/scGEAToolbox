@@ -1,14 +1,27 @@
-function i_heatmap(sce, glist, thisc, parentfig)
+function i_heatmap(sce, glist, thisc, parentfig, markerof, levelorder, cellpicked)
+% MARKEROF, optional, is the group each gene in GLIST was picked as a marker
+% for, one per gene (CALLBACK_FINDALLMARKERS). Export data hands it back
+% with the matrix, so a row of Y can be traced to its cell type.
+% LEVELORDER, optional, is the order the groups were listed in when the
+% user picked them; the columns keep it. Without it they are natural-sorted.
+% CELLPICKED, optional, is a logical mask over SCE's cells; THISC then holds
+% labels for the picked cells only. Expression is normalised on all cells
+% before subsetting, so values match an all-cells map.
 
 if nargin<4, parentfig = []; end
+if nargin<5 || isempty(markerof), markerof = strings(0, 1); end
+if nargin<6, levelorder = []; end
+if nargin<7 || isempty(cellpicked), cellpicked = true(size(sce.X, 2), 1); end
+cellidx = find(cellpicked);
+markerof = string(markerof(:));
 
-[c, cL, noanswer] = gui.i_reordergroups(thisc, [], parentfig);
+[c, cL, noanswer] = gui.i_reordergroups(thisc, levelorder, parentfig);
 if noanswer, return; end
 [~, gidx] = ismember(glist, sce.g);
 [Xt] = gui.i_transformx(sce.X, true, "libsize_log1p", parentfig);
 if isempty(Xt), return; end
 
-Y = Xt(gidx, :);
+Y = Xt(gidx, cellidx);
 [~, cidx] = sort(c);
 Yori = Y(:, cidx);
 
@@ -152,6 +165,9 @@ function in_callback_renamecat(~, ~)
             % Redrawn rather than relabelled in place: the groups are on
             % the Y axis once the map is flipped, and setting XTickLabel
             % wrote the new names over the gene labels there.
+            % MARKEROF names groups by their old names; carry it over.
+            [tf, loc] = ismember(markerof, string(cL));
+            markerof(tf) = string(tg(loc(tf)));
             cL = tg;
             in_drawmap();
         else
@@ -176,14 +192,38 @@ function in_callback_resetcolor(src, ~)
     end
 
 
-function in_callback_savetable(~, ~)
+function in_callback_savetable(src, ~)
+        % Y is genes x cells in drawn order; CELLGROUP names the group of
+        % each column, so Y can be read without counting block widths.
         labels = {'Save Y to variable named:', ...
             'Save glist to variable named:', ...
-            'Save cL to variable named:'};
-        vars = {'Y', 'g', 'cL'};
-        values = {full(Y), glist, string(cL)};
-        [~, ~] = export2wsdlg(labels, vars, values, ...
+            'Save cL to variable named:', ...
+            'Save group of each column of Y to variable named:'};
+        vars = {'Y', 'g', 'cL', 'cellgroup'};
+        values = {full(Y), glist, string(cL), reshape(string(cL(c)), [], 1)};
+        [labels, vars, values] = in_addmarkertable(labels, vars, values);
+        gui.i_export2wsdlg(ancestor(src, 'figure'), labels, vars, values, ...
             'Save Data to Workspace');
+    end
+
+function in_callback_exportsummary(src, ~, T)
+        % The summary maps' table, plus TMARKERS as the main map exports it.
+        labels = {'Save summary table to variable named:'};
+        vars = {'Tsummary'};
+        values = {T};
+        [labels, vars, values] = in_addmarkertable(labels, vars, values);
+        gui.i_export2wsdlg(ancestor(src, 'figure'), labels, vars, values, ...
+            'Save Data to Workspace');
+    end
+
+function [labels, vars, values] = in_addmarkertable(labels, vars, values)
+        % TMARKERS, one row per gene as listed, when MARKEROF was given.
+        if numel(markerof) == numel(glist)
+            labels{end+1} = 'Save marker-to-cell-type table to variable named:';
+            vars{end+1} = 'Tmarkers';
+            values{end+1} = table(string(glist(:)), markerof, ...
+                'VariableNames', {'Gene', 'MarkerOf'});
+        end
     end
 
 function in_callback_exporttable(src, ~, T, needwait, defname)
@@ -240,7 +280,14 @@ function in_summarymap()
         hs.GridVisible = 'off';
         hs.CellLabelColor = 'none';
         t = array2table(z, 'VariableNames', cL, 'RowNames', mx);
+        if numel(markerof) == numel(MX)
+            % A gene picked for more than one group is one row here, so
+            % its groups are joined.
+            t.MarkerOf = arrayfun(@(gn) strjoin(unique(markerof(MX == gn), 'stable'), "; "), ...
+                string(mx(:)));
+        end
         hx1.addCustomButton('off', {@in_callback_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
+        hx1.addCustomButton('off', {@in_callback_exportsummary, t}, 'floppy-disk.jpg', 'Export data...');
         hx1.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
         hx1.show(hFig);
     end
@@ -267,6 +314,7 @@ function in_summarymapT()
         hs.CellLabelColor = 'none';
         t = array2table(z.', 'VariableNames', mx, 'RowNames', cL);
         hx2.addCustomButton('off', {@in_callback_exporttable, t}, 'floppy-disk-arrow-in.jpg', 'Save table...');
+        hx2.addCustomButton('off', {@in_callback_exportsummary, t}, 'floppy-disk.jpg', 'Export data...');
         hx2.addCustomButton('off', {@gui.i_pickcolormap, c}, 'color-wheel.jpg', 'Pick new color map...');
         hx2.addCustomButton('off', @in_callback_resetcolor, 'refresh_16dp_000000_FILL0_wght400_GRAD0_opsz20.jpg', 'Reset color map');
         hx2.show(hFig);
@@ -277,7 +325,7 @@ function in_callback_dotplotx(~, ~)
             % C is in drawn order, so the cells must be too: SCE.X in its
             % own order gave every group another group's cells.
             gui.myFigure.drawInto(hFig, ...
-                @() gui.i_dotplot(sce.X(:, colorder), sce.g, c, cL, MX));
+                @() gui.i_dotplot(sce.X(:, cellidx(colorder)), sce.g, c, cL, MX));
         catch ME
             gui.myErrordlg(hFig, ME.message, ME.identifier);
         end

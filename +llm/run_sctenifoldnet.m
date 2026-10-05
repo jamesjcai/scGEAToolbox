@@ -8,12 +8,17 @@ function results = run_sctenifoldnet(sample_id1, sample_id2, data_dir, out_dir)
 %   Builds PCR-based Gene Regulatory Networks (GRNs) for two GEO samples
 %   and identifies differentially regulated (DR) genes per cell type.
 %
-%   Method (lite — no tensor decomposition or subsampling):
-%     1. Normalize and log-transform expression -> net.pcrnet -> GRN per sample
-%     2. Symmetrize: A = 0.5*(A + A')
-%     3. Align the two networks via manifold alignment (ten.i_ma)
-%     4. Identify DR genes: chi-squared test on squared alignment distances,
-%        FDR correction (BH). Genes with pAdjusted < 0.05 are DR genes.
+%   Method: ten.sctenifoldnet with its defaults, once per shared cell type, on
+%   raw counts. That is, per sample:
+%     1. Drop ribosomal genes; libsize-normalize and log1p
+%     2. Build 10 PCNets, each on 500 bootstrap-resampled cells (ten.i_nc)
+%     3. Denoise them into one network by CP tensor decomposition
+%   then symmetrize both networks, align them (ten.i_ma), and call DR genes
+%   with a chi-squared test on squared alignment distances, BH-corrected
+%   (ten.i_dr). Genes with pAdjusted < 0.05 are DR genes.
+%
+%   Requires the Tensor Toolbox (Setup > Install Tensor Toolbox); without it
+%   every cell type fails with the toolbox's install message.
 %
 %   Inputs:
 %     sample_id1 - GSM accession of sample 1 (e.g. 'GSM2333580')
@@ -122,12 +127,10 @@ if ~isempty(out_dir) && ~isfolder(out_dir)
     mkdir(out_dir);
 end
 
-max_cells = 1000;   % subsample per cell type; GRN build time grows with cells
-
-i_log(out_dir, sprintf('START scTenifoldNet (lite): %s vs %s | %d cell types', ...
+i_log(out_dir, sprintf('START scTenifoldNet: %s vs %s | %d cell types', ...
     sample_id1, sample_id2, numel(shared_ct)));
 
-% ---- scTenifoldNet (lite) per cell type -----------------------------
+% ---- scTenifoldNet per cell type ------------------------------------
 ri = 0;
 nTooSmall = 0;
 nFailed = 0;
@@ -146,43 +149,16 @@ for k = 1:numel(shared_ct)
         continue;
     end
 
-    fprintf('\nscTenifoldNet (lite) for "%s": %d vs %d cells ...\n', ct, n1, n2);
+    fprintf('\nscTenifoldNet for "%s": %d vs %d cells ...\n', ct, n1, n2);
     i_log(out_dir, sprintf('BEGIN "%s": n1=%d n2=%d', ct, n1, n2));
 
-    idx1 = find(mask1);
-    idx2 = find(mask2);
-    if numel(idx1) > max_cells
-        idx1 = idx1(randperm(numel(idx1), max_cells));
-        fprintf('  Subsampled sample1: %d → %d cells\n', n1, max_cells);
-        n1 = max_cells;
-    end
-    if numel(idx2) > max_cells
-        idx2 = idx2(randperm(numel(idx2), max_cells));
-        fprintf('  Subsampled sample2: %d → %d cells\n', n2, max_cells);
-        n2 = max_cells;
-    end
-
-    Xs1 = full(X1_all(:, idx1));
-    Xs2 = full(X2_all(:, idx2));
-
-    Xs1 = log1p(sc_norm(Xs1));
-    Xs2 = log1p(sc_norm(Xs2));
-
-    useGPU0 = pkg.i_usegpu(Xs1);
-    useGPU1 = pkg.i_usegpu(Xs2);
-
-    T = [];
+    % All cells go in: ten.sctenifoldnet draws its own 500-cell bootstrap
+    % subsamples per network, so a cap here would only discard cells. It
+    % normalizes the raw counts itself, and savegrn=false keeps it from
+    % writing A0_*.mat/A1_*.mat into the working folder.
     try
-        disp('Constructing network (1/2)...')
-        A0 = net.pcrnet(Xs1, 3, false, true, false, false, useGPU0);
-        disp('Constructing network (2/2)...')
-        A1 = net.pcrnet(Xs2, 3, false, true, false, false, useGPU1);
-        A0 = 0.5 * (A0 + A0');
-        A1 = 0.5 * (A1 + A1');
-        disp('Manifold alignment...')
-        [aln0, aln1] = ten.i_ma(A0, A1);
-        disp('Differential regulation (DR) detection...')
-        T = ten.i_dr(aln0, aln1, common_genes);
+        T = ten.sctenifoldnet(full(X1_all(:, mask1)), full(X2_all(:, mask2)), ...
+            common_genes, 'savegrn', false);
     catch ME
         fprintf('FAILED: %s\n', ME.message);
         i_log(out_dir, sprintf('FAILED "%s": %s', ct, ME.message));
@@ -279,7 +255,7 @@ else
         'sample1',    char(sample_id1), ...
         'sample2',    char(sample_id2), ...
         'status',     'completed', ...
-        'method',     'scTenifoldNet-lite (PCR networks, manifold alignment; tensor decomposition omitted for speed)', ...
+        'method',     'scTenifoldNet (ten.sctenifoldnet defaults: 10 bootstrap PCNets per sample, CP tensor denoising, manifold alignment)', ...
         'cell_types', {cell_types});
 end
 

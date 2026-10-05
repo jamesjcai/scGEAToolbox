@@ -1,13 +1,13 @@
-%% Demo 4 - Clustering Functions
-%% Load example data
-
+%[text] # Demo 4 - Clustering Functions
+%[text] ## Load example data
 cdgea; % set working directory
+% load('example_data/example10xdata2.mat','X','genelist');
 [X,genelistx]=sc_readfile(pkg.i_exampledata('GSM3204304_P_P_Expr.csv'));
 [Y,genelisty]=sc_readfile(pkg.i_exampledata('GSM3204305_P_N_Expr.csv'));
 [X,genelistx]=sc_selectg(X,genelistx,3,1);
 [Y,genelisty]=sc_selectg(Y,genelisty,3,1);
-%% Intersection of common genes in X, Y and Z
-
+%%
+%[text] ## Intersection of common genes in X, Y and Z
 [genelist]=intersect(genelistx,genelisty,'stable');
 % Remove genes encoded in the mitochondrial genome
 i=startsWith(genelist,'MT-');
@@ -16,16 +16,16 @@ genelist(i)=[];
 [~,i2]=ismember(genelist,genelisty);
 X=X(i1,:); genelistx=genelist;
 Y=Y(i2,:); genelisty=genelist;
-%% Label cells
-
+%%
+%[text] ## Label cells
 cellidx=[1*ones(size(X,2),1); 2*ones(size(Y,2),1)];
-%% Cluster cells using SIMLR
-
+%%
+%[text] ## Cluster cells using SIMLR
 C = sc_cluster_x([X Y], 5, 'type', 'simlr');
 
 % [C,s] = run.ml_SIMLR(X,[]);  % auto-determine the number of clusters.
-%% Plot the clustering result
-
+%%
+%[text] ## Plot the clustering result
 s = sc_tsne([X Y], 2, true, false);   % s=sc_tsne(X,ndim,donorm,dolog1p);
 %%
 figure;
@@ -33,8 +33,8 @@ scatter(s(:,1), s(:,2), 20, C, 'filled')
 
 figure;
 scatter(s(:,1), s(:,2), 20, cellidx, 'filled')
-%% Using SC3 example data yan.csv
-
+%%
+%[text] ## Using SC3 example data yan.csv
 [X,genelist] = sc_readtsvfile(pkg.i_exampledata('yan.csv'));
 t = readtable(pkg.i_exampledata('yan_celltype.txt'));
 celltypelist = string(t.cell_type1);
@@ -48,14 +48,14 @@ c3 = run.ml_SoptSC(X, 'k', 6);
 % Result of SC3/R pacakge
 sc3_results = load(pkg.i_exampledata('sc3_results.txt'));
 c0 = sc3_results;
-%% Compare clustering results between SC3/R vs SC3, SIMILR and SoptSC
-
+%%
+%[text] ## Compare clustering results between SC3/R vs SC3, SIMILR and SoptSC
 Cal_NMI(c0,c1)
 Cal_NMI(c0,c2)
 Cal_NMI(c0,c3)
 
 
-fh=figure; 
+fh=figure;
 subplot(2,2,1)
 gscatter(s(:,1),s(:,2),celltypelist)
 if showlegend, legend('Location','northwest'); else, legend off; end
@@ -76,4 +76,11 @@ gscatter(s(:,1),s(:,2),c3)
 if showlegend, legend('Location','northwest'); else, legend off; end
 title('SoptSC')
 fh.Position=[fh.Position(1) fh.Position(2)-100 fh.Position(3)+100 fh.Position(4)+100];
-%% The End
+%%
+%[text] ## The End
+
+%[appendix]{"version":"1.0"}
+%---
+%[metadata:view]
+%   data: {"layout":"onright","rightPanelPercent":40}
+%---

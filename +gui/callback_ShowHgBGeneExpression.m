@@ -46,7 +46,7 @@ function in_callback_saveM(~, ~, ~)
                 'Save hemoglobin scores (summed Hb gene counts) to variable named:'};
             vars = {'cell_id', 'c'};
             values = {sce.c_cell_id, ci(:)};
-            waitfor(export2wsdlg(labels, vars, values));   % one at a time
+            gui.i_export2wsdlg(hFig, labels, vars, values);   % one at a time
         else
             gui.myErrordlg(hx.FigHandle, ['This function is not available for standalone application.' ...
                 ' Run scgeatool in MATLAB to use this function.']);

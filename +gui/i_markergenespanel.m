@@ -12,8 +12,21 @@ n = length(markerlist);
 if nargin < 5 || isempty(numfig)
     numfig = ceil(n/N);
 end
-if ~ismember(N, [9, 16]) || numfig < 1 || numfig > 10
-    error('error');
+if ~ismember(N, [9, 16])
+    error('gui:i_markergenespanel:badPageSize', ...
+        'Genes per page must be 9 or 16, not %d.', N);
+end
+if numfig < 1
+    error('gui:i_markergenespanel:noGenes', 'There are no genes to show.');
+end
+% Ten pages at most. More used to raise a bare error('error'); now the
+% first ten pages are drawn and the rest are named in a warning.
+maxpages = 10;
+if numfig > maxpages
+    warning('gui:i_markergenespanel:tooManyGenes', ...
+        'Showing the first %d of %d genes (%d pages of %d).', ...
+        maxpages*N, n, maxpages, N);
+    numfig = maxpages;
 end
 
 % Pages were separate windows, cascaded over the main app.

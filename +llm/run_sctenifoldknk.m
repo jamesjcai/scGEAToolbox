@@ -11,7 +11,7 @@ function results = run_sctenifoldknk(sample_id, kogene, data_dir, out_dir)
 %   pseudo-KO GRN to identify differentially regulated (DR) genes.
 %
 %   Method (lite — no tensor decomposition or subsampling):
-%     1. Normalize and log-transform expression -> net.pcrnet -> GRN (A0)
+%     1. Normalize and log-transform expression -> ten.i_pcnet -> GRN (A0)
 %     2. Virtual KO: zero the row of kogene in A0 -> pseudo-KO GRN
 %     3. Manifold alignment of A0 vs pseudo-KO GRN -> DR genes by
 %        chi-squared test, FDR correction (BH). Genes with pAdjusted <
@@ -133,12 +133,10 @@ for k = 1:numel(cell_types)
     X = sc_norm(X);
     X = log1p(X);
 
-    useGPU = pkg.i_usegpu(X);
-
     A0 = [];
     try
         disp('Constructing gene regulatory network...')
-        A0 = net.pcrnet(X, 3, false, true, false, false, useGPU);
+        A0 = ten.i_pcnet(X, 3, 0, false, false, symmetrize=false, scale=false);
     catch ME
         fprintf('FAILED (network construction): %s\n', ME.message);
         i_log(out_dir, sprintf('FAILED "%s" (pcrnet): %s', ct_k, ME.message));

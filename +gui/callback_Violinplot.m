@@ -61,6 +61,10 @@ switch answer
 
     case 'Cell State'
         [thisyv, ylabelv] = gui.i_selectnstates(sce, true, [1], FigureHandle);
+        % Cancelled, or I_SELECTNSTATES has already said there is nothing
+        % to pick: return quietly rather than report "No valid cell state
+        % variables", which is what an empty pick used to fall through to.
+        if isempty(thisyv), return; end
 
         a = false(length(thisyv), 1);
         for k = 1:length(thisyv)

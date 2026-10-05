@@ -18,7 +18,7 @@ ownsWaitbar = nargin < 3 || isempty(fw);
 if ownsWaitbar
     fw = gui.myWaitbar([]);
 else
-    gui.myWaitbar(parentfig, fw, false, '', 'Exporting PowerPoint...', 0.995);
+    gui.myWaitbar(parentfig, fw, false, '', 'Exporting PowerPoint...');
 end
 % Same path as GUI.I_EXPORT2PPTX: a named per-process folder and a
 % timestamped file, so the deck can be named in the fallback message

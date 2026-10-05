@@ -75,14 +75,14 @@ chosen = symbols(indx);
 set(h, 'Marker', char(chosen));
 
 % Only scatter objects carry SizeData; GSCATTER returns lines, which size
-% themselves through MarkerSize instead.
-if ~isprop(h(1), 'SizeData')
-    return;
-end
-if chosen == "." && current ~= "."
-    set(h, 'SizeData', 50);
-elseif chosen ~= "." && current == "."
-    set(h, 'SizeData', 10);
+% themselves through MarkerSize instead. Lines skip the resize but not the
+% store below, which a RETURN here used to skip too.
+if isprop(h(1), 'SizeData')
+    if chosen == "." && current ~= "."
+        set(h, 'SizeData', 50);
+    elseif chosen ~= "." && current == "."
+        set(h, 'SizeData', 10);
+    end
 end
 
 % Record it on the SCE so the choice survives a save and reload.

@@ -66,6 +66,7 @@ scorenames = listitems(indx2);
 if isempty(methodid), return; end
 
 % ---- 3. Which groups to compare --------------------------------------------
+levels = [];   % the radar keeps the order the chooser listed groups in
 answer = gui.myQuestdlg(FigureHandle, ...
     ['Compare signature scores between cell groups?', newline, newline, ...
     'Yes: one radar polygon per cell group.', newline, ...
@@ -78,7 +79,7 @@ switch answer
         [thisc, clabel] = gui.i_selectnclass(sce, false, [], [], FigureHandle);
         if isempty(thisc), return; end
         if ~isscalar(unique(thisc))
-            picked = gui.i_selectgroupsubset(thisc, clabel, FigureHandle);
+            [picked, levels] = gui.i_selectgroupsubset(thisc, clabel, FigureHandle);
             if isempty(picked) || ~any(picked), return; end
             sce.selectcells(picked);
             thisc = thisc(picked);
@@ -133,7 +134,7 @@ end
 labelx = scorenames';
 if n >= 3
     % The radar plot's toolbar saves the score matrix.
-    gui.i_spiderplot(Y, thisc, labelx, sce, FigureHandle);
+    gui.i_spiderplot(Y, thisc, labelx, sce, FigureHandle, levels);
     return;
 end
 

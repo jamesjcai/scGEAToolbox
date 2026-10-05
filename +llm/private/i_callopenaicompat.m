@@ -8,10 +8,10 @@ function [done, res] = i_callopenaicompat(prompt, model, keyVars, baseVar, defau
 %   apart from the variable names (the TAMU copy also printed the reply
 %   twice). KEYVARS are environment variables tried in order for the API
 %   key; BASEVAR names the base-URL variable, DEFAULTBASE is used when it is
-%   unset ("" for the OpenAI default endpoint). The env file named by the
-%   scgeatoolbox 'llapikeyenvfile' preference is loaded first when there is
-%   one; the copies called GETPREF unconditionally and threw when it was
-%   unset, instead of trying the environment as it stood.
+%   unset ("" for the OpenAI default endpoint). The key is looked up by
+%   llm.i_getapikey (environment, MATLAB vault, then the env file named by
+%   the 'llapikeyenvfile' preference); the base URL in the environment, then
+%   the env file.
 %
 %   done is true on a reply; on failure res is [] and the reason is printed
 %   as "Error in chat completion: ..." (llm.i_askllm passes that on).
@@ -23,26 +23,22 @@ if isempty(which('openAIChat'))
     error('Needs the Add-On of Large Language Models (LLMs) with MATLAB');
 end
 
-if ispref('scgeatoolbox', 'llapikeyenvfile')
-    apikeyfile = getpref('scgeatoolbox', 'llapikeyenvfile');
-    if ~isempty(apikeyfile) && isfile(apikeyfile)
-        loadenv(apikeyfile, "FileType", "env");
-    end
-end
-
-apikey = "";
-for v = string(keyVars)
-    apikey = string(getenv(v));
-    if strlength(apikey) > 0, break; end
-end
+fileValues = llm.i_readkeyfile();
+apikey = string(llm.i_getapikey(keyVars, fileValues));
 if strlength(apikey) == 0
-    fprintf('Error in chat completion: %s is not set.\n', strjoin(string(keyVars), " or "));
+    fprintf(['Error in chat completion: %s is not set. Store it with ' ...
+        'llm.i_storeapikey("%s") or add it to llm_api_key.env.\n'], ...
+        strjoin(string(keyVars), " or "), string(keyVars(1)));
     return;
 end
 
 apibase = "";
-if strlength(string(baseVar)) > 0
+baseVar = string(baseVar);
+if strlength(baseVar) > 0
     apibase = string(getenv(baseVar));
+    if strlength(apibase) == 0 && isConfigured(fileValues) && isKey(fileValues, baseVar)
+        apibase = fileValues(baseVar);
+    end
 end
 if strlength(apibase) == 0
     apibase = string(defaultBase);

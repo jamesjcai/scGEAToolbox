@@ -98,8 +98,10 @@ gui.myGuidata(FigureHandle, sce, src);
 % Visualize a chosen pattern on the current embedding.
 patternToShow = gui.i_inputnumk(1, 1, size(P, 2), ...
     'Color cells by which pattern?', FigureHandle);
+returnfig = FigureHandle;
 if ~isempty(patternToShow)
     hx = gui.myFigure(FigureHandle);
+    returnfig = hx.FigHandle;
     gui.i_gscatter3(sce.s, P(:, patternToShow), 1, 1, hx.AxHandle);
     colorbar(hx.AxHandle);
     title(hx.AxHandle, sprintf('CoGAPS Pattern %d', patternToShow));
@@ -113,7 +115,7 @@ if ~(ismcc || isdeployed)
         'Save PatternMarker table to variable named:'};
     vars = {'CoGAPS_A', 'CoGAPS_P', 'CoGAPS_PatternMarkers'};
     values = {A, P, Tmarkers};
-    export2wsdlg(labels, vars, values);
+    gui.i_export2wsdlg(returnfig, labels, vars, values);
 else
     gui.i_exporttable(Tmarkers, false, 'CoGAPS_PatternMarkers', ...
         [], [], [], FigureHandle);

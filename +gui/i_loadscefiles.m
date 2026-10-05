@@ -25,8 +25,16 @@ fw = gui.myWaitbar(parentfig);
 try
     for k = 1:numel(fnames)
         scefile = fullfile(pathname, fnames{k});
+        % LOAD reports no progress, so the bar can only count files already
+        % read. With one file that count says nothing, and no fraction
+        % leaves the bar spinning.
+        if isscalar(fnames)
+            frac = [];
+        else
+            frac = (k - 1)/numel(fnames);
+        end
         gui.myWaitbar(parentfig, fw, false, '', ...
-            sprintf('Loading %s...', fnames{k}), k/numel(fnames));
+            sprintf('Loading %s...', fnames{k}), frac);
         info = whos('-file', scefile);
         scevars = {info(strcmp({info.class}, 'SingleCellExperiment')).name};
         if ismember('sce', scevars)

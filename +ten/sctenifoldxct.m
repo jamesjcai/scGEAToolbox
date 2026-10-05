@@ -56,18 +56,18 @@ function [T, grns] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, vara
 %     'grn2'     - same, for CELLTYPE2.
 %                  Passing either skips that side's pcrnet call - the
 %                  expensive step at cell counts in the tens of thousands -
-%                  but the matrix still goes through TEN.I_XCTGRN's scale/
+%                  but the matrix still goes through TEN.I_PCNET's scale/
 %                  filter/symmetrize so cfg.mu and cfg.grnoffset stay
 %                  meaningful. A network built by a different method (a
 %                  different ncomp, a bootstrapped/denoised one, ...) is a
 %                  different quantity than the one net.pcrnet(X,3) would have
 %                  built here, not a faster way to get the same answer - see
-%                  TEN.I_XCTGRN.
+%                  TEN.I_PCNET.
 %     'grn1_processed', 'grn2_processed' - true if the matching grn1/grn2 is
 %                  itself a grns.A_s/A_t this function previously returned
 %                  (see the grns output below) - skips scale/filter/symmetrize
 %                  a second time, which is NOT a no-op for the q=0.75 filter
-%                  (default false; see TEN.I_XCTGRN's 'processed' option).
+%                  (default false; see TEN.I_PCNET's 'processed' option).
 %
 %   Discovery-mode Name-Value pairs:
 %     'candidates' - "database" (default) restricts the output to L-R
@@ -98,7 +98,7 @@ function [T, grns] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, vara
 %     grns - requested by asking for a second output; struct with fields
 %            A_s, A_t (the ng-by-ng adjacency actually used for CELLTYPE1/
 %            CELLTYPE2 - freshly built, or grn1/grn2 passed through TEN.
-%            I_XCTGRN's scale/filter/symmetrize either way) and genes. One
+%            I_PCNET's scale/filter/symmetrize either way) and genes. One
 %            pair regardless of twosided - both directions align the same
 %            two networks, just swapped - so there is nothing to return
 %            twice. Building it costs nothing extra: A_s/A_t already exist
@@ -108,8 +108,8 @@ function [T, grns] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, vara
 %            without rebuilding it.
 %
 %   Algorithm:
-%     Builds partial-correlation GRNs for each cell type via net.pcrnet, then
-%     performs spectral manifold alignment via graph Laplacian eigenvectors on
+%     Builds a PCNet GRN (principal-component regression) for each cell type
+%     on log-normalized expression via ten.i_pcnet, then performs spectral manifold alignment via graph Laplacian eigenvectors on
 %     the combined [GRN_source, W_LR; W_LR', GRN_target] weight matrix.
 %     Ligand-receptor pairs from the built-in database act as correspondences
 %     that pull ligand and receptor gene embeddings together.  Significance is

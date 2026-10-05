@@ -1,6 +1,7 @@
-function [score] = sc_cellscore(X, genelist, tgsPos, tgsNeg, methodid)
+function [score] = sc_cellscore(X, genelist, tgsPos, tgsNeg, methodid, options)
 %SC_CELLSCORE  Cell-level gene signature scoring.
 %  score = SC_CELLSCORE(X, genelist, tgsPos, tgsNeg, methodid)
+%  score = SC_CELLSCORE(..., ReferenceX=Xref, ReferenceGenes=gref)
 %
 %  X         : G x C expression matrix (genes x cells).
 %  genelist  : G x 1 string/cell array of gene names.
@@ -12,11 +13,33 @@ function [score] = sc_cellscore(X, genelist, tgsPos, tgsNeg, methodid)
 %              2 = AddModuleScore/Seurat (default)
 %              3 = AUCell (AUC recovery curve)
 %
+%  Name-value arguments (method 2 only):
+%  ReferenceX     : raw count matrix (genes x cells) of a reference sample,
+%                   such as untreated control cells. Gene means for the
+%                   expression bins, and so the control genes, are taken
+%                   from it instead of from X. Use it when X is dominated by
+%                   one state -- a drug-arrested population, or a subset
+%                   selected by an earlier score -- which otherwise raises
+%                   or lowers its own baseline and shifts every score.
+%  ReferenceGenes : gene names for the rows of ReferenceX. Genes are matched
+%                   to GENELIST ignoring case; genes missing from the
+%                   reference are left out of both the markers and the
+%                   control pool.
+%
 % see also: PKG.E_CELLSCORES, SC_CELLCYCLESCORE
 
-if nargin < 5 || isempty(methodid), methodid = 2; end
-if nargin < 4, tgsNeg = []; end
-if nargin < 3 || isempty(tgsPos)
+arguments
+    X
+    genelist
+    tgsPos = []
+    tgsNeg = []
+    methodid = 2
+    options.ReferenceX = []
+    options.ReferenceGenes = []
+end
+
+if isempty(methodid), methodid = 2; end
+if isempty(tgsPos)
     error('USAGE: >>[score]=sc_cellscore(X,genelist,tgsPos);');
 end
 
@@ -39,11 +62,22 @@ if ~isempty(tgsNeg) && (methodid == 1 || methodid == 3)
         'them.'], methodid, numel(string(tgsNeg)));
 end
 
+hasReference = ~isempty(options.ReferenceX);
+if hasReference && methodid ~= 2
+    warning('sc_cellscore:referenceIgnored', ...
+        ['Method %d scores each cell on its own ranks, so it has no ', ...
+        'baseline to take from ReferenceX. The reference is ignored.'], methodid);
+end
+refAvg = [];
+if hasReference && methodid == 2
+    refAvg = i_referencemeans(options.ReferenceX, options.ReferenceGenes, genelist);
+end
+
 switch methodid
     case 1
         score = i_ucell(X, genelist, tgsPos);
     case 2
-        score = i_admdl(X, genelist, tgsPos, tgsNeg);
+        score = i_admdl(X, genelist, tgsPos, tgsNeg, refAvg);
     case 3
         score = i_aucell(X, genelist, tgsPos);
     otherwise
@@ -82,13 +116,18 @@ end
 
 
 %% ---- Method 2: AddModuleScore/Seurat ----
-function [score] = i_admdl(X, genelist, tgsPos, tgsNeg, nbin, ctrl)
+function [score] = i_admdl(X, genelist, tgsPos, tgsNeg, refAvg, nbin, ctrl)
 % AddModuleScore - Seurat-style scoring
 % ref: https://github.com/satijalab/seurat/blob/master/R/utilities.R
 % ref: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8271111/
+%
+% REFAVG, when not empty, holds a reference sample's mean log expression for
+% each gene of GENELIST (NaN where the reference lacks the gene). The bins,
+% and so the control genes, are built from it instead of from X.
 
-if nargin < 6, ctrl = 100; end
-if nargin < 5, nbin = 24; end
+if nargin < 7, ctrl = 100; end
+if nargin < 6, nbin = 24; end
+if nargin < 5, refAvg = []; end
 if nargin < 4, tgsNeg = []; end
 
 % Kept sparse: SC_NORM and LOG1P both preserve sparsity, and only the rows
@@ -98,26 +137,37 @@ if nargin < 4, tgsNeg = []; end
 X = sc_norm(X);
 X = log1p(X);
 
-[score] = i_admdl_calculate(X, genelist, tgsPos, 1, nbin, ctrl);
+if isempty(refAvg)
+    dataAvg = full(mean(X, 2));
+else
+    dataAvg = refAvg;
+end
+
+[score] = i_admdl_calculate(X, genelist, tgsPos, 1, nbin, ctrl, dataAvg);
 % Apply the negative term only when at least one of its genes is present in
 % the data. A tgsNeg whose genes are all absent is an ordinary situation - a
 % masking enzyme simply not expressed in this tissue - and must leave the
 % positive score untouched. Without this guard the control-gene pool comes
-% back empty and MATCHES errors on it.
+% back empty and MATCHES errors on it. With a reference, a gene the
+% reference lacks counts as absent.
 if ~isempty(tgsNeg) && any(strlength(string(tgsNeg)) > 0) && ...
-        any(matches(genelist, tgsNeg, 'IgnoreCase', true))
-    [s] = i_admdl_calculate(X, genelist, tgsNeg, -1, nbin, ctrl);
+        any(matches(genelist(~isnan(dataAvg)), tgsNeg, 'IgnoreCase', true))
+    [s] = i_admdl_calculate(X, genelist, tgsNeg, -1, nbin, ctrl, dataAvg);
     score = score + s;
 end
 end
 
-function [score] = i_admdl_calculate(X, genelist, tgs, directtag, nbin, ctrl)
+function [score] = i_admdl_calculate(X, genelist, tgs, directtag, nbin, ctrl, dataAvg)
+% DATAAVG is the mean expression of each gene of GENELIST that the bins are
+% built from. Genes where it is NaN -- absent from a reference -- are left
+% out of the bins, and so out of both the markers and the controls.
 if nargin < 6, ctrl = 100; end
 if nargin < 5, nbin = 24; end
 if nargin < 4, directtag = 1; end
 
-cluster_length = size(X, 1);
-data_avg = full(mean(X, 2));
+usable = find(~isnan(dataAvg));
+cluster_length = numel(usable);
+data_avg = dataAvg(usable);
 
 % Break exact ties (e.g. all-zero genes) before binning, matching Seurat's
 % addition of rnorm(n)/1e30 to data.avg prior to cut_number.
@@ -125,6 +175,9 @@ data_avg = data_avg + randn(size(data_avg)) / 1e30;
 
 [~, I] = sort(data_avg);
 data_avg = data_avg(I);
+% I indexes rows of X from here on, so the X(I(mask), :) reads below still
+% pick the right genes after the unusable ones are dropped.
+I = usable(I);
 gsorted = genelist(I);
 % No XSORTED = X(I, :): a permuted copy of the whole matrix, when only a few
 % hundred rows are read. Rows are picked below as I(mask), which is the
@@ -183,6 +236,35 @@ else
 end
 end
 
+
+function refAvg = i_referencemeans(refX, refGenes, genelist)
+% Mean log expression of each gene of GENELIST in the reference, NaN where
+% the reference lacks the gene. Normalised the way I_ADMDL normalises X, so
+% the two are on the same scale.
+refGenes = string(refGenes(:));
+if size(refX, 1) ~= numel(refGenes)
+    error('sc_cellscore:referenceSize', ...
+        ['ReferenceX has %d rows but ReferenceGenes has %d names. ', ...
+        'Pass one gene name per row of ReferenceX.'], size(refX, 1), numel(refGenes));
+end
+refX = log1p(sc_norm(refX));
+refMean = full(mean(refX, 2));
+% Exact names first, so two genes that differ only in case keep their own
+% means; ignoring case only for the rest (a human reference for mouse data).
+genelist = string(genelist(:));
+[found, loc] = ismember(genelist, refGenes);
+[foundCI, locCI] = ismember(upper(genelist(~found)), upper(refGenes));
+loc(~found) = locCI;
+found(~found) = foundCI;
+if ~any(found)
+    error('sc_cellscore:referenceNoGenes', ...
+        'None of the genes in GENELIST are in ReferenceGenes. Check that both use the same gene symbols.');
+end
+% "like" keeps a single-precision reference single: the bins sort these
+% means, and promoting them to double reorders near-ties.
+refAvg = NaN(numel(genelist), 1, "like", refMean);
+refAvg(found) = refMean(loc(found));
+end
 
 %% ---- Method 3: AUCell (AUC recovery curve) ----
 function [score] = i_aucell(X, genelist, tgsPos, aucMaxRank)

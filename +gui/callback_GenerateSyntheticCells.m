@@ -52,7 +52,15 @@ try
 
     sub_sce.setCellAttribute(tag, true(sub_sce.NumCells, 1));
 
+    % Each synthetic cell keeps the batch of the cell it came from.
+    % SC_MERGESCES relabels a single-batch dataset 1/2 (original vs
+    % synthetic), which overwrote the original batch IDs; IS_SYNTHETIC
+    % already says which cells are new.
+    batchids = [sce.c_batch_id(:); sub_sce.c_batch_id(:)];
     sce = sc_mergesces({sce, sub_sce}, "intersect", true, true);
+    if numel(batchids) == sce.NumCells
+        sce.c_batch_id = batchids;
+    end
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
@@ -63,13 +71,16 @@ catch ME
 end
 gui.myWaitbar(FigureHandle, fw);
 
+% Only the synthetic cells are nudged off the cells they copy. This loop
+% used to add noise to every row of every stored embedding, so the real
+% cells moved too.
 f = fieldnames(sce.struct_cell_embeddings);
-
+newrows = (oldcn + 1):sce.NumCells;
 for i = 1:numel(f)
-    if ~isempty(sce.struct_cell_embeddings.(f{i}))
-        s = sce.struct_cell_embeddings.(f{i});
-        r = trnd(100, size(s)) * 0.75;
-        sce.struct_cell_embeddings.(f{i}) = s + r;
+    s = sce.struct_cell_embeddings.(f{i});
+    if ~isempty(s) && size(s, 1) == sce.NumCells && ~isempty(newrows)
+        s(newrows, :) = s(newrows, :) + trnd(100, numel(newrows), size(s, 2)) * 0.75;
+        sce.struct_cell_embeddings.(f{i}) = s;
     end
 end
 

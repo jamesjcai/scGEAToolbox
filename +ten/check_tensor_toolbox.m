@@ -15,7 +15,7 @@ end
 
 if exist(['@tensor', filesep, 'tensor.m'], 'file') ~= 2
     error('scgeatoolbox:tensortoolbox:notfound', ...
-        'TENSOR TOOLBOX is not installed. Use the scTenifold menu to install it.');
+        'TENSOR TOOLBOX is not installed. Install it from Setup > Install Tensor Toolbox.');
 end
 
 end

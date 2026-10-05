@@ -4,6 +4,12 @@ function callback_MultiGroupingView(src, ~)
 [FigureHandle, sce] = gui.gui_getfigsce(src);
 answer = gui.myQuestdlg(FigureHandle, 'Select type of multi-view:','', ...
 {'Multigrouping','Multiembedding'},'Multigrouping');
+if ~ismember(answer, {'Multigrouping', 'Multiembedding'}), return; end
+
+% Both views only read SCE, so a copy holding just the picked cells is all
+% either needs to show a subset.
+[sce, cancelled] = in_pickcells(sce, FigureHandle);
+if cancelled, return; end
 
 gui.i_bringtofront(FigureHandle);
 switch answer
@@ -58,5 +64,29 @@ switch answer
         return;
 end
 
+end
 
+function [sce, cancelled] = in_pickcells(sce, FigureHandle)
+% Opt-in, as the views have no grouping step of their own to hang it on;
+% the group chooser is the one the Dotplot, Heatmap and violin plots use -
+% see gui.i_selectgroupsubset.
+cancelled = true;
+answer = gui.myQuestdlg(FigureHandle, ...
+    "Show all cells, or only cells in selected groups?", "", ...
+    {'All Cells', 'Selected Groups', 'Cancel'}, 'All Cells');
+switch answer
+    case 'All Cells'
+        % Keep every cell.
+    case 'Selected Groups'
+        [thisc, clabel] = gui.i_selectnclass(sce, false, [], [], FigureHandle);
+        if isempty(thisc), return; end
+        picked = gui.i_selectgroupsubset(thisc, clabel, FigureHandle);
+        if isempty(picked), return; end
+        if ~all(picked)
+            sce = copy(sce).selectcells(picked);
+        end
+    otherwise
+        return;
+end
+cancelled = false;
 end

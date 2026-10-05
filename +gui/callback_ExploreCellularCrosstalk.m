@@ -2,17 +2,16 @@ function callback_ExploreCellularCrosstalk(src, ~)
 
 [FigureHandle, sce_ori] = gui.gui_getfigsce(src);
 sce = copy(sce_ori);
+% The reference dialog says the method is an unpublished preprint; a second
+% Continue? dialog used to repeat that.
 if ~gui.gui_showrefinfo('talklr [DOI:10.1101/2020.02.01.930602]', FigureHandle), return; end
-
-answer = gui.myQuestdlg(FigureHandle, 'This function is based on an unpublished method [DOI:10.1101/2020.02.01.930602]. Continue?');
-if ~strcmp(answer, 'Yes'), return; end
 
         if isempty(sce.c_cell_type_tx) || numel(unique(sce.c_cell_type_tx)) < 2
             if ~isempty(sce.c_cluster_id) && numel(unique(sce.c_cluster_id)) > 1
                 answer = gui.myQuestdlg(FigureHandle, sprintf('Cell type (C_CELL_TYPE_TX) is undefined.\nWould you like to use cluster id (C_CLUSTER_ID) to define cell groups?'));
                 switch answer
                     case 'Yes'
-                        sce.c_cell_type_tx = strcat('Goup', string(sce.c_cluster_id));
+                        sce.c_cell_type_tx = strcat('Group', string(sce.c_cluster_id));
                     otherwise
                         return;
                 end
@@ -30,10 +29,6 @@ if ~strcmp(answer, 'Yes'), return; end
             return;
         end
         selected = ismember(c, idx);
-
-        pw = fileparts(mfilename('fullpath'));
-        dbfile = fullfile(pw, '..', 'assets', 'Ligand_Receptor', 'Ligand_Receptor.mat');
-        load(dbfile, 'ligand', 'receptor', 'T');
 
         fw = gui.myWaitbar(FigureHandle);
         sce = sce.selectcells(selected); % OK
@@ -55,8 +50,7 @@ end
         values = {OUT};
 
         if ~(ismcc || isdeployed)
-            [f, ft] = export2wsdlg(labels, vars, values);
-            waitfor(f);
+            ft = gui.i_export2wsdlg(FigureHandle, labels, vars, values);
             if ft
                 disp('Run gui.i_crosstalkgraph(OUT,k) to plot crosstalk graph for ligand-receptor pair k.')
             end

@@ -4,21 +4,38 @@ if nargin<1, src = []; end
 
 [parentfig, ~] = gui.gui_getfigsce(src);
 done = false;
+% Keys come from the environment, the MATLAB vault or an llm_api_key.env
+% file (llm.i_getapikey). The env file is optional: choosing the vault
+% stores an empty preference, and each provider below asks for its key,
+% through MATLAB's masked SETSECRET dialog, the first time it is missing.
 preftagname = 'llapikeyenvfile';
+apikeyfile = "";
 if ~ispref('scgeatoolbox', preftagname)
-    if ~strcmp('Yes', gui.myQuestdlg(parentfig, 'Locate LLM API key env file?')), return; end
-    [file, path] = uigetfile('llm_api_key.env', 'Select File');
-    if isequal(file, 0), return; end
-    apikeyfile = fullfile(path, file);
-    if isfile(apikeyfile)
-        setpref('scgeatoolbox', preftagname, apikeyfile);
-        if ~strcmp('Yes', gui.myQuestdlg(parentfig, "LLM API key env file is located successfully. Continue?"))
+    answer0 = gui.myQuestdlg(parentfig, ...
+        ['Keep LLM API keys encrypted in the MATLAB vault, ' ...
+        'or read them from an llm_api_key.env file?'], ...
+        'LLM API Keys', {'MATLAB vault', 'Env file...', 'Cancel'}, 'MATLAB vault');
+    switch answer0
+        case 'MATLAB vault'
+            setpref('scgeatoolbox', preftagname, '');
+        case 'Env file...'
+            [file, path] = uigetfile('llm_api_key.env', 'Select File');
+            if isequal(file, 0), return; end
+            apikeyfile = fullfile(path, file);
+            if isfile(apikeyfile)
+                setpref('scgeatoolbox', preftagname, apikeyfile);
+                if ~strcmp('Yes', gui.myQuestdlg(parentfig, "LLM API key env file is located successfully. Continue?"))
+                    return;
+                end
+            else
+                gui.myHelpdlg(parentfig, "Invalid file.")
+                return;
+            end
+        otherwise
             return;
-        end
-    else
-        gui.myHelpdlg(parentfig, "Invalid file.")
-        return;
     end
+elseif isempty(getpref('scgeatoolbox', preftagname))
+    % The vault was chosen before: no file to confirm.
 else
     apikeyfile = getpref('scgeatoolbox', preftagname);
     answer1 = gui.myQuestdlg(parentfig, sprintf('%s', apikeyfile), ...
@@ -26,8 +43,6 @@ else
         {'Use this', 'Use another', '🌐Learn api_key file...'}, 'Use this');
     if isempty(answer1), return; end
     switch answer1
-        case 'Cancel'
-            return;
         case 'Use another'
             [file, path] = uigetfile('llm_api_key.env', 'Select API Key File');
             if isequal(file, 0), return; end
@@ -39,6 +54,7 @@ else
             return;
     end
 end
+fileValues = llm.i_readkeyfile(apikeyfile);
 
 preftagname = 'llmodelprovider';
 if ispref('scgeatoolbox', preftagname)
@@ -50,9 +66,14 @@ if ispref('scgeatoolbox', preftagname)
     switch answer1
         case 'Use this'
             fw = gui.myWaitbar(parentfig);
-            [done] = llm.i_checkllm(apikeyfile);
+            [done, tested] = llm.i_checkllm(apikeyfile);
             gui.myWaitbar(parentfig, fw);
-            if done
+            if done && ~tested
+                % Said so rather than reported as a success: the check has
+                % no test call for every provider.
+                gui.myHelpdlg(parentfig, "LLM provider and model are " + ...
+                    "kept, but this provider cannot be tested from here.");
+            elseif done
                 gui.myHelpdlg(parentfig, "LLM provider and" + ...
                  " model are set successfully.");
             else
@@ -67,17 +88,26 @@ if ispref('scgeatoolbox', preftagname)
     end
 end
 
-listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', 'Anthropic', ...
-             'NVIDIA', 'DeepSeek', 'xAI', 'Mistral', 'Cohere'};
+% Only providers some feature can call. Anthropic and Cohere used to be
+% offered too, but neither llm.i_askllm (the LLM reports) nor GEOcellar has
+% a client for them, so choosing one broke both. The two features support
+% different sets, and each entry says which it works with.
+listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', ...
+             'NVIDIA', 'DeepSeek', 'xAI', 'Mistral'};
+listShown = {'Ollama', 'Gemini (LLM reports only, not GEOcellar)', ...
+             'TAMUAIChat', 'OpenAI', 'NVIDIA', ...
+             'DeepSeek (GEOcellar only, not LLM reports)', ...
+             'xAI (GEOcellar only, not LLM reports)', ...
+             'Mistral (GEOcellar only, not LLM reports)'};
 
 if gui.i_isuifig(parentfig)
-    [selectedIndex, ok] = gui.myListdlg(parentfig, listItems, ...
-            'Select a LLM provider:', listItems(1), false);
+    [selectedIndex, ok] = gui.myListdlg(parentfig, listShown, ...
+            'Select a LLM provider:', listShown(1), false);
 else
     [selectedIndex, ok] = listdlg('PromptString', ...
                           'Select a LLM provider:', ...
                           'SelectionMode', 'single', ...
-                          'ListString', listItems, ...
+                          'ListString', listShown, ...
                           'ListSize', [220 300], ...
                           'InitialValue', 1);
 end
@@ -141,17 +171,16 @@ switch selectedProvider
             return;
         end
     case 'Gemini'
-        if ~exist(apikeyfile,"file")
-            gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
-            return;   % LOADENV on a missing file threw after the dialog
-        end
-        loadenv(apikeyfile,"FileType","env");
-        if ~isempty(getenv("GEMINI_API_KEY"))
+        apiKey = i_providerkey(parentfig, "GEMINI_API_KEY", fileValues);
+        if ~isempty(apiKey)
             % The key in a header, not in the URL, where it is written to
             % proxy and server access logs.
+            % Gemini answers a bad key with 400 API_KEY_INVALID, not 401.
             url = 'https://generativelanguage.googleapis.com/v1beta/models';
-            a = webread(url, weboptions('HeaderFields', ...
-                {'x-goog-api-key', getenv("GEMINI_API_KEY")}, 'Timeout', 30));
+            [a, ok] = i_fetchmodels(parentfig, url, ...
+                @(k) weboptions('HeaderFields', {'x-goog-api-key', k}, 'Timeout', 30), ...
+                "GEMINI_API_KEY", apiKey, fileValues, "Gemini", [400 401 403]);
+            if ~ok, return; end
             model_names = cellstr(i_field2str(a.models, 'name'));
             model_names = extractAfter(model_names, 7);
             [y, idx]=ismember('gemini-2.0-flash', model_names);
@@ -186,31 +215,16 @@ switch selectedProvider
             end
         end
     case 'NVIDIA'
-        if ~exist(apikeyfile,"file")
-            gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
-            return;   % LOADENV on a missing file threw after the dialog
-        end
-        loadenv(apikeyfile,"FileType","env");
-        if ~isempty(getenv("NVIDIA_API_KEY"))
-            OPEN_WEBUI_API_ENDPOINT = getenv("NVIDIA_API_BASE");
+        apiKey = i_providerkey(parentfig, "NVIDIA_API_KEY", fileValues);
+        if ~isempty(apiKey)
+            OPEN_WEBUI_API_ENDPOINT = i_setting("NVIDIA_API_BASE", ...
+                "https://integrate.api.nvidia.com/v1", fileValues);
             models_url = sprintf('%s/models', OPEN_WEBUI_API_ENDPOINT);
 
-            options = weboptions('HeaderFields', {'Authorization', ...
-                sprintf('Bearer %s', getenv("NVIDIA_API_KEY"))}, ...
-                'ContentType', 'json', 'Timeout', 50);
-
-            fw = gui.myWaitbar(parentfig);
-
-            try
-                models_response = webread(models_url, options);
-                model_names = string({models_response.data.id});
-            catch ME
-                gui.myWaitbar(parentfig, fw, true);
-                gui.myErrordlg(parentfig, ME.message, 'Error fetching models');
-                return;
-            end
-
-            gui.myWaitbar(parentfig, fw);
+            [models_response, ok] = i_fetchmodels(parentfig, models_url, ...
+                @(k) i_beareroptions(k, 50), "NVIDIA_API_KEY", apiKey, fileValues, "NVIDIA");
+            if ~ok, return; end
+            model_names = i_field2str(models_response.data, 'id');
 
             [y, idx]=ismember('minimaxai/minimax-m2.5', model_names);
             if y
@@ -244,31 +258,15 @@ switch selectedProvider
             end
         end
     case 'TAMUAIChat'
-        if ~exist(apikeyfile,"file")
-            gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
-            return;   % LOADENV on a missing file threw after the dialog
-        end
-        loadenv(apikeyfile,"FileType","env");
-        if ~isempty(getenv("TAMUAI_API_KEY"))
+        apiKey = i_providerkey(parentfig, "TAMUAI_API_KEY", fileValues);
+        if ~isempty(apiKey)
             OPEN_WEBUI_API_ENDPOINT = "https://chat-api.tamu.ai";
             models_url = sprintf('%s/api/models', OPEN_WEBUI_API_ENDPOINT);
 
-            options = weboptions('HeaderFields', {'Authorization', ...
-                sprintf('Bearer %s', getenv("TAMUAI_API_KEY"))}, ...
-                'ContentType', 'json', 'Timeout', 50);
-
-            fw = gui.myWaitbar(parentfig);
-
-            try
-                models_response = webread(models_url, options);
-                model_names = i_field2str(models_response.data, 'id');
-            catch ME
-                gui.myWaitbar(parentfig, fw, true);
-                gui.myErrordlg(parentfig, ME.message, 'Error fetching models');
-                return;
-            end
-
-            gui.myWaitbar(parentfig, fw);
+            [models_response, ok] = i_fetchmodels(parentfig, models_url, ...
+                @(k) i_beareroptions(k, 50), "TAMUAI_API_KEY", apiKey, fileValues, "TAMU AI");
+            if ~ok, return; end
+            model_names = i_field2str(models_response.data, 'id');
 
             [y, idx]=ismember('protected.gpt-4.1', model_names);  % xxx
             if y
@@ -302,33 +300,20 @@ switch selectedProvider
             end
         end
     case 'OpenAI'
-        if ~exist(apikeyfile,"file")
-            gui.myErrordlg(parentfig,"llm_api_key.env is not a valid file.");
-            return;   % LOADENV on a missing file threw after the dialog
-        end
-        loadenv(apikeyfile,"FileType","env");
         % OPENAI_API_KEY, the name the pipelines and .env.example use, or
         % the OpenAI_API_KEY this once read alone: environment names are
         % case-sensitive on macOS and Linux, so there the conventional name
         % was never found and choosing OpenAI silently did nothing.
-        openaiKey = getenv("OPENAI_API_KEY");
-        if isempty(openaiKey), openaiKey = getenv("OpenAI_API_KEY"); end
+        openaiKey = i_providerkey(parentfig, ["OPENAI_API_KEY", "OpenAI_API_KEY"], fileValues);
         if ~isempty(openaiKey)
             OPEN_WEBUI_API_ENDPOINT = "https://api.openai.com/v1";
             models_url = sprintf('%s/models', OPEN_WEBUI_API_ENDPOINT);
 
-            options = weboptions('HeaderFields', {'Authorization', ...
-                sprintf('Bearer %s', openaiKey)}, ...
-                'ContentType', 'json',...
-                'Timeout', 30);
-
-            try
-                models_response = webread(models_url, options);
-                model_names = i_field2str(models_response.data, 'id');
-             catch ME
-                fprintf('Error fetching models: %s\n', ME.message);
-                return;
-            end
+            [models_response, ok] = i_fetchmodels(parentfig, models_url, ...
+                @(k) i_beareroptions(k, 30), ["OPENAI_API_KEY", "OpenAI_API_KEY"], ...
+                openaiKey, fileValues, "OpenAI");
+            if ~ok, return; end
+            model_names = i_field2str(models_response.data, 'id');
 
             [y, idx]=ismember('gpt-4.1', model_names);
             if y
@@ -362,113 +347,16 @@ switch selectedProvider
             end
         end
 
-    case 'Anthropic'
-        % Anthropic Claude models via the official Messages API
-        % Requires ANTHROPIC_API_KEY to be set in the env file.
-        if ~exist(apikeyfile, "file")
-            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
-            return;
-        end
-        loadenv(apikeyfile, "FileType", "env");
-        api_key = getenv("ANTHROPIC_API_KEY");
-        if isempty(api_key)
-            gui.myWarndlg(parentfig, ...
-                "ANTHROPIC_API_KEY not found in the env file. " + ...
-                "Please add it and try again.");
-            return;
-        end
-
-        % Fetch available models from the Anthropic API
-        models_url = 'https://api.anthropic.com/v1/models';
-        options = weboptions( ...
-            'HeaderFields', { ...
-                'x-api-key',         api_key; ...
-                'anthropic-version', '2023-06-01'}, ...
-            'ContentType', 'json', ...
-            'Timeout', 30);
-
-        fw = gui.myWaitbar(parentfig);
-        try
-            models_response = webread(models_url, options);
-            % Response shape: struct with field 'data', each element has 'id'
-            model_names = i_field2str(models_response.data, 'id');
-        catch ME
-            gui.myWaitbar(parentfig, fw, true);
-            gui.myErrordlg(parentfig, ME.message, 'Error fetching Anthropic models');
-            return;
-        end
-        gui.myWaitbar(parentfig, fw);
-
-        % Pre-select claude-sonnet-4-6 as the recommended default if present
-        preferred_model = 'claude-sonnet-4-6';
-        [y, idx] = ismember(preferred_model, model_names);
-        if ~y
-            % Fall back to first model
-            idx = 1;
-            y   = ~isempty(model_names);
-        end
-
-        if y
-            if gui.i_isuifig(parentfig)
-                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a Claude model:', model_names(idx), false);
-            else
-                [idx, ok2] = listdlg('PromptString', 'Select a Claude model:', ...
-                              'SelectionMode', 'single', ...
-                              'ListString', model_names, ...
-                              'ListSize', [300 300], ...
-                              'InitialValue', idx);
-            end
-        else
-            if gui.i_isuifig(parentfig)
-                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a Claude model:', [], false);
-            else
-                [idx, ok2] = listdlg('PromptString', 'Select a Claude model:', ...
-                              'SelectionMode', 'single', ...
-                              'ListString', model_names, ...
-                              'ListSize', [300 300]);
-            end
-        end
-
-        if ok2
-            selectedModel = model_names{idx};
-            setpref('scgeatoolbox', preftagname, ...
-                selectedProvider + ":" + selectedModel);
-            done = true;
-        else
-            return;
-        end
-
     case 'DeepSeek'
         % DeepSeek — OpenAI-compatible API
-        % Requires DEEPSEEK_API_KEY in the env file.
-        if ~exist(apikeyfile, "file")
-            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
-            return;
-        end
-        loadenv(apikeyfile, "FileType", "env");
-        api_key = getenv("DEEPSEEK_API_KEY");
-        if isempty(api_key)
-            gui.myWarndlg(parentfig, ...
-                "DEEPSEEK_API_KEY not found in the env file. " + ...
-                "Please add it and try again.");
-            return;
-        end
+        % Requires DEEPSEEK_API_KEY in the env file or the MATLAB vault.
+        api_key = i_providerkey(parentfig, "DEEPSEEK_API_KEY", fileValues);
+        if isempty(api_key), return; end
         models_url = 'https://api.deepseek.com/v1/models';
-        options = weboptions('HeaderFields', {'Authorization', ...
-            sprintf('Bearer %s', api_key)}, ...
-            'ContentType', 'json', 'Timeout', 30);
-        fw = gui.myWaitbar(parentfig);
-        try
-            models_response = webread(models_url, options);
-            model_names = i_field2str(models_response.data, 'id');
-        catch ME
-            gui.myWaitbar(parentfig, fw, true);
-            gui.myErrordlg(parentfig, ME.message, 'Error fetching DeepSeek models');
-            return;
-        end
-        gui.myWaitbar(parentfig, fw);
+        [models_response, ok] = i_fetchmodels(parentfig, models_url, ...
+            @(k) i_beareroptions(k, 30), "DEEPSEEK_API_KEY", api_key, fileValues, "DeepSeek");
+        if ~ok, return; end
+        model_names = i_field2str(models_response.data, 'id');
         preferred_model = 'deepseek-chat';
         [y, idx] = ismember(preferred_model, model_names);
         if ~y, idx = 1; y = ~isempty(model_names); end
@@ -500,33 +388,14 @@ switch selectedProvider
 
     case 'xAI'
         % xAI Grok — OpenAI-compatible API
-        % Requires XAI_API_KEY in the env file.
-        if ~exist(apikeyfile, "file")
-            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
-            return;
-        end
-        loadenv(apikeyfile, "FileType", "env");
-        api_key = getenv("XAI_API_KEY");
-        if isempty(api_key)
-            gui.myWarndlg(parentfig, ...
-                "XAI_API_KEY not found in the env file. " + ...
-                "Please add it and try again.");
-            return;
-        end
+        % Requires XAI_API_KEY in the env file or the MATLAB vault.
+        api_key = i_providerkey(parentfig, "XAI_API_KEY", fileValues);
+        if isempty(api_key), return; end
         models_url = 'https://api.x.ai/v1/models';
-        options = weboptions('HeaderFields', {'Authorization', ...
-            sprintf('Bearer %s', api_key)}, ...
-            'ContentType', 'json', 'Timeout', 30);
-        fw = gui.myWaitbar(parentfig);
-        try
-            models_response = webread(models_url, options);
-            model_names = i_field2str(models_response.data, 'id');
-        catch ME
-            gui.myWaitbar(parentfig, fw, true);
-            gui.myErrordlg(parentfig, ME.message, 'Error fetching xAI models');
-            return;
-        end
-        gui.myWaitbar(parentfig, fw);
+        [models_response, ok] = i_fetchmodels(parentfig, models_url, ...
+            @(k) i_beareroptions(k, 30), "XAI_API_KEY", api_key, fileValues, "xAI");
+        if ~ok, return; end
+        model_names = i_field2str(models_response.data, 'id');
         preferred_model = 'grok-3';
         [y, idx] = ismember(preferred_model, model_names);
         if ~y, idx = 1; y = ~isempty(model_names); end
@@ -558,40 +427,24 @@ switch selectedProvider
 
     case 'Mistral'
         % Mistral AI — OpenAI-compatible API
-        % Requires MISTRAL_API_KEY in the env file.
-        if ~exist(apikeyfile, "file")
-            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
-            return;
-        end
-        loadenv(apikeyfile, "FileType", "env");
-        api_key = getenv("MISTRAL_API_KEY");
-        if isempty(api_key)
-            gui.myWarndlg(parentfig, ...
-                "MISTRAL_API_KEY not found in the env file. " + ...
-                "Please add it and try again.");
-            return;
-        end
+        % Requires MISTRAL_API_KEY in the env file or the MATLAB vault.
+        api_key = i_providerkey(parentfig, "MISTRAL_API_KEY", fileValues);
+        if isempty(api_key), return; end
         models_url = 'https://api.mistral.ai/v1/models';
-        options = weboptions('HeaderFields', {'Authorization', ...
-            sprintf('Bearer %s', api_key)}, ...
-            'ContentType', 'json', 'Timeout', 30);
-        fw = gui.myWaitbar(parentfig);
-        try
-            models_response = webread(models_url, options);
-            model_names = i_field2str(models_response.data, 'id');
-            % Keep only chat-capable models (exclude embed/moderation models)
-            is_chat = cellfun(@(s) isfield(s,'capabilities') && ...
-                isfield(s.capabilities,'completion_chat') && ...
-                s.capabilities.completion_chat, models_response.data);
-            if any(is_chat)
-                model_names = model_names(is_chat);
-            end
-        catch ME
-            gui.myWaitbar(parentfig, fw, true);
-            gui.myErrordlg(parentfig, ME.message, 'Error fetching Mistral models');
-            return;
+        [models_response, ok] = i_fetchmodels(parentfig, models_url, ...
+            @(k) i_beareroptions(k, 30), "MISTRAL_API_KEY", api_key, fileValues, "Mistral");
+        if ~ok, return; end
+        model_names = i_field2str(models_response.data, 'id');
+        % Keep only chat-capable models (exclude embed/moderation models).
+        % NUM2CELL lets one CELLFUN cover both JSONDECODE shapes.
+        data = models_response.data;
+        if ~iscell(data), data = num2cell(data); end
+        is_chat = cellfun(@(s) isfield(s,'capabilities') && ...
+            isfield(s.capabilities,'completion_chat') && ...
+            isequal(s.capabilities.completion_chat, true), data);
+        if any(is_chat)
+            model_names = model_names(is_chat);
         end
-        gui.myWaitbar(parentfig, fw);
         preferred_model = 'mistral-large-latest';
         [y, idx] = ismember(preferred_model, model_names);
         if ~y, idx = 1; y = ~isempty(model_names); end
@@ -621,68 +474,6 @@ switch selectedProvider
             return;
         end
 
-    case 'Cohere'
-        % Cohere — native API (slightly different from OpenAI-compatible)
-        % Requires COHERE_API_KEY in the env file.
-        if ~exist(apikeyfile, "file")
-            gui.myErrordlg(parentfig, "llm_api_key.env is not a valid file.");
-            return;
-        end
-        loadenv(apikeyfile, "FileType", "env");
-        api_key = getenv("COHERE_API_KEY");
-        if isempty(api_key)
-            gui.myWarndlg(parentfig, ...
-                "COHERE_API_KEY not found in the env file. " + ...
-                "Please add it and try again.");
-            return;
-        end
-        % Use /v2/models?endpoint=chat to get only chat-capable models
-        models_url = 'https://api.cohere.com/v2/models?endpoint=chat&page_size=50';
-        options = weboptions('HeaderFields', { ...
-            'Authorization', sprintf('Bearer %s', api_key); ...
-            'X-Client-Name', 'scGEAToolbox'}, ...
-            'ContentType', 'json', 'Timeout', 30);
-        fw = gui.myWaitbar(parentfig);
-        try
-            models_response = webread(models_url, options);
-            % Cohere response: struct with field 'models', each has 'name'
-            model_names = string(cellfun(@(s) s.name, ...
-                models_response.models, 'UniformOutput', false));
-        catch ME
-            gui.myWaitbar(parentfig, fw, true);
-            gui.myErrordlg(parentfig, ME.message, 'Error fetching Cohere models');
-            return;
-        end
-        gui.myWaitbar(parentfig, fw);
-        preferred_model = 'command-r-plus';
-        [y, idx] = ismember(preferred_model, model_names);
-        if ~y, idx = 1; y = ~isempty(model_names); end
-        if y
-            if gui.i_isuifig(parentfig)
-                [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
-                        'Select a Cohere model:', model_names(idx), false);
-            else
-                [idx, ok2] = listdlg('PromptString', 'Select a Cohere model:', ...
-                              'SelectionMode', 'single', 'ListString', model_names, ...
-                              'ListSize', [300 300], 'InitialValue', idx);
-            end
-        else
-            if gui.i_isuifig(parentfig)
-                [idx, ok2] = gui.myListdlg(parentfig, model_names, 'Select a Cohere model:', [], false);
-            else
-                [idx, ok2] = listdlg('PromptString', 'Select a Cohere model:', ...
-                              'SelectionMode', 'single', 'ListString', model_names, ...
-                              'ListSize', [300 300]);
-            end
-        end
-        if ok2
-            selectedModel = model_names{idx};
-            setpref('scgeatoolbox', preftagname, selectedProvider + ":" + selectedModel);
-            done = true;
-        else
-            return;
-        end
-
     otherwise
         gui.myWarndlg(parentfig, ...
             sprintf(['The function supporting %s API is ' ...
@@ -691,13 +482,100 @@ switch selectedProvider
         return;
 end
 
-fw = gui.myWaitbar(parentfig);
-done2=true;
-gui.myWaitbar(parentfig, fw);
-
-if done && done2
+if done
      gui.myHelpdlg(parentfig, "LLM provider and" + ...
          " model are set successfully.");
+end
+end
+
+function key = i_providerkey(parentfig, names, fileValues)
+% The provider's API key (llm.i_getapikey). When there is none, offer to
+% enter it in MATLAB's masked dialog and keep it in the vault; '' when the
+% user declines. The branches used to stop at "not a valid file" whenever
+% no env file was set, even with the key in the environment.
+key = llm.i_getapikey(names, fileValues);
+if ~isempty(key), return; end
+name = string(names(1));
+answer = gui.myQuestdlg(parentfig, sprintf(['%s was not found in the ' ...
+    'environment, the MATLAB vault or the env file. Enter it now? It is ' ...
+    'stored encrypted in the MATLAB vault.'], name));
+if strcmp(answer, 'Yes')
+    key = llm.i_storeapikey(name);
+end
+end
+
+function [response, ok] = i_fetchmodels(parentfig, url, makeOptions, names, key, fileValues, label, authCodes)
+% WEBREAD(URL, MAKEOPTIONS(KEY)) behind a waitbar. When the provider
+% rejects the key (an HTTP status in AUTHCODES, 401 and 403 by default),
+% offer to enter a new one and try again. A wrong key used to end at an
+% error dialog, and since it stayed in the vault every later attempt
+% failed the same way. Any other failure is reported and ends the attempt.
+if nargin < 8, authCodes = [401 403]; end
+response = [];
+ok = false;
+while true
+    fw = gui.myWaitbar(parentfig);
+    try
+        response = webread(url, makeOptions(key));
+        gui.myWaitbar(parentfig, fw);
+        ok = true;
+        return;
+    catch ME
+        gui.myWaitbar(parentfig, fw, true);
+        status = str2double(regexp(ME.identifier, 'HTTP(\d+)StatusCodeError', ...
+            'tokens', 'once'));
+        if ~any(status == authCodes)
+            gui.myErrordlg(parentfig, ME.message, "Error fetching " + label + " models");
+            return;
+        end
+    end
+    key = i_replacekey(parentfig, names, fileValues, label, status);
+    if isempty(key), return; end
+end
+end
+
+function key = i_replacekey(parentfig, names, fileValues, label, status)
+% Ask for a replacement for a rejected key and store it in the vault; ''
+% when declined. A key in the environment cannot be replaced from here:
+% it comes before the vault, so the new key would never be used.
+key = '';
+name = string(names(1));
+[~, source] = llm.i_getapikey(names, fileValues);
+if source == "environment"
+    gui.myErrordlg(parentfig, sprintf(['%s rejected the key (HTTP %d). ' ...
+        'It is set as the environment variable %s, which comes before ' ...
+        'the MATLAB vault. Correct or clear it there, for example with ' ...
+        'setenv("%s", ""), and try again.'], label, status, name, name), ...
+        'API Key Rejected');
+    return;
+end
+if source == "file"
+    where = 'It is stored in the MATLAB vault and used instead of the one in the env file.';
+else
+    where = 'It replaces the key in the MATLAB vault.';
+end
+answer = gui.myQuestdlg(parentfig, sprintf(['%s rejected the %s key ' ...
+    '(HTTP %d). Enter a new key? %s'], label, name, status, where), ...
+    'API Key Rejected');
+if strcmp(answer, 'Yes')
+    key = llm.i_storeapikey(name);
+end
+end
+
+function options = i_beareroptions(key, timeout)
+% WEBOPTIONS for the providers that take the key as a Bearer token.
+options = weboptions('HeaderFields', {'Authorization', ...
+    sprintf('Bearer %s', key)}, 'ContentType', 'json', 'Timeout', timeout);
+end
+
+function v = i_setting(name, default, fileValues)
+% Setting NAME from the environment, else the env file, else DEFAULT.
+v = getenv(name);
+if isempty(v) && isConfigured(fileValues) && isKey(fileValues, name)
+    v = char(fileValues(name));
+end
+if isempty(v)
+    v = default;
 end
 end
 

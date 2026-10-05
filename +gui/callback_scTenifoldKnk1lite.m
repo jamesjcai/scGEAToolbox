@@ -45,12 +45,13 @@ if isempty(A0)
 
     X = sc_norm(sce.X);
     X = log1p(X);
-    useGPU = pkg.i_usegpu(X);
 
     fw = gui.myWaitbar(FigureHandle);
     disp('Constructing gene regulatory network...')
     try
-        A0 = net.pcrnet(X, 3, false, true, false, false, useGPU);
+        % Single directed network, unscaled and unfiltered: the lite variant
+        % skips the subsampling ensemble and tensor step of ten.sctenifoldknk.
+        A0 = ten.i_pcnet(X, 3, 0, false, false, symmetrize=false, scale=false);
     catch ME
         gui.myWaitbar(FigureHandle, fw, true);
         gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
@@ -173,8 +174,8 @@ end
             gui.myExport2wsdlg(labels, {'A0'}, {net}, ...
                 'Save Network to Workspace', [], FigureHandle);
         else
-            waitfor(export2wsdlg(labels, {'A0'}, {net}, ...
-                'Save Network to Workspace'));
+            gui.i_export2wsdlg(FigureHandle, labels, {'A0'}, {net}, ...
+                'Save Network to Workspace');
         end
     end
 

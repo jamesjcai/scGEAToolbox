@@ -2,6 +2,7 @@ function [celltypes, T] = py_panhumanpy(sce, wkdir, ...
     isdebug, prepare_input_only)
 
 celltypes = [];
+T = table.empty;
 if nargin < 4, prepare_input_only = false; end
 if nargin < 3, isdebug = true; end
 if nargin < 2, wkdir = pkg.i_tempdirfile(); end
@@ -43,7 +44,7 @@ if ~prepare_input_only
 
 pkg.i_deletefiles({'input.h5ad', 'output.h5ad','tg.csv'});
 tmpfilelist = {'Xnorm.mat', 'X.mat', 'g.csv', 'c.csv', 'tg.csv', ...
-        'input.h5ad', 'output.h5ad'};
+        'input.h5ad', 'output.h5ad', 'output.csv'};
 pkg.i_deletefiles(tmpfilelist);   % always clear stale files, so a failed
 % run cannot leave a previous run's output to be picked up as this one's
 
@@ -60,12 +61,18 @@ cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
 
 if ~prepare_input_only
-    [status] = system(cmdlinestr, '-echo');
-    if status == 0 && exist('output.csv', 'file')
-        T = readtable('output.csv','ReadVariableNames', true, ...
-            'VariableNamingRule', 'modify');
-        celltypes = string(T.final_level_labels);
+    [status, cmdout] = system(cmdlinestr, '-echo');
+    % Raised with the script's last lines. T used to be left unassigned
+    % here, so the caller reported "Output argument T not assigned".
+    if status ~= 0 || ~isfile('output.csv')
+        lines = splitlines(strtrim(string(cmdout)));
+        error('run:py_panhumanpy:scriptFailed', ...
+            'panhumanpy script.py failed (exit status %d) and wrote no output.csv.\n%s', ...
+            status, strjoin(lines(max(1, end-9):end), newline));
     end
+    T = readtable('output.csv','ReadVariableNames', true, ...
+        'VariableNamingRule', 'modify');
+    celltypes = string(T.final_level_labels);
 else
     disp('Input files are prepared. To do the analysis, run script.py in the working folder.')
 end

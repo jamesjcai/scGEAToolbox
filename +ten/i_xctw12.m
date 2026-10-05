@@ -100,8 +100,8 @@ Xt = double(full(X_t));
 if opts.lognorm
     % core.py:_get_metric refuses integer input outright ("require log data"),
     % so the reference always sees log-normalised expression here.
-    Xs = i_lognorm(Xs);
-    Xt = i_lognorm(Xt);
+    Xs = ten.i_lognorm(Xs);
+    Xt = ten.i_lognorm(Xt);
 end
 
 metric_s = i_metric(Xs, opts.alpha);
@@ -120,12 +120,4 @@ function m = i_metric(X, alpha)
 mu = mean(X, 2);
 v = var(X, 1, 2);      % normalise by N, matching numpy's ddof=0 default
 m = (1 - alpha).*mu.^2 + alpha.*v;
-end
-
-
-%% ---- library-size normalisation followed by log1p ----
-function X = i_lognorm(X)
-cs = sum(X, 1);
-cs(cs == 0) = 1;
-X = log1p(X./cs.*median(cs));
 end

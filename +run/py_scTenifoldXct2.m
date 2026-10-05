@@ -200,20 +200,18 @@ function in_prepareX(sce, id)
     end
 
 function in_prepareA(sce, id)
+        % Log-normalised input, as in py_scTenifoldXct and ten.sctenifoldxct2;
+        % Python uses these networks as-is (rebuild_GRN=False).
         disp('Building A1 network...')
         X1 = sce.X(:, sce.c_cell_type_tx == celltype1);
-        A1 = net.pcrnet(X1, 3, false, true, false, false, pkg.i_usegpu(X1));
+        A = ten.i_pcnet(ten.i_lognorm(X1), 3, 0.75, false, false, symmetrize=false);
         disp('A1 network built.')
-        A1 = A1 ./ max(abs(A1(:)));
-        A = ten.e_filtadjc(A1, 0.75, false);
         save(sprintf('%d/pcnet_Source.mat', id), 'A', '-v7.3');
 
         disp('Building A2 network...');
         X2 = sce.X(:, sce.c_cell_type_tx == celltype2);
-        A2 = net.pcrnet(X2, 3, false, true, false, false, pkg.i_usegpu(X2));
+        A = ten.i_pcnet(ten.i_lognorm(X2), 3, 0.75, false, false, symmetrize=false);
         disp('A2 network built.');
-        A2 = A2 ./ max(abs(A2(:)));
-        A = ten.e_filtadjc(A2, 0.75, false);
         save(sprintf('%d/pcnet_Target.mat', id), 'A', '-v7.3');
     end
 

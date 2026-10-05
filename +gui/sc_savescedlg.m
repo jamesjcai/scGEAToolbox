@@ -63,8 +63,16 @@ switch ButtonName
                 OKPressed = true;
             end
         case 'Seurat/Rds File (*.rds)...'
-            answer = gui.myQuestdlg(parentfig, 'This function requires R. Continue?','');
-            if ~strcmp(answer,'Yes'), return; end
+            % One question, and only when R is missing. It used to ask
+            % "requires R. Continue?" every time, then after the file
+            % picker ask again whether to set R up.
+            if ~ispref('scgeatoolbox', 'rexecutablepath')
+                if strcmp(gui.myQuestdlg(parentfig, ['Saving as .rds needs R, ' ...
+                        'which is not set up. Set it up now?']), 'Yes')
+                    gui.i_setrenv(parentfig);
+                end
+                if ~ispref('scgeatoolbox', 'rexecutablepath'), return; end
+            end
             if ~isempty(a)
                 [file, path] = uiputfile({'*.rds'; '*.*'}, 'Save as', a);
             else
@@ -75,14 +83,6 @@ switch ButtonName
                 return;
             else
                 filename = fullfile(path, file);
-                % Asked here, before the progress bar: run.commoncheck_R asks with no
-                % parent, so without this its question opened behind the open bar.
-                if ~ispref('scgeatoolbox', 'rexecutablepath')
-                    if strcmp(gui.myQuestdlg(parentfig, 'This needs R, which is not set up. Set it up now?'), 'Yes')
-                        gui.i_setrenv(parentfig);
-                    end
-                    if ~ispref('scgeatoolbox', 'rexecutablepath'), return; end
-                end
                 fw = gui.myWaitbar(parentfig);
                 % A failed save used to be reported as a success: the
                 % status was ignored and no file existed.
@@ -126,7 +126,7 @@ switch ButtonName
                 end
                 if ok
                     fprintf("\nTo read file, in Python:\n");
-                    fprintf("adata = anndata.read(""%s"")\n", file);
+                    fprintf("adata = anndata.read_h5ad(""%s"")\n", file);
                     OKPressed = true;
                 end
             end
@@ -144,7 +144,7 @@ switch ButtonName
                     'Save Data to Workspace', ...
                     [true, false, false, false], parentfig);
             else
-                [~, OKPressed] = export2wsdlg(labels, vars, values, ...
+                OKPressed = gui.i_export2wsdlg(parentfig, labels, vars, values, ...
                     'Save Data to Workspace', ...
                     logical([1, 0, 0, 0]));
             end

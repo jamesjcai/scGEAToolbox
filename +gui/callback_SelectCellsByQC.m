@@ -72,14 +72,14 @@ end
                 whitelist = [];
             end
 
-            answer3 = gui.myQuestdlg(FigureHandle, 'Relaxed or Strigent?', ...
+            answer3 = gui.myQuestdlg(FigureHandle, 'Relaxed or Stringent?', ...
                 'Cutoff Settings',{'Relaxed (keep more cells/genes)', ...
-                'Strigent (remove more cells/genes)'}, ...
-                'Strigent (remove more cells/genes)');
+                'Stringent (remove more cells/genes)'}, ...
+                'Stringent (remove more cells/genes)');
             switch answer3
                 case 'Relaxed (keep more cells/genes)'
                     definput = {'500', '0.20', '10', '200'};
-                case 'Strigent (remove more cells/genes)'
+                case 'Stringent (remove more cells/genes)'
                     definput = {'1000', '0.15', '15', '500'};
                 otherwise
                     return;
@@ -462,7 +462,7 @@ newgn = sce.NumGenes;
 
     if newgn==0
         if ~isempty(sceori)
-            gui.myHelpdlg(FigureHandle, "All genes are removed. Opertaion is cancelled.");
+            gui.myHelpdlg(FigureHandle, "All genes are removed. Operation is cancelled.");
             sce = copy(sceori);
             disp('Original SCE copied back 1.');
             gui.myGuidata(FigureHandle, sce, src);
@@ -473,7 +473,7 @@ newgn = sce.NumGenes;
     end
     if newcn==0
         if ~isempty(sceori)
-            gui.myHelpdlg(FigureHandle, "All cells are removed. Opertaion is cancelled.");
+            gui.myHelpdlg(FigureHandle, "All cells are removed. Operation is cancelled.");
             sce = copy(sceori);
             disp('Original SCE copied back 2.');
             gui.myGuidata(FigureHandle, sce, src);

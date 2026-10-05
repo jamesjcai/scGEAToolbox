@@ -16,20 +16,26 @@ end
 
 if isempty(selectedDir) || ~isfolder(selectedDir)
 
-    answer = gui.myQuestdlg(parentfig, 'Download SCimilarity models. Note, this is a large tarball - downloading and uncompressing can take a several minutes.');
-    if strcmp('Yes', answer)
-        web('https://zenodo.org/records/10685499');
-    else
-        return;
+    % Locate is offered straight away. It used to sit behind a Download
+    % question whose No ended the function, so a user who already had
+    % the model had to open Zenodo to reach the folder picker.
+    answer = gui.myQuestdlg(parentfig, ['The SCimilarity model folder ' ...
+        'is not set up. Locate a downloaded model, or download it first ' ...
+        '(a large tarball; downloading and unpacking take several minutes)?'], ...
+        'Model Path', {'Locate Folder', 'Download', 'Cancel'}, 'Locate Folder');
+    switch answer
+        case 'Locate Folder'
+        case 'Download'
+            web('https://zenodo.org/records/10685499');
+            if ~strcmp('Yes', gui.myQuestdlg(parentfig, ...
+                    'Once the model is downloaded and unpacked, locate its folder?'))
+                return;
+            end
+        otherwise
+            return;
     end
-    answer = gui.myQuestdlg(parentfig, 'Scimilarity model path has not been set up. Locate it?');
-    if strcmp('Yes', answer)
-        [done] = ix_setpath;
-        if ~done, return; end
-        gui.myHelpdlg(parentfig, 'Scimilarity model path is set successfully.');
-    else
-        return;
-    end
+    if ~ix_setpath, return; end
+    gui.myHelpdlg(parentfig, 'Scimilarity model path is set successfully.');
 else
     answer = gui.myQuestdlg(parentfig, sprintf('%s', selectedDir), ...
         'Model Path', ...
@@ -63,19 +69,23 @@ function [y] = ix_setpath
             figure(parentfig);
         end
 
-        if selectedDir == 0
+        if isequal(selectedDir, 0)
             fprintf('Folder selection canceled.\n');
             selectedDir = '';
-        else
-            fprintf('Selected folder: %s\n', selectedDir);
-            y = true;
-            setpref('scgeatoolbox', preftagname, selectedDir);
+            return;
         end
-
-        label_ints_file = fullfile(selectedDir, 'label_ints.csv');
-        if ~exist(label_ints_file, "file")
-            y = false;
+        % Checked before it is saved. The folder used to be stored first,
+        % so a wrong one was kept and offered as "Use this" next time.
+        if ~isfile(fullfile(selectedDir, 'label_ints.csv'))
+            gui.myWarndlg(parentfig, sprintf(['%s does not look like an ' ...
+                'SCimilarity model folder (no label_ints.csv). The path ' ...
+                'was not saved.'], selectedDir));
+            selectedDir = '';
+            return;
         end
+        fprintf('Selected folder: %s\n', selectedDir);
+        setpref('scgeatoolbox', preftagname, selectedDir);
+        y = true;
     end
 
 end

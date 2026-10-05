@@ -2,8 +2,8 @@ function callback_CellQCViolin(src, ~)
 %CALLBACK_CELLQCVIOLIN Violin plots of the cell QC metrics, over all cells or by group.
 %
 %   Behind Plots > Cell QC Metrics in Violin Plots. Asks whether to pool all
-%   cells or plot one violin per group, and for a grouping variable in the
-%   second case.
+%   cells or plot one violin per group, and for a grouping variable and
+%   which of its groups to show in the second case.
 %
 %   See also GUI.I_QCVIOLIN, GUI.I_SELECT1CLASS.
 
@@ -18,7 +18,13 @@ switch answer
     case 'By Group'
         [thisc, clabel] = gui.i_select1class(sce, false, [], [], FigureHandle);
         if isempty(thisc), return; end
-        gui.i_qcviolin(sce.X, sce.g, FigureHandle, thisc, clabel);
+        % Same group chooser as gui.callback_Violinplot - see
+        % gui.i_selectgroupsubset. QC metrics are per cell, so subsetting
+        % the raw counts first changes no cell's values.
+        [picked, levels] = gui.i_selectgroupsubset(thisc, clabel, FigureHandle);
+        if isempty(picked), return; end
+        gui.i_qcviolin(sce.X(:, picked), sce.g, FigureHandle, ...
+            thisc(picked), clabel, levels);
     otherwise
         % Cancel or dismissed: nothing to plot.
 end

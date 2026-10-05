@@ -14,7 +14,13 @@ answer = gui.myQuestdlg(FigureHandle, 'Paste new gene names?');
 if ~strcmp(answer, 'Yes'), return; end
 renamedglist = gui.i_inputgenelist(glist, [], FigureHandle);
 
+if isempty(renamedglist), return; end   % paste cancelled
 if length(glist) ~= length(renamedglist)
+    % Said nothing before, so a miscounted paste looked like a rename.
+    gui.myWarndlg(FigureHandle, sprintf(['%s selected but %s pasted; ' ...
+        'the two lists must be the same length. Nothing was renamed.'], ...
+        pkg.i_plural(length(glist), 'gene'), ...
+        pkg.i_plural(length(renamedglist), 'name')));
     return;
 end
 

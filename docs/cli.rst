@@ -36,6 +36,13 @@ session or a job script:
 
    cli.main('deg', '--input', 'data.h5ad', '--group1', '1', '--group2', '2')
 
+Progress lines carry a timestamp. Errors are shown in red and warnings in
+yellow, but only where the colour will render: the MATLAB desktop Command
+Window (R2026b and newer), or a terminal when ``scgea.sh`` finds that stdout
+is one. Output that is piped or redirected stays plain text. Set
+``SCGEA_COLOR=1`` to force colour (for example under ``scgea.bat`` in Windows
+Terminal), or ``NO_COLOR=1`` to turn it off.
+
 Subcommands
 -----------
 

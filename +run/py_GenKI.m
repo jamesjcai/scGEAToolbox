@@ -1,5 +1,9 @@
 function [T] = py_GenKI(X, g, idx, wkdir, isdebug)
 
+% Every failure below raises an error carrying its cause. T used to be left
+% unassigned when script.py failed or wrote no output.csv, so the caller
+% saw only "Output argument T not assigned" and the Python error was lost.
+T = [];
 if nargin < 5, isdebug = true; end
 if nargin < 4, wkdir = pkg.i_tempdirfile(); end
 
@@ -60,8 +64,7 @@ catch ME
     if pkg.i_isvalid(fw)
          gui.myWaitbar([], fw, true);
     end
-    errordlg(ME.message,'');
-    return;
+    rethrow(ME);
 end
 if pkg.i_isvalid(fw)
     gui.myWaitbar([], fw, [], [], 'Checking Python environment is complete');
@@ -73,9 +76,10 @@ end
 if pkg.i_isvalid(fw)
     gui.myWaitbar([], fw, [], [], 'Building pcnet_Source network...');
 end
-A1 = net.pcrnet(X, 3, false, true, false, false, pkg.i_usegpu(X));
-A1 = A1 ./ max(abs(A1(:)));
-A = ten.e_filtadjc(A1, 0.75, false);
+% Log-normalised input, as in py_scTenifoldXct; script.py log-normalises its
+% own copy of X too (log_normalize=True) but uses this network as-is
+% (rebuild_GRN=False).
+A = ten.i_pcnet(ten.i_lognorm(X), 3, 0.75, false, false, symmetrize=false);
 save('pcnet_Source.mat', 'A', '-v7.3');
 if pkg.i_isvalid(fw)
     gui.myWaitbar([], fw, [], [], 'pcnet_Source.mat saved.');
@@ -85,9 +89,18 @@ codefullpath = fullfile(codepth,'script.py');
 pkg.i_addwd2script(codefullpath, wkdir, 'python');
 cmdlinestr = sprintf('"%s" "%s"', x.Executable, codefullpath);
 disp(cmdlinestr)
-[status] = system(cmdlinestr, '-echo');
+[status, cmdout] = system(cmdlinestr, '-echo');
 
-if status == 0 && pkg.i_isvalid(fw)
+if status ~= 0 || ~isfile('output.csv')
+    if pkg.i_isvalid(fw)
+        gui.myWaitbar([], fw, true);
+    end
+    lines = splitlines(strtrim(string(cmdout)));
+    error('run:py_GenKI:scriptFailed', ...
+        'GenKI script.py failed (exit status %d) and wrote no output.csv.\n%s', ...
+        status, strjoin(lines(max(1, end-9):end), newline));
+end
+if pkg.i_isvalid(fw)
     gui.myWaitbar([], fw, [], 'py_GenKI is complete');
 end
 
@@ -97,10 +110,8 @@ end
 %    disp(cmdlinestr)
 %    [status]=system(cmdlinestr,'-echo');
 
-if status == 0 && exist('output.csv', 'file')
-    T = readtable('output.csv');
-    T.Properties.VariableNames{1} = 'gene';
-end
+T = readtable('output.csv');
+T.Properties.VariableNames{1} = 'gene';
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 end

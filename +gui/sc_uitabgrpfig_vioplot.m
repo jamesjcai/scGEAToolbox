@@ -429,7 +429,7 @@ function in_callback_savedata(~, ~)
             T = [T, t];
         end
         T = rows2vars(T);
-        gui.i_exporttable(T, true, 'Tviolindata','ViolinPlotTable');
+        gui.i_exporttable(T, true, 'Tviolindata', 'ViolinPlotTable', [], [], hFig);
     end
 
 end

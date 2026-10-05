@@ -57,7 +57,7 @@ fittab = gobjects(0);
 
 hx.addCustomButton('off', @in_savedata, 'floppy-disk-arrow-in.jpg', 'Export data...');
 hx.addCustomButton('off', @in_addregress, 'plotpicker-renko.gif', 'Add Regression Line...');
-hx.addCustomButton('off', @in_addlocfitx, 'plotpicker-renko.gif', 'Add Locfit Local Regression...');
+hx.addCustomButton('off', @in_addlocfitx, 'plotpicker-renko.gif', 'Compare Locfit Curves of Several Variables...');
 hx.addCustomButton('off', @in_addlocfit, 'plotpicker-renko.gif', 'Add Locfit Local Regression...');
 hx.addCustomButton('on', @in_PickPlotMarker, 'plotpicker-rose.gif', 'Switch scatter plot marker type');
 hx.addCustomButton('off', @in_BoxOnOff, 'RectGate.gif', 'Switch box on/off');
@@ -94,13 +94,15 @@ function displaySelection(~,event)
     end
 
 function in_BoxOnOff(~,~)
+        % Flipped once for the whole window. It used to flip inside the
+        % loop, so with several tabs every other tab got the opposite.
+        ybox = ~ybox;
         for tabidx=1:n
-            if ~ybox
+            if ybox
                 box(ax0{tabidx},'on');
             else
                 box(ax0{tabidx},'off');
             end
-            ybox = ~ybox;
         end
     end
 
@@ -140,6 +142,10 @@ function in_addlocfit(~, ~)
             [y_fit] = pkg.e_locfit(thisy(:), thisx(:));
             % [y_fit2] = malowess(thisx(:), thisy(:));
 
+            % The lowess curve needs the Curve Fitting Toolbox; without it
+            % only the locfit curve is drawn. Y_FIT2 used to be plotted
+            % unconditionally and was undefined when the toolbox was absent.
+            y_fit2 = [];
             if license('test','Curve_Fitting_Toolbox') && ~isempty(which('curveFitter'))
                 y_fit2 = smooth(thisx(:), thisy(:), 0.5, 'lowess');
                 % y_fit2 = fit([thisx(:), thisy(:)], 'lowess', 'Span', 0.2);
@@ -154,7 +160,9 @@ function in_addlocfit(~, ~)
             hold(thisax,"on");
             [sortedx, idxx]=sort(thisx(:));
             plot(thisax, sortedx, y_fit(idxx), '-','LineWidth', 2);
-            plot(thisax, sortedx, y_fit2(idxx), '-','LineWidth', 2);
+            if ~isempty(y_fit2)
+                plot(thisax, sortedx, y_fit2(idxx), '-','LineWidth', 2);
+            end
             hold(thisax,"off");
         end
         [~,tabidx]=ismember(focalg, tabnamelist);

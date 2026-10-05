@@ -59,6 +59,12 @@ end
 [manuallyselect, bestonly] = gui.i_annotemanner(FigureHandle);
 if isempty(manuallyselect), return; end
 
+% What clustering changes, kept so a cancel further down can put it back.
+% SCE is the app's handle and is clustered in place, so returning used to
+% leave the new clusters on the object with the screen never redrawn.
+before = struct('c', sce.c, 'c_cluster_id', sce.c_cluster_id, ...
+    'struct_cell_clusterings', sce.struct_cell_clusterings, ...
+    'struct_cell_reductions', sce.struct_cell_reductions);
 if clusterfirst
     fw = gui.myWaitbar(FigureHandle);
     try
@@ -107,7 +113,7 @@ if ~manuallyselect, fw = gui.myWaitbar(FigureHandle); end
 rawTypes = strings(max(c), 1);
 for ix = 1:max(c)
     if ~manuallyselect
-        gui.myWaitbar(FigureHandle, fw, false, '', '', ix/max(c));
+        gui.myWaitbar(FigureHandle, fw, false, '', '', (ix - 1)/max(c));
     end
     ptsSelected = c == ix;
 
@@ -130,7 +136,10 @@ for ix = 1:max(c)
             [indx, tf] = listdlg('PromptString', {'Select cell type'}, ...
                 'SelectionMode', 'single', 'ListString', ctxt, 'ListSize', [220, 300]);
         end
-        if tf ~= 1, return; end
+        if tf ~= 1
+            in_cancel(sce, before, clusterfirst, h, src);
+            return;
+        end
         ctxt = Tct.C1_Cell_Type{indx};
     else
         ctxt = Tct.C1_Cell_Type{1};
@@ -211,4 +220,20 @@ if isempty(s) || s(1) <= 0
     s = [0; s(:)];
 end
 Tct = table(names(:), s(:), 'VariableNames', {'C1_Cell_Type', 'C1_CTA_Score'});
+end
+
+function in_cancel(sce, before, clusterfirst, h, src)
+%IN_CANCEL Undo what the run did before the user cancelled the manual pick.
+%   Puts back the clustering done for 'Cluster First', and clears the
+%   datatips drawn so far and the HOLD the loop set on the axes.
+if clusterfirst
+    sce.c = before.c;
+    sce.c_cluster_id = before.c_cluster_id;
+    sce.struct_cell_clusterings = before.struct_cell_clusterings;
+    sce.struct_cell_reductions = before.struct_cell_reductions;
+end
+if ~isempty(h) && pkg.i_isvalid(h)
+    delete(findobj(h, 'Type', 'datatip'));
+    hold(src.UIAxes, 'off');
+end
 end

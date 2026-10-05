@@ -9,6 +9,25 @@ if isempty(thisc1), return; end
 iscon1 = i_iscontinuous(thisc1);
 iscon2 = ~isempty(thisc2) && i_iscontinuous(thisc2);
 
+% Which groups of each categorical variable to keep, through the chooser
+% the Dotplot, Heatmap and violin plots use (gui.i_selectgroupsubset). The
+% second is asked on the cells the first kept, so its counts are the ones
+% the table will show. A continuous variable has no groups to pick.
+levels1 = [];
+levels2 = [];
+if ~iscon1
+    [picked, levels1] = gui.i_selectgroupsubset(thisc1, clabel1, FigureHandle);
+    if isempty(picked), return; end
+    thisc1 = thisc1(picked);
+    if ~isempty(thisc2), thisc2 = thisc2(picked); end
+end
+if ~isempty(thisc2) && ~iscon2
+    [picked, levels2] = gui.i_selectgroupsubset(thisc2, clabel2, FigureHandle);
+    if isempty(picked), return; end
+    thisc1 = thisc1(picked);
+    thisc2 = thisc2(picked);
+end
+
 if ~isempty(thisc2) && (iscon1 || iscon2)
     if iscon1 && iscon2
         % Both continuous: scatter plot
@@ -43,7 +62,7 @@ if ~isempty(thisc2) && (iscon1 || iscon2)
     return;
 end
 
-[c, cL1, noanswer] = gui.i_reordergroups(thisc1, [], FigureHandle);
+[c, cL1, noanswer] = gui.i_reordergroups(thisc1, levels1, FigureHandle);
 if noanswer, return; end
 if isnumeric(thisc1)
     thisc1 = categorical(cL1(c), cL1);
@@ -51,7 +70,7 @@ else
     thisc1 = categorical(thisc1, cL1);
 end
 if ~isempty(thisc2)
-    [c2, cL2, noanswer] = gui.i_reordergroups(thisc2, [], FigureHandle);
+    [c2, cL2, noanswer] = gui.i_reordergroups(thisc2, levels2, FigureHandle);
     if noanswer, return; end
     if isnumeric(thisc2)
         thisc2 = categorical(cL2(c2), cL2);

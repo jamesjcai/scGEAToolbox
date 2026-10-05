@@ -4,17 +4,10 @@ function callback_scTenifoldKnk1(src, ~)
 if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]', ...
         FigureHandle), return; end
 
-try
-    ten.check_tensor_toolbox;
-catch
-    gui.i_installtensortoolbox(src);
-    try
-        ten.check_tensor_toolbox;
-    catch ME
-        gui.myErrordlg(FigureHandle, ME.message);
-        return;
-    end
-end
+% The Tensor Toolbox is checked for (and offered for download) only on the
+% 'Construct de novo' branch below. Knocking out a gene in a network that
+% already exists runs TEN.I_KNK, which uses no tensors; the check used to
+% sit here and demanded the toolbox from that path too.
 
 extprogname = 'scTenifoldKnk';
 preftagname = 'externalwrkpath';
@@ -76,9 +69,14 @@ switch answer
     case 'Construct de novo'
         try
             ten.check_tensor_toolbox;
-        catch ME
-            gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-            return;
+        catch
+            gui.i_installtensortoolbox(src);
+            try
+                ten.check_tensor_toolbox;
+            catch ME
+                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
+                return;
+            end
         end
         A0 = [];
         gui.myHelpdlg(FigureHandle, "Network will be constructed. Now, " + ...
@@ -225,8 +223,8 @@ end
             gui.myExport2wsdlg(labels, {'A0'}, {net}, ...
                 'Save Network to Workspace', [], FigureHandle);
         else
-            waitfor(export2wsdlg(labels, {'A0'}, {net}, ...
-                'Save Network to Workspace'));
+            gui.i_export2wsdlg(FigureHandle, labels, {'A0'}, {net}, ...
+                'Save Network to Workspace');
         end
     end
 

@@ -3,8 +3,9 @@ function [done, res] = callGemini(apikeyfile, prompt, model)
 %   [done, res] = llm.callGemini(apikeyfile, prompt, model)
 %
 %   apikeyfile  env file holding GEMINI_API_KEY (default: the scgeatoolbox
-%               'llapikeyenvfile' preference). If it is empty or not a file,
-%               GEMINI_API_KEY is read from the environment as it stands.
+%               'llapikeyenvfile' preference). The key is looked up by
+%               llm.i_getapikey: the environment, the MATLAB vault, then
+%               this file.
 %   prompt      text to send (default: 'Why is the sky blue?')
 %   model       model name (default: "gemini-2.5-flash")
 %
@@ -21,18 +22,13 @@ end
 if nargin < 1, apikeyfile = []; end
 if nargin < 2, prompt = 'Why is the sky blue?'; end
 
-if isempty(apikeyfile) && ispref('scgeatoolbox', 'llapikeyenvfile')
-    apikeyfile = getpref('scgeatoolbox', 'llapikeyenvfile');
-end
-
-if ~isempty(apikeyfile) && isfile(apikeyfile)
-    loadenv(apikeyfile, "FileType", "env");
-end
-apikey = getenv("GEMINI_API_KEY");
+if isempty(apikeyfile), apikeyfile = ""; end
+apikey = llm.i_getapikey("GEMINI_API_KEY", llm.i_readkeyfile(apikeyfile));
 if isempty(apikey)
     error('llm:callGemini:noKey', ...
-        ['GEMINI_API_KEY is not set. Put it in the env file named by the ' ...
-        '''llapikeyenvfile'' preference, or pass that file as APIKEYFILE.']);
+        ['GEMINI_API_KEY is not set. Store it with ' ...
+        'llm.i_storeapikey("GEMINI_API_KEY"), put it in the env file named ' ...
+        'by the ''llapikeyenvfile'' preference, or pass that file as APIKEYFILE.']);
 end
 
 % "parts" is an array of part objects, [{"text": ...}]. This used to put a

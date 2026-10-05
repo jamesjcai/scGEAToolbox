@@ -2,9 +2,10 @@ function callback_scTenifoldNetView(src, ~)
 % CALLBACK_SCTENIFOLDNETVIEW  View a saved scTenifoldNet result.
 %
 % Opens the side-by-side viewer for a pair of GRNs produced by
-% ten.sctenifoldnet or gui.callback_BuildGRNAllGenes, with an optional
-% third panel for their difference. The networks come either from two .mat
-% files on disk or from two matrices already in the base workspace; the
+% ten.sctenifoldnet or gui.callback_CompareGRNAllGenes, with an optional
+% third panel for their difference. The networks come from one file saved
+% by Build & Compare Two GRNs, from two .mat files on disk, or from two
+% matrices already in the base workspace; the
 % differential regulation table, if there is one, decides which genes are
 % drawn.
 %
@@ -92,13 +93,37 @@ end
 function [A0, A1, genes, T, labels, celltype] = i_fromfiles(parentfig)
 [A0, A1, genes, T, labels, celltype] = deal([], [], [], [], string.empty, string.empty);
 
-[f1, p1] = uigetfile({'*.mat'}, 'Select the FIRST network (.mat)');
+[f1, p1] = uigetfile({'*.mat'}, ...
+    'Select the FIRST network, or a saved Build & Compare result (.mat)');
 if isequal(f1, 0), return; end
+
+% A file saved by Build & Compare Two GRNs holds both networks, the gene
+% list and the DR table, so it is the whole input on its own.
+% ten.sctenifoldnetview takes A0 from it as the first network and A1 as
+% the second.
+fname1 = fullfile(p1, f1);
+w = whos('-file', fname1);
+vars = string({w.name});
+if all(ismember(["A0", "A1"], vars))
+    A0 = fname1;
+    A1 = fname1;
+    if ismember("groups", vars)
+        S = load(fname1, 'groups');
+        labels = string(S.groups(:))';
+    end
+    if ismember("T", vars)
+        S = load(fname1, 'T');
+        if istable(S.T), T = S.T; end
+    end
+    return;
+end
+
 [f2, p2] = uigetfile({'*.mat'}, 'Select the SECOND network (.mat)', p1);
 if isequal(f2, 0), return; end
 
-% ten.sctenifoldnetview reads A, the gene list and the metadata itself.
-A0 = fullfile(p1, f1);
+% ten.sctenifoldnetview reads the network, the gene list and the metadata
+% itself.
+A0 = fname1;
 A1 = fullfile(p2, f2);
 
 [labels, celltype] = i_readlabels(A0, A1);
