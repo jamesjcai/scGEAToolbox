@@ -41,7 +41,7 @@ function results = run_sctenifoldknk(sample_id, kogene, data_dir, out_dir)
 %   Reference:
 %     Osorio D et al. (2022). scTenifoldKnk: An efficient virtual knockout
 %     tool for gene function predictions via single-cell gene regulatory
-%     network perturbation. Patterns 3(5):100434.
+%     network perturbation. Patterns 3(3):100434. PMID:35510185.
 %     https://doi.org/10.1016/j.patter.2022.100434
 %
 %   Example (from agent via evaluate_matlab_code):
@@ -76,7 +76,7 @@ end
 
 % ---- QC filter ------------------------------------------------------
 fprintf('Applying QC filter...\n');
-sce = sce.qcfilterwhitelist(1000, 0.15, 15, 500, kogene);
+sce = sce.qcfilterwhitelist(500, 0.15, 15, 200, kogene);
 fprintf('After QC: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
 
 genelist = sce.g;
@@ -102,6 +102,9 @@ if ~isempty(out_dir) && ~isfolder(out_dir)
 end
 
 max_cells = 1000;   % subsample per cell type; GRN build time grows with cells
+% Subsample from a local seeded stream: identical calls give identical
+% results, and the caller's global stream is left alone.
+subsample_stream = RandStream("twister", "Seed", 1);
 
 i_log(out_dir, sprintf('START scTenifoldKnk (lite): %s | kogene=%s | %d cell types', ...
     sample_id, kogene, numel(cell_types)));
@@ -125,7 +128,7 @@ for k = 1:numel(cell_types)
 
     cell_idx = find(mask);
     if numel(cell_idx) > max_cells
-        cell_idx = cell_idx(randperm(numel(cell_idx), max_cells));
+        cell_idx = cell_idx(randperm(subsample_stream, numel(cell_idx), max_cells));
         fprintf('  Subsampled: %d → %d cells\n', n, max_cells);
         n = max_cells;
     end

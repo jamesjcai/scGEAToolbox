@@ -208,12 +208,7 @@ for c = 1:length(ctag)
             sprintf('DP (%s) - Processing %s ...', ctag{c}, CellTypeList{k}), ...
             (iStep - 0.5)/nStepTotal);
 
-        outfile = sprintf('%s_DP_%s_vs_%s_%s.xlsx', ...
-            prefixtag, ...
-            matlab.lang.makeValidName(string(cL1)), ...
-            matlab.lang.makeValidName(string(cL2)), ...
-            matlab.lang.makeValidName(string(CellTypeList{k})));
-            filesaved = fullfile(outdir, outfile);
+        filesaved = i_dpfile(outdir, prefixtag, cL1, cL2, CellTypeList{k});
 
         idx = sce.c_cell_type_tx == CellTypeList{k};
         try
@@ -244,12 +239,7 @@ end
 % file, so every other DP workbook went without it.
 Tnt = table(ctag, ccat);
 for k = 1:length(CellTypeList)
-    outfile = sprintf('%s_DP_%s_vs_%s_%s.xlsx', ...
-        prefixtag, ...
-        matlab.lang.makeValidName(string(cL1)), ...
-        matlab.lang.makeValidName(string(cL2)), ...
-        matlab.lang.makeValidName(string(CellTypeList{k})));
-    filesaved = fullfile(outdir, outfile);
+    filesaved = i_dpfile(outdir, prefixtag, cL1, cL2, CellTypeList{k});
     if isfile(filesaved)
         try
             writetable(Tnt, filesaved, "FileType", "spreadsheet", 'Sheet', 'Note');
@@ -290,4 +280,17 @@ if any(contains(selected, 'Open Output Folder'))
     end
 end
 
+end
+
+
+function filesaved = i_dpfile(outdir, prefixtag, cL1, cL2, celltype)
+% The DP workbook of one cell type. One definition for the loop that
+% writes the results and the one that adds the Note sheet afterwards, so
+% the two cannot drift apart; GUI.I_BATCHMODEPREP probes the same name.
+outfile = sprintf('%s_DP_%s_vs_%s_%s.xlsx', ...
+    prefixtag, ...
+    matlab.lang.makeValidName(string(cL1)), ...
+    matlab.lang.makeValidName(string(cL2)), ...
+    matlab.lang.makeValidName(string(celltype)));
+filesaved = fullfile(outdir, outfile);
 end

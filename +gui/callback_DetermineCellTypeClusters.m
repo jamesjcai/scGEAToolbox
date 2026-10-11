@@ -177,6 +177,13 @@ end
 
 if ~manuallyselect, gui.myWaitbar(FigureHandle, fw); end
 
+% Methods text for the database-marker path, which is CTA scoring; the
+% custom-marker paths score differently and print nothing.
+if usedefaultdb && strcmpi(databasetag, 'panglaodb')
+    pkg.i_ctamethodstext(Species=string(speciestag), NumClusters=max(c), ...
+        NumUnknown=sum(rawTypes == "Unknown"), Manual=manuallyselect, SCE=sce);
+end
+
 % Keep the annotation this replaces as a new numbered cell attribute, the
 % same way GUI.CALLBACK_RUNSCIMILARITY and SC_ANNOTATECELLS do.
 stashname = pkg.i_stashcelltypehistory(sce);

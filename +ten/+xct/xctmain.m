@@ -37,8 +37,8 @@ function [T, emb] = xctmain(X_s, X_t, g, varargin)
 %     6. Rank L-R candidate pairs by Euclidean distance in embedding space.
 %     7. Nonparametric left-tail null test against sampled background pairs.
 %
-%   Requires Statistics and Machine Learning Toolbox, via net.pcrnet.
-%   Reference: Ma et al., Cell Systems 2023. PMID:36787742
+%   Requires Statistics and Machine Learning Toolbox (not for net.pcrnet).
+%   Reference: Yang et al., Cell Systems 2023;14(4):302-311.e4. PMID:36787742
 
 % ── Parse inputs ─────────────────────────────────────────────────────────
 i_rejectcorrthr(varargin);

@@ -147,6 +147,9 @@ end
 gui.myWaitbar(FigureHandle, fw, false, '', '', 7/8);
 gui.myGuidata(FigureHandle, sce, src);
 gui.myWaitbar(FigureHandle, fw);
+% Each step of the pipeline recorded its Methods paragraph on SCE; print
+% them together, as one section.
+sc_methodstext(sce);
 
 requirerefresh = true;
 end

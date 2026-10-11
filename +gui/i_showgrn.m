@@ -78,9 +78,9 @@ if numel(g) >= minWaitbarGenes
 end
 try
     if isempty(method)
-        save(fname, 'A', 'g', '-v7.3');
+        save(fname, 'A', 'g', '-v7.3', '-nocompression');
     else
-        save(fname, 'A', 'g', 'method', '-v7.3');
+        save(fname, 'A', 'g', 'method', '-v7.3', '-nocompression');
     end
     if ~isempty(fw), gui.myWaitbar(parentfig, fw); end
     fprintf('The network has been saved in %s\n', fname);

@@ -38,6 +38,12 @@ classdef SingleCellExperiment < handle & matlab.mixin.Copyable
         % discards it when the data no longer match, so nothing here needs
         % subsetting with the cells.
         struct_saved_results = struct();
+        % Methods text for a manuscript, one field per analysis step
+        % ("qc", "embedding", "clustering", ...), each a struct with the
+        % paragraph, its reference keys and when it was written. Written by
+        % PKG.I_METHODSREPORT and read by SC_METHODSTEXT; a re-run step
+        % overwrites its own field, so the text describes the final run.
+        struct_methods_text = struct();
     end
 
     properties (Dependent)
@@ -431,6 +437,7 @@ methods
         if nargin < 4 || isempty(min_cells_nonzero), min_cells_nonzero = 15; end
         if nargin < 3 || isempty(mtratio), mtratio = 0.15; end
         if nargin < 2 || isempty(libsize), libsize = 1000; end
+        before = [obj.NumCells, obj.NumGenes];
         [obj.X, obj.g] = sc_rmdugenes(obj.X, obj.g);
         [~, keptg, keptidxv] = sc_qcfilter(obj.X, obj.g, ...
             libsize, mtratio, ...
@@ -442,6 +449,13 @@ methods
         obj.X = obj.X(y, :);
         obj.g = obj.g(y);
         obj = i_filterGeneAttributes(obj, y);
+        % Stored, not printed: qcfilter also runs inside other analyses on
+        % subsets. Entry points print it (PKG.I_METHODSSHOW). The 200
+        % detected genes is SC_QCFILTER's default, which this does not pass.
+        pkg.i_methodsreport(obj, "qc", pkg.i_qcmethodstext(LibSize=libsize, ...
+            MtRatio=mtratio, MinCells=min_cells_nonzero, MinGenes=200, ...
+            CellsBefore=before(1), GenesBefore=before(2), ...
+            CellsAfter=obj.NumCells, GenesAfter=obj.NumGenes), "cai2020", Print=false);
     end
 
     function obj = selectgenes(obj, min_cellnum, nonzero_cutoff)

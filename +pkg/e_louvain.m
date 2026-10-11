@@ -16,6 +16,10 @@ function [c, Q] = e_louvain(A, gamma, maxPasses)
 %   produce; they count towards a node's degree but never towards the
 %   links it has into another community.
 %
+%   A community Louvain leaves in disconnected pieces is split into them
+%   (PKG.E_SPLITDISCONNECTED), so every community returned is connected,
+%   as Leiden guarantees.
+%
 %   Nodes are visited in index order rather than a random one, so repeated
 %   calls on the same graph return the same partition.
 %
@@ -129,7 +133,7 @@ while true
     W = P' * W * P;
 end
 
-c = map;
+c = pkg.e_splitdisconnected(map, A);
 
 if nargout > 1
     P = sparse(1:n0, c, 1, n0, max(c));

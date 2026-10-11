@@ -14,8 +14,8 @@ if isa(src, 'matlab.apps.AppBase')
 
 elseif isa(src, 'matlab.ui.Figure')
     % A figure is its own parent. Callers that already hold the app window
-    % pass it here (gui.i_installtensortoolbox(FigureHandle)); the branch
-    % below took src.Parent.Parent, which for a figure is empty, and threw.
+    % pass it here; the branch below took src.Parent.Parent, which for a
+    % figure is empty, and threw.
     parentfig = src;
     if nargout > 1
         sce = guidata(parentfig);

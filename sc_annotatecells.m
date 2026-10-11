@@ -189,8 +189,14 @@ switch method
     case "markers"
         i_requireclusters(sce, method);
         [c, cL] = pkg.i_grp2idxsorted(sce.c_cluster_id);
-        [~, cLtx] = sc_celltypeanno(sce.X, sce.g, c, char(options.Species));
+        [~, cLtx] = sc_celltypeanno(sce.X, sce.g, c, char(options.Species), ...
+            Verbose=false);
         cLtx = string(cLtx(:));
+        % Printed here rather than by sc_celltypeanno, so it is also kept
+        % with SCE for sc_methodstext.
+        pkg.i_ctamethodstext(Species=options.Species, ...
+            NumClusters=numel(cLtx), NumUnknown=sum(cLtx == "Unknown"), ...
+            SCE=sce, Print=options.Verbose);
         labels = cLtx(c);
         [types, lists] = i_panglaodblists(options.Species);
         fdr = i_listfdr(sce, c, cLtx, types, lists);

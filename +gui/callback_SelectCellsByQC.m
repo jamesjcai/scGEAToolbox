@@ -42,6 +42,10 @@ if tf ~= 1
     return;
 end
 
+    % This run's QC Methods text, set only if the QC filter runs below, so
+    % the result dialog never offers a paragraph from an earlier run.
+    qctext = "";
+
     % Taken before the duplicate-gene merge below, which edits SCE in place:
     % after it, "Cancel Changes" restored a copy that kept the merge.
     if sce.NumCells*sce.NumGenes < 4e8
@@ -167,14 +171,10 @@ end
                 end
             end
 
-            if min_cells_nonzero < 1.0
-                a = sprintf('%.f%%', min_cells_nonzero*100);
-            else
-                a = sprintf('%d', min_cells_nonzero);
-            end
-
-fprintf('\nCells with more than %.f%% mitochondrial reads or fewer than %d total detected molecules (library size) were excluded. Additionally, cells expressing fewer than %d genes and genes detected in fewer than %s cells were removed from the UMI count matrix, resulting in %d genes across %d cells.\n', ...
-            mtratio*100, libsize, numgenes, a, sce.NumGenes, sce.NumCells);
+% The Methods paragraph qcfilterwhitelist stored, with the thresholds
+% and counts it actually used.
+pkg.i_methodsshow(sce, "qc");
+qctext = pkg.i_methodsshow(sce, "qc");
 
 
 %            fprintf(['\n"We removed cells with more than %.f%% mitochondrial reads and ', ...
@@ -487,10 +487,23 @@ newgn = sce.NumGenes;
         return;
     end
 
+    % Show Methods Text opens the QC paragraph and comes back to the same
+    % question; three buttons is myQuestdlg's limit.
+    if strlength(qctext) > 0
+        choices = {'Accept Changes', 'Show Methods Text', 'Cancel Changes'};
+    else
+        choices = {'Accept Changes', 'Cancel Changes'};
+    end
     if ~isempty(sceori)
-        answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
-                oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
-                {'Accept Changes', 'Cancel Changes'}, 'Accept Changes');
+        answer = 'Show Methods Text';
+        while strcmp(answer, 'Show Methods Text')
+            answer = gui.myQuestdlg(FigureHandle, sprintf('%d genes will be removed; %d cells will be removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
+                    oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn),'', ...
+                    choices, 'Accept Changes');
+            if strcmp(answer, 'Show Methods Text')
+                gui.i_showmethodstext(FigureHandle, qctext);
+            end
+        end
         if ~strcmp(answer, 'Accept Changes')
             sce = copy(sceori);
             disp('Original SCE copied back 3.');
@@ -499,8 +512,21 @@ newgn = sce.NumGenes;
             requirerefresh = true;
         end
     else
-        gui.myHelpdlg(FigureHandle, sprintf('%d genes removed; %d cells removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
-            oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn), '');
+        msg = sprintf('%d genes removed; %d cells removed.\n[%d genes x %d cells] => [%d genes x %d cells]', ...
+            oldgn-newgn, oldcn-newcn, oldgn, oldcn, newgn, newcn);
+        if strlength(qctext) > 0
+            % No copy to go back to here, so OK rather than Accept/Cancel.
+            answer = 'Show Methods Text';
+            while strcmp(answer, 'Show Methods Text')
+                answer = gui.myQuestdlg(FigureHandle, msg, '', ...
+                    {'OK', 'Show Methods Text'}, 'OK');
+                if strcmp(answer, 'Show Methods Text')
+                    gui.i_showmethodstext(FigureHandle, qctext);
+                end
+            end
+        else
+            gui.myHelpdlg(FigureHandle, msg, '');
+        end
         requirerefresh = true;
     end
 gui.myGuidata(FigureHandle, sce, src);

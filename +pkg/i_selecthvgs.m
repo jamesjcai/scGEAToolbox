@@ -1,9 +1,11 @@
-function keep = i_selecthvgs(X, g, numhvg)
+function [keep, ranker] = i_selecthvgs(X, g, numhvg)
 %I_SELECTHVGS  Flag the NUMHVG most variable genes of a raw count matrix.
 %
 %   keep = pkg.i_selecthvgs(X, g, numhvg) returns a logical vector, one
 %   entry per row of X, marking the genes to keep. X is raw counts (genes x
-%   cells) and G the matching gene names. This is the gene set
+%   cells) and G the matching gene names. RANKER names the ranker that
+%   actually ran - "analytic", or "splinefit" / "brennecke" after the ones
+%   before it failed - for the Methods text. This is the gene set
 %   SingleCellExperiment.embedcells feeds the embedders, and the one
 %   PKG.E_CELLPCS takes principal components of.
 %
@@ -27,6 +29,7 @@ function keep = i_selecthvgs(X, g, numhvg)
 %
 % The other two stay as fallbacks in the order they were the
 % default, newest first.
+ranker = "analytic";
 try
     Tranked = sc_analyticfit(X, g);
     granked = Tranked.genes;
@@ -34,6 +37,7 @@ catch ME
     warning(ME.message);
     try
         [~, ~, granked] = sc_splinefit(X, g, true, false, true);
+        ranker = "splinefit";
     catch ME2
         warning(ME2.message);
         % NORMIT false so this ranks on the same raw counts the
@@ -50,6 +54,7 @@ catch ME
         % that warning firing.
         [~, ~, granked] = sc_hvg(X, g, true, false, ...
             false, false, true);
+        ranker = "brennecke";
     end
 end
 

@@ -65,16 +65,12 @@ function [XM] = i_nc(X, nsubsmpl, ncom, csubsmpl, usebootstrp, useparallel, pars
 % branch below is byte-for-byte the code that was there before, so nothing
 % changes for any existing caller.
 %
-% READ THIS BEFORE EXPECTING A 10x SPEEDUP. The serial loop is not
-% single-threaded: TEN.I_PCNET's header records that multithreaded BLAS
-% already gives the per-network SVD loop 3.0x on 600 genes and 5.7x on 1856
-% (20 cores, 784 cells). Process-pool workers get ONE computational thread
-% each, so a 10-worker parfor trades that BLAS parallelism for task
-% parallelism rather than adding to it. On 20 cores the honest expectation is
-% 10 cores of single-threaded work against roughly 6 cores' worth of BLAS
-% speedup - a modest gain, not an order of magnitude. Measure it on the
-% workload that matters before planning around it; the gain grows with
-% nsubsmpl and shrinks as the gene count rises and BLAS scales better.
+% READ THIS BEFORE TURNING IT ON. There is little left to parallelise. On
+% 3000 genes, 500-cell subsamples, 20 cores, the serial loop builds 10
+% networks in 3.6 s (2026-10-05, after net.pcrnet's root-finding stopped
+% early). Earlier the same day, when it took 10.8 s, a parfor took 5.1 s with
+% a pool already open - and starting the pool took 37.5 s. It is unlikely to
+% pay at all now; measure before relying on it.
 %
 % RNG: THE PARALLEL PATH DRAWS DIFFERENT SUBSAMPLES. parfor cannot consume the
 % global stream in loop order, so the parallel branch gives each network its

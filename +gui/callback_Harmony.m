@@ -93,6 +93,9 @@ sce.s = s;
 if usepcs
     sce.struct_cell_reductions.harmony = pcsCorrected;
 end
+[ptext, prefs] = pkg.i_harmonymethodstext(Backend="native", UsePCs=usepcs, ...
+    NumBatches=numel(unique(batchid)), NumDims=size(s, 2));
+pkg.i_methodsreport(sce, "harmony", ptext, prefs);
 gui.myGuidata(FigureHandle, sce, src);
 done = true;
 

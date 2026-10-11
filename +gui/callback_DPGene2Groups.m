@@ -47,6 +47,14 @@ function callback_DPGene2Groups(src, ~)
         return;
     end
     
+    % Recorded before the no-results return, so a run with no hits is
+    % described too. On SCE_ORI, the app's object: SCE is a working copy.
+    [ptext, prefs] = pkg.i_dpmethodstext(Collection=indx1, ...
+        Species=string(speciesid), NumSetsTested=size(setmatrx, 1), ...
+        NumSetsReported=height(T), RankNorm=ranknorm, BgSubtract=bgsubtract, ...
+        Group1=string(cL1), Group2=string(cL2), N1=sum(i1), N2=sum(i2));
+    pkg.i_methodsreport(sce_ori, "dp", ptext, prefs);
+
     [~, ix, iy] = intersect(upper(setgenes), upper(sce.g));
     setgenes = setgenes(ix);
     setmatrx = setmatrx(:,ix);

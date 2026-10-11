@@ -17,9 +17,6 @@ function results = run_sctenifoldnet(sample_id1, sample_id2, data_dir, out_dir)
 %   with a chi-squared test on squared alignment distances, BH-corrected
 %   (ten.i_dr). Genes with pAdjusted < 0.05 are DR genes.
 %
-%   Requires the Tensor Toolbox (Setup > Install Tensor Toolbox); without it
-%   every cell type fails with the toolbox's install message.
-%
 %   Inputs:
 %     sample_id1 - GSM accession of sample 1 (e.g. 'GSM2333580')
 %     sample_id2 - GSM accession of sample 2 (e.g. 'GSM2333581')
@@ -40,10 +37,10 @@ function results = run_sctenifoldnet(sample_id1, sample_id2, data_dir, out_dir)
 %       .Tdr        - significant DR genes (pAdjusted < 0.05)
 %
 %   Reference:
-%     Osorio D et al. (2022). scTenifoldNet: A Machine Learning Workflow for
+%     Osorio D et al. (2020). scTenifoldNet: A Machine Learning Workflow for
 %     Constructing and Comparing Transcriptome-wide Gene Regulatory Networks
-%     from Single-Cell Data. Patterns 3(3):100434.
-%     https://doi.org/10.1016/j.patter.2020.100434
+%     from Single-Cell Data. Patterns 1(9):100139. PMID:33336197.
+%     https://doi.org/10.1016/j.patter.2020.100139
 %
 %   Example (from agent via evaluate_matlab_code):
 %     results = llm.run_sctenifoldnet('GSM2333580', 'GSM2333581', ...
@@ -89,9 +86,9 @@ end
 sce1.X = X1_all; sce1.g = common_genes;
 sce2.X = X2_all; sce2.g = common_genes;
 fprintf('Applying QC filter (sample 1)...\n');
-sce1 = sce1.qcfilterwhitelist(1000, 0.15, 15, 500, []);
+sce1 = sce1.qcfilterwhitelist(500, 0.15, 15, 200, []);
 fprintf('Applying QC filter (sample 2)...\n');
-sce2 = sce2.qcfilterwhitelist(1000, 0.15, 15, 500, []);
+sce2 = sce2.qcfilterwhitelist(500, 0.15, 15, 200, []);
 % QCFILTERWHITELIST drops genes detected in fewer than 15 cells, sample by
 % sample, so the two gene lists can differ afterwards. They were used as if
 % they still matched COMMON_GENES: unequal lengths made every cell type fail

@@ -57,6 +57,7 @@ try
     [~, ~, stashname] = sc_annotatecells(sce, 'Method', S.Method, args{:}, ...
         'Verbose', false);
     sce.setCellAttribute('annotation_stability', S.Stability);
+    pkg.i_stabilitymethodsreport(sce, S);
 catch ME
     gui.myWaitbar(FigureHandle, fw, true);
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);

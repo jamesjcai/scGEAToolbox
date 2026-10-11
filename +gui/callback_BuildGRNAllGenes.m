@@ -14,7 +14,7 @@ function callback_BuildGRNAllGenes(src, cellIdx)
 %                 scTenifold comparison and knockout tools.
 %   Denoised PCR  net.pcrnet_denoised - PCR networks from 10 cell
 %                 subsamples, merged by CP tensor decomposition (the full
-%                 scTenifoldNet construction; needs Tensor Toolbox).
+%                 scTenifoldNet construction).
 %   IDS           net.idsnet - unsigned, nonlinear co-dependence network;
 %                 not an scTenifold input, so its file also stores METHOD.
 %
@@ -31,16 +31,13 @@ methods = {'PCR (signed; scTenifoldNet)', ...
 prompt = sprintf(['How should the network over all %d genes be built?\n\n', ...
     'PCR is fast and gives the signed network the scTenifold comparison ', ...
     'and knockout tools use. Denoised PCR builds PCR networks on 10 ', ...
-    'subsamples of 500 cells and merges them; slower, needs Tensor ', ...
-    'Toolbox. IDS scores unsigned, nonlinear dependence. ', ...
+    'subsamples of 500 cells and merges them; slower. IDS scores ', ...
+    'unsigned, nonlinear dependence. ', ...
     '[scTenifoldNet, PMID:33336197]'], numel(sce.g));
 [indx, tf] = gui.myListdlg(FigureHandle, methods, 'Network Method', ...
     1, false, true, [420, 160], prompt);
 if tf ~= 1 || isempty(indx), return; end
 
-if indx == 2 && ~i_checktensortoolbox(FigureHandle)
-    return;
-end
 
 % --- Build
 X = sce.X(:, cellIdx);
@@ -77,26 +74,18 @@ catch ME
 end
 gui.myWaitbar(FigureHandle, fw);
 
+% Each choice above fixes its own input: pcrnet and ids on log-normalized
+% data, the denoised pcrnet on the counts as given.
+grnkeys = ["pcrnet", "pcrnet_denoised", "ids"];
+grntransforms = ["libsize_log1p", "", "libsize_log1p"];
+[ptext, prefs] = pkg.i_grnmethodstext(grnkeys(indx), NumGenes=numel(g), ...
+    NumCells=size(X, 2), Transform=grntransforms(indx));
+pkg.i_methodsreport(sce, "grn", ptext, prefs);
+
 try
     gui.i_showgrn(A, g, method, tag, FigureHandle);
 catch ME
     gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-end
-end
-
-
-function ok = i_checktensortoolbox(FigureHandle)
-ok = true;
-try
-    ten.check_tensor_toolbox;
-catch
-    gui.i_installtensortoolbox(FigureHandle);
-    try
-        ten.check_tensor_toolbox;
-    catch ME
-        gui.myErrordlg(FigureHandle, ME.message);
-        ok = false;
-    end
 end
 end
 

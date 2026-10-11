@@ -4,6 +4,11 @@ function [T] = i_knk(A0, idx, genelist, dosort, lambdav, reference)
 % T = ten.i_knk(A0, idx, genelist)
 % T = ten.i_knk(A0, idx, genelist, dosort, lambdav, reference)
 %
+% With several genes in IDX, T is a cell with one table per gene, each what
+% a call for that gene alone returns. The alignments then share A0's
+% preparation (TEN.I_MA's KNOCKOUTS), which is what TEN.KNKNULLCONTROL's
+% many knockouts of one network are for.
+%
 % A0 is the network as TEN.SCTENIFOLDKNK returns it, in NET.PCRNET's
 % orientation: row k holds the coefficients of the regression of gene k, so
 % A0(k, j) is the effect of gene j ON gene k.
@@ -40,6 +45,14 @@ if nargin < 4, dosort = true; end
 if ischar(idx) || isstring(idx)
     [~, idx] = ismember(idx, genelist);
 end
+if ~isscalar(idx) && reference
+    % The reference alignment builds its own Laplacian per knockout anyway
+    T = cell(numel(idx), 1);
+    for b = 1:numel(idx)
+        T{b} = ten.i_knk(A0, idx(b), genelist, dosort, lambdav, true);
+    end
+    return
+end
 
 import ten.*
 
@@ -55,6 +68,27 @@ end
 A0 = A0 - diag(diag(A0));
 % Row k now lists the targets of gene k
 A0 = A0.';
+
+if ~isscalar(idx)
+    T = cell(numel(idx), 1);
+    toAlign = false(numel(idx), 1);
+    for b = 1:numel(idx)
+        nOutgoing = nnz(A0(idx(b), :) ~= 0);
+        if nOutgoing < 10
+            warning('KO gene (%s) has no link or too few links with other genes.', ...
+                genelist(idx(b)));
+            T{b} = table();
+        else
+            toAlign(b) = true;   % a row with links changes when zeroed
+        end
+    end
+    [aln0, aln1] = ten.i_ma(A0, [], 2, Knockouts=idx(toAlign));
+    alignedIdx = find(toAlign);
+    for b = 1:numel(alignedIdx)
+        T{alignedIdx(b)} = ten.i_dr(aln0{b}, aln1{b}, genelist, dosort);
+    end
+    return
+end
 
 nOutgoing = nnz(A0(idx, :) ~= 0);
 if reference

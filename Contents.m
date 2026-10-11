@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.6.2 04-Oct-2026
+% Version 26.6.2 10-Oct-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -10,9 +10,10 @@
 %   sc_annotationstability    - SC_ANNOTATIONSTABILITY Choose a clustering resolution by how its cell-type labels behave.
 %   sc_buildcelltyperef       - SC_BUILDCELLTYPEREF Summarise a labelled dataset into a cell-type reference.
 %   sc_causalcccnet           - SC_CAUSALCCCNET  Local approximation of a causalCCC/MIIC network.
+%   sc_cellcyclecompare       - SC_CELLCYCLECOMPARE  Compare cell cycle position between two samples.
 %   sc_cellcyclescore         - Score cell cycle phases
 %   sc_cellscore              - SC_CELLSCORE  Cell-level gene signature scoring.
-%   sc_celltypeanno           - sc_celltypeanno is a function.
+%   sc_celltypeanno           - SC_CELLTYPEANNO Marker-based cell type annotation of clusters (PanglaoDB).
 %   sc_celltypeannoref        - SC_CELLTYPEANNOREF Label clusters against a summary-statistic cell-type reference.
 %   sc_cluster_s              - sc_cluster_s - cluster cells using cell embeding s
 %   sc_cluster_x              - sc_cluster_x - cluster cells using UMI matrix X
@@ -41,10 +42,12 @@
 %   sc_meld                   - SC_MELD Relative likelihood that each cell came from each sample.
 %   sc_mergedata              - sc_mergedata is a function.
 %   sc_mergesces              - Merges two SCE objects
+%   sc_methodstext            - SC_METHODSTEXT Methods section for the analysis steps run on a dataset.
 %   sc_norm                   - sc_norm is a function.
 %   sc_phate                  - PHATE embedding of cells
 %   sc_pickmarkers            - sc_pickmarkers is a function.
 %   sc_potency                - Estimate differentiation potency of cells
+%   sc_powerseek              - SC_POWERSEEK Rank genes by how much they drive cell-state covariance structure.
 %   sc_qcfilter               - Basic QC filter
 %   sc_read10xdir             - Read 10x folder
 %   sc_read10xh5file          - Read 10x Genomics H5 file

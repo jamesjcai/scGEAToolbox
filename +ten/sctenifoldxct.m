@@ -120,10 +120,23 @@ function [T, grns] = sctenifoldxct(sce_ori, celltype1, celltype2, twosided, vara
 %   which shares this function's engine and adds the glyco channels without
 %   altering anything here.
 %
-%   This function is a drop-in MATLAB replacement for +run/py_scTenifoldXct.
-%   Reference: Ma et al., Cell Systems 2023. PMID:36787742
+%   CHECK THE RESULT AGAINST SHUFFLED NETWORKS BEFORE CALLING IT NETWORK-
+%   DERIVED. At the defaults, shuffling both networks' gene labels left every
+%   call and nearly every distance unchanged in 17 of 17 cell-type pairs
+%   (pipelines/glyco_xct/Notes.md section 6k); under w12mode "lr" every
+%   candidate tests significant by construction. TEN.XCTNULLCONTROL reruns
+%   with shuffled networks and reports which pairs, if any, the networks
+%   support, and a verdict:
 %
-% see also: TEN.SCTENIFOLDXCT_GLYCO, TEN.I_XCTCORE, TEN.I_ALIGNEMBED
+%       [T, grns] = ten.sctenifoldxct(sce, "A", "B", false);
+%       [Tn, S] = ten.xctnullcontrol(sce, "A", "B", Grns=grns);
+%       disp(S.Verdict)
+%
+%   This function is a drop-in MATLAB replacement for +run/py_scTenifoldXct.
+%   Reference: Yang et al., Cell Systems 2023;14(4):302-311.e4. PMID:36787742
+%
+% see also: TEN.XCTNULLCONTROL, TEN.SCTENIFOLDXCT_GLYCO, TEN.I_XCTCORE,
+%           TEN.I_ALIGNEMBED
 
 if nargin < 4, twosided = true; end
 

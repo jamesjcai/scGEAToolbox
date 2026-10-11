@@ -33,8 +33,7 @@ function A = i_pcnet(X, ncomp, q, verbose, useparallel, opts)
 %                  which need the network directed; see below.
 %     scale      - normalize by max(abs(A)) (default true). FALSE for
 %                  TEN.I_NCT, which filters and saves the raw network itself.
-%     fastersvd  - swap svds for lmsvd inside net.pcrnet (default false).
-%                  Slower, and non-deterministic; see below.
+%     fastersvd  - passed to net.pcrnet, which ignores it (default false).
 %     precomputed - an ng-by-ng adjacency to use in place of net.pcrnet's
 %                  output, e.g. a network built by another tool for the same
 %                  genes and cell population. Its diagonal is zeroed (a
@@ -82,7 +81,8 @@ function A = i_pcnet(X, ncomp, q, verbose, useparallel, opts)
 %   immediately before manifold alignment. Symmetrizing here would move that
 %   step earlier and change the algorithm.
 %
-%   Requires Statistics and Machine Learning Toolbox, via net.pcrnet's zscore.
+%   Needs no toolbox beyond MATLAB; Parallel Computing Toolbox only for the
+%   GPU path.
 %
 % see also: NET.PCRNET, TEN.E_FILTADJC, TEN.I_NC, TEN.I_NCT,
 %           TEN.XCT.XCTMAIN, TEN.XCT.XCTMAIN_NN
@@ -113,52 +113,12 @@ elseif ncomp < 2 || ncomp >= ng
         "Received %g.", ng, ncomp);
 end
 
-% net.pcrnet regresses each gene on the principal components of the others, a
-% loop over ng genes that it runs as a parfor when USEPARALLEL is set. A GPU
-% takes precedence: pcrnet disables the parfor itself, because parfor and
-% gpuArray cannot be combined.
-%
-% USEPARALLEL defaults to false because it is usually the slower choice, which
-% is counterintuitive enough to be worth recording. The serial loop is ALREADY
-% parallel: multithreaded BLAS spreads each SVD across every core, measured at
-% 3.0x on 600 genes and 5.7x on 1856 (20 cores, 784 cells). A parfor fragments
-% that same work and ends up fighting it - against serial with no pool, roughly
-% break-even at 600 genes, 0.5x at 1200 and 0.3x at 1856.
-%
-% A Threads pool does not rescue it. Its workers report the full 20
-% computational threads each, so 20 workers oversubscribe 20 cores 20-fold;
-% measured 0.41x at 1856, no better than the process pool's 0.62x. Process
-% workers have the opposite problem, one thread apiece. Either way the BLAS
-% threading the serial path gets for free is the thing to preserve.
-%
-% pcrnet's FASTERSVD flag is likewise left off, but for reproducibility rather
-% than for speed. It swaps svds for lmsvd, a block-Krylov solver.
-%
-% ON SPEED, THE HONEST ANSWER IS "ABOUT THE SAME". Early single-shot tic/toc
-% runs suggested lmsvd was 1.7-2.5x slower, and that was wrong - this machine's
-% wall clock varies by over 2x between runs on identical work (svds on 1200
-% genes measured 6.8 s and 15.0 s in two sittings). Re-measured with timeit,
-% per-call times run 0.53x to 1.13x with no consistent direction, and the whole
-% pcrnet loop at 1200 genes comes out at 0.97x. Treat the two as comparable and
-% do not quote a speedup either way. lmsvd converges in ~10 iterations against
-% its maxit of 150, so it is not mistuned; it simply has no edge over ARPACK at
-% the small r used here.
-%
-% THE REAL REASONS to prefer svds:
-%   1. lmsvd is NON-DETERMINISTIC. Its default initial guess is randn(n,r), so
-%      two identical calls differ by ~1e-9 where svds is bitwise identical.
-%      That alone prevents scTenifoldNet and scTenifoldKnk from reproducing a
-%      run exactly.
-%   2. Accuracy degrades with r: relative difference 5e-9 at ncom=3 rising to
-%      1.3e-5 at ncom=40.
-%
-% Both solvers compute the same subspace - |Vs'*Vl| has singular values
-% [1 1 1] - so switching costs nothing in the result: the L-R ranking is
-% unchanged, rank correlation +1.0000 with zero rank shift.
-%
-% fastersvd was turned off at every call site in the toolbox on 2026-07-20,
-% including the scTenifoldNet and scTenifoldKnk paths that had used it since
-% before this function existed.
+% USEPARALLEL and FASTERSVD are passed through but net.pcrnet ignores both:
+% since 2026-09-24 it builds every regression from one eigendecomposition
+% (Osorio's pcNet, scTenifoldNet 1.4.1), so there is no per-gene SVD loop for
+% a parfor to split or for lmsvd to replace. They stay in the signature for
+% the callers that still pass them. A 3000-gene, 500-cell network takes about
+% 0.35 s, filtering included.
 if opts.processed && isempty(opts.precomputed)
     error("TEN:I_PCNET:ProcessedNeedsPrecomputed", ...
         "processed=true has nothing to skip processing ON without precomputed " + ...

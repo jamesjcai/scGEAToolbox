@@ -86,6 +86,21 @@ catch ME
 end
 gui.myWaitbar(FigureHandle, fw);
 
+% Methods text, one sub-key per knocked-out gene so a second knockout
+% keeps the first. A network kept from an earlier run is "existing": this
+% run does not know how it was built.
+kogene = string(sce.g(idx));
+nsig = nnz(T.pAdjusted < 0.05 & string(T.genelist) ~= kogene);
+if isreconstructed
+    network = "single";
+else
+    network = "existing";
+end
+[ptext, prefs] = pkg.i_tenifoldmethodstext("knk", Gene=kogene, ...
+    Network=network, NumCells=sce.NumCells, NumSignificant=nsig);
+pkg.i_methodsreport(sce, "knk_" + string(matlab.lang.makeValidName(kogene)), ...
+    ptext, prefs);
+
 [answer_exp, filename] = gui.i_exporttable(T, true, ...
     sprintf('Ttenifldknk_%s', sce.g(idx)), ...
     sprintf('TenifldKnkTable_%s', sce.g(idx)), [], [], FigureHandle);

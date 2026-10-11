@@ -62,13 +62,31 @@ if verbose
 end
 
 % ── Shift-invert eigensolve, with a plain fallback ────────────────────────
+% L - sigma*I is positive definite whenever L is a graph Laplacian with
+% nonnegative weights (the default, offset = 1), so it is factored here with
+% CHOL and eigs is handed the solve. Given L itself, eigs builds a
+% decomposition object that also estimates the condition number, 0.15 s a
+% call at 3000 genes for nothing the solve needs. The Krylov iteration is
+% the same either way. When CHOL refuses (signed weights can make L
+% indefinite), eigs gets L as before.
 sigma = -1e-4;
+[R, notPD] = chol(L - sigma*speye(n));
 try
-    [V, D_ev] = eigs(L, n_ev, sigma);
+    if notPD
+        [V, D_ev] = eigs(L, n_ev, sigma);
+    else
+        % linsolve with the triangle declared: R.'\b would copy the
+        % transpose and re-test for triangularity on every solve
+        lower = struct('UT', true, 'TRANSA', true);
+        upper = struct('UT', true);
+        [V, D_ev] = eigs(@(b) linsolve(R, linsolve(R, b, lower), upper), ...
+            n, n_ev, sigma, 'IsFunctionSymmetric', true);
+    end
 catch
     % Fall back to the direct formulation if the shifted factorization fails
     [V, D_ev] = eigs(L, n_ev, 'smallestreal', struct('tol', 1e-6));
 end
+clear R
 
 ev = real(diag(D_ev));
 V = real(V);
@@ -116,6 +134,24 @@ end
 function ncomp = i_ncomponents(W)
 A = abs(W) > 0;
 A = A | A';
+% A dense W (offset > 0) is almost always connected, and building a GRAPH
+% from its millions of edges took 0.3 s at 3000 genes to say so. A
+% breadth-first search over the rows answers that case in a few hundredths;
+% only a graph it does not cover is handed to CONNCOMP to count.
+if ~issparse(A)
+    reached = false(1, size(A, 1));
+    reached(1) = true;
+    frontier = 1;
+    while ~isempty(frontier)
+        found = any(A(frontier, :), 1) & ~reached;
+        reached = reached | found;
+        frontier = find(found);
+    end
+    if all(reached)
+        ncomp = 1;
+        return
+    end
+end
 try
     ncomp = max(conncomp(graph(A, "omitselfloops")));
 catch

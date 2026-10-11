@@ -49,6 +49,9 @@ if nargin < 3 || isempty(data_dir), data_dir = 'data'; end
 if nargin < 4, out_dir = []; end
 
 max_cells = 2000;   % subsample per cell type; statistical power plateaus well below this
+% Subsample from a local seeded stream: identical calls give identical
+% results, and the caller's global stream is left alone.
+subsample_stream = RandStream("twister", "Seed", 1);
 
 % Default filter parameters matching gui.i_degparamset(true) defaults:
 %   mindiffpct=0.05, minabsolfc=1.0, apvaluecut=0.01, sort by adj p-value
@@ -127,11 +130,11 @@ for k = 1:numel(shared_ct)
     idx1 = find(mask1);
     idx2 = find(mask2);
     if numel(idx1) > max_cells
-        idx1 = idx1(randperm(numel(idx1), max_cells));
+        idx1 = idx1(randperm(subsample_stream, numel(idx1), max_cells));
         fprintf('(subsampled→%d) ', max_cells);
     end
     if numel(idx2) > max_cells
-        idx2 = idx2(randperm(numel(idx2), max_cells));
+        idx2 = idx2(randperm(subsample_stream, numel(idx2), max_cells));
         fprintf('(subsampled→%d) ', max_cells);
     end
     n1 = numel(idx1);

@@ -46,6 +46,8 @@ for ik = 1:max(c)
     end
     cL(ik) = ctxt;
 end
+pkg.i_ctamethodstext(Species=string(speciesid), NumClusters=max(c), ...
+    NumUnknown=sum(rawTypes == "Unknown"), SCE=obj);
 if keepold
     pkg.i_stashcelltypehistory(obj);
 end

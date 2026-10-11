@@ -3,33 +3,32 @@ function tf = i_usegpu(X, threshold)
 % X         - input matrix (used only for numel)
 % threshold - element count above which GPU is worthwhile (default: 5e6)
 %
-% THRESHOLD RAISED FROM 5e5 TO 5e6 (2026-08-18). Every caller of this function
-% feeds the result straight to NET.PCRNET's UseGPU argument, so the only
-% question that matters is where the GPU beats the CPU for pcrnet. Measured on
-% an RTX 5060 against 20-core BLAS, at 500 cells, one network each:
+% Every caller feeds the result to NET.PCRNET's UseGPU argument. Since
+% net.pcrnet became one eigendecomposition (2026-09-24) the GPU no longer
+% loses, but there is little left to win. Measured 2026-10-05 on an RTX 5060
+% against 20-core BLAS, timeit, one network each:
 %
-%    genes    CPU s    GPU s    GPU/CPU
-%     1000      3.2     51.4     16.13x slower
-%     2000     10.5    102.7      9.81x
-%     4000     79.7    245.5      3.08x
-%     6000    150.9    243.3      1.61x
-%     8000    274.1    318.1      1.16x
+%    genes x cells    CPU s    GPU s
+%     1000 x   500     0.13     0.22
+%     2000 x   500     0.35     0.25
+%     4000 x   500     0.81     0.33
+%     8000 x   500     1.93     0.82
+%     2000 x  5000     1.02     0.63
+%     3000 x 20000     2.57     2.28
 %
-% The GPU lost at every size tested. pcrnet's loop is n tiny svds calls on
-% cells-by-n slices, so kernel launch overhead dominates, and the GPU branch
-% additionally forces UseParallel=false while the CPU branch keeps
-% multithreaded BLAS. The ratio does fall steadily with n and extrapolates to
-% a crossover somewhere past 10,000 genes, which is why this is a raised
-% threshold rather than a hard disable.
+% Re-measured after pcrnet's early stop (same day), which sped up both:
 %
-% The old 5e5 default meant any run past 1,000 genes at 500 cells took the
-% slow path, which is exactly the regime scTenifoldNet's subsampling uses
-% (TEN.I_NC calls TEN.I_PCNET with csubsmpl=500 and no way to opt out).
+%     3000 x  2108     1.10     0.56
+%     3000 x 20000     2.26     2.21
+%     6000 x 20000    13.92     9.95
 %
-% NOTE the measurements vary only n, at fixed 500 cells. numel() conflates
-% genes and cells, so a caller with few genes and very many cells is not
-% covered by this evidence; such calls (e.g. SC_GRN on a full matrix) sit far
-% above 5e6 and still take the GPU, as before.
+% So the GPU still pays above the threshold - 2x at the size of a
+% scTenifoldXct cell type - but timeit hides its one-time cost: the first
+% gpuArray call in a MATLAB session spends about 2.3 s initialising the
+% device (measured inside a scTenifoldXct run). A single network in a
+% fresh session is slower on the GPU; every later one is faster. The 5e6
+% threshold (set 2026-08-18, when the old per-gene SVD loop ran 1-16x
+% slower on the GPU) is kept.
 if nargin < 2, threshold = 5e6; end
 tf = gpuDeviceCount > 0 && numel(X) > threshold;
 end

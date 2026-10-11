@@ -98,35 +98,38 @@ if nNull == 0
         "filterzeros=false, or use a dense correspondence (w12mode=""outer"").");
 end
 
-pvals = i_percentileofscore(null_d, cand_d, nNull);
+[pvals, nTied] = i_percentileofscore(null_d, cand_d, nNull);
 
-info = struct("n_null", nNull, "filterzeros", filterZeros, ...
-    "n_ties", sum(ismember(cand_d, null_d)));
+info = struct("n_null", nNull, "filterzeros", filterZeros, "n_ties", nTied);
 
 end
 
 
 %% ---- scipy.stats.percentileofscore, kind="rank" ----
-function pct = i_percentileofscore(null_d, cand_d, nNull)
-
-nullSorted = sort(null_d(:));
+function [pct, nTied] = i_percentileofscore(null_d, cand_d, nNull)
+% NTIED is the number of candidates equal to at least one null value.
+%
+% Only the candidates are sorted. The null (every other gene pair, ~9
+% million at 3000 genes) used to be sorted too and then searched with
+% ISMEMBER twice for ties, 0.3 s a direction for counts that histcounts
+% gives without either: it does not need sorted data, and for the
+% nonnegative distances here x <= c exactly when x < c + eps(c), the next
+% double above c, so a second pass on edges moved up by one float counts
+% each candidate's ties too.
 [candSorted, order] = sort(cand_d(:));
 
 % Counts of null values strictly below each candidate. histcounts bins are
 % half-open [e(k), e(k+1)), so the running total up to bin k is exactly
 % #{null < candSorted(k)}.
 edges = [-Inf; candSorted; Inf];
-below = cumsum(histcounts(nullSorted, edges));
+below = cumsum(histcounts(null_d, edges));
 below = below(1:numel(candSorted))';
 
-% Exact ties. Vanishingly rare for continuous distances, so the membership
-% test short-circuits in the normal case.
-ties = zeros(numel(candSorted), 1);
-isTied = ismember(candSorted, nullSorted);
-for k = find(isTied)'
-    ties(k) = sum(nullSorted == candSorted(k));
-end
-atOrBelow = below + ties;
+% Counts at or below each candidate, and so the exact ties
+edgesUp = [-Inf; candSorted + eps(candSorted); Inf];
+atOrBelow = cumsum(histcounts(null_d, edgesUp));
+atOrBelow = atOrBelow(1:numel(candSorted))';
+nTied = nnz(atOrBelow > below);
 
 pctSorted = (below + atOrBelow + (atOrBelow > below))./(2*nNull);
 

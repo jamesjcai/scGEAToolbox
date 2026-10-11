@@ -4,11 +4,6 @@ function callback_scTenifoldKnk1(src, ~)
 if ~gui.gui_showrefinfo('scTenifoldKnk [PMID:35510185]', ...
         FigureHandle), return; end
 
-% The Tensor Toolbox is checked for (and offered for download) only on the
-% 'Construct de novo' branch below. Knocking out a gene in a network that
-% already exists runs TEN.I_KNK, which uses no tensors; the check used to
-% sit here and demanded the toolbox from that path too.
-
 extprogname = 'scTenifoldKnk';
 preftagname = 'externalwrkpath';
 [wkdir] = gui.gui_setprgmwkdir(extprogname, preftagname, FigureHandle);
@@ -67,17 +62,6 @@ switch answer
             end
         end
     case 'Construct de novo'
-        try
-            ten.check_tensor_toolbox;
-        catch
-            gui.i_installtensortoolbox(src);
-            try
-                ten.check_tensor_toolbox;
-            catch ME
-                gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
-                return;
-            end
-        end
         A0 = [];
         gui.myHelpdlg(FigureHandle, "Network will be constructed. Now, " + ...
             "select a KO gene (i.e., gene to be knocked out).");
@@ -168,6 +152,22 @@ else
     end
     isreconstructed = false;
 end
+
+% Methods text, one sub-key per knocked-out gene so a second knockout
+% keeps the first. A network kept from an earlier run is "existing": this
+% run does not know how it was built.
+kogene = string(sce.g(idx));
+nsig = nnz(T.pAdjusted < 0.05 & string(T.genelist) ~= kogene);
+if isreconstructed
+    [ptext, prefs] = pkg.i_tenifoldmethodstext("knk", Gene=kogene, ...
+        Network="ensemble", NumCells=sce.NumCells, NumSubsamples=nsubsmpl, ...
+        SubsampleSize=csubsmpl, NumSignificant=nsig);
+else
+    [ptext, prefs] = pkg.i_tenifoldmethodstext("knk", Gene=kogene, ...
+        Network="existing", NumSignificant=nsig);
+end
+pkg.i_methodsreport(sce, "knk_" + string(matlab.lang.makeValidName(kogene)), ...
+    ptext, prefs);
 
 % Results first, then the network: the table is what was asked for.
 [answer, filename] = gui.i_exporttable(T, true, ...

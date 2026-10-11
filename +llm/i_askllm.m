@@ -23,7 +23,8 @@ function [txt, ok] = i_askllm(prompt, provider, model, quiet)
 %   identified error rather than failing obscurely.
 %
 %   See also LLM.I_LLMSETTINGS, LLM.CALLOLLAMA, LLM.CALLOPENAICHAT,
-%   LLM.CALLOPENAICHATTAMU, LLM.CALLOPENAICHATNVIDIA, LLM.CALLGEMINI.
+%   LLM.CALLOPENAICHATTAMU, LLM.CALLOPENAICHATNVIDIA, LLM.CALLGEMINI,
+%   LLM.CALLCLAUDE.
 
 arguments
     prompt (1,1) string
@@ -113,10 +114,12 @@ switch lower(provider)
             keyfile = string(getpref('scgeatoolbox', 'llapikeyenvfile'));
         end
         [done, res] = llm.callGemini(keyfile, prompt, model);
+    case "anthropic"
+        [done, res] = llm.callClaude(prompt, model);
     otherwise
         error('llm:i_askllm:UnsupportedProvider', ...
             ['Provider "%s" has no client in +llm yet. Supported: ', ...
-             'Ollama, OpenAI, TAMUAIChat, NVIDIA, Gemini. Choose one of ', ...
+             'Ollama, OpenAI, TAMUAIChat, NVIDIA, Gemini, Anthropic. Choose one of ', ...
              'those with gui.i_setllmmodel, or pass Provider= explicitly.'], ...
             provider);
 end

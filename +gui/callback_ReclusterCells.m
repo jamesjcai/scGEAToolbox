@@ -91,6 +91,7 @@ if ~usingold
                 sce.c_cluster_id = S.ClusterId;
                 sce.struct_cell_clusterings.louvainpc = S.ClusterId;
                 sce.setCellAttribute('annotation_stability', S.Stability);
+                pkg.i_stabilitymethodsreport(sce, S);
                 gui.myGuidata(FigureHandle, sce, src);
                 requirerefresh = true;
                 return;
@@ -112,6 +113,8 @@ if ~usingold
         return
     end
     gui.myWaitbar(FigureHandle, fw);
+    % The Methods paragraph clustercells stored for this run.
+    pkg.i_methodsshow(sce, "clustering");
 end
 
 gui.myGuidata(FigureHandle, sce, src);

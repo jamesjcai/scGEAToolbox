@@ -1,56 +1,40 @@
 function i_installquantumpackage(src, ~)
 % I_INSTALLQUANTUMPACKAGE  Install or upgrade the MATLAB Quantum Computing Support Package.
-%   Checks the installed version against the latest GitHub release and prompts
-%   the user to upgrade if a newer version is available. Support packages
-%   require the MathWorks installer, so the function opens the File Exchange
-%   page rather than installing automatically.
+%   Reports the installed version and offers to open the package's page in
+%   Add-On Explorer, which shows Install or Update as appropriate. There is
+%   no public feed of the latest version: mathworks/Quantum-Computing-MATLAB
+%   publishes no GitHub releases, and the File Exchange version history
+%   lags the actual release, so Add-On Explorer is the only reliable judge.
 
 [parentfig, ~] = gui.gui_getfigsce(src);
 
 ADDON_NAME = 'MATLAB Support Package for Quantum Computing';
-GITHUB_REPO = 'mathworks/Quantum-Computing-MATLAB';
+% Support-package base code, from the add-on's .mlpkginstall signpost.
+% Add-On Explorer opens a support package's page by this code, not by
+% its File Exchange uuid.
+ADDON_ID = 'QUANTUM';
 FEX_URL = 'https://www.mathworks.com/matlabcentral/fileexchange/125425-matlab-support-package-for-quantum-computing';
 
-% --- Installed state ---------------------------------------------------------
-[isInstalled, installedVersion] = i_getInstalledVersion(ADDON_NAME);
-
-% --- Latest version from GitHub ----------------------------------------------
-latestVersion = i_fetchLatestRelease(GITHUB_REPO);
-
-% --- Decide what to do -------------------------------------------------------
-if isInstalled
-    if ~isempty(latestVersion) && ~strcmp(installedVersion, latestVersion)
-        answer = gui.myQuestdlg(parentfig, ...
-            sprintf(['%s is installed (v%s).\n' ...
-                     'A newer version (v%s) is available. Open the installer page?'], ...
-                     ADDON_NAME, installedVersion, latestVersion), ...
-            'Package Update', {'Open Installer Page', 'Cancel'}, 'Open Installer Page');
-        if strcmp(answer, 'Open Installer Page')
-            web(FEX_URL, '-browser');
-        end
-    else
-        if isempty(latestVersion)
-            msg = sprintf(['%s (v%s) is installed.\n' ...
-                '(Could not check for updates — network unavailable.)'], ...
-                ADDON_NAME, installedVersion);
-        else
-            msg = sprintf('%s (v%s) is up to date.', ADDON_NAME, installedVersion);
-        end
-        gui.myHelpdlg(parentfig, msg);
-    end
+installedVersion = i_getInstalledVersion(ADDON_ID);
+if isempty(installedVersion)
+    msg = sprintf(['%s is not installed.\n' ...
+        'Open it in Add-On Explorer to install?'], ADDON_NAME);
+    dlgTitle = 'Install Package';
 else
-    if ~isempty(latestVersion)
-        installMsg = sprintf(['%s is not installed.\n' ...
-            'Latest version: v%s. Open the installer page?'], ...
-            ADDON_NAME, latestVersion);
-    else
-        installMsg = sprintf(['%s is not installed.\n' ...
-            'Open the MATLAB Support Package page to download the installer?'], ...
-            ADDON_NAME);
-    end
-    answer = gui.myQuestdlg(parentfig, installMsg, ...
-        'Install Package', {'Open Installer Page', 'Cancel'}, 'Open Installer Page');
-    if strcmp(answer, 'Open Installer Page')
+    msg = sprintf(['%s v%s is installed.\n' ...
+        'Open it in Add-On Explorer to check for an update?'], ...
+        ADDON_NAME, installedVersion);
+    dlgTitle = 'Package Update';
+end
+answer = gui.myQuestdlg(parentfig, msg, dlgTitle, ...
+    {'Add-On Explorer', 'Cancel'}, 'Add-On Explorer');
+if strcmp(answer, 'Add-On Explorer')
+    try
+        %#exclude matlab.internal.addons.launchers.showExplorer
+        matlab.internal.addons.launchers.showExplorer('scgeatool', ...
+            'identifier', ADDON_ID);
+    catch
+        % Internal launcher unavailable (e.g. deployed); use the web page.
         web(FEX_URL, '-browser');
     end
 end
@@ -58,46 +42,19 @@ end
 
 
 % -----------------------------------------------------------------------------
-function [isInstalled, version] = i_getInstalledVersion(addonName)
-isInstalled = false;
+function version = i_getInstalledVersion(identifier)
+% Return the installed version, or '' when the add-on is not installed.
 version = '';
 if ismcc || isdeployed
     return;
 end
 try
-    %#exclude matlabshared.supportpkg.getInstalled
-    pkgs = matlabshared.supportpkg.getInstalled;
-    if isempty(pkgs), return; end
-    idx = strcmp({pkgs.Name}, addonName);
-    if any(idx)
-        isInstalled = true;
-        v = pkgs(idx).Version;
-        if iscell(v)
-            version = char(v{1});
-        else
-            version = char(v);
-        end
+    addons = matlab.addons.installedAddons;
+    idx = find(addons.Identifier == identifier, 1);
+    if ~isempty(idx)
+        version = char(addons.Version(idx));
     end
 catch
-    % Support package query unavailable
-end
-end
-
-
-% -----------------------------------------------------------------------------
-function version = i_fetchLatestRelease(githubRepo)
-% Query the GitHub releases API for the latest tag name.
-version = '';
-try
-    apiUrl = sprintf('https://api.github.com/repos/%s/releases/latest', githubRepo);
-    opts = weboptions('Timeout', 10, 'ContentType', 'json');
-    data = webread(apiUrl, opts);
-    tag = data.tag_name;
-    if startsWith(tag, 'v')
-        tag = tag(2:end);
-    end
-    version = tag;
-catch
-    % Network unavailable or no releases published
+    % Add-on query unavailable; treat as not installed.
 end
 end

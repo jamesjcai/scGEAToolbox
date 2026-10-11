@@ -52,7 +52,7 @@ if isempty(method), return; end
 % Transform only the cells being compared, together, so both networks
 % see the same scale.
 inEither = i1 | i2;
-[Xt] = gui.i_transformx(sce.X(:, inEither), true, method.Transform, FigureHandle);
+[Xt, usedTransform] = gui.i_transformx(sce.X(:, inEither), true, method.Transform, FigureHandle);
 if isempty(Xt), return; end
 if ~gui.i_confirmgrnrun(method, Xt(i, :), 2, FigureHandle), return; end
 
@@ -69,6 +69,10 @@ catch ME
     return;
 end
 gui.myWaitbar(FigureHandle, fw);
+
+[ptext, prefs] = pkg.i_grnmethodstext(method.Key, NumGenes=numel(i), ...
+    Transform=usedTransform, Groups=[string(name1), string(name2)]);
+pkg.i_methodsreport(sce, "grn", ptext, prefs);
 
 drawnow;
 stitle = sprintf('%s vs. %s', name1, name2);

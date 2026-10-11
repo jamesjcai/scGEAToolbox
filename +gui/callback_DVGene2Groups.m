@@ -122,6 +122,12 @@ catch ME
 end
 i_closewaitbar(fw);
 
+% Kept on SCE_ORI, the app's object: SCE here is a working copy.
+[ptext, prefs] = pkg.i_dvmethodstext(Method=methodtag, Direction=direction, ...
+    NumPermutations=numPerm, Group1=string(cL1), Group2=string(cL2), ...
+    N1=sce1.NumCells, N2=sce2.NumCells, QCFiltered=true, NumGenesRemoved=a-b);
+pkg.i_methodsreport(sce_ori, "dv", ptext, prefs);
+
 hFig = []; hx = []; h1 = []; h2 = [];
 hAx0 = []; hAx1 = []; hAx2 = [];
 sh1 = []; sh2 = []; idx = 1;

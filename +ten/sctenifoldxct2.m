@@ -1,10 +1,11 @@
-function [T] = sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided, varargin)
+function [T, grns] = sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided, varargin)
 % SCTENIFOLDXCT2  Differential cell-cell interaction across two samples.
 %   Native MATLAB implementation (Path B, PCNet GRNs).  No Python required.
 %
 %   T = ten.sctenifoldxct2(SCE1, SCE2, CT1, CT2)
 %   T = ten.sctenifoldxct2(SCE1, SCE2, CT1, CT2, TWOSIDED)
 %   T = ten.sctenifoldxct2(SCE1, SCE2, CT1, CT2, TWOSIDED, Name, Value)
+%   [T, grns] = ten.sctenifoldxct2(...)   % also return the four GRNs used
 %
 %   Identifies L-R pairs whose interaction strength differs significantly
 %   between two conditions (SCE1 vs SCE2) for the same pair of cell types.
@@ -34,8 +35,8 @@ function [T] = sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided, vararg
 %                 Until 2026-07-20 this function applied no offset at all,
 %                 having kept its own inline block assembly; it now shares
 %                 TEN.I_XCTBLOCK with the other entry points.
-%     'useparallel' - build the GRNs with a parfor (default: false, and usually
-%                 the slower choice; see TEN.I_PCNET)
+%     'useparallel' - passed to net.pcrnet, which ignores it (default: false;
+%                 see TEN.I_PCNET)
 %
 %   Precomputed-GRN Name-Value pairs:
 %     'grn_s1'   - ng-by-ng adjacency to use for CT1 in SCE1, instead of
@@ -87,6 +88,15 @@ function [T] = sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided, vararg
 %                      distance changed more between conditions than typical
 %            q_value : Benjamini-Hochberg across all gene pairs
 %          When twosided=true, T is a cell array {T_ct1_ct2, T_ct2_ct1}.
+%     grns - struct with fields A_s1, A_t1 (CT1 and CT2 in SCE1), A_s2, A_t2
+%          (the same in SCE2) - the networks actually used, after TEN.
+%          I_PCNET's scale/filter/symmetrize - and genes. Pass them back as
+%          grn_* with grn_*_processed=true to reuse them, as TEN.
+%          XCT2NULLCONTROL does. Empty if the run stopped before building them.
+%
+%   CHECK THE RESULT AGAINST SHUFFLED NETWORKS. As for TEN.SCTENIFOLDXCT,
+%   the networks may not be what drives the result; TEN.XCT2NULLCONTROL
+%   reruns with the networks' gene labels shuffled and gives a verdict.
 %
 %   THE TEST CHANGED ON 2026-07-20 AND SO DID `FC`. This function previously
 %   computed FC = dist_s1/dist_s2 and a two-tailed empirical p-value for
@@ -105,10 +115,10 @@ function [T] = sctenifoldxct2(sce1, sce2, celltype1, celltype2, twosided, vararg
 %   the same order, which was always assumed and is now checked.
 %
 %   This is a MATLAB replacement for +run/py_scTenifoldXct2.
-%   Reference: Ma et al., Cell Systems 2023. PMID:36787742
+%   Reference: Yang et al., Cell Systems 2023;14(4):302-311.e4. PMID:36787742
 %
-% see also: TEN.I_XCT2CORE, TEN.SCTENIFOLDXCT2_GLYCO, TEN.I_XCTCHI2,
-%           TEN.SCTENIFOLDXCT
+% see also: TEN.XCT2NULLCONTROL, TEN.I_XCT2CORE, TEN.SCTENIFOLDXCT2_GLYCO,
+%           TEN.I_XCTCHI2, TEN.SCTENIFOLDXCT
 
 if nargin < 5, twosided = true; end
 
@@ -153,7 +163,7 @@ cfg.grn_t1_processed = logical(p.Results.grn_t1_processed);
 cfg.grn_s2_processed = logical(p.Results.grn_s2_processed);
 cfg.grn_t2_processed = logical(p.Results.grn_t2_processed);
 
-T = ten.i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg);
+[T, grns] = ten.i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg);
 
 end % sctenifoldxct2
 

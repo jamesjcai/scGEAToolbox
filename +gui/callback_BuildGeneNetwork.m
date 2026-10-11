@@ -39,7 +39,7 @@ method = gui.i_selectgrnmethod(FigureHandle, sprintf(['How should the ', ...
     'links between the %d genes be scored?'], numel(glist)));
 if isempty(method), return; end
 
-[Xt] = gui.i_transformx(sce.X(:, cellIdx), true, method.Transform, FigureHandle);
+[Xt, usedTransform] = gui.i_transformx(sce.X(:, cellIdx), true, method.Transform, FigureHandle);
 if isempty(Xt), return; end
 x = Xt(i, :);
 if ~gui.i_confirmgrnrun(method, x, 1, FigureHandle), return; end
@@ -53,6 +53,9 @@ catch ME
     return;
 end
 gui.myWaitbar(FigureHandle, fw);
+[ptext, prefs] = pkg.i_grnmethodstext(method.Key, NumGenes=size(x, 1), ...
+    NumCells=size(x, 2), Transform=usedTransform);
+pkg.i_methodsreport(sce, "grn", ptext, prefs);
 
 % Saved silently to the working folder, then drawn whole (or sketched,
 % for a long gene list); the figure's toolbar exports and locates it.

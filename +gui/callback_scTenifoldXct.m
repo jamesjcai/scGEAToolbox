@@ -164,6 +164,29 @@ switch answer
         return;
 end
 
+% ── 4b. Shuffled-network control (toolbox spectral path) ─────────────────
+% At the default settings the networks barely move the result: shuffling
+% their gene labels left every call unchanged in 17 of 17 cell-type pairs
+% (pipelines/glyco_xct/Notes.md section 6k). ten.xctnullcontrol measures that
+% for this run. It wraps ten.sctenifoldxct, so only that path offers it.
+runControl = false;
+controls = struct([]);
+if midx == MTHD_SPEC
+    answer = gui.myQuestdlg(FigureHandle, ['Also run the shuffled-network ' ...
+        'control? It repeats the analysis 20 times with the networks'' gene ' ...
+        'labels shuffled - about a minute per direction at 3000 genes - and ' ...
+        'reports whether the result depends on the networks, with an ' ...
+        'empirical p (EmpP) per pair.'], '', {'Yes', 'No', 'Cancel'}, 'No');
+    switch answer
+        case 'Yes'
+            runControl = true;
+        case 'No'
+            % run without it
+        otherwise
+            return;   % Cancel, or the dialog closed
+    end
+end
+
 % ── 5. Prepare filtered SCE ──────────────────────────────────────────────
 sce.c_batch_id = thisc;
 sce.c_batch_id(c == x1) = "Source";
@@ -198,8 +221,14 @@ switch midx
 
     case MTHD_SPEC   % ── Path B: spectral, toolbox GRN settings ─────────────
         try
-            Tres = ten.sctenifoldxct(sce, string(cL{x1}), string(cL{x2}), ...
+            [Tres, grns] = ten.sctenifoldxct(sce, string(cL{x1}), string(cL{x2}), ...
                 twosided, 'w12mode', w12mode, 'useparallel', useparallel);
+            if runControl
+                [Tres, verdicts, controls] = in_runcontrol(Tres, grns, sce, ...
+                    string(cL{x1}), string(cL{x2}), twosided, ...
+                    {'w12mode', w12mode, 'useparallel', useparallel}, ...
+                    FigureHandle, fw);
+            end
         catch ME
             in_closewaitbar(FigureHandle, fw, true);   % before the error, not under it
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
@@ -231,6 +260,9 @@ switch midx
 
 end
 in_closewaitbar(FigureHandle, fw, false);
+if runControl
+    gui.myHelpdlg(FigureHandle, strjoin(verdicts, [newline, newline]));
+end
 
 % ── 7. Post-process: unify two-sided results and add direction column ─────
 T = [];
@@ -253,6 +285,22 @@ elseif istable(Tres)
     a = sprintf("%s -> %s", cL{x1}, cL{x2});
     T = addvars(T, repelem(a, height(T), 1), 'Before', 1);
     T.Properties.VariableNames{'Var1'} = 'direction';
+end
+
+% Methods text, on SCE_ORI (the app's object; SCE is a working copy). One
+% sub-key per cell-type pair, so a second pair keeps the first.
+if ~isempty(T)
+    pathkeys = ["nn", "spectral", "reference", "python"];
+    nsig = NaN;
+    if ismember('p_value', T.Properties.VariableNames)
+        nsig = nnz(T.p_value < 0.05);
+    end
+    [ptext, prefs] = pkg.i_tenifoldmethodstext("xct", ...
+        Groups=[string(cL{x1}), string(cL{x2})], N1=nnz(c == x1), ...
+        N2=nnz(c == x2), Path=pathkeys(midx), W12Mode=w12mode, ...
+        TwoSided=twosided, NumCandidates=height(T), NullControl=runControl, Control=controls, NumSignificant=nsig);
+    pkg.i_methodsreport(sce_ori, "ccc_" + string(matlab.lang.makeValidName( ...
+        string(cL{x1}) + "_" + string(cL{x2}))), ptext, prefs);
 end
 
 % ── 8. Annotate with extended L-R database and export ────────────────────
@@ -317,6 +365,55 @@ else
 end
 
 end
+
+function [Tres, verdicts, controls] = in_runcontrol(Tres, grns, sce, source, target, ...
+    twosided, xctArgs, parentfig, fw)
+% Run ten.xctnullcontrol for each direction Tres holds, reusing the networks
+% the main run built, and add its per-pair columns to that direction's table.
+% The networks are per cell type, so the reverse direction swaps them.
+pairs = [source, target];
+nets = {grns};
+if twosided
+    pairs = [pairs; target, source];
+    nets{2} = struct('A_s', grns.A_t, 'A_t', grns.A_s, 'genes', grns.genes);
+else
+    Tres = {Tres};
+end
+verdicts = strings(size(pairs, 1), 1);
+% Each direction's diagnostics, for the Methods text.
+controls = struct([]);
+for d = 1:size(pairs, 1)
+    gui.myWaitbar(parentfig, fw, false, '', sprintf(['Shuffled-network ' ...
+        'control, %s -> %s (%d of %d)...'], pairs(d, 1), pairs(d, 2), ...
+        d, size(pairs, 1)));
+    [Tn, S] = ten.xctnullcontrol(sce, pairs(d, 1), pairs(d, 2), ...
+        Grns=nets{d}, XctArgs=xctArgs, Verbose=false);
+    Tres{d} = in_addcontrolcols(Tres{d}, Tn);
+    verdicts(d) = sprintf('%s -> %s: %s', pairs(d, 1), pairs(d, 2), S.Verdict);
+    c = struct('Source', pairs(d, 1), 'Target', pairs(d, 2), ...
+        'NumShuffles', S.NumShuffles, 'NetworkSensitive', S.NetworkSensitive, ...
+        'MedianRho', S.MedianRho, 'MedianSigJaccard', S.MedianSigJaccard, ...
+        'NumEmpPBelow05', S.NumEmpPBelow05, 'NumCandidates', S.NumCandidates, ...
+        'NumExpectedByChance', S.NumExpectedByChance, 'NumSigReal', S.NumSigReal);
+    if isempty(controls), controls = c; else, controls(end+1) = c; end %#ok<AGROW> two directions at most
+end
+if ~twosided
+    Tres = Tres{1};
+end
+end
+
+
+function T = in_addcontrolcols(T, Tn)
+% The control's per-pair columns, matched to T by ligand and receptor
+key = string(T.ligand) + "|" + string(T.receptor);
+[found, j] = ismember(key, string(Tn.ligand) + "|" + string(Tn.receptor));
+for col = ["ShuffleMedianDist", "ShuffleRatio", "EmpP", "ShuffleSigFrac"]
+    v = nan(height(T), 1);
+    v(found) = Tn.(col)(j(found));
+    T.(col) = v;
+end
+end
+
 
 function in_closewaitbar(parentfig, fw, witherror)
 % Close the MATLAB-path progress bar; a no-op when none was opened.

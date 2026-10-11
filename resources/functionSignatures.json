@@ -412,7 +412,7 @@
 	"inputs":
 	[
 		{"name":"X", "kind":"required", "type":["numeric"]},
-		{"name":"type", "kind":"ordered", "type":["string","choices={'pcrnet','pcrnet_batch','pcrnet_denoised','genie3','pearson','xicor','distcorr','mi','grnformer','tn'}"]}
+		{"name":"type", "kind":"ordered", "type":["string","choices={'pcrnet','xicor','pearson','distcorr','mi','mic','ids','genie3','pcrnet_legacy','pcrnet_denoised','grnformer','tn'}"]}
 	]
 },
 "sc_grnview":

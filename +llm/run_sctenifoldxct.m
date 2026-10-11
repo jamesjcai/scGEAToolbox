@@ -1,9 +1,10 @@
-function results = run_sctenifoldxct(sample_id, celltype1, celltype2, data_dir, out_dir)
+function results = run_sctenifoldxct(sample_id, celltype1, celltype2, data_dir, out_dir, null_control)
 % LLM.RUN_SCTENIFOLDXCT  Ligand-receptor interaction analysis between two cell types.
 %
 %   results = llm.run_sctenifoldxct(sample_id, celltype1, celltype2)
 %   results = llm.run_sctenifoldxct(sample_id, celltype1, celltype2, data_dir)
 %   results = llm.run_sctenifoldxct(sample_id, celltype1, celltype2, data_dir, out_dir)
+%   results = llm.run_sctenifoldxct(..., out_dir, null_control)
 %
 %   Detects ligand-receptor pairs co-expressed across two cell types within
 %   a single GEO sample using spectral manifold alignment of gene regulatory
@@ -11,7 +12,7 @@ function results = run_sctenifoldxct(sample_id, celltype1, celltype2, data_dir, 
 %     Direction 1: celltype1 (ligand source) -> celltype2 (receptor target)
 %     Direction 2: celltype2 (ligand source) -> celltype1 (receptor target)
 %
-%   Method (Ma et al., Cell Systems 2023. PMID:36787742):
+%   Method (Yang et al., Cell Systems 2023. PMID:36787742):
 %     1. Build a PCNet GRN (principal-component regression) for each cell
 %        type on log-normalized expression, via ten.i_pcnet
 %     2. Assemble block weight matrix with L-R database correspondences
@@ -29,6 +30,15 @@ function results = run_sctenifoldxct(sample_id, celltype1, celltype2, data_dir, 
 %                  Pass an absolute path when calling from the agent.
 %     out_dir    - folder to write Excel result files (optional).
 %                  If omitted or empty, no files are written.
+%     null_control - also run ten.xctnullcontrol for each direction
+%                  (default true): 20 reruns with the networks' gene labels
+%                  shuffled, about a minute in all at the runner's sizes.
+%                  At the default settings scTenifoldXct's calls do not
+%                  depend on the networks (pipelines/glyco_xct/Notes.md
+%                  section 6k), and this is what tells a report so: each
+%                  direction's verdict goes into the JSON as
+%                  network_control, and the tables gain EmpP, ShuffleRatio,
+%                  ShuffleSigFrac and ShuffleMedianDist. Pass false to skip.
 %
 %   Output:
 %     results - struct with fields:
@@ -42,11 +52,15 @@ function results = run_sctenifoldxct(sample_id, celltype1, celltype2, data_dir, 
 %       .T2         - L-R table, celltype2->celltype1 (all pairs, sorted by dist)
 %       .T1sig      - significant pairs from T1 (p_value < 0.05)
 %       .T2sig      - significant pairs from T2 (p_value < 0.05)
+%       .control1   - ten.xctnullcontrol's diagnostics for T1's direction
+%                     (struct with Verdict, NetworkSensitive, MedianRho, ...),
+%                     empty when null_control is false
+%       .control2   - the same for T2's direction
 %
 %   Reference:
-%     Ma W et al. (2023). Characterizing cell-cell communication in
-%     single-cell multi-omics data with scTenifoldXct.
-%     Cell Systems 16(4):337-354. PMID:36787742.
+%     Yang Y et al. (2023). scTenifoldXct: A semi-supervised method for
+%     predicting cell-cell interactions and mapping cellular communication
+%     graphs. Cell Systems 14(4):302-311.e4. PMID:36787742.
 %
 %   Example (from agent via evaluate_matlab_code):
 %     results = llm.run_sctenifoldxct('GSM2333580', 'T cell', 'Cancer cell', ...
@@ -54,6 +68,7 @@ function results = run_sctenifoldxct(sample_id, celltype1, celltype2, data_dir, 
 
 if nargin < 4 || isempty(data_dir), data_dir = 'data'; end
 if nargin < 5, out_dir = []; end
+if nargin < 6 || isempty(null_control), null_control = true; end
 
 celltype1 = string(celltype1);
 celltype2 = string(celltype2);
@@ -67,7 +82,9 @@ results = struct( ...
     'T1',    table(), ...
     'T2',    table(), ...
     'T1sig', table(), ...
-    'T2sig', table());
+    'T2sig', table(), ...
+    'control1', struct([]), ...
+    'control2', struct([]));
 
 % ---- Load SCE object ------------------------------------------------
 sce = i_load_sce(sample_id, data_dir);
@@ -83,7 +100,7 @@ end
 
 % ---- QC filter ------------------------------------------------------
 fprintf('Applying QC filter...\n');
-sce = sce.qcfilterwhitelist(1000, 0.15, 15, 500, []);
+sce = sce.qcfilterwhitelist(500, 0.15, 15, 200, []);
 fprintf('After QC: %d genes x %d cells\n', sce.NumGenes, sce.NumCells);
 
 % ---- List available cell types --------------------------------------
@@ -135,12 +152,11 @@ i_log(out_dir, sprintf('START scTenifoldXct: %s | %s (n=%d) <-> %s (n=%d)', ...
 
 % ---- Run scTenifoldXct (both directions) ----------------------------
 fprintf('\nRunning scTenifoldXct: %s <-> %s ...\n', celltype1, celltype2);
-fprintf('WARNING: GRN construction may take several minutes.\n');
 
 T_pair = [];
 try
     % Returns {T1, T2}: T1 = ct1->ct2, T2 = ct2->ct1
-    T_pair = ten.sctenifoldxct(sce, celltype1, celltype2, true);
+    [T_pair, grns] = ten.sctenifoldxct(sce, celltype1, celltype2, true);
 catch ME
     error('llm:run_sctenifoldxct:failed', ...
         'scTenifoldXct failed: %s', ME.message);
@@ -157,6 +173,37 @@ end
 
 if ~istable(T1), T1 = table(); end
 if ~istable(T2), T2 = table(); end
+
+% ---- Shuffled-network control ---------------------------------------
+% Each direction's control re-runs it with the networks the run above
+% built (swapped for the reverse direction) and returns the same table with
+% the control's columns, so it replaces T1/T2. Seed 1 keeps reports
+% reproducible. A failure here costs the control, not the result.
+if null_control
+    nets = {grns, struct('A_s', grns.A_t, 'A_t', grns.A_s, 'genes', grns.genes)};
+    pairs = [celltype1, celltype2; celltype2, celltype1];
+    Ts = {T1, T2};
+    controls = {struct([]), struct([])};
+    for d = 1:2
+        if height(Ts{d}) < 3
+            continue   % too few candidates to compare rankings
+        end
+        fprintf('Shuffled-network control, %s -> %s ...\n', pairs(d, 1), pairs(d, 2));
+        try
+            [Tn, Sn] = ten.xctnullcontrol(sce, pairs(d, 1), pairs(d, 2), ...
+                Grns=nets{d}, Seed=1, Verbose=false);
+            fprintf('  %s\n', Sn.Verdict);
+            Ts{d} = sortrows(Tn, 'dist');
+            controls{d} = Sn;
+        catch ME
+            warning('llm:run_sctenifoldxct:controlFailed', ...
+                'Shuffled-network control failed for %s -> %s: %s', ...
+                pairs(d, 1), pairs(d, 2), ME.message);
+        end
+    end
+    [T1, T2] = Ts{:};
+    [results.control1, results.control2] = controls{:};
+end
 
 % Significant pairs (p_value < 0.05)
 T1sig = i_significant(T1);
@@ -240,14 +287,16 @@ dir1 = struct( ...
     'receptor_cell',  results.celltype2, ...
     'n_total_pairs',  height(results.T1), ...
     'n_sig_pairs',    height(results.T1sig), ...
-    'top_pairs',      {i_table_to_structs(results.T1sig, top_n)});
+    'top_pairs',      {i_table_to_structs(results.T1sig, top_n)}, ...
+    'network_control', i_control_json(results.control1));
 
 dir2 = struct( ...
     'ligand_cell',    results.celltype2, ...
     'receptor_cell',  results.celltype1, ...
     'n_total_pairs',  height(results.T2), ...
     'n_sig_pairs',    height(results.T2sig), ...
-    'top_pairs',      {i_table_to_structs(results.T2sig, top_n)});
+    'top_pairs',      {i_table_to_structs(results.T2sig, top_n)}, ...
+    'network_control', i_control_json(results.control2));
 
 % STATUS for the schema GEOcellar's analysis node reads. A run that gets
 % here has results; zero significant pairs is one of them, reported by
@@ -273,13 +322,37 @@ function rows = i_table_to_structs(T, n)
 rows = {};
 if isempty(T) || ~istable(T), return; end
 n = min(n, height(T));
+hasControl = ismember('EmpP', T.Properties.VariableNames);
 for i = 1:n
     s = struct('ligand',   char(T.ligand(i)), ...
                'receptor', char(T.receptor(i)), ...
                'dist',     round(double(T.dist(i)), 6), ...
                'p_value',  double(T.p_value(i)));
+    if hasControl
+        % The pair against its own shuffled networks; see i_control_json
+        s.emp_p = round(double(T.EmpP(i)), 4);
+        s.shuffle_ratio = round(double(T.ShuffleRatio(i)), 4);
+    end
     rows{end+1} = s; %#ok<AGROW>
 end
+end
+
+% ---- Helper: shuffled-network control for JSON ----------------------
+function c = i_control_json(S)
+% ten.xctnullcontrol's verdict for one direction, or a note that it did
+% not run. VERDICT is a full sentence meant to be read as it stands.
+if isempty(S)
+    c = struct('ran', false, 'verdict', '', 'network_sensitive', [], ...
+        'median_spearman_vs_shuffled', [], 'median_sig_jaccard_vs_shuffled', [], ...
+        'n_pairs_beating_shuffles', [], 'n_shuffles', 0);
+    return
+end
+c = struct('ran', true, 'verdict', char(S.Verdict), ...
+    'network_sensitive', S.NetworkSensitive, ...
+    'median_spearman_vs_shuffled', round(S.MedianRho, 4), ...
+    'median_sig_jaccard_vs_shuffled', round(S.MedianSigJaccard, 4), ...
+    'n_pairs_beating_shuffles', S.NumEmpPBelow05, ...
+    'n_shuffles', S.NumShuffles);
 end
 
 
@@ -307,11 +380,14 @@ end
 
 % ---- Helper: subsample two named cell types to at most max_cells each
 function sce = i_subsample_celltypes(sce, ct, ct1, ct2, max_cells)
+% A local seeded stream: identical calls pick the same cells, and the
+% caller's global stream is left alone.
+stream = RandStream("twister", "Seed", 1);
 for ctname = [ct1, ct2]
     mask = ct == ctname;
     idx  = find(mask);
     if numel(idx) > max_cells
-        keep = idx(randperm(numel(idx), max_cells));
+        keep = idx(randperm(stream, numel(idx), max_cells));
         drop = setdiff(idx, keep);
         keep_all = setdiff(1:sce.NumCells, drop);
         sce = sce.selectcells(keep_all);

@@ -30,8 +30,8 @@ function [T, A0, A1, genelist] = sctenifoldnet(X0, X1, genelist, varargin)
 %
 % 'useparallel' (default false) runs TEN.I_NC's network-construction loop as a
 % parfor, one worker per subsampled network. See I_NC's header before turning
-% it on: the serial path is already parallel through multithreaded BLAS, so
-% the realistic gain is modest rather than nsubsmpl-fold, and the parallel
+% it on: each network takes about a third of a second, so there is little to
+% gain and starting a pool costs far more, and the parallel
 % branch draws different bootstrap subsamples than the serial one - equivalent
 % in distribution, reproducible from a seed, but not the same cells.
 %
@@ -49,8 +49,7 @@ function [T, A0, A1, genelist] = sctenifoldnet(X0, X1, genelist, varargin)
 %                genes kept; the genes are those passing QC in both samples
 %   networks     TEN.I_NCREF: R's sample() through TEN.RRANDOM, q = 0.95 on
 %                R's quantile, max scaling; 'nsubsmpl' and 'csubsmpl' apply
-%   tensor       TEN.I_CPALS: R's CP-ALS, K = 3, rounded to 1 decimal; no
-%                Tensor Toolbox needed
+%   tensor       TEN.I_CPALS: R's CP-ALS, K = 3, rounded to 1 decimal
 %   alignment    unnormalized Laplacian, 30 dimensions
 %   regulation   TEN.I_DR reference mode: adds distance and Box-Cox Z,
 %                noise-level distances get p = 1, sorted by p
@@ -90,23 +89,6 @@ if p.Results.reference
     return
 end
 
-if ~(ismcc || isdeployed)
-    if exist(['@tensor', filesep, 'tensor.m'], 'file') ~= 2
-        if ispref('scgeatoolbox', 'tensor_toolbox_path')
-            pth = getpref('scgeatoolbox', 'tensor_toolbox_path');
-            if isfolder(pth)
-                addpath(pth);
-            else
-                error('sctenifoldnet:missingToolbox', ...
-                    'Tensor Toolbox path not found: %s\nRe-install via Setup > Install Tensor Toolbox.', pth);
-            end
-        else
-            error('sctenifoldnet:missingToolbox', ...
-                'Tensor Toolbox is not installed. Install it via Setup > Install Tensor Toolbox.');
-        end
-    end
-end
-
 doqqplot = p.Results.qqplot;
 tdmethod = p.Results.tdmethod;
 nsubsmpl = p.Results.nsubsmpl;
@@ -135,9 +117,6 @@ if size(X0, 1) ~= length(genelist)
     error('Length of genelist should be the same as the number of rows of X0 or X1.');
 end
 
-if exist('tensor.m', 'file') ~= 2
-    error('Need tensor_toolbox');
-end
 if isempty(which('net.pcrnet'))
     error('Need net.pcrnet in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
 end
@@ -173,7 +152,10 @@ if savegrn
     tic
     disp('Saving scGRN network 1/2')
     tstr = matlab.lang.makeValidName(string(datetime));
-    save(sprintf('A0_%s', tstr), 'A0', 'genelist', '-v7.3');
+    % Uncompressed: the denoised network is dense, so compression saved 4%
+    % of the file and took 15x as long (3000 genes: 1.4 s against 0.09 s).
+    % -v7.3 is kept for networks past 2 GB, about 16,000 genes.
+    save(sprintf('A0_%s', tstr), 'A0', 'genelist', '-v7.3', '-nocompression');
     toc
 end
 tic
@@ -187,7 +169,7 @@ toc
 if savegrn
     tic
     disp('Saving scGRN network 2/2')
-    save(sprintf('A1_%s', tstr), 'A1', 'genelist', '-v7.3');
+    save(sprintf('A1_%s', tstr), 'A1', 'genelist', '-v7.3', '-nocompression');
     toc
 end
 

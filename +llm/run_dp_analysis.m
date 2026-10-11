@@ -59,6 +59,9 @@ if nargin < 5 || isempty(gene_set_option), gene_set_option = 2; end
 if nargin < 6 || isempty(species), species = 'human'; end
 
 max_cells = 2000;   % subsample per cell type for speed
+% Subsample from a local seeded stream: identical calls give identical
+% results, and the caller's global stream is left alone.
+subsample_stream = RandStream("twister", "Seed", 1);
 
 i_validate_gene_set_option(gene_set_option);
 
@@ -138,11 +141,11 @@ for k = 1:numel(shared_ct)
     idx1 = find(mask1);
     idx2 = find(mask2);
     if numel(idx1) > max_cells
-        idx1 = idx1(randperm(numel(idx1), max_cells));
+        idx1 = idx1(randperm(subsample_stream, numel(idx1), max_cells));
         fprintf('(subsampled→%d) ', max_cells);
     end
     if numel(idx2) > max_cells
-        idx2 = idx2(randperm(numel(idx2), max_cells));
+        idx2 = idx2(randperm(subsample_stream, numel(idx2), max_cells));
         fprintf('(subsampled→%d) ', max_cells);
     end
     n1 = numel(idx1);

@@ -88,13 +88,14 @@ if ispref('scgeatoolbox', preftagname)
     end
 end
 
-% Only providers some feature can call. Anthropic and Cohere used to be
-% offered too, but neither llm.i_askllm (the LLM reports) nor GEOcellar has
-% a client for them, so choosing one broke both. The two features support
-% different sets, and each entry says which it works with.
-listItems = {'Ollama', 'Gemini', 'TAMUAIChat', 'OpenAI', ...
+% Only providers some feature can call. Cohere used to be offered too, but
+% neither llm.i_askllm (the LLM reports) nor GEOcellar has a client for it,
+% so choosing it broke both. The two features support different sets, and
+% each entry says which it works with.
+listItems = {'Ollama', 'Gemini', 'Anthropic', 'TAMUAIChat', 'OpenAI', ...
              'NVIDIA', 'DeepSeek', 'xAI', 'Mistral'};
 listShown = {'Ollama', 'Gemini (LLM reports only, not GEOcellar)', ...
+             'Anthropic Claude (LLM reports only, not GEOcellar)', ...
              'TAMUAIChat', 'OpenAI', 'NVIDIA', ...
              'DeepSeek (GEOcellar only, not LLM reports)', ...
              'xAI (GEOcellar only, not LLM reports)', ...
@@ -345,6 +346,37 @@ switch selectedProvider
             else
                 return;
             end
+        end
+
+    case 'Anthropic'
+        % Anthropic Messages API, called by llm.callClaude.
+        % Requires ANTHROPIC_API_KEY in the env file or the MATLAB vault.
+        api_key = i_providerkey(parentfig, "ANTHROPIC_API_KEY", fileValues);
+        if isempty(api_key), return; end
+        models_url = 'https://api.anthropic.com/v1/models?limit=100';
+        [models_response, ok] = i_fetchmodels(parentfig, models_url, ...
+            @(k) weboptions('HeaderFields', {'x-api-key', k; ...
+            'anthropic-version', '2023-06-01'}, 'Timeout', 30), ...
+            "ANTHROPIC_API_KEY", api_key, fileValues, "Anthropic");
+        if ~ok, return; end
+        model_names = i_field2str(models_response.data, 'id');
+        preferred_model = 'claude-sonnet-5-5';
+        [y, idx] = ismember(preferred_model, model_names);
+        if ~y, idx = 1; end
+        if gui.i_isuifig(parentfig)
+            [idx, ok2] = gui.myListdlg(parentfig, model_names, ...
+                    'Select a Claude model:', model_names(idx), false);
+        else
+            [idx, ok2] = listdlg('PromptString', 'Select a Claude model:', ...
+                          'SelectionMode', 'single', 'ListString', model_names, ...
+                          'ListSize', [300 300], 'InitialValue', idx);
+        end
+        if ok2
+            selectedModel = model_names{idx};
+            setpref('scgeatoolbox', preftagname, selectedProvider + ":" + selectedModel);
+            done = true;
+        else
+            return;
         end
 
     case 'DeepSeek'

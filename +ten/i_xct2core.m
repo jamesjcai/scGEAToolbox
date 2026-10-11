@@ -1,4 +1,4 @@
-function T = i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg)
+function [T, grns] = i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg)
 %I_XCT2CORE  Shared engine for the differential scTenifoldXct entry points.
 %   T = TEN.I_XCT2CORE(SCE1, SCE2, CELLTYPE1, CELLTYPE2, TWOSIDED, CFG) runs the
 %   two-sample comparison: four GRNs, one correspondence block per sample, a
@@ -23,7 +23,7 @@ function T = i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg)
 %     w12mode    - "lr" (cognate pairs) or "outer" (reference outer product)
 %     alpha      - mean/variance blend for w12mode="outer"
 %     grnoffset  - constant added to every GRN element; see TEN.I_XCTBLOCK
-%     useparallel- pass a parfor down to net.pcrnet; see TEN.I_PCNET
+%     useparallel- passed to net.pcrnet, which ignores it; see TEN.I_PCNET
 %     tag        - string used to prefix progress messages
 %     candidates - "database" (default) restricts the output to L-R database
 %                  matches, as published. "all" instead ranks EVERY gene
@@ -74,6 +74,11 @@ function T = i_xct2core(sce1, sce2, celltype1, celltype2, twosided, cfg)
 tag = cfg.tag;
 verbose = cfg.verbose;
 
+% GRNS (second output) holds the four networks used, after TEN.I_PCNET's
+% processing, so they can be passed back as grn_* with grn_*_processed=true
+% (TEN.XCT2NULLCONTROL does). Empty when the run stops before building them.
+grns = struct([]);
+
 % -- Expression matrices --------------------------------------------------
 [X_s1, X_t1, X_s2, X_t2, g] = i_prepare(sce1, sce2, celltype1, celltype2, ...
     tag, verbose);
@@ -121,6 +126,8 @@ A_s2 = ten.i_pcnet(ten.i_lognorm(X_s2), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_s2, processed=cfg.grn_s2_processed);
 A_t2 = ten.i_pcnet(ten.i_lognorm(X_t2), 3, 0.75, false, cfg.useparallel, ...
     precomputed=cfg.grn_t2, processed=cfg.grn_t2_processed);
+grns = struct('A_s1', A_s1, 'A_t1', A_t1, 'A_s2', A_s2, 'A_t2', A_t2, ...
+    'genes', string(g(:)));
 
 % One bundle per sample, so the direction swap is a single operation and the
 % argument list stays readable.

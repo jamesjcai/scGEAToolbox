@@ -89,7 +89,7 @@ function [T, emb] = xctmain_nn(X_s, X_t, g, varargin)
 %   ncomp=3 and a 0.75 quantile filter - so results from the two entry points
 %   are not directly comparable.
 %
-%   Reference: Ma et al., Cell Systems 2023. PMID:36787742
+%   Reference: Yang et al., Cell Systems 2023;14(4):302-311.e4. PMID:36787742
 
 % ── Toolbox guard ─────────────────────────────────────────────────────────
 if ~(exist('dlarray', 'builtin') || exist('dlarray', 'file'))

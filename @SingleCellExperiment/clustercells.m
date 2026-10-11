@@ -98,12 +98,19 @@ if alreadyClustered && ~forced
     return;
 end
 
+textopts = {};
 if ismember(methodid, graphMethods)
     pcs = i_correctedpcs(obj);
-    if isempty(pcs) || ~isempty(opts.Genes)
+    usedHarmony = ~isempty(pcs) && isempty(opts.Genes);
+    if ~usedHarmony
         pcs = pkg.e_cellpcs(obj.X, obj.g, Whitelist=opts.Genes);
     end
-    id = sc_louvain(pcs, k, Resolution=opts.Resolution);
+    [id, info] = sc_louvain(pcs, k, Resolution=opts.Resolution);
+    target = NaN;
+    if ~isempty(k) && k > 1 && isempty(opts.Resolution), target = k; end
+    textopts = {'Resolution', info.Resolution, 'K', target, ...
+        'NumPCs', size(pcs, 2), 'Harmony', usedHarmony, ...
+        'NumExtraGenes', numel(opts.Genes)};
 elseif usesEmbedding
     if isempty(sx)
         id = sc_cluster_s(obj.s, k, 'type', methodid);
@@ -116,6 +123,18 @@ end
 
 obj.c_cluster_id = id(:);
 obj.struct_cell_clusterings.(methodid) = obj.c_cluster_id;
+
+% Methods text, stored not printed: clustercells also runs inside other
+% analyses. Entry points print it (PKG.I_METHODSSHOW).
+if usesEmbedding
+    if isempty(sx), ndim = size(obj.s, 2); else, ndim = size(sx, 2); end
+    textopts = {'K', k, 'NumDims', ndim};
+elseif ~ismember(methodid, graphMethods)
+    textopts = {'K', k};
+end
+[ptext, prefs] = pkg.i_clustermethodstext(methodid, textopts{:}, ...
+    NumClusters=numel(unique(id)));
+pkg.i_methodsreport(obj, "clustering", ptext, prefs, Print=false);
 end
 
 function pcs = i_correctedpcs(obj)

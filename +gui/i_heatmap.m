@@ -67,9 +67,10 @@ MX = glist;
 c = c(cidx);
 Z = zeros(length(glist), length(cL));
 
-% The columns on screen, as indices into SCE's cells. C is in drawn order,
-% so anything that goes back to SCE.X has to take its cells in this order
-% too; IN_CALLBACK_SORTGROUPS permutes it with YORI.
+% The columns on screen, as indices into the picked cells; CELLIDX(COLORDER)
+% gives them as columns of SCE.X. C is in drawn order, so anything that goes
+% back to SCE.X has to take its cells in this order too;
+% IN_CALLBACK_SORTGROUPS permutes it with YORI.
 colorder = cidx(:).';
 
 % Where each column block sits now, in terms of the groups GUI.I_REORDER-

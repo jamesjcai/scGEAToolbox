@@ -38,7 +38,7 @@ prompt = "What model are you?";
 % The switch below sends a test prompt for these providers only. Any other
 % falls through to DONE = TRUE untested, which the caller used to report
 % as a success; TESTED lets it say so instead.
-tested = ismember(string(provider), ["Ollama", "OpenAI", "TAMUAIChat", "Gemini"]);
+tested = ismember(string(provider), ["Ollama", "OpenAI", "TAMUAIChat", "Gemini", "Anthropic"]);
 
 switch provider
         case 'Ollama'
@@ -106,6 +106,18 @@ switch provider
                     return;
                 end
              catch ME
+                fprintf('Error in chat completion: %s\n', ME.message);
+                return;
+            end
+            disp(response);
+        case 'Anthropic'
+            try
+                [ok, response] = llm.callClaude(prompt, model);
+                if ~ok
+                    fprintf('Anthropic returned an error.\n');
+                    return;
+                end
+            catch ME
                 fprintf('Error in chat completion: %s\n', ME.message);
                 return;
             end

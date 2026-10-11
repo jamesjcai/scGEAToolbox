@@ -44,6 +44,10 @@ filesaved = fullfile(outdir, [outfile, '.xlsx']);
 % differ, and the volcano plot must label what was actually applied.
 [Tup, Tdn, ~, usedset] = pkg.e_processdetable(T, paramset, FigureHandle);
 Tnt = pkg.i_decutoffnote(Tnt, usedset);
+[ptext, prefs] = pkg.i_demethodstext(Group1=string(cL1), Group2=string(cL2), ...
+    N1=sum(i1), N2=sum(i2), Cutoffs=usedset, NumUp=height(Tup), ...
+    NumDown=height(Tdn));
+pkg.i_methodsreport(sce, "de", ptext, prefs);
 
 gui.myWaitbar(FigureHandle, fw, false, '', 'Saving DE results...', 0.85);
 try

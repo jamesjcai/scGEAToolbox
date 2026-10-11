@@ -119,7 +119,12 @@ end
 
 fw = gui.myWaitbar(FigureHandle);
 
-speciestag = "human";
+% The approved-symbol list has to match the data's species. This was fixed
+% at "human", which on mouse data (example_data/new_example_sce.mat) dropped
+% 474 of 7061 genes - Ins1, Ins2, Amy1, Try4, H2-Aa among them - so the beta
+% clusters' markers came out without insulin and 18 of 20 clusters' top ten
+% changed.
+speciestag = pkg.i_guessspecies(sce.g);
 load(fullfile(mfolder, ...
 '..', 'assets', 'Biomart', sprintf('Biomart_%s_genes.mat',speciestag)), 'T');
 ApprovedSymbol = string(T.GeneName);

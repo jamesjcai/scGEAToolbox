@@ -358,6 +358,8 @@ end % i_matchpairs
 
 %% ---- built-in ligand-receptor database ----
 function [lig_db, rec_db] = i_loadlrdb()
+% The 2,422 ligand-receptor pairs of Ramilowski et al., Nat Commun 2015;
+% 6:7866 (PMID:26198319). PKG.I_TENIFOLDMETHODSTEXT cites it.
 pw1 = fileparts(mfilename('fullpath'));
 lr_mat = fullfile(pw1, '..', 'assets', 'Ligand_Receptor', 'Ligand_Receptor.mat');
 lr_txt = fullfile(pw1, '..', 'assets', 'Ligand_Receptor', 'Ligand_Receptor.txt');

@@ -9,8 +9,7 @@ function [A, info] = i_cpals(XM, K, opts)
 %   factors are initialized with R's rnorm after set.seed(Seed) (through
 %   TEN.RRANDOM), each column is normalized by its L1 norm, and iteration
 %   stops when the change of the residual norm, relative to the norm of the
-%   tensor, falls below Tol, or after MaxIter - 1 iterations. Unlike
-%   TEN.I_TD1 it needs no Tensor Toolbox.
+%   tensor, falls below Tol, or after MaxIter - 1 iterations.
 %
 %   [A, INFO] = TEN.I_CPALS(...) also returns a struct with Lambdas, U (the
 %   factor matrices), Converged, Residuals and NormPercent.

@@ -109,50 +109,30 @@ writetable(t, 'gene_name_Source.tsv', 'filetype', 'text', 'Delimiter', '\t');
 writetable(t, 'gene_name_Target.tsv', 'filetype', 'text', 'Delimiter', '\t');
 disp('Input gene_names written.');
 
-useexist = false;
-if exist("pcnet_Source.mat", 'file') && exist("pcnet_Target.mat", 'file')
-    answer = gui.i_questdlgtimer(10, ...
-        'pcnet_Source.mat and pcnet_Target.mat files existing. Use them?', ...
-         '', 'Yes', ...
-         'No', ...
-         'Cancel', 'No');
-    switch answer
-        case 'Yes'
-            useexist = true;
-        case 'No'
-            useexist = false;
-        case 'Cancel'
-            return;
-        otherwise
-            return;
-    end
-end
-
-% Opened whatever USEEXIST says: the step-3 update below needs it either way.
-% The cleanup closes it on every exit, a failed run included.
+% Both networks are always rebuilt. Offering to reuse pcnet_Source.mat and
+% pcnet_Target.mat left in the working folder risked running on networks
+% from other data, and since net.pcrnet became one eigendecomposition a
+% rebuild takes seconds.
+% The cleanup closes the progress bar on every exit, a failed run included.
 fw = gui.myWaitbar(parentfig);
 closeFw = onCleanup(@() gui.myWaitbar(parentfig, fw, true));
-if ~useexist
-    gui.myWaitbar(parentfig, fw, false, [], 'Step 1 of 3: Building pcnet_Source network...');
-    disp('Building pcnet_Source network...');
-    % Networks are built on log-normalised expression, as ten.sctenifoldxct
-    % does: on raw counts each cell's sequencing depth reads as co-expression
-    % (tests/xctLogNormTest.m). Python never rebuilds them (rebuild_GRN=False).
-    X1 = sce.X(:, sce.c_cell_type_tx == celltype1);
-    A = ten.i_pcnet(ten.i_lognorm(X1), 3, 0.75, false, false, symmetrize=false);
-    save('pcnet_Source.mat', 'A', '-v7.3');
-    disp('pcnet_Source.mat saved.');
-    if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Source is complete'); end
-end
-if ~useexist
-    gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet_Target network...');
-    disp('Building pcnet_Target network...')
-    X2 = sce.X(:, sce.c_cell_type_tx == celltype2);
-    A = ten.i_pcnet(ten.i_lognorm(X2), 3, 0.75, false, false, symmetrize=false);
-    save('pcnet_Target.mat', 'A', '-v7.3');
-    disp('pcnet_Target network saved.')
-    if pkg.i_isvalid(fw), gui.myWaitbar(parentfig, fw, false, [], 'Building pcnet_Target is complete'); end
-end
+
+gui.myWaitbar(parentfig, fw, false, [], 'Step 1 of 3: Building pcnet_Source network...');
+disp('Building pcnet_Source network...');
+% Networks are built on log-normalised expression, as ten.sctenifoldxct
+% does: on raw counts each cell's sequencing depth reads as co-expression
+% (tests/xctLogNormTest.m). Python never rebuilds them (rebuild_GRN=False).
+X1 = sce.X(:, sce.c_cell_type_tx == celltype1);
+A = ten.i_pcnet(ten.i_lognorm(X1), 3, 0.75, false, false, symmetrize=false);
+save('pcnet_Source.mat', 'A', '-v7.3');
+disp('pcnet_Source.mat saved.');
+
+gui.myWaitbar(parentfig, fw, false, [], 'Step 2 of 3: Building pcnet_Target network...');
+disp('Building pcnet_Target network...')
+X2 = sce.X(:, sce.c_cell_type_tx == celltype2);
+A = ten.i_pcnet(ten.i_lognorm(X2), 3, 0.75, false, false, symmetrize=false);
+save('pcnet_Target.mat', 'A', '-v7.3');
+disp('pcnet_Target network saved.')
 
 if twosided
     twosidedtag = 1;

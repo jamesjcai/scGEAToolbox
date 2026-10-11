@@ -56,9 +56,17 @@ switch typeid
             end
         end
         if needestimt
+            % Same order as SingleCellExperiment.estimatecellcycle's METHODID.
+            methods = {'Module scores (S and G2M gene sets; fast)', ...
+                'Seurat CellCycleScoring (R)', ...
+                'tricycle (R; also stores the position on the cycle)'};
+            [methodid, tf] = gui.myListdlg(FigureHandle, methods, ...
+                'Cell Cycle Method', 1, false, true, [360, 140], ...
+                'How should the cell cycle phase be assigned?');
+            if tf ~= 1 || isempty(methodid), return; end
             fw = gui.myWaitbar(FigureHandle);
             try
-                sce = sce.estimatecellcycle(true, 1);
+                sce = sce.estimatecellcycle(true, methodid);
             catch ME
                 gui.myWaitbar(FigureHandle, fw, true);
                 gui.myErrordlg(FigureHandle, ME.message, ME.identifier);

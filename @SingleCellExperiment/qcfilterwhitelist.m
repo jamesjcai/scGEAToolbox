@@ -6,6 +6,7 @@ if nargin < 4 || isempty(min_cells_nonzero), min_cells_nonzero = 15; end
 if nargin < 3 || isempty(mtratio), mtratio = 0.15; end
 if nargin < 2 || isempty(libszcutoff), libszcutoff = 1000; end
 
+before = [sce.NumCells, sce.NumGenes];
 if ~isempty(whitelist)
     assert(all(ismember(whitelist, sce.g)), ...
         'All whitelist genes must be present in sce.g.');
@@ -49,4 +50,11 @@ if ~isempty(whitelist)
     sce = i_appendGeneAttributeRows(sce, attrResv);
 end
 
+% Stored, not printed: this also runs inside other analyses. Entry points
+% print it (PKG.I_METHODSSHOW).
+pkg.i_methodsreport(sce, "qc", pkg.i_qcmethodstext(LibSize=libszcutoff, ...
+    MtRatio=mtratio, MinCells=min_cells_nonzero, MinGenes=gnnumcutoff, ...
+    NumWhitelist=numel(whitelist), CellsBefore=before(1), ...
+    GenesBefore=before(2), CellsAfter=sce.NumCells, ...
+    GenesAfter=sce.NumGenes), "cai2020", Print=false);
 end

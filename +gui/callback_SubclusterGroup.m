@@ -84,6 +84,13 @@ if colorby == "celltype"
 else
     sce.c_cluster_id = labels;
 end
+% One sub-key per group split, so splitting a second group keeps the first.
+key = "clustering_" + string(matlab.lang.makeValidName("sub_" + string(target)));
+pkg.i_methodsreport(sce, key, sprintf(['The "%s" group (%d cells) was ' ...
+    'reclustered on its own with the same Louvain procedure, applied to ' ...
+    'those cells alone, at resolution %g, giving %d ' ...
+    'subclusters.'], string(target), info.NumCells, resolution, ...
+    info.NumSubclusters), ["blondel2008", "cai2020"]);
 gui.myGuidata(FigureHandle, sce, src);
 requirerefresh = true;
 

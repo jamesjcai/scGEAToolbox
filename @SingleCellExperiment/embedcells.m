@@ -19,10 +19,13 @@ if isempty(obj.s) || forced
         methodtag = lower(methodtag);
     end
 
+    numhvgused = 0;
+    ranker = "analytic";
     if usehvgs && size(obj.X, 1) > numhvg
         % The gene set is shared with PKG.E_CELLPCS; the ranking and its
         % rationale live in PKG.I_SELECTHVGS.
-        keep = pkg.i_selecthvgs(obj.X, obj.g, numhvg);
+        [keep, ranker] = pkg.i_selecthvgs(obj.X, obj.g, numhvg);
+        numhvgused = nnz(keep);
 
         X = obj.X(keep, :);
         g = obj.g(keep);
@@ -102,6 +105,20 @@ if isempty(obj.s) || forced
     end
 
     obj.struct_cell_embeddings.(methoddimtag) = single(obj.s);
+
+    % Methods text, stored not printed: embedcells also runs inside
+    % pipelines and loops. One sub-key per embedding, so a loop over
+    % methods keeps them all; the gene set is shared, under _features.
+    ndimused = size(obj.s, 2);
+    [ptext, prefs] = pkg.i_embedmethodstext("features", NumHVGs=numhvgused, ...
+        Ranker=ranker, NumAppended=nappended);
+    pkg.i_methodsreport(obj, "embedding_features", ptext, prefs, Print=false);
+    method = string(regexprep(methoddimtag, '\d+d$', ''));
+    [ptext, prefs] = pkg.i_embedmethodstext(method, NumGenes=numel(g), ...
+        NumAppended=nappended, MarkerWeight=max(1, markerweight * applyweight), ...
+        NumDims=ndimused, NumCells=size(X, 2));
+    pkg.i_methodsreport(obj, "embedding_" + string(methoddimtag), ptext, ...
+        prefs, Print=false);
 else
     disp('Use `sce = sce.embedcells(''tSNE'', true)` to overwrite existing SCE.S.');
 end

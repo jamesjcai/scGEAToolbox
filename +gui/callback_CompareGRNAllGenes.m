@@ -13,7 +13,7 @@ function callback_CompareGRNAllGenes(src, i1, i2, name1, name2)
 %   PCR           net.pcrnet on each group, as a single network.
 %   Denoised PCR  ten.sctenifoldnet - PCR networks on 10 subsamples of 500
 %                 cells per group, merged by tensor decomposition (the full
-%                 scTenifoldNet construction; needs Tensor Toolbox). It drops
+%                 scTenifoldNet construction). It drops
 %                 ribosomal genes, so its networks and table are over fewer
 %                 genes than sce.g.
 %
@@ -32,8 +32,8 @@ methods = {'PCR (fast)', ...
 prompt = sprintf(['How should the two networks over all %d genes be ', ...
     'built?\n\n%s: %d cells.  %s: %d cells.\n\nPCR builds one network per ', ...
     'group. Denoised PCR builds PCR networks on %d subsamples of %d ', ...
-    'cells per group and merges them; it can take hours and needs Tensor ', ...
-    'Toolbox. Either way, the networks are aligned and genes ranked by ', ...
+    'cells per group and merges them; slower, and over all genes it needs ', ...
+    'much memory. Either way, the networks are aligned and genes ranked by ', ...
     'how much their regulation differs. [scTenifoldNet, PMID:33336197]'], ...
     numel(sce.g), name1, nnz(i1), name2, nnz(i2), numSubsamples, subsampleSize);
 [indx, tf] = gui.myListdlg(FigureHandle, methods, 'Network Method', ...
@@ -48,7 +48,6 @@ if indx == 2
             min(nnz(i1), nnz(i2))));
         return;
     end
-    if ~i_checktensortoolbox(FigureHandle), return; end
 end
 
 % --- Build, align, rank
@@ -87,24 +86,22 @@ catch ME
 end
 gui.myWaitbar(FigureHandle, fw);
 
+if indx == 1
+    [ptext, prefs] = pkg.i_grnmethodstext("pcrnet", NumGenes=numel(g), ...
+        Transform="libsize_log1p", Groups=[name1, name2], ...
+        ManifoldAlignment=true);
+else
+    % The full scTenifoldNet pipeline: ribosomal-gene removal, its own
+    % normalization, the subsample ensemble and tensor step are all inside
+    % ten.sctenifoldnet, so it has its own paragraph.
+    [ptext, prefs] = pkg.i_tenifoldmethodstext("net", Groups=[name1, name2], ...
+        N1=nnz(i1), N2=nnz(i2), NumSubsamples=numSubsamples, ...
+        SubsampleSize=subsampleSize, NumSignificant=nnz(T.pAdjusted < 0.05));
+end
+pkg.i_methodsreport(sce, "grn", ptext, prefs);
+
 qqFig = ten.e_mkqqplot(T);
 i_saveresult(T, A0, A1, g, name1, name2, tag, FigureHandle, qqFig);
-end
-
-
-function ok = i_checktensortoolbox(FigureHandle)
-ok = true;
-try
-    ten.check_tensor_toolbox;
-catch
-    gui.i_installtensortoolbox(FigureHandle);
-    try
-        ten.check_tensor_toolbox;
-    catch ME
-        gui.myErrordlg(FigureHandle, ME.message);
-        ok = false;
-    end
-end
 end
 
 
@@ -126,7 +123,7 @@ gseaPrompt = sprintf(['Genes are ranked by how much their regulation ', ...
     '(GSEA) on the ranking?'], name1, name2);
 if ~isequal(file, 0)
     f1 = fullfile(folder, file);
-    save(f1, 'T', 'A0', 'A1', 'glist', 'groups', '-v7.3');
+    save(f1, 'T', 'A0', 'A1', 'glist', 'groups', '-v7.3', '-nocompression');
     fprintf('The result has been saved in %s\n', f1);
     gseaPrompt = sprintf('The result has been saved in %s.\n\n%s', f1, gseaPrompt);
 end

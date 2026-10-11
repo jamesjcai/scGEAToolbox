@@ -27,8 +27,8 @@ function [c_cell_type_tx, cL_cell_type_tx, T] = e_celltypeanno(sce, options)
 %     NumGenes     marker genes shown per cluster. Default 30.
 %     Provider     LLM provider. Default: whatever gui.i_setllmmodel
 %                  configured. Any provider with a client in +llm works -
-%                  Ollama, OpenAI, TAMUAIChat, NVIDIA, Gemini - so this does
-%                  not require a local model.
+%                  Ollama, OpenAI, TAMUAIChat, NVIDIA, Gemini, Anthropic -
+%                  so this does not require a local model.
 %     Model        model name for that provider. Default: the configured one.
 %     NIterations  independent answers per cluster, majority-voted.
 %                  Default 3. See REPRODUCIBILITY.
@@ -127,11 +127,13 @@ end
 % ---- markers ------------------------------------------------------------
 if isempty(options.Markers)
     if options.Verbose, fprintf('[celltypeanno] ranking markers...\n'); end
-    % A generous cap: e_findallmarkers truncates each cluster to
-    % maxnummarkers BEFORE sorting by significance, so a small cap would
-    % select genes by their position in sce.g rather than by how well they
-    % mark the cluster. Ask for many and rank them here instead.
-    Tm = pkg.e_findallmarkers(sce.X, sce.g, cidx, cL, 0.5, 0.1, false, 500, ...
+    % e_findallmarkers ranks each cluster's rows (p_val_adj, then
+    % avg_log2FC) before keeping the first maxnummarkers, so NumGenes is all
+    % that needs computing. No specificity filter (pct_2) on purpose: when
+    % the clustering splits one type in two, the genes the halves share -
+    % Gcg in two alpha-cell clusters - are what names the type, and
+    % pkg.i_clustermarkers' MaxPctOut would drop them.
+    Tm = pkg.e_findallmarkers(sce.X, sce.g, cidx, cL, 0.5, 0.1, false, options.NumGenes, ...
         OnlyPos=true, PAdjust="bh", ReturnThresh=0.05, ThresholdOn="p_val_adj");
 else
     Tm = options.Markers;

@@ -8,7 +8,7 @@ function [T, A0, genelist] = sctenifoldknk(X, genelist, kogene, varargin)
 % (row k = regression of gene k), over the genes of the third output.
 %
 % THE TOOLBOX VARIANT IS THE DEFAULT ('reference', false): libsize + log1p,
-% no QC, Tensor Toolbox CP of rank NSUBSMPL, normalized Laplacian, and at
+% no QC, CP (ten.i_cpalstt) of rank NSUBSMPL, normalized Laplacian, and at
 % least 10 outgoing links on the KO gene. The third output is then GENELIST.
 %
 % WHY THE TOOLBOX VARIANT IS THE DEFAULT. Reference mode was the default for
@@ -44,7 +44,7 @@ function [T, A0, genelist] = sctenifoldknk(X, genelist, kogene, varargin)
 % from them describes the network rather than the knockout.
 %
 % TEN.KNKNULLCONTROL settles it by knocking out random genes from the same A0
-% and rescoring against that background. It costs minutes, needs the A0
+% and rescoring against that background. It takes ~13 s at 3000 genes, needs the A0
 % returned here, and reports a verdict:
 %
 %     [T, A0, g] = ten.sctenifoldknk(X, genelist, "Foxp3");
@@ -103,18 +103,6 @@ if size(X, 1) ~= length(genelist)
     error('Length of genelist should be the same as the number of rows of X0 or X1.');
 end
 
-% Add the Tensor Toolbox from the saved preference if it is not already on
-% the path, then error only if it genuinely is not installed.
-%
-% This used to error outright, which made the function fail in any MATLAB
-% that had not happened to call ten.sctenifoldnet first - that one does the
-% addpath itself, so an interactive session picked the path up as a side
-% effect and a fresh `matlab -batch` did not. A long unattended run would
-% then die at its first contrast. ten.check_tensor_toolbox is the toolbox's
-% own helper for exactly this and is what ten.sctenifoldnet's own preamble
-% amounts to.
-ten.check_tensor_toolbox;
-
 X = sc_norm(X, "type", "libsize");
 X = log1p(X);
 
@@ -122,7 +110,7 @@ X = log1p(X);
 [A0] = i_td1(XM, tdmethod);
     if savegrn
         tstr = matlab.lang.makeValidName(strrep(sprintf("GRN_created_on_% s", datetime)," ", "_at_"));
-        save(tstr, 'A0', 'genelist', '-v7.3');
+        save(tstr, 'A0', 'genelist', '-v7.3', '-nocompression');
         fprintf('\nConstructed gene regulatory network (GRN) is saved in %s.mat\n', tstr);
     end
 T = ten.i_knk(A0, idx, genelist, dosort);
@@ -150,7 +138,7 @@ clear XM
 A0(1:(size(A0, 1) + 1):end) = 0;
 if opts.savegrn
     tstr = matlab.lang.makeValidName(string(datetime));
-    save(sprintf('A0_%s', tstr), 'A0', 'genelist', '-v7.3');
+    save(sprintf('A0_%s', tstr), 'A0', 'genelist', '-v7.3', '-nocompression');
 end
 T = ten.i_knk(A0, idx, genelist, true, 0, true);
 end

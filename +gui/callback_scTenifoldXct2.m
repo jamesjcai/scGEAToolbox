@@ -121,7 +121,7 @@ if numel(cL_batch) < 2
         'Two samples are required.']);
     return;
 end
-[j1, j2, ~, ~] = aaa(cL_batch, string(sce.c_batch_id), FigureHandle);
+[j1, j2, sample1, sample2] = aaa(cL_batch, string(sce.c_batch_id), FigureHandle);
 if isempty(j1) || isempty(j2), return; end   % cancelled, or AAA said why
 sce1 = copy(sce); sce1.selectcells(j1);
 sce2 = copy(sce); sce2.selectcells(j2);
@@ -166,6 +166,53 @@ switch answer
         return;
 end
 
+% ── 5b. Shuffled-network control (toolbox spectral path) ─────────────────
+% As for one-sample Xct, the default settings can leave the networks with
+% little say in the result. ten.xct2nullcontrol measures that for this run:
+% it shuffles each cell type's network gene labels, with the same shuffle
+% in both samples, so the difference between the samples' networks is kept
+% and only put on the wrong genes. It wraps ten.sctenifoldxct2, so only
+% that path offers it.
+runControl = false;
+calibrate = false;
+controls = struct([]);
+if midx == MTHD_SPEC
+    answer = gui.myQuestdlg(FigureHandle, ['Also run the shuffled-network ' ...
+        'control? It repeats the analysis 20 times with the networks'' gene ' ...
+        'labels shuffled (the same shuffle in both samples) and reports ' ...
+        'whether the result depends on the networks, with an empirical p ' ...
+        '(EmpP) per pair. It takes about 20 times as long as the analysis.'], ...
+        '', {'Yes', 'No', 'Cancel'}, 'No');
+    switch answer
+        case 'Yes'
+            runControl = true;
+        case 'No'
+            % run without it
+        otherwise
+            return;   % Cancel, or the dialog closed
+    end
+end
+% The control's EmpP count is not calibrated for a change between samples
+% (random splits of one sample give two to four times the shuffle-based
+% expectation; see ten.xct2nullcontrol), so it means something only against
+% random splits of the same cells. TEN.XCT2SPLITCALIBRATION runs five.
+if runControl
+    answer = gui.myQuestdlg(FigureHandle, ['Also calibrate the control ' ...
+        'against random splits? It pools the two samples, splits the cells ' ...
+        'at random into two pseudo-samples five times, and runs the analysis ' ...
+        'and the control on each, to show how many pairs beat their shuffles ' ...
+        'when nothing differs. It takes about five times as long again as ' ...
+        'the control.'], '', {'Yes', 'No', 'Cancel'}, 'No');
+    switch answer
+        case 'Yes'
+            calibrate = true;
+        case 'No'
+            % control without calibration
+        otherwise
+            return;   % Cancel, or the dialog closed
+    end
+end
+
 % ── 6. Run selected implementation ───────────────────────────────────────
 Tres = [];
 % The MATLAB paths report no progress of their own, so the app looked frozen
@@ -193,8 +240,14 @@ switch midx
 
     case MTHD_SPEC   % ── Path B: spectral, toolbox GRN settings ─────────────
         try
-            Tres = ten.sctenifoldxct2(sce1, sce2, ct1, ct2, twosided, ...
+            [Tres, grns] = ten.sctenifoldxct2(sce1, sce2, ct1, ct2, twosided, ...
                 'w12mode', w12mode, 'useparallel', useparallel);
+            if runControl
+                [Tres, verdicts, controls] = in_runcontrol(Tres, grns, sce1, ...
+                    sce2, string(ct1), string(ct2), twosided, ...
+                    {'w12mode', w12mode, 'useparallel', useparallel}, ...
+                    calibrate, FigureHandle, fw);
+            end
         catch ME
             in_closewaitbar(FigureHandle, fw, true);   % before the error, not under it
             gui.myErrordlg(FigureHandle, ME.message, ME.identifier);
@@ -228,6 +281,9 @@ switch midx
 
 end
 in_closewaitbar(FigureHandle, fw, false);
+if runControl
+    gui.myHelpdlg(FigureHandle, strjoin(verdicts, [newline, newline]));
+end
 
 % ── 7. Post-process: add direction column ─────────────────────────────────
 T = [];
@@ -250,6 +306,24 @@ elseif istable(Tres) && height(Tres) > 0
     a = sprintf("%s -> %s", ct1, ct2);
     T = addvars(T, repelem(a, height(T), 1), 'Before', 1);
     T.Properties.VariableNames{'Var1'} = 'direction';
+end
+
+% Methods text, on SCE_ORI (the app's object). One sub-key per cell-type
+% pair, so a second pair keeps the first.
+if ~isempty(T)
+    pathkeys = ["nn", "spectral", "reference", "python"];
+    nsig = NaN;
+    if ismember('q_value', T.Properties.VariableNames)
+        nsig = nnz(T.q_value < 0.05);
+    end
+    [ptext, prefs] = pkg.i_tenifoldmethodstext("xct2", ...
+        Groups=[string(ct1), string(ct2)], ...
+        Samples=[string(sample1), string(sample2)], N1=sce1.NumCells, ...
+        N2=sce2.NumCells, Path=pathkeys(midx), W12Mode=w12mode, ...
+        TwoSided=twosided, NumCandidates=height(T), NullControl=runControl, ...
+        Control=controls, NumSignificant=nsig);
+    pkg.i_methodsreport(sce_ori, "ccc_" + string(matlab.lang.makeValidName( ...
+        "two_sample_" + string(ct1) + "_" + string(ct2))), ptext, prefs);
 end
 
 % ── 8. Annotate with extended L-R database and export ────────────────────
@@ -351,6 +425,70 @@ if tf == 1
     i2  = ci == cL2;
 end
 end
+
+function [Tres, verdicts, controls] = in_runcontrol(Tres, grns, sce1, sce2, ...
+    source, target, twosided, xctArgs, calibrate, parentfig, fw)
+% Run ten.xct2nullcontrol for each direction Tres holds, reusing the
+% networks the main run built, and add its per-pair columns to that
+% direction's table. GRNS has the source's networks as A_s1/A_s2, so the
+% reverse direction swaps them with A_t1/A_t2.
+pairs = [source, target];
+nets = {grns};
+if twosided
+    pairs = [pairs; target, source];
+    nets{2} = struct('A_s1', grns.A_t1, 'A_t1', grns.A_s1, ...
+        'A_s2', grns.A_t2, 'A_t2', grns.A_s2, 'genes', grns.genes);
+else
+    Tres = {Tres};
+end
+verdicts = strings(size(pairs, 1), 1);
+controls = struct([]);
+for d = 1:size(pairs, 1)
+    gui.myWaitbar(parentfig, fw, false, '', sprintf(['Shuffled-network ' ...
+        'control, %s -> %s (%d of %d)...'], pairs(d, 1), pairs(d, 2), ...
+        d, size(pairs, 1)));
+    [Tn, S] = ten.xct2nullcontrol(sce1, sce2, pairs(d, 1), pairs(d, 2), ...
+        Grns=nets{d}, XctArgs=xctArgs, Verbose=false);
+    Tres{d} = in_addcontrolcols(Tres{d}, Tn);
+    verdicts(d) = sprintf('%s -> %s: %s', pairs(d, 1), pairs(d, 2), S.Verdict);
+    splitCounts = [];
+    calibratedP = NaN;
+    if calibrate
+        gui.myWaitbar(parentfig, fw, false, '', sprintf(['Random-split ' ...
+            'calibration, %s -> %s (%d of %d)...'], pairs(d, 1), pairs(d, 2), ...
+            d, size(pairs, 1)));
+        Cal = ten.xct2splitcalibration(sce1, sce2, pairs(d, 1), pairs(d, 2), ...
+            RealCount=S.NumEmpPBelow05, NumShuffles=S.NumShuffles, ...
+            XctArgs=xctArgs, Verbose=false);
+        splitCounts = Cal.SplitCounts;
+        calibratedP = Cal.CalibratedP;
+        verdicts(d) = verdicts(d) + " Calibration: " + Cal.Summary;
+    end
+    c = struct('Source', pairs(d, 1), 'Target', pairs(d, 2), ...
+        'NumShuffles', S.NumShuffles, 'NetworkSensitive', S.NetworkSensitive, ...
+        'MedianRho', S.MedianRho, 'MedianSigJaccard', S.MedianSigJaccard, ...
+        'NumEmpPBelow05', S.NumEmpPBelow05, 'NumCandidates', S.NumCandidates, ...
+        'NumExpectedByChance', S.NumExpectedByChance, 'NumSigReal', S.NumSigReal, ...
+        'SplitCounts', splitCounts, 'CalibratedP', calibratedP);
+    if isempty(controls), controls = c; else, controls(end+1) = c; end %#ok<AGROW> two directions at most
+end
+if ~twosided
+    Tres = Tres{1};
+end
+end
+
+
+function T = in_addcontrolcols(T, Tn)
+% The control's per-pair columns, matched to T by ligand and receptor.
+key = string(T.ligand) + "|" + string(T.receptor);
+[found, j] = ismember(key, string(Tn.ligand) + "|" + string(Tn.receptor));
+for col = ["ShuffleMedianDiff2", "ShuffleRatio", "EmpP", "ShuffleSigFrac"]
+    v = nan(height(T), 1);
+    v(found) = Tn.(col)(j(found));
+    T.(col) = v;
+end
+end
+
 
 function in_closewaitbar(parentfig, fw, witherror)
 % Close the MATLAB-path progress bar; a no-op when none was opened.

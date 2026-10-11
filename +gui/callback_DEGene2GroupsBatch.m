@@ -73,6 +73,11 @@ for k=1:length(CellTypeList)
     end
 end
 gui.myWaitbar(FigureHandle, fw);
+% PARAMSET, the requested cutoffs: under 'Automatic' each cell type may
+% have been relaxed differently, which the text says.
+[ptext, prefs] = pkg.i_demethodstext(Group1=string(cL1), Group2=string(cL2), ...
+    Cutoffs=paramset, PerCellType=true);
+pkg.i_methodsreport(sce, "de", ptext, prefs);
 
 answer=gui.myQuestdlg(FigureHandle, sprintf('Result files saved. Open the folder %s?', outdir), '');
 if strcmp(answer,'Yes'), winopen(outdir); end

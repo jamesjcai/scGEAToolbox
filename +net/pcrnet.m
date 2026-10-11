@@ -205,7 +205,16 @@ for i = 1:ncom
             outside = isnan(tauNew) | tauNew <= lo | tauNew >= hi;
             tauNew(outside) = (lo(outside) + hi(outside))/2;
 
-            exact = f == 0;
+            % f is known only to within its rounding error, so once it is
+            % inside that bound tau is as good as it gets - dlaed4's test.
+            % Without it the step test below can only be met by bisecting
+            % the bracket down to 4*eps of tau, which is measured from the
+            % nearer pole and can be tiny: about 60 iterations a component
+            % instead of 4-6 (3000 genes, 500 cells: 0.8 s -> 0.35 s a
+            % network, A unchanged to 5e-16 relative).
+            errBound = eps*(2 + 8*(sumAbove - sumBelow) + ...
+                3*abs(tauA).*(slopeAbove + slopeBelow));
+            exact = abs(f) <= errBound;
             tauNew(exact) = tauA(exact);
             converged = exact | abs(tauNew - tauA) <= tol*abs(tauNew) | ...
                 (hi - lo) <= tol*max(abs(lo), abs(hi));

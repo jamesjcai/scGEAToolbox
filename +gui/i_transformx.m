@@ -1,8 +1,12 @@
-function [X] = i_transformx(X, donorm, methodid, parentfig)
+function [X, used] = i_transformx(X, donorm, methodid, parentfig)
 %I_TRANSFORMX Ask whether and how to normalise, transform or impute X.
 %   X = gui.i_transformx(X, donorm, methodid, parentfig) asks whether to
 %   transform X (DONORM sets the default answer) and, if so, which way,
 %   with METHODID preselected. X is [] if the user cancels.
+%
+%   [X, used] = gui.i_transformx(...) also returns the Key of the transform
+%   applied ("none" if the user chose to use the data unchanged), for the
+%   Methods text.
 %
 %   METHODID names an item by its Key in gui.i_transformitems, e.g.
 %   "pearson_residuals" or "libsize_log1p" (the default). A position in the
@@ -12,6 +16,7 @@ function [X] = i_transformx(X, donorm, methodid, parentfig)
 %
 %   See also gui.i_transformitems.
 
+used = "none";
 if nargin < 4, parentfig = []; end
 if nargin < 3 || isempty(methodid), methodid = "libsize_log1p"; end
 if nargin < 2 || isempty(donorm), donorm = false; end
@@ -113,6 +118,7 @@ if tf == 1
         return;
     end
     gui.myWaitbar(parentfig, fw);
+    used = items.Key(indx);
 else
     % Cancelled. X = [] is how this function signals that, and it is what
     % every caller tests: callback_CompareGeneNetwork,
