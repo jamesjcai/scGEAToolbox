@@ -15,9 +15,9 @@ if nargin < 4, plotit = false; end
 
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'ml_GENIE3');
-if ~(ismcc || isdeployed), addpath(pth); end
-pth = fullfile(pw1, '..', 'external', 'ml_GENIE3', 'RT');
-if ~(ismcc || isdeployed), addpath(pth); end
+if ~(ismcc || isdeployed)
+    genie3cleanup = pkg.i_addpathtemp(pth, fullfile(pth, 'RT'));   %#ok<NASGU>
+end
 
 if donorm
     X = sc_norm(X, 'type', 'libsize');

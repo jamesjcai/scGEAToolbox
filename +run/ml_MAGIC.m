@@ -44,7 +44,7 @@ end
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'ml_MAGIC');
 if ~(ismcc || isdeployed)
-    addpath(pth);
+    magiccleanup = pkg.i_addpathtemp(pth);   %#ok<NASGU>
 end
 % gene_names=cellstr(gl123);  MAGIC needs [cells x genes]
 % data=X';

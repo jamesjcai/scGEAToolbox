@@ -24,7 +24,9 @@ switch methodid
     case 2
         pw1 = fileparts(mfilename('fullpath'));
         pth = fullfile(pw1, 'external', 'fun_kNNcode');
-        if ~(ismcc || isdeployed), addpath(pth); end
+        if ~(ismcc || isdeployed)
+            knncleanup = pkg.i_addpathtemp(pth);   %#ok<NASGU>
+        end
         kneighbors = k; % number of neighbors in kNN
         S = s';
         [dim, N] = size(S);

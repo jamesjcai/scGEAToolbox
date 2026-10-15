@@ -10,7 +10,7 @@ end
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'ml_scGeneFit');
 if ~(ismcc || isdeployed)
-    addpath(pth);
+    scgenefitcleanup = pkg.i_addpathtemp(pth);   %#ok<NASGU>
 end
 opt.samples_fraction = 0.15;
 opt.constraints_neighbors = 3;

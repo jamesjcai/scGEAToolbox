@@ -17,11 +17,7 @@ function [C, s] = ml_SIMLR(X, k, donorm)
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'ml_SIMLR');
 if ~(ismcc || isdeployed)
-    addpath(pth);
-end
-pth = fullfile(pw1, '..', 'external', 'ml_SIMLR', 'src');
-if ~(ismcc || isdeployed)
-    addpath(pth);
+    simlrcleanup = pkg.i_addpathtemp(pth, fullfile(pth, 'src'));   %#ok<NASGU>
 end
 
 if nargin < 2

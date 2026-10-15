@@ -11,7 +11,7 @@ function [C] = ml_SinNLRR(X, k)
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'ml_SinNLRR');
 if ~(ismcc || isdeployed)
-    addpath(pth);
+    sinnlrrcleanup = pkg.i_addpathtemp(pth);   %#ok<NASGU>
 end
 if nargin < 2 || isempty(k)
     k = pkg.e_numclusters(X);

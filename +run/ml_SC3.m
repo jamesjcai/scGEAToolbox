@@ -34,7 +34,9 @@ oldpath = pwd;
 cleanupCwd = onCleanup(@() cd(oldpath));
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(fileparts(pw1), 'external', 'ml_SC3', 'ClusterPack');
-if ~(ismcc || isdeployed), addpath(pth); end
+if ~(ismcc || isdeployed)
+    sc3cleanup = pkg.i_addpathtemp(pth);   %#ok<NASGU>
+end
 
 % ClusterPack shells out. SGRAPH writes a partgraph<id>.bat beside the
 % graph file and runs it with system(), and that .bat in turn calls

@@ -34,11 +34,10 @@ k = p.Results.k;
 
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1, '..', 'external', 'ml_SoptSC');
-if ~(ismcc || isdeployed), addpath(pth); end
-pth = fullfile(pw1, '..', 'external', 'ml_SoptSC', 'NNDSVD');
-if ~(ismcc || isdeployed), addpath(pth); end
-pth = fullfile(pw1, '..', 'external', 'ml_SoptSC', 'symnmf2');
-if ~(ismcc || isdeployed), addpath(pth); end
+if ~(ismcc || isdeployed)
+    soptsccleanup = pkg.i_addpathtemp(pth, fullfile(pth, 'NNDSVD'), ...
+        fullfile(pth, 'symnmf2'));   %#ok<NASGU>
+end
 
 
 if donorm

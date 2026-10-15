@@ -1,7 +1,8 @@
 function [X, Y] = ml_ComBat(X, Y)
 pw1 = fileparts(mfilename('fullpath'));
 if ~(ismcc || isdeployed)
-    addpath(fullfile(pw1, '..', 'external', 'ml_ComBat'));
+    combatcleanup = pkg.i_addpathtemp( ...
+        fullfile(pw1, '..', 'external', 'ml_ComBat'));   %#ok<NASGU>
 end
 
 n1 = size(X, 2);

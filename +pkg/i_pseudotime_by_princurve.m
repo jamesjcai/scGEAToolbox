@@ -5,7 +5,9 @@ if nargin < 2, plotit = false; end
 
 pw1 = fileparts(mfilename('fullpath'));
 pth = fullfile(pw1,  '..', 'external', 'fun_MPPC');
-if ~(ismcc || isdeployed), addpath(pth); end
+if ~(ismcc || isdeployed)
+    mppccleanup = pkg.i_addpathtemp(pth);   %#ok<NASGU>
+end
 
 n = size(s, 1);
 mass = 1 / n * ones(1, n);

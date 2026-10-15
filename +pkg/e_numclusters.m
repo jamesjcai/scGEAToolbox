@@ -14,19 +14,18 @@ pw1 = fileparts(mfilename('fullpath'));
 switch p.Results.type
     case 'simlr'
         pth = fullfile(pw1, '..', 'external', 'ml_SIMLR');
-        if ~(ismcc || isdeployed), addpath(pth); end
-        pth = fullfile(pw1, '..', 'external', 'ml_SIMLR', 'src');
-        if ~(ismcc || isdeployed), addpath(pth); end
+        if ~(ismcc || isdeployed)
+            pathcleanup = pkg.i_addpathtemp(pth, fullfile(pth, 'src'));   %#ok<NASGU>
+        end
         [~, K2] = Estimate_Number_of_Clusters_SIMLR(X', 2:10);
         [~, i] = min(K2);
         optimk = i + 1;
     case 'soptsc'
         pth = fullfile(pw1, '..', 'external', 'ml_SoptSC');
-        if ~(ismcc || isdeployed), addpath(pth); end
-        pth = fullfile(pw1, '..', 'external', 'ml_SoptSC', 'NNDSVD');
-        if ~(ismcc || isdeployed), addpath(pth); end
-        pth = fullfile(pw1, '..', 'external', 'ml_SoptSC', 'symnmf2');
-        if ~(ismcc || isdeployed), addpath(pth); end
+        if ~(ismcc || isdeployed)
+            pathcleanup = pkg.i_addpathtemp(pth, fullfile(pth, 'NNDSVD'), ...
+                fullfile(pth, 'symnmf2'));   %#ok<NASGU>
+        end
 
         realdata = X;
         realdata = realdata - min(realdata(:));

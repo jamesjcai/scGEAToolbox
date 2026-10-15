@@ -14,7 +14,9 @@ cleanupObj = onCleanup(@() cd(oldpth));
 cd(pth);
 predict = @predict;
 
-if ~(ismcc || isdeployed), addpath(pth); end
+if ~(ismcc || isdeployed)
+    locfitcleanup = pkg.i_addpathtemp(pth);   %#ok<NASGU>
+end
 % pth = fullfile(pw1, '..', 'external', 'locfit', 'source');
 % if ~(ismcc || isdeployed), addpath(pth); end
 Y = zeros(size(X));

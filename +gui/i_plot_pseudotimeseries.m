@@ -43,12 +43,10 @@ ylabel('Expression');
 
 % Add locfit and predict paths
 pw1 = fileparts(mfilename('fullpath'));
-locfit_paths = {fullfile(pw1, '..', 'external', 'fun_locfit')};
-
-for p = locfit_paths
-    if ~(ismcc || isdeployed)
-        addpath(p{1});
-    end
+if ~(ismcc || isdeployed)
+    % fun_locfit's predict.m comes off the path again when this returns.
+    locfitcleanup = pkg.i_addpathtemp( ...
+        fullfile(pw1, '..', 'external', 'fun_locfit'));   %#ok<NASGU>
 end
 
 % Fit smooth curves using locfit
