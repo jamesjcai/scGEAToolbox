@@ -170,6 +170,13 @@ function info = i_show(info, viewer)
 % Open INFO.Target with VIEWER, falling back when VIEWER is "auto".
 switch viewer
     case "molviewer"
+        if isdeployed
+            % molviewer is excluded from the MATLAB Runtime; "auto" falls
+            % back to the web page or the PDBQT viewer.
+            error("gui:i_viewprotein:NoMolviewer", ...
+                "molviewer is not available in the standalone app.");
+        end
+        %#exclude molviewer
         info.Figure = molviewer(i_molviewerinput(info.Target));
         info.Viewer = "molviewer";
     case "web"

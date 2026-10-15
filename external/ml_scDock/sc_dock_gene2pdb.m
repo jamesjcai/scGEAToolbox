@@ -152,7 +152,7 @@ pdb_id = '';
 try
     url = sprintf( ...
         'https://rest.uniprot.org/uniprotkb/search?query=gene:%s+organism_id:9606+reviewed:true&format=tsv&fields=accession,xref_pdb', ...
-        urlencode(gene));
+        i_urlencode(gene));
     txt  = webread(url);
     lines = strsplit(strtrim(txt), newline);
     if numel(lines) < 2, return; end
@@ -163,4 +163,18 @@ try
     end
 catch
 end
+end
+
+
+function s = i_urlencode(s)
+% URLENCODE's encoding: URLENCODE itself is excluded from the MATLAB Runtime.
+bytes = unicode2native(char(s), 'UTF-8');
+safe = (bytes >= 'a' & bytes <= 'z') | (bytes >= 'A' & bytes <= 'Z') | ...
+    (bytes >= '0' & bytes <= '9') | ismember(bytes, uint8('-_.*'));
+parts = cell(1, numel(bytes));
+parts(safe) = cellstr(char(bytes(safe))');
+parts(bytes == ' ') = {'+'};
+other = ~safe & bytes ~= ' ';
+parts(other) = cellstr(strcat('%', dec2hex(bytes(other), 2)))';
+s = [parts{:}];
 end

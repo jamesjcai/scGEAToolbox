@@ -24,7 +24,15 @@ end
 
 key = '';
 done = false;
+if isdeployed
+    % SETSECRET is excluded from the MATLAB Runtime: a compiled app reads
+    % keys from environment variables only.
+    fprintf(['The MATLAB vault is not available in the standalone app. ' ...
+        'Set the environment variable %s and restart the app.\n'], name);
+    return;
+end
 try
+    %#exclude setSecret
     setSecret(name, Overwrite=true);
 catch ME
     fprintf("Could not store %s in the MATLAB vault: %s\n", name, ME.message);

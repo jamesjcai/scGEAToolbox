@@ -332,7 +332,7 @@ if ~isnan(cid)
 else
     url = sprintf( ...
         'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/%s/SDF', ...
-        urlencode(char(compound_id)));
+        i_urlencode(char(compound_id)));
 end
 fprintf('    Downloading SDF for %s from PubChem...\n', compound_id);
 try
@@ -489,4 +489,18 @@ for k = 1:numel(cid)
     if length(s) > 2 && strcmp(s(end-1:end), '.0'), s = s(1:end-2); end
     cid(k) = string(s);
 end
+end
+
+
+function s = i_urlencode(s)
+% URLENCODE's encoding: URLENCODE itself is excluded from the MATLAB Runtime.
+bytes = unicode2native(char(s), 'UTF-8');
+safe = (bytes >= 'a' & bytes <= 'z') | (bytes >= 'A' & bytes <= 'Z') | ...
+    (bytes >= '0' & bytes <= '9') | ismember(bytes, uint8('-_.*'));
+parts = cell(1, numel(bytes));
+parts(safe) = cellstr(char(bytes(safe))');
+parts(bytes == ' ') = {'+'};
+other = ~safe & bytes ~= ' ';
+parts(other) = cellstr(strcat('%', dec2hex(bytes(other), 2)))';
+s = [parts{:}];
 end

@@ -201,7 +201,7 @@ seq = "";
 try
     url = sprintf(['https://rest.uniprot.org/uniprotkb/search?' ...
         'query=gene:%s+organism_id:9606+reviewed:true' ...
-        '&format=tsv&fields=accession,sequence'], urlencode(key));
+        '&format=tsv&fields=accession,sequence'], pkg.i_urlencode(key));
     txt = webread(url, weboptions("Timeout", 30));
     lines = strsplit(strtrim(txt), newline);
     if numel(lines) >= 2
