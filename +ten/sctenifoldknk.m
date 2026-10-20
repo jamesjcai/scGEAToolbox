@@ -11,6 +11,39 @@ function [T, A0, genelist] = sctenifoldknk(X, genelist, kogene, varargin)
 % no QC, CP (ten.i_cpalstt) of rank NSUBSMPL, normalized Laplacian, and at
 % least 10 outgoing links on the KO gene. The third output is then GENELIST.
 %
+% 'ncom' (default 20) is the number of principal components each pcNet
+% regression in TEN.I_NC uses. It was hardcoded at 3 until 2026-10-19 and
+% changed after pipelines/tenifold_laplacian (README "pcNet components"):
+% on a linear-SEM simulation scored against interventional truth, the
+% median responder AUROC was 0.64 at ncom = 3 and 0.91 at 20 with 25
+% regulator modules, 0.90 and 1.00 with 5; ncom = 20 beat 3 in all twelve
+% seed x regime cells. On three real populations it made knockouts more
+% specific (top-50 overlap between different knockouts 0.27-0.46 -> 0.21-
+% 0.27). Three components cannot represent more than a few co-regulated
+% modules, so each gene's regression borrows from the same few axes. Network
+% construction costs about 4x as much (1.7 s -> 6.5 s at 1000 genes, 10
+% networks). Pass 'ncom', 3 to reproduce earlier results. This is a
+% different bottleneck from the one in TEN.KNKNULLCONTROL's RANK COLLAPSE
+% note: the CP rank still caps A0 at rank NSUBSMPL whatever ncom is.
+% It is capped at one below the gene count. Reference mode ignores 'ncom'
+% (R uses 3).
+%
+% LITE MODE ('lite', true) builds A0 as llm.run_sctenifoldknk does: libsize
+% + log1p, then one TEN.I_PCNET on all cells with q = 0, unsymmetrized and
+% unscaled - no subsampling, no edge filter, no CP. 'nsubsmpl', 'csubsmpl',
+% 'smplmethod' and 'tdmethod' are ignored; 'ncom' applies. It is opt-in, but
+% on the evidence of pipelines/tenifold_laplacian (README "Which step loses
+% the signal") it is the better network: in the linear-SEM simulation it
+% matched |Pearson| (median responder AUROC 0.87 / 0.72 at weak signal, base
+% 0.52 / 0.56), on three real populations it gave the most knockout-specific
+% output (top-50 overlap between knockouts 0.10-0.12, base 0.21-0.27), and it
+% builds 5-10x faster. Subsampling to 500 cells is what loses the signal in
+% simulation; the q = 0.95 filter plus CP is what makes different knockouts
+% report the same hub genes on real data. A0 is dense, so every gene passes
+% the 10-link check, and its rank is not capped by CP (see TEN.KNKNULLCONTROL).
+%
+%     [T, A0, g] = ten.sctenifoldknk(X, genelist, "Foxp3", 'lite', true);
+%
 % WHY THE TOOLBOX VARIANT IS THE DEFAULT. Reference mode was the default for
 % part of 2026-09-25 and was switched back after a paired benchmark
 % (pipelines/tenifold_laplacian, README "Why reference mode scores lower"):
@@ -71,10 +104,15 @@ addOptional(p, 'smplmethod', "bootstrap", @(x) (isstring(x) | ischar(x)) & ismem
 addOptional(p, 'tdmethod', "CP", @(x) (isstring(x) | ischar(x)) & ismember(upper(string(x)), ["CP", "TUCKER"]));
 addOptional(p, 'nsubsmpl', 10, @(x) fix(x) == x & x > 0);
 addOptional(p, 'csubsmpl', 500, @(x) fix(x) == x & x > 0);
+addOptional(p, 'ncom', 20, @(x) isscalar(x) && fix(x) == x && x > 0);
 addOptional(p, 'savegrn', false, @islogical);
 addOptional(p, 'reference', false, @islogical);
+addOptional(p, 'lite', false, @islogical);
 addOptional(p, 'seed', 1, @(x) isnumeric(x) && isscalar(x) && fix(x) == x);
 parse(p, varargin{:});
+if p.Results.reference && p.Results.lite
+    error("'reference' and 'lite' build different networks. Set at most one of them to true.");
+end
 if p.Results.reference
     [T, A0, genelist] = i_reference(X, genelist, idx, p.Results);
     return
@@ -83,6 +121,9 @@ dosort = p.Results.sorttable;
 tdmethod = p.Results.tdmethod;
 nsubsmpl = p.Results.nsubsmpl;
 csubsmpl = p.Results.csubsmpl;
+% Capped below the gene count, which pcNet needs, so the default still runs
+% on small gene sets
+ncom = min(p.Results.ncom, size(X, 1) - 1);
 smplmethod = p.Results.smplmethod;
 savegrn = p.Results.savegrn;
 
@@ -106,8 +147,12 @@ end
 X = sc_norm(X, "type", "libsize");
 X = log1p(X);
 
-[XM] = i_nc(X, nsubsmpl, 3, csubsmpl, usebootstrp);
-[A0] = i_td1(XM, tdmethod);
+if p.Results.lite
+    A0 = ten.i_pcnet(X, ncom, 0, false, false, symmetrize=false, scale=false);
+else
+    [XM] = i_nc(X, nsubsmpl, ncom, csubsmpl, usebootstrp);
+    [A0] = i_td1(XM, tdmethod);
+end
     if savegrn
         tstr = matlab.lang.makeValidName(strrep(sprintf("GRN_created_on_% s", datetime)," ", "_at_"));
         save(tstr, 'A0', 'genelist', '-v7.3', '-nocompression');

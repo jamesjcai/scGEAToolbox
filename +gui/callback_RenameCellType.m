@@ -37,6 +37,26 @@ if removesubscript
     end
     requirerefresh = true;
 else
+    answer = gui.myQuestdlg(FigureHandle, ...
+        'Rename one cell type, or edit all names in a table?', ...
+        '', {'Select One', 'Edit Table', 'Cancel'}, 'Select One');
+    switch answer
+        case 'Select One'
+        case 'Edit Table'
+            % Old and new names side by side; giving two types the same new
+            % name merges them.
+            newvals = gui.i_relabeldlg(FigureHandle, sce.c_cell_type_tx, ...
+                'Rename Cell Types');
+            if ~isempty(newvals)
+                sce.c_cell_type_tx = newvals;
+                gui.myGuidata(FigureHandle, sce, src);
+                requirerefresh = true;
+            end
+            return;
+        otherwise
+            return;
+    end
+
     [ci, cLi] = pkg.i_grp2idxsorted(sce.c_cell_type_tx);
 
     % %---------

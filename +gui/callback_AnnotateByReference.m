@@ -46,6 +46,8 @@ catch ME
 end
 gui.myWaitbar(FigureHandle, fw);
 needupdatesce = true;
+% sc_annotatecells stored the paragraph silently (Verbose=false).
+pkg.i_methodsshow(sce, "annotation");
 
 numDisagree = sum(~Tref.Agree);
 msg = sprintf('%d clusters labelled against %s.', height(Tref), ref.Source);

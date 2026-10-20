@@ -12,7 +12,7 @@ function [T, A0, A1, genelist] = sctenifoldnet(X0, X1, genelist, varargin)
 %
 % Name-value options: 'reference', 'seed', 'qqplot', 'nsubsmpl', 'csubsmpl',
 % 'savegrn'; and, for the toolbox variant only, 'smplmethod', 'tdmethod',
-% 'useparallel'.
+% 'ncom', 'useparallel'.
 %
 % THE TOOLBOX VARIANT IS THE DEFAULT ('reference', false): ribosomal genes
 % dropped, libsize + log1p, no QC, MATLAB's RNG, TEN.I_NC networks, Tensor
@@ -27,6 +27,12 @@ function [T, A0, A1, genelist] = sctenifoldnet(X0, X1, genelist, varargin)
 % 0.93 here, the loss coming from R's rounding of the denoised network to one
 % decimal, its rank-3 decomposition and CPM without log1p. Use reference mode
 % when the numbers have to agree with R or scTenifoldpy.
+%
+% 'ncom' (default 3) is the number of principal components in each pcNet
+% regression (TEN.I_NC); reference mode ignores it. TEN.SCTENIFOLDKNK
+% defaults to 20 since 2026-10-19 on a knockout benchmark (see its header);
+% scTenifoldNet stays at 3 because its own planted benchmark was not rerun
+% at other values.
 %
 % 'useparallel' (default false) runs TEN.I_NC's network-construction loop as a
 % parfor, one worker per subsampled network. See I_NC's header before turning
@@ -74,6 +80,7 @@ addOptional(p, 'smplmethod', "Bootstrap", @(x) (isstring(x) | ischar(x)) & ismem
 addOptional(p, 'tdmethod', "CP", @(x) (isstring(x) | ischar(x)) & ismember(upper(string(x)), ["CP", "TUCKER"]));
 addOptional(p, 'nsubsmpl', 10, @(x) fix(x) == x & x > 0);
 addOptional(p, 'csubsmpl', 500, @(x) fix(x) == x & x > 0);
+addOptional(p, 'ncom', 3, @(x) isscalar(x) && fix(x) == x && x > 0);
 addOptional(p, 'savegrn', true, @islogical);
 addOptional(p, 'useparallel', false, @islogical);
 addOptional(p, 'reference', false, @islogical);
@@ -93,6 +100,7 @@ doqqplot = p.Results.qqplot;
 tdmethod = p.Results.tdmethod;
 nsubsmpl = p.Results.nsubsmpl;
 csubsmpl = p.Results.csubsmpl;
+ncom = p.Results.ncom;
 smplmethod = p.Results.smplmethod;
 savegrn = p.Results.savegrn;
 useparallel = p.Results.useparallel;
@@ -142,7 +150,7 @@ rng('default');
 
 tic
 disp('Sample 1/2 ...')
-[XM] = i_nc(X0, nsubsmpl, 3, csubsmpl, usebootstrp, useparallel);
+[XM] = i_nc(X0, nsubsmpl, ncom, csubsmpl, usebootstrp, useparallel);
 toc
 tic
 disp('Tensor decomposition')
@@ -160,7 +168,7 @@ if savegrn
 end
 tic
 disp('Sample 2/2 ...')
-[XM] = i_nc(X1, nsubsmpl, 3, csubsmpl, usebootstrp, useparallel);
+[XM] = i_nc(X1, nsubsmpl, ncom, csubsmpl, usebootstrp, useparallel);
 toc
 tic
 disp('Tensor decomposition')

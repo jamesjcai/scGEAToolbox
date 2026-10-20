@@ -11,7 +11,11 @@ function results = run_sctenifoldknk(sample_id, kogene, data_dir, out_dir)
 %   pseudo-KO GRN to identify differentially regulated (DR) genes.
 %
 %   Method (lite — no tensor decomposition or subsampling):
-%     1. Normalize and log-transform expression -> ten.i_pcnet -> GRN (A0)
+%     1. Normalize and log-transform expression -> ten.i_pcnet -> GRN (A0),
+%        20 principal components (3 before 2026-10-19; see
+%        pipelines/tenifold_laplacian/README.md "pcNet components": on a
+%        25-module simulation the lite knockout found its responders at
+%        AUROC 0.62 with 3 and 0.97 with 20)
 %     2. Virtual KO: zero the row of kogene in A0 -> pseudo-KO GRN
 %     3. Manifold alignment of A0 vs pseudo-KO GRN -> DR genes by
 %        chi-squared test, FDR correction (BH). Genes with pAdjusted <
@@ -139,7 +143,8 @@ for k = 1:numel(cell_types)
     A0 = [];
     try
         disp('Constructing gene regulatory network...')
-        A0 = ten.i_pcnet(X, 3, 0, false, false, symmetrize=false, scale=false);
+        ncom = min(20, size(X, 1) - 1);
+        A0 = ten.i_pcnet(X, ncom, 0, false, false, symmetrize=false, scale=false);
     catch ME
         fprintf('FAILED (network construction): %s\n', ME.message);
         i_log(out_dir, sprintf('FAILED "%s" (pcrnet): %s', ct_k, ME.message));
@@ -253,7 +258,7 @@ else
         'kogene',           char(kogene), ...
         'status',           'completed', ...
         'ko_gene_excluded', true, ...
-        'method',           'scTenifoldKnk-lite (PCR network, virtual KO via row-zeroing, manifold alignment; tensor decomposition omitted for speed)', ...
+        'method',           'scTenifoldKnk-lite (PCR network on 20 PCs, virtual KO via row-zeroing, manifold alignment; tensor decomposition omitted for speed)', ...
         'cell_types',       {cell_types});
 end
 

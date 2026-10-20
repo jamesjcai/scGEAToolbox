@@ -13,6 +13,28 @@ end
 if ~isstring(sce.c_batch_id)
     sce.c_batch_id = string(sce.c_batch_id);
 end
+
+answer = gui.myQuestdlg(FigureHandle, ...
+    'Rename one batch ID, or edit all names in a table?', ...
+    '', {'Select One', 'Edit Table', 'Cancel'}, 'Select One');
+switch answer
+    case 'Select One'
+    case 'Edit Table'
+        % Old and new names side by side; giving two batches the same new
+        % name merges them.
+        newvals = gui.i_relabeldlg(FigureHandle, sce.c_batch_id, ...
+            'Rename Batch IDs');
+        if ~isempty(newvals)
+            sce.c_batch_id = newvals;
+            requirerefresh = true;
+        end
+        gui.myGuidata(FigureHandle, sce, src);
+        return;
+    otherwise
+        gui.myGuidata(FigureHandle, sce, src);
+        return;
+end
+
 [ci, cLi] = pkg.i_grp2idxsorted(sce.c_batch_id);
 
 % %---------

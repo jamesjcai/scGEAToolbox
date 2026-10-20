@@ -35,6 +35,22 @@ function ref = sc_allenbrainref(options)
 %   detection-rate filter SC_BUILDCELLTYPEREF uses on cell-level data, so
 %   the marker test is somewhat less comparable here than the correlation.
 %
+%   LIMITATIONS
+%     - Adult mouse brain only. A cluster from another tissue or species
+%       still gets its nearest brain type: the correlation always names
+%       one. Gene symbols match case-insensitively, so human data partly
+%       matches and is not rejected.
+%     - Clusters, not cells, are labelled (SC_CELLTYPEANNOREF), and genes
+%       are z-scored across the query's clusters, so a label can change
+%       with the clustering and with which other clusters are present
+%       (e.g. sorted neurons or one region versus whole brain).
+%     - Profiles are from single-cell 10x data; single-nucleus queries
+%       differ in transcript mix, which z-scoring does not remove.
+%     - Only the class and subclass levels are built, not the 1,201
+%       supertypes or 5,322 clusters.
+%     - Check T.Agree and T.Correlation: a label the marker test does not
+%       support should be confirmed with known markers.
+%
 %   Name-value options:
 %     Level          "subclass" (default) or "class"
 %     CacheDir       where the built reference is kept

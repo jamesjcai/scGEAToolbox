@@ -248,8 +248,23 @@ switch method
                  'SC_BUILDCELLTYPEREF or assembled from published tables.']);
         end
         [c, cL] = pkg.i_grp2idxsorted(sce.c_cluster_id);
-        [cLtx, Tref] = sc_celltypeannoref(sce.X, sce.g, sce.c_cluster_id, ...
-            options.Reference, Method=options.ReferenceMethod);
+        [cLtx, Tref, details] = sc_celltypeannoref(sce.X, sce.g, ...
+            sce.c_cluster_id, options.Reference, Method=options.ReferenceMethod);
+        % No genes used means the correlation did not run (Method or the
+        % reference ruled it out), so the labels came from the marker test.
+        numGenesUsed = numel(details.GenesUsed);
+        if numGenesUsed == 0
+            numGenesUsed = NaN;
+            numAgree = sum(cLtx ~= "undetermined");
+        else
+            numAgree = sum(Tref.Agree);
+        end
+        % Printed here rather than by sc_celltypeannoref, so it is also kept
+        % with SCE for sc_methodstext.
+        pkg.i_refannomethodstext(options.Reference, ...
+            Method=options.ReferenceMethod, NumClusters=numel(cLtx), ...
+            NumGenesUsed=numGenesUsed, NumAgree=numAgree, ...
+            SCE=sce, Print=options.Verbose);
         labels = cLtx(c);
         T = i_clustertable(method, cL, cLtx, c, nan(numel(cL), 1), Tref.FDR);
         methodResult = Tref;

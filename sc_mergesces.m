@@ -90,8 +90,9 @@ if ~isempty(sce1.c_cell_type_tx) && ~isempty(sce2.c_cell_type_tx)
     if ~isstring(sce2.c_cell_type_tx)
         sce2.c_cell_type_tx = string(sce2.c_cell_type_tx);
     end
-    sce.c_cell_type_tx = [i_remove_affix(sce1.c_cell_type_tx); ...
-        i_remove_affix(sce2.c_cell_type_tx)];
+    % Labels are kept as they are, subtype suffixes such as "_{30}"
+    % included; Collapse Cell Subtypes drops them when that is wanted.
+    sce.c_cell_type_tx = [sce1.c_cell_type_tx; sce2.c_cell_type_tx];
 end
 
 if ~isempty(sce1.c_cluster_id) && ~isempty(sce2.c_cluster_id)
@@ -254,15 +255,4 @@ else
     X = [zeros(nf, nBefore, 'like', m.X), m.X, zeros(nf, nAfter, 'like', m.X)];
 end
 f = m.f;
-end
-
-
-function b = i_remove_affix(a)
-b = a;
-for k = 1:length(a)
-    idx = strfind(a(k), '_{');
-    if ~isempty(idx) && idx(1) > 0
-        b(k) = extractBefore(a(k), idx(1));
-    end
-end
 end

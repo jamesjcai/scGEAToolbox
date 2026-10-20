@@ -1,5 +1,5 @@
 % scGEAToolbox - Single-Cell Gene Expression Analysis Toolbox
-% Version 26.6.4 15-Oct-2026
+% Version 26.6.5 20-Oct-2026
 %
 % Functions
 %   cdgea                     - CDGEA - Change working directory to the scGEAToolbox folder
@@ -19,6 +19,7 @@
 %   sc_cluster_x              - sc_cluster_x - cluster cells using UMI matrix X
 %   sc_csubtypeanno           - SC_CSUBTYPEANNO Annotate the subtypes of one primary cell type.
 %   sc_deg                    - SC_DEG - DEG analysis using Mann–Whitney U test or t-test
+%   sc_diffabundance          - SC_DIFFABUNDANCE  Differential cell-type abundance testing between conditions.
 %   sc_dpg                    - SC_DPG - Differential Program (DP) analysis between two groups of cells
 %   sc_dvg                    - SC_DVG - Differential variability (DV) analysis between two groups
 %   sc_fgsea                  - SC_FGSEA  Preranked gene set enrichment against Enrichr libraries.

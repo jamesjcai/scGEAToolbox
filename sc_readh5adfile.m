@@ -81,7 +81,9 @@ if XisSparse
     shape = double(grpAttrs(idx2).Value);
 
     % reconstruct genes-by-cells sparse matrix from the CSR/CSC arrays
-    if isMATLABReleaseOlderThan('R2025a')
+    % sparse() takes only double, single or logical values; integer counts
+    % (e.g. uint16 or int32 /X/data) must be cast first
+    if ~isa(data, 'single') || isMATLABReleaseOlderThan('R2025a')
         data = double(data);   % single-valued sparse needs R2025a or newer
     end
     X = buildSparseFromCS(data, indices, indptr, shape(1), shape(2), ...

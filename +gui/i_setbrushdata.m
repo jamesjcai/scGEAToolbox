@@ -17,8 +17,15 @@ function [ok] = i_setbrushdata(h, mask)
 
 ok = false;
 if isempty(h) || ~pkg.i_isvalid(h) || ~isprop(h, 'BrushData'), return; end
-if isempty(h.BrushData) || numel(h.BrushData) ~= numel(mask), return; end
+% BrushData stays empty until the plot is first brushed; the data it would
+% cover is then the length to check against.
+if isempty(h.BrushData)
+    shape = size(h.XData);
+else
+    shape = size(h.BrushData);
+end
+if prod(shape) == 0 || prod(shape) ~= numel(mask), return; end
 
-h.BrushData = uint8(reshape(logical(mask), size(h.BrushData)));
+h.BrushData = uint8(reshape(logical(mask), shape));
 ok = true;
 end

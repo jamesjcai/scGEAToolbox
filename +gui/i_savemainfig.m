@@ -1,4 +1,8 @@
 function i_savemainfig(src, ~, tag, fig, ax)
+%I_SAVEMAINFIG Save a window's figure to a file or to PowerPoint.
+%
+%   TAG 1 saves SVG or PDF, TAG 2 a graphic file (JPG, PNG, TIF, PDF, EPS),
+%   TAG 3 a PowerPoint file.
 
 % Initialize the figure and axes handles
 if nargin < 4, fig = []; end
@@ -22,16 +26,29 @@ if isempty(axesHandles)
 end
 
 switch tag
-    case 1 % PDF only
-        defFilter = {'*.pdf'};
-        [filename, filepath, filterIdx] = uiputfile(defFilter, 'Save as PDF');
+    case 1 % SVG or PDF, behind the "Save Figure as SVG File" button
+        defFilter = {'*.svg'; '*.pdf'};
+        [filename, filepath, filterIdx] = uiputfile(defFilter, 'Save as SVG or PDF');
         if isequal(filename,0), return; end
         fullfileOut = enforceExtension(fullfile(filepath, filename), defFilter{filterIdx});
 
-        if gui.i_isuifig(parentfig) || ~isMATLABReleaseOlderThan('R2025a')
+        [~, ~, ext] = fileparts(fullfileOut);
+        if strcmpi(ext, '.svg')
+            % EXPORTAPP, which exportWhite uses for every figure, cannot
+            % write SVG; EXPORTGRAPHICS can, for figures and uifigures alike.
+            % Light theme while exporting, as exportWhite does, so that text
+            % drawn light on a dark window is not lost on the white page.
+            if isprop(parentfig, 'Theme') && ~isempty(parentfig.Theme)
+                oldTheme = parentfig.Theme.BaseColorStyle;
+                theme(parentfig, "light");
+                themeCleanup = onCleanup(@() theme(parentfig, oldTheme));
+            end
+            exportgraphics(parentfig, fullfileOut, BackgroundColor="white", ...
+                ContentType="vector");
+        elseif gui.i_isuifig(parentfig) || ~isMATLABReleaseOlderThan('R2025a')
             exportWhite(parentfig, fullfileOut);
         else
-            saveas(parentfig, fullfileOut, 'pdf');
+            exportgraphics(parentfig, fullfileOut);
         end
 
     case 2 % Multiple formats
