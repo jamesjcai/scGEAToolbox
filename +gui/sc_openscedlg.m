@@ -361,11 +361,14 @@ setpref('scgeatoolbox', preftagname, indx);
         case 'GEO Accession Number(s)...'
 
             preftagname1 ='previousgeoaccs';
-            previousgeoaccs = getpref('scgeatoolbox', preftagname1, 'GSM7855468');
+            % Mouse pancreatic islets (GSE117770), 10x mtx: a tissue sample
+            % PanglaoDB annotates well. GSM7855468, the old default, is an
+            % in-vitro NSC culture whose clusters nearly all come out "Unknown".
+            previousgeoaccs = getpref('scgeatoolbox', preftagname1, 'GSM3308549');
 
             figure(parentfig);
             if gui.i_isuifig(parentfig)
-                acc = gui.myInputdlg({'Input(s) (e.g., GSM7855468 or GSM3308549-52):'}, ...
+                acc = gui.myInputdlg({'Input(s) (e.g., GSM3308549 or GSM3308549-52):'}, ...
                     'GEO Accession', {previousgeoaccs}, parentfig);
             else
                 acc = inputdlg('Input Number(s) (e.g., GSM3308549-52):', ...
